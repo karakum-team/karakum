@@ -1,3 +1,17 @@
-const isTypeAssertion: (node: Node) => node is TypeAssertion;
+function funA(): string
+function funB(): string
 
-const isIdentifierOrPrivateIdentifier: (node: Node) => node is MemberName;
+class ClassA {
+    field: string
+    method(): string
+}
+
+class ClassB {
+    field: string
+    method(): string
+}
+
+class ClassC {
+    field: string
+    method(): string
+}

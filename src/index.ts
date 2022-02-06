@@ -1,12 +1,13 @@
-import ts, {EmitHint, SyntaxKind} from "typescript";
+import ts, {EmitHint, SyntaxKind, Type} from "typescript";
 import {traverse} from "./utils/traverse";
 import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
 import {preprocess} from "./preprocessor/preprocessor";
 import fs from "fs";
 import {convert} from "./converter/converter";
 
-const file = "node_modules/typescript/lib/typescript.d.ts"
-// const file = "src/test.d.ts"
+// const file = "node_modules/typescript/lib/typescript.d.ts"
+// const file = "node_modules/typescript/lib/lib.webworker.iterable.d.ts"
+const file = "src/test.d.ts"
 const program = ts.createProgram([file], {lib: []})
 const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
 const typeChecker = program.getTypeChecker()
