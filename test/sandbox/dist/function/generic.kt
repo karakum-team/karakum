@@ -1,0 +1,1 @@
+external fun <T  , U : Any > genericFn(firstParam: T, secondParam: Double): Boolean

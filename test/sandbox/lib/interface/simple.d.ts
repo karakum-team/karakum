@@ -3,7 +3,7 @@ export interface ExampleInterface {
     secondField: number;
 }
 
-export interface HelloWorldInterface {
+export interface SimpleInterface {
     firstField: string;
     secondField: number;
     thirdField: ExampleInterface;
@@ -11,5 +11,3 @@ export interface HelloWorldInterface {
     firstMethod(firstParam: string, secondParam: number): void;
     secondMethod(firstParam: string, secondParam: number): boolean;
 }
-
-export function helloWorld(firstParam: string, secondParam: number): HelloWorldInterface;

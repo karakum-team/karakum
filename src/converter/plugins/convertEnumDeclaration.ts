@@ -12,8 +12,8 @@ export const convertEnumDeclaration: ConverterPlugin = (node, context, render) =
         .join(",\n")
 
     return `
-        external enum class ${name} {
-            ${members}
-        }
+external enum class ${name} {
+${members}
+}
     `
 }

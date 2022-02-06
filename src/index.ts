@@ -55,6 +55,7 @@ export function process(configuration: Configuration) {
 
         const convertedFile = convert(preprocessedFile)
 
-        fs.writeFileSync(targetFileName, convertedFile)
+        fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
+        fs.writeFileSync(targetFileName, convertedFile, {})
     })
 }

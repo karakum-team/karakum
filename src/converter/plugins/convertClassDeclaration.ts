@@ -21,8 +21,8 @@ export const convertClassDeclaration: ConverterPlugin = (node, context, render) 
         .join("\n")
 
     return `
-        external class ${name} ${ifPresent(typeParameters, it => `<${it}>`)} ${heritageClauses ?? ""} {
-            ${members}
-        }
+external class ${name} ${ifPresent(typeParameters, it => `<${it}> `)}${heritageClauses ?? ""} {
+${members}
+}
     `
 }
