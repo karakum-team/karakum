@@ -18,5 +18,5 @@ export const convertMethodSignature: ConverterPlugin = (node, context, render) =
 
     const returnType = node.type && render(node.type)
 
-    return `fun ${ifPresent(typeParameters, it => `<${it}>`)} ${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+    return `fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
 }
