@@ -1,7 +1,8 @@
-import ts, {InterfaceDeclaration, SourceFile, Symbol, TransformerFactory, TypeChecker} from "typescript";
+import ts, {InterfaceDeclaration, Program, SourceFile, Symbol, TransformerFactory} from "typescript";
 import {createTransformer} from "../createTransformer";
 
-export const createMergeInterfacesTransformer = (typeChecker: TypeChecker): TransformerFactory<SourceFile> => {
+export const createMergeInterfacesTransformer = (program: Program): TransformerFactory<SourceFile> => {
+    const typeChecker = program.getTypeChecker()
     const interfaceSymbols = new Set<Symbol>()
 
     return createTransformer(node => {

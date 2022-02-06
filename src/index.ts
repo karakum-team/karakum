@@ -1,120 +1,60 @@
-import ts, {EmitHint, SyntaxKind, Type} from "typescript";
-import {traverse} from "./utils/traverse";
-import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
-import {preprocess} from "./preprocessor/preprocessor";
-import fs from "fs";
+import ts from "typescript";
 import {convert} from "./converter/converter";
+import {Configuration} from "./configuration/configuration";
+import {glob} from "glob";
+import {preprocess} from "./preprocessor/preprocessor";
+import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
+import fs from "fs";
+import path from "path";
+import {commonPrefix} from "./utils/commonPrefix";
 
-// const file = "node_modules/typescript/lib/typescript.d.ts"
-// const file = "node_modules/typescript/lib/lib.webworker.iterable.d.ts"
-const file = "src/test.d.ts"
-const program = ts.createProgram([file], {lib: []})
-const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
-const typeChecker = program.getTypeChecker()
-const sourceFile = program.getSourceFile(file)
+function generateOutputFileName(prefix: string, sourceFileName: string) {
+    return sourceFileName
+        .replace(prefix, "")
+        .replace(/\.d\.ts$/, ".kt")
+        .replace(/\.ts$/, ".kt")
+}
 
-if (!sourceFile) throw new Error("Source file is not defined")
+export function process(configuration: Configuration) {
+    const {input, output, compilerOptions} = configuration
 
-const preprocessedFile = preprocess(sourceFile, [
-    createMergeInterfacesTransformer(typeChecker),
-])
+    const normalizedInput = typeof input === "string" ? [input] : input
 
-fs.writeFileSync("typescript.d.ts", printer.printFile(preprocessedFile))
+    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern))
 
-const result = convert(preprocessedFile)
+    const program = ts.createProgram(rootNames, {
+        lib: [],
+        types: [],
+        ...compilerOptions
+    })
 
-fs.writeFileSync("typescript.kt", result)
+    console.log(`Source files count: ${program.getSourceFiles().length}`)
 
-// traverse(sourceFile, node => {
-//     if (node.kind === SyntaxKind.ObjectBindingPattern) {
-//         console.log(printer.printNode(EmitHint.Unspecified, node, sourceFile))
-//     }
-// })
+    const sources = ([] as string[][]).concat(
+        normalizedInput.map(pattern => pattern.split("/")),
+        rootNames.map(fileName => fileName.split("/")),
+    )
 
-/*
+    const prefix = commonPrefix(...sources).join("/") + "/"
 
-let unionsCount = 0
-let stringUnionsCount = 0
-let optionalUnionsCount = 0
-let referenceUnionsCount = 0
-let arrayUnionsCount = 0
-let stringNodeUnionsCount = 0
-let withFinalUnionsCount = 0
-let restUnionsCount = 0
+    console.log(`Source files root: ${prefix}`)
 
-traverse(sourceFile, node => {
-    // if (ts.isStringLiteral(node) && node.parent.kind === SyntaxKind.LiteralType) {
-    //     stringLiteralParents.add(node.parent.parent.kind)
-    //     console.log(printer.printNode(EmitHint.Unspecified, node.parent.parent, sourceFile))
-    // }
+    fs.rmdirSync(output, {recursive: true})
+    fs.mkdirSync(output, {recursive: true})
 
-    if (ts.isUnionTypeNode(node)) {
-        unionsCount++
+    program.getSourceFiles().forEach(sourceFile => {
+        console.log(`Source file: ${sourceFile.fileName}`)
 
-        if (
-            node.types.length === 2 &&
-            node.types[1].kind === SyntaxKind.UndefinedKeyword
-        ) {
-            optionalUnionsCount++
-        } else if (node.types.every(typeNode => {
-            return (
-                typeNode.kind === SyntaxKind.TypeReference ||
-                typeNode.kind === SyntaxKind.UndefinedKeyword
-            );
-        })) {
-            referenceUnionsCount++
-        } else if (node.types.every(typeNode => {
-            return typeNode.kind === SyntaxKind.ArrayType;
-        })) {
-            arrayUnionsCount++
-        } else if (node.types.every(typeNode => {
-            return (
-                ts.isLiteralTypeNode(typeNode) &&
-                typeNode.kind === SyntaxKind.LiteralType
-            );
-        })) {
-            stringUnionsCount++
-        } else if (
-            node.getText() === "string | Identifier" ||
-            node.getText() === "string | Identifier | undefined" ||
-            node.getText() === "string | NodeArray<JSDocComment>" ||
-            node.getText() === "string | NodeArray<JSDocComment> | undefined"
-        ) {
-            stringNodeUnionsCount++
-        } else if (
-            node.types[0].kind === SyntaxKind.BooleanKeyword ||
-            node.types[0].kind === SyntaxKind.StringKeyword ||
-            node.types[0].kind === SyntaxKind.NumberKeyword ||
-            node.types[node.types.length - 1].kind === SyntaxKind.StringKeyword ||
-            node.types[node.types.length - 1].kind === SyntaxKind.NumberKeyword
-        ) {
-            withFinalUnionsCount++
-        } else {
-            restUnionsCount++
-            console.log(node.getText())
-            // node.types.forEach(typeNode => console.log(SyntaxKind[typeNode.kind]))
-        }
-    }
-})
+        const targetFileName = path.resolve(output, generateOutputFileName(prefix, sourceFile.fileName))
 
-console.log("unionsCount", unionsCount)
-console.log("stringUnionsCount", stringUnionsCount)
-console.log("optionalUnionsCount", optionalUnionsCount)
-console.log("referenceUnionsCount", referenceUnionsCount)
-console.log("arrayUnionsCount", arrayUnionsCount)
-console.log("stringNodeArrayUnionsCount", stringNodeUnionsCount)
-console.log("withFinalUnionsCount", withFinalUnionsCount)
-console.log("restUnionsCount", restUnionsCount)
+        console.log(`Target file: ${targetFileName}`)
 
-// VariableDeclarationList | readonly VariableDeclaration[] <- with final
-// T | T[] | undefined <- ???
-// CallHierarchyItem | CallHierarchyItem[] | undefined <- ???
-// CodeActionCommand | CodeActionCommand[] <- ???
-// ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[] <- ???
-// CodeActionCommand | CodeActionCommand[] <- ???
-// ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]
-// SignatureHelpTriggerCharacter | ")" <- string
-// T | T[] <- ???
-// VariableDeclarationList | readonly VariableDeclaration[] <- with final
+        const preprocessedFile = preprocess(sourceFile, [
+            createMergeInterfacesTransformer(program),
+        ])
 
-*/
+        const convertedFile = convert(preprocessedFile)
+
+        fs.writeFileSync(targetFileName, convertedFile)
+    })
+}

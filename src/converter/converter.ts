@@ -211,8 +211,8 @@ export function convert(sourceFile: SourceFile): string {
 
     checkCoveredNodes(sourceFile)
 
-    console.log("Covered nodes: ", coveredNodes.size)
-    console.log("Uncovered nodes: ", uncoveredNodes.size)
+    console.log(`Covered nodes: ${coveredNodes.size}`)
+    console.log(`Uncovered nodes: ${uncoveredNodes.size}`)
 
     return output
 }
