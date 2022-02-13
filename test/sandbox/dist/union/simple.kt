@@ -4,9 +4,21 @@
 
 package sandbox.union
 
-typealias A = /* { brand: "one" } */
-typealias B = /* { brand: "two" } */
-typealias C = /* { brand: "three" } */
+
+external interface A {
+var brand: one
+}
+    
+
+external interface B {
+var brand: two
+}
+    
+
+external interface C {
+var brand: three
+}
+    
 typealias AorBorC = Any /* A | B | C */
 typealias AorB = Any /* A | B */
     

@@ -1,8 +1,8 @@
-type A = { brand: "one" }
+interface A { brand: "one" }
 
-type B = { brand: "two" }
+interface B { brand: "two" }
 
-type C = { brand: "three" }
+interface C { brand: "three" }
 
 type AorBorC = A | B | C
 
