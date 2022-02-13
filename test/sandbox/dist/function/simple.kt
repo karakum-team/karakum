@@ -1,1 +1,0 @@
-external fun exampleFn(firstParam: String, secondParam: Double): Boolean

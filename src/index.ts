@@ -2,8 +2,8 @@ import ts from "typescript";
 import {convert} from "./converter/converter";
 import {Configuration} from "./configuration/configuration";
 import {glob} from "glob";
-import {preprocess} from "./preprocessor/preprocessor";
-import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
+// import {preprocess} from "./preprocessor/preprocessor";
+// import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
 import fs from "fs";
 import path from "path";
 import {commonPrefix} from "./utils/commonPrefix";
@@ -22,11 +22,15 @@ export function process(configuration: Configuration) {
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern))
 
-    const program = ts.createProgram(rootNames, {
+    const preparedCompilerOptions = {
         lib: [],
         types: [],
         ...compilerOptions
-    })
+    }
+
+    const compilerHost = ts.createCompilerHost(preparedCompilerOptions, /* setParentNodes */ true);
+
+    const program = ts.createProgram(rootNames, preparedCompilerOptions, compilerHost)
 
     console.log(`Source files count: ${program.getSourceFiles().length}`)
 
@@ -49,11 +53,11 @@ export function process(configuration: Configuration) {
 
         console.log(`Target file: ${targetFileName}`)
 
-        const preprocessedFile = preprocess(sourceFile, [
-            createMergeInterfacesTransformer(program),
-        ])
+        // const preprocessedFile = preprocess(sourceFile, [
+        //     createMergeInterfacesTransformer(program),
+        // ])
 
-        const convertedFile = convert(preprocessedFile)
+        const convertedFile = convert(sourceFile)
 
         fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
         fs.writeFileSync(targetFileName, convertedFile, {})

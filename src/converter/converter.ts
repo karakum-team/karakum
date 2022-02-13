@@ -1,4 +1,4 @@
-import ts, {EmitHint, Node, SourceFile, SyntaxKind} from "typescript"
+import ts, {CommentRange, EmitHint, Node, SourceFile, SyntaxKind} from "typescript"
 import {ConverterPlugin} from "./plugin";
 import {ConverterContext} from "./context";
 import {convertPrimitive} from "./plugins/convertPrimitive";
@@ -30,6 +30,7 @@ import {convertOptionalUnionType} from "./plugins/convertOptionalUnionType";
 import {convertCallSignature} from "./plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./plugins/convertTypePredicate";
+import {convertComments} from "./plugins/convertComments";
 
 const foundKinds = new Set<SyntaxKind>()
 
@@ -115,6 +116,10 @@ const coveredNodes = new Set<Node>()
 
 const uncoveredNodes = new Set<Node>()
 
+const coveredComments = new Set<Node>()
+
+const coveredCommentRanges: CommentRange[] = []
+
 function checkCoveredNodes(sourceFile: SourceFile) {
     const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
 
@@ -136,8 +141,9 @@ function checkCoveredNodes(sourceFile: SourceFile) {
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
 const plugins: ConverterPlugin[] = [
+    convertComments,
+
     convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
-    convertPrimitive(hasKind(SyntaxKind.ExportDeclaration), () => ""),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),
@@ -192,6 +198,20 @@ export function convert(sourceFile: SourceFile): string {
         },
         deepCover(node: Node) {
             traverse(node, it => this.cover(it))
+        },
+
+        isCommentCovered(node: Node): boolean {
+            return coveredComments.has(node)
+        },
+        coverComment(node: Node) {
+            coveredComments.add(node)
+        },
+
+        isCommentRangeCovered(commentRange: CommentRange): boolean {
+            return coveredCommentRanges.some(it => it.pos === commentRange.pos && it.end === commentRange.end)
+        },
+        coverCommentRange(commentRange: CommentRange) {
+            coveredCommentRanges.push(commentRange)
         }
     }
 
