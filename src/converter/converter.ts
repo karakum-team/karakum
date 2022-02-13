@@ -31,6 +31,7 @@ import {convertCallSignature} from "./plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./plugins/convertTypePredicate";
 import {convertComments} from "./plugins/convertComments";
+import {convertUnionTypeHierarchy} from "./plugins/convertUnionTypeHierarchy";
 
 const foundKinds = new Set<SyntaxKind>()
 
@@ -187,6 +188,7 @@ const plugins: ConverterPlugin[] = [
     convertPrefixUnaryExpression,
     convertParenthesizedType,
     convertOptionalUnionType,
+    convertUnionTypeHierarchy,
     convertCallSignature,
     convertFunctionDeclaration,
     convertTypePredicate,
