@@ -1,10 +1,13 @@
-import ts from "typescript";
+import ts, {SyntaxKind} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ifPresent} from "../render";
 
 export const convertClassDeclaration: ConverterPlugin = (node, context, render) => {
     if (!ts.isClassDeclaration(node)) return null
     context.cover(node)
+
+    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    exportModifier && context.cover(exportModifier)
 
     const name = (node.name && render(node.name)) ?? "Anonymous"
 

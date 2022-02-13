@@ -1,10 +1,13 @@
-import ts from "typescript";
+import ts, {SyntaxKind} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ifPresent} from "../render";
 
 export const convertFunctionDeclaration: ConverterPlugin = (node, context, render) => {
     if (!ts.isFunctionDeclaration(node)) return null
     context.cover(node)
+
+    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    exportModifier && context.cover(exportModifier)
 
     // skip body
     node.body && context.cover(node.body)
