@@ -11,5 +11,5 @@ export const convertTypeParameterDeclaration: ConverterPlugin = (node, context, 
     const constraintType = node.constraint && render(node.constraint)
     const defaultType = node.default && render(node.default)
 
-    return `${name} ${ifPresent(constraintType, it => `: ${it}`)} ${ifPresent(defaultType, it => `/* default is ${it} */`)}`
+    return `${name}${ifPresent(constraintType, it => ` : ${it}`)}${ifPresent(defaultType, it => ` /* default is ${it} */`)}`
 }

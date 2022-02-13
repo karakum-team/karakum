@@ -1,6 +1,8 @@
 import {CommentRange, Node} from "typescript";
 
 export interface ConverterContext {
+    module: String
+
     cover(node: Node): void
     deepCover(node: Node): void
 

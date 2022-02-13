@@ -141,6 +141,8 @@ function checkCoveredNodes(sourceFile: SourceFile) {
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
 const plugins: ConverterPlugin[] = [
+    convertSourceFile,
+
     convertComments,
 
     convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
@@ -162,7 +164,6 @@ const plugins: ConverterPlugin[] = [
     convertPrimitive(ts.isStringLiteral, node => node.text),
     convertPrimitive(ts.isNumericLiteral, node => node.text),
 
-    convertSourceFile,
     convertModuleDeclaration,
     convertModuleBlock,
     convertInterfaceDeclaration,
@@ -191,8 +192,16 @@ const plugins: ConverterPlugin[] = [
     convertTypePredicate,
 ]
 
-export function convert(sourceFile: SourceFile): string {
+export function convert(
+    libraryName: string,
+    relativeFileName: string,
+    sourceFile: SourceFile,
+): string {
     const context: ConverterContext = {
+        module: relativeFileName !== ""
+            ? `${libraryName}/${relativeFileName}`
+            : libraryName,
+
         cover(node: Node) {
             coveredNodes.add(node)
         },

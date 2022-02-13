@@ -24,7 +24,7 @@ export const convertInterfaceDeclaration: ConverterPlugin = (node, context, rend
         .join("\n")
 
     return `
-external interface ${name} ${ifPresent(typeParameters, it => `<${it}> `)}${heritageClauses ?? ""} {
+external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClauses ?? ""} {
 ${members}
 }
     `

@@ -15,8 +15,15 @@ function generateOutputFileName(prefix: string, sourceFileName: string) {
         .replace(/\.ts$/, ".kt")
 }
 
+function generateRelativeFileName(prefix: string, sourceFileName: string) {
+    return sourceFileName
+        .replace(prefix, "")
+        .replace(/\.d\.ts$/, "")
+        .replace(/\.ts$/, "")
+}
+
 export function process(configuration: Configuration) {
-    const {input, output, compilerOptions} = configuration
+    const {input, output, libraryName = "", compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
 
@@ -57,7 +64,9 @@ export function process(configuration: Configuration) {
         //     createMergeInterfacesTransformer(program),
         // ])
 
-        const convertedFile = convert(sourceFile)
+        const relativeFileName = generateRelativeFileName(prefix, sourceFile.fileName)
+
+        const convertedFile = convert(libraryName, relativeFileName, sourceFile)
 
         fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
         fs.writeFileSync(targetFileName, convertedFile, {})
