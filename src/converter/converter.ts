@@ -162,8 +162,8 @@ const plugins: ConverterPlugin[] = [
     convertPrimitive(hasKind(SyntaxKind.NeverKeyword), () => "Nothing"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),
-    convertPrimitive(ts.isStringLiteral, node => node.text),
-    convertPrimitive(ts.isNumericLiteral, node => node.text),
+    convertPrimitive(ts.isStringLiteral, () => "String"),
+    convertPrimitive(ts.isNumericLiteral, () => "Double"),
 
     convertModuleDeclaration,
     convertModuleBlock,

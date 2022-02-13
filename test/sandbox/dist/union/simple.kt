@@ -6,17 +6,17 @@ package sandbox.union
 
 
 external interface A {
-var brand: one
+var brand: String
 }
     
 
 external interface B {
-var brand: two
+var brand: String
 }
     
 
 external interface C {
-var brand: three
+var brand: String
 }
     
 typealias AorBorC = Any /* A | B | C */
