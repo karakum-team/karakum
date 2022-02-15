@@ -1,7 +1,7 @@
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import ts, {SyntaxKind} from "typescript";
 
-export const convertPrefixUnaryExpression: ConverterPlugin = (node, context) =>  {
+export const convertPrefixUnaryExpression = createSimplePlugin((node, context) =>  {
     if (!ts.isPrefixUnaryExpression(node)) return null
     context.cover(node)
 
@@ -10,4 +10,4 @@ export const convertPrefixUnaryExpression: ConverterPlugin = (node, context) => 
     }
 
     return `${node.operator}${node.operand}`
-}
+})

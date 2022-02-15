@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertHeritageClause: ConverterPlugin = (node, context, render) => {
+export const convertHeritageClause = createSimplePlugin((node, context, render) => {
     if (!ts.isHeritageClause(node)) return null
     context.cover(node)
 
@@ -10,4 +10,4 @@ export const convertHeritageClause: ConverterPlugin = (node, context, render) =>
         .join(", ")
 
     return " : " + types
-}
+})

@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertMethodSignature: ConverterPlugin = (node, context, render) => {
+export const convertMethodSignature = createSimplePlugin((node, context, render) => {
     if (!ts.isMethodSignature(node)) return null
     context.cover(node)
 
@@ -19,4 +19,4 @@ export const convertMethodSignature: ConverterPlugin = (node, context, render) =
     const returnType = node.type && render(node.type)
 
     return `fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
-}
+})

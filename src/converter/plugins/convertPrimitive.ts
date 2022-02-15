@@ -1,4 +1,4 @@
-import {ConverterPlugin} from "../plugin";
+import {ConverterPlugin, createSimplePlugin} from "../plugin";
 import {Node} from "typescript";
 import {Render} from "../render";
 
@@ -16,10 +16,10 @@ export function convertPrimitive(
     predicate: (node: Node) => boolean,
     render: Render
 ): ConverterPlugin {
-    return (node, context) => {
+    return createSimplePlugin((node, context) => {
         if (!predicate(node)) return null
         context.cover(node)
 
         return render(node)
-    }
+    })
 }

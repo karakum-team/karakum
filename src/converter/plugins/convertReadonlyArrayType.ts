@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertReadonlyArrayType: ConverterPlugin = (node, context, render) => {
+export const convertReadonlyArrayType = createSimplePlugin((node, context, render) => {
     if (
         ts.isTypeOperatorNode(node) &&
         node.operator === SyntaxKind.ReadonlyKeyword &&
@@ -16,4 +16,4 @@ export const convertReadonlyArrayType: ConverterPlugin = (node, context, render)
 
 
     return null;
-}
+})

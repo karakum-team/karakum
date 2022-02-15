@@ -1,8 +1,8 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertInterfaceDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertInterfaceDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isInterfaceDeclaration(node)) return null
     context.cover(node)
 
@@ -28,4 +28,4 @@ external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${herita
 ${members}
 }
     `
-}
+})

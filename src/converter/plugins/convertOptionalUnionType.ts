@@ -1,12 +1,12 @@
 import ts, {Node, SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === SyntaxKind.NullKeyword
 const isUndefined = (type: Node) => type.kind === SyntaxKind.UndefinedKeyword
 
 const isNullable = (type: Node) => isNull(type) || isUndefined(type)
 
-export const convertOptionalUnionType: ConverterPlugin = (node, context, render) => {
+export const convertOptionalUnionType = createSimplePlugin((node, context, render) => {
     if (ts.isUnionTypeNode(node) &&
         node.types.length === 2 &&
         node.types.some(type => isNullable(type))
@@ -24,4 +24,4 @@ export const convertOptionalUnionType: ConverterPlugin = (node, context, render)
     }
 
     return null;
-}
+})

@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertTypeAliasDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
     context.cover(node)
 
@@ -15,4 +15,4 @@ export const convertTypeAliasDeclaration: ConverterPlugin = (node, context, rend
     const type = render(node.type)
 
     return `typealias ${name}${ifPresent(typeParameters, it => `<${it}>`)} = ${type}`
-}
+})

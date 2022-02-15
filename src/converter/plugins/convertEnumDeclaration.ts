@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertEnumDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertEnumDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumDeclaration(node)) return null
     context.cover(node)
 
@@ -16,4 +16,4 @@ external enum class ${name} {
 ${members}
 }
     `
-}
+})

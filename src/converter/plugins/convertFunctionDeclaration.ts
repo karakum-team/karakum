@@ -1,8 +1,8 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertFunctionDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertFunctionDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionDeclaration(node)) return null
     context.cover(node)
 
@@ -25,4 +25,4 @@ export const convertFunctionDeclaration: ConverterPlugin = (node, context, rende
     const returnType = node.type && render(node.type)
 
     return `external fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
-}
+})

@@ -1,7 +1,7 @@
 import ts, {NodeFlags} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertVariableDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertVariableDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isVariableDeclaration(node)) return null
     context.cover(node)
 
@@ -24,4 +24,4 @@ export const convertVariableDeclaration: ConverterPlugin = (node, context, rende
     }
 
     return `external ${modifier}${name}: ${type}`
-}
+})

@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertFunctionType: ConverterPlugin = (node, context, render) => {
+export const convertFunctionType = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionTypeNode(node)) return null
     context.cover(node)
 
@@ -17,4 +17,4 @@ export const convertFunctionType: ConverterPlugin = (node, context, render) => {
     const returnType = render(node.type)
 
     return `(${parameters}) -> ${returnType}`
-}
+})

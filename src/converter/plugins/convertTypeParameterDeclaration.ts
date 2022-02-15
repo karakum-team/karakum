@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertTypeParameterDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertTypeParameterDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeParameterDeclaration(node)) return null
     context.cover(node)
 
@@ -12,4 +12,4 @@ export const convertTypeParameterDeclaration: ConverterPlugin = (node, context, 
     const defaultType = node.default && render(node.default)
 
     return `${name}${ifPresent(constraintType, it => ` : ${it}`)}${ifPresent(defaultType, it => ` /* default is ${it} */`)}`
-}
+})

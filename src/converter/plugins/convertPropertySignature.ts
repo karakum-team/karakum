@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertPropertySignature: ConverterPlugin = (node, context, render) => {
+export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
     context.cover(node)
 
@@ -22,4 +22,4 @@ export const convertPropertySignature: ConverterPlugin = (node, context, render)
     }
 
     return `${modifier}${name}: ${type}${node.questionToken ? "?" : ""}`
-}
+})

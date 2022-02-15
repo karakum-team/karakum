@@ -228,7 +228,7 @@ export function convert(
 
     const render = (node: Node) => {
         for (const plugin of plugins) {
-            const result = plugin(node, context, render)
+            const result = plugin.render(node, context, render)
 
             if (result !== null) return result
         }

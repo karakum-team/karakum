@@ -1,8 +1,8 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertClassDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertClassDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isClassDeclaration(node)) return null
     context.cover(node)
 
@@ -28,4 +28,4 @@ external class ${name} ${ifPresent(typeParameters, it => `<${it}> `)}${heritageC
 ${members}
 }
     `
-}
+})

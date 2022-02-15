@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {KOTLIN_KEYWORDS} from "../constants";
 
-export const convertSourceFile: ConverterPlugin = (node, context, render) => {
+export const convertSourceFile = createSimplePlugin((node, context, render) => {
     if (!ts.isSourceFile(node)) return null
     context.cover(node)
     context.cover(node.endOfFileToken)
@@ -32,4 +32,4 @@ package ${packageName}
 
 ${body}
     `
-}
+})

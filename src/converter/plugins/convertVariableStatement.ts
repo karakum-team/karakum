@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertVariableStatement: ConverterPlugin = (node, context, render) => {
+export const convertVariableStatement = createSimplePlugin((node, context, render) => {
     if (!ts.isVariableStatement(node)) return null
     context.cover(node)
     context.cover(node.declarationList)
@@ -12,4 +12,4 @@ export const convertVariableStatement: ConverterPlugin = (node, context, render)
     return node.declarationList.declarations
         .map(declaration => render(declaration))
         .join("\n")
-}
+})

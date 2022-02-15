@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 
-export const convertCallSignature: ConverterPlugin = (node, context, render) => {
+export const convertCallSignature = createSimplePlugin((node, context, render) => {
     if (!ts.isCallSignatureDeclaration(node)) return null
     context.cover(node)
 
@@ -17,4 +17,4 @@ export const convertCallSignature: ConverterPlugin = (node, context, render) => 
     const returnType = node.type && render(node.type)
 
     return `fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
-}
+})

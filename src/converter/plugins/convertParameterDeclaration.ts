@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertParameterDeclaration: ConverterPlugin = (node, context, render) => {
+export const convertParameterDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isParameter(node)) return null
     context.cover(node)
     node.dotDotDotToken && context.cover(node.dotDotDotToken)
@@ -25,4 +25,4 @@ export const convertParameterDeclaration: ConverterPlugin = (node, context, rend
     }
 
     return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${type}${node.questionToken ? " = definedExternally" : ""}`
-}
+})

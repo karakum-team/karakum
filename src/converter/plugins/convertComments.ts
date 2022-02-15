@@ -1,5 +1,5 @@
 import ts, {CommentRange, SourceFile} from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 import {ConverterContext} from "../context";
 
 function renderComments(sourceFile: SourceFile, commentRanges: CommentRange[], context: ConverterContext) {
@@ -16,7 +16,7 @@ function renderComments(sourceFile: SourceFile, commentRanges: CommentRange[], c
         .join("")
 }
 
-export const convertComments: ConverterPlugin = (node, context, render) => {
+export const convertComments = createSimplePlugin((node, context, render) => {
     if (context.isCommentCovered(node)) return null
     context.coverComment(node)
 
@@ -29,4 +29,4 @@ export const convertComments: ConverterPlugin = (node, context, render) => {
     const trailingCommentsOutput = renderComments(sourceFile, trailingComments, context)
 
     return `${leadingCommentsOutput}${render(node)}${trailingCommentsOutput}`
-}
+})

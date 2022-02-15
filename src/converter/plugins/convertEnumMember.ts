@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {ConverterPlugin} from "../plugin";
+import {createSimplePlugin} from "../plugin";
 
-export const convertEnumMember: ConverterPlugin = (node, context, render) => {
+export const convertEnumMember = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumMember(node)) return null
     context.cover(node)
 
@@ -9,4 +9,4 @@ export const convertEnumMember: ConverterPlugin = (node, context, render) => {
     node.initializer && context.cover(node.initializer)
 
     return render(node.name)
-}
+})
