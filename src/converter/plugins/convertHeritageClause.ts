@@ -1,9 +1,12 @@
 import ts from "typescript";
 import {createSimplePlugin} from "../plugin";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertHeritageClause = createSimplePlugin((node, context, render) => {
     if (!ts.isHeritageClause(node)) return null
-    context.cover(node)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
 
     const types = node.types
         .map(type => render(type))

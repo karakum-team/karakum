@@ -1,9 +1,12 @@
 import {createSimplePlugin} from "../plugin";
 import ts, {SyntaxKind} from "typescript";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertPrefixUnaryExpression = createSimplePlugin((node, context) =>  {
     if (!ts.isPrefixUnaryExpression(node)) return null
-    context.cover(node)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
 
     if (node.operator === SyntaxKind.TildeToken) {
         return `inv(${node.operand})`

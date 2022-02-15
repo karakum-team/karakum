@@ -1,35 +1,52 @@
 import ts from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {KOTLIN_KEYWORDS} from "../constants";
+import {generateRelativeFileName} from "../../utils/fileName";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 
-export const convertSourceFile = createSimplePlugin((node, context, render) => {
-    if (!ts.isSourceFile(node)) return null
-    context.cover(node)
-    context.cover(node.endOfFileToken)
+export function convertSourceFile(sourceFileRoot: string) {
+    return createSimplePlugin((node, context, render) => {
+        if (!ts.isSourceFile(node)) return null
 
-    const body = node.statements
-        .map(statement => render(statement))
-        .join("\n")
+        const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
 
-    const packageChunks = context.module.split("/")
-    packageChunks.pop()
+        checkCoverageService?.cover(node)
+        checkCoverageService?.cover(node.endOfFileToken)
 
-    const packageName = packageChunks
-        .map(it => {
-            if (KOTLIN_KEYWORDS.has(it)) {
-                return `\`${it}\``
-            } else {
-                return it
-            }
-        })
-        .join(".")
+        const relativeFileName = generateRelativeFileName(sourceFileRoot, node.fileName)
 
-    return `
-@file:JsModule("${context.module}")
+        const libraryName = configurationService?.configuration?.libraryName ?? ""
+
+        const module = relativeFileName !== ""
+            ? `${libraryName}/${relativeFileName}`
+            : libraryName;
+
+        const body = node.statements
+            .map(statement => render(statement))
+            .join("\n")
+
+        const packageChunks = module.split("/")
+        packageChunks.pop()
+
+        const packageName = packageChunks
+            .map(it => {
+                if (KOTLIN_KEYWORDS.has(it)) {
+                    return `\`${it}\``
+                } else {
+                    return it
+                }
+            })
+            .join(".")
+
+        return `
+@file:JsModule("${module}")
 @file:JsNonModule
 
 package ${packageName}
 
 ${body}
     `
-})
+    })
+}

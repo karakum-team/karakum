@@ -1,16 +1,19 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertFunctionDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionDeclaration(node)) return null
-    context.cover(node)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
 
     const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
-    exportModifier && context.cover(exportModifier)
+    exportModifier && checkCoverageService?.cover(exportModifier)
 
     // skip body
-    node.body && context.cover(node.body)
+    node.body && checkCoverageService?.cover(node.body)
 
     const name = (node.name && render(node.name)) ?? "Anonymous"
 

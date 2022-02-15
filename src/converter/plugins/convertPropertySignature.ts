@@ -1,12 +1,15 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
-    context.cover(node)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
 
     const readonly = node.modifiers?.find(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword)
-    readonly && context.cover(readonly)
+    readonly && checkCoverageService?.cover(readonly)
 
     const modifier = readonly
         ? "val "

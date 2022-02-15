@@ -1,11 +1,14 @@
 import ts from "typescript";
 import {createSimplePlugin} from "../plugin";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertParameterDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isParameter(node)) return null
-    context.cover(node)
-    node.dotDotDotToken && context.cover(node.dotDotDotToken)
-    node.questionToken && context.cover(node.questionToken)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
+    node.dotDotDotToken && checkCoverageService?.cover(node.dotDotDotToken)
+    node.questionToken && checkCoverageService?.cover(node.questionToken)
 
     const name = render(node.name)
 

@@ -1,14 +1,18 @@
-import {CommentRange, Node} from "typescript";
-
 export interface ConverterContext {
-    module: String
+    registerService<T>(key: symbol, service: T): void
+    lookupService<T>(key: symbol): T | undefined
+}
 
-    cover(node: Node): void
-    deepCover(node: Node): void
+export function createContext(): ConverterContext {
+    const services: Record<symbol, unknown> = {}
 
-    isCommentCovered(node: Node): boolean
-    coverComment(node: Node): void
+    return {
+        registerService<T>(key: symbol, service: T) {
+            services[key] = service
+        },
 
-    isCommentRangeCovered(node: CommentRange): boolean
-    coverCommentRange(commentRange: CommentRange): void
+        lookupService<T>(key: symbol): T | undefined {
+            return services[key] as T
+        },
+    }
 }

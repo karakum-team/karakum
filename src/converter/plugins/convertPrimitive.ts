@@ -1,6 +1,7 @@
 import {ConverterPlugin, createSimplePlugin} from "../plugin";
 import {Node} from "typescript";
 import {Render} from "../render";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export function convertPrimitive<TNode extends Node = Node>(
     predicate: (node: Node) => node is TNode,
@@ -18,7 +19,9 @@ export function convertPrimitive(
 ): ConverterPlugin {
     return createSimplePlugin((node, context) => {
         if (!predicate(node)) return null
-        context.cover(node)
+
+        const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        checkCoverageService?.cover(node)
 
         return render(node)
     })

@@ -1,12 +1,15 @@
 import ts, {NodeFlags} from "typescript";
 import {createSimplePlugin} from "../plugin";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
 export const convertVariableDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isVariableDeclaration(node)) return null
-    context.cover(node)
+
+    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    checkCoverageService?.cover(node)
 
     // skip initializer
-    node.initializer && context.cover(node.initializer)
+    node.initializer && checkCoverageService?.cover(node.initializer)
 
     const modifier = node.parent.flags & NodeFlags.Const
         ? "val "
