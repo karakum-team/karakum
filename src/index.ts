@@ -138,7 +138,9 @@ export function process(configuration: Configuration) {
 
     const sources = rootNames.map(fileName => fileName.split("/"))
 
-    const sourceFileRoot = commonPrefix(...sources).join("/") + "/"
+    const sourceFileRoot = rootNames.length === 1
+        ? path.dirname(rootNames[0]) + "/"
+        : commonPrefix(...sources).join("/") + "/"
 
     console.log(`Source files root: ${sourceFileRoot}`)
 
