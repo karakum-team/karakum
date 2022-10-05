@@ -15,6 +15,18 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
         ?.map(typeParameter => render(typeParameter))
         ?.join(", ")
 
+    if (ts.isTypeLiteralNode(node.type)) {
+        const members = node.type.members
+            .map(member => render(member))
+            .join("\n")
+
+        return `
+external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
+${members}
+}
+        `
+    }
+
     const type = render(node.type)
 
     return `typealias ${name}${ifPresent(typeParameters, it => `<${it}>`)} = ${type}`
