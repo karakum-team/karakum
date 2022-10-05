@@ -5,6 +5,9 @@ import {Configuration} from "./configuration/configuration";
 
 const argv = yargs(hideBin(process.argv))
     .config("config")
+    .parserConfiguration({
+        "dot-notation": false
+    })
     .parseSync()
 
 // TODO: Specify all config params explicitly
