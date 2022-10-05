@@ -1,6 +1,7 @@
 import ts, {Node, SyntaxKind} from "typescript";
 import {Configuration} from "./configuration/configuration";
-import {glob} from "glob";
+import glob from "glob";
+import minimatch from "minimatch";
 // import {preprocess} from "./preprocessor/preprocessor";
 // import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
 import fs from "fs";
@@ -103,11 +104,14 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
 ]
 
 export function process(configuration: Configuration) {
-    const {input, output, compilerOptions} = configuration
+    const {input, output, ignore, compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
+    const normalizedIgnore = ignore !== undefined
+        ? typeof ignore === "string" ? [ignore] : ignore
+        : []
 
-    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern))
+    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {ignore}))
 
     const preparedCompilerOptions = {
         lib: [],
@@ -161,22 +165,26 @@ export function process(configuration: Configuration) {
         return `/* ${node.getText()} */`
     }
 
-    program.getSourceFiles().forEach(sourceFile => {
-        console.log(`Source file: ${sourceFile.fileName}`)
+    program.getSourceFiles()
+        .filter(sourceFile => {
+            return normalizedIgnore.every(pattern => !minimatch(sourceFile.fileName, pattern))
+        })
+        .forEach(sourceFile => {
+            console.log(`Source file: ${sourceFile.fileName}`)
 
-        const targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, sourceFile.fileName))
+            const targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, sourceFile.fileName))
 
-        console.log(`Target file: ${targetFileName}`)
+            console.log(`Target file: ${targetFileName}`)
 
-        // const preprocessedFile = preprocess(sourceFile, [
-        //     createMergeInterfacesTransformer(program),
-        // ])
+            // const preprocessedFile = preprocess(sourceFile, [
+            //     createMergeInterfacesTransformer(program),
+            // ])
 
-        const convertedFile = render(sourceFile)
+            const convertedFile = render(sourceFile)
 
-        fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
-        fs.writeFileSync(targetFileName, convertedFile, {})
-    })
+            fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
+            fs.writeFileSync(targetFileName, convertedFile, {})
+        })
 
     for (const plugin of plugins) {
         plugin.generate(context)
