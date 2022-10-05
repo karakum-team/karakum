@@ -45,7 +45,7 @@ export function convertSourceFile(sourceFileRoot: string) {
                     return it
                 }
             })
-            .map(it => it.replace("-", "."))
+            .map(it => it.replace(/-/g, "."))
             .join(".")
 
         return `
