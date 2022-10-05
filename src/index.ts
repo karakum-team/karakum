@@ -130,7 +130,9 @@ export function process(configuration: Configuration) {
 
     console.log(`Source files root: ${sourceFileRoot}`)
 
-    fs.rmdirSync(output, {recursive: true})
+    if (fs.existsSync(output)) {
+        fs.rmSync(output, {recursive: true})
+    }
     fs.mkdirSync(output, {recursive: true})
 
     const context = createContext()

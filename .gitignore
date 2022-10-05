@@ -4,3 +4,7 @@ node_modules/
 # IDE config
 .idea/
 *.iml
+
+# Output directories
+build/
+dist/
