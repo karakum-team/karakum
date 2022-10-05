@@ -2,6 +2,7 @@ import {ConverterPlugin} from "../plugin";
 import {Node, SyntaxKind} from "typescript";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 
 const supportedKinds: SyntaxKind[] = [
     SyntaxKind.SourceFile, // lines
@@ -80,8 +81,10 @@ export class CheckKindsPlugin implements ConverterPlugin {
         return null;
     }
 
-    traverse(node: Node): void {
-        if (!supportedKinds.includes(node.kind)) {
+    traverse(node: Node, context: ConverterContext): void {
+        const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
+
+        if (configurationService?.configuration?.verbose && !supportedKinds.includes(node.kind)) {
             console.error(`Unknown syntax kind ${SyntaxKind[node.kind]}`)
         }
     }

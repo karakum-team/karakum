@@ -111,7 +111,10 @@ export function process(configuration: Configuration) {
         ? typeof ignore === "string" ? [ignore] : ignore
         : []
 
-    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {ignore}))
+    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
+        absolute: true,
+        ignore,
+    }))
 
     const preparedCompilerOptions = {
         lib: [],
@@ -125,10 +128,7 @@ export function process(configuration: Configuration) {
 
     console.log(`Source files count: ${program.getSourceFiles().length}`)
 
-    const sources = ([] as string[][]).concat(
-        normalizedInput.map(pattern => pattern.split("/")),
-        rootNames.map(fileName => fileName.split("/")),
-    )
+    const sources = rootNames.map(fileName => fileName.split("/"))
 
     const sourceFileRoot = commonPrefix(...sources).join("/") + "/"
 
