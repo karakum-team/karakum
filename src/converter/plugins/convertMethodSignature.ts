@@ -16,7 +16,7 @@ export const convertMethodSignature = createSimplePlugin((node, context, render)
         ?.join(", ")
 
     const parameters = node.parameters
-        ?.map(heritageClause => render(heritageClause))
+        ?.map(parameter => render(parameter))
         ?.join(", ")
 
     const returnType = node.type && render(node.type)

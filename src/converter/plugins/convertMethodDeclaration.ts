@@ -3,11 +3,13 @@ import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
-export const convertCallSignature = createSimplePlugin((node, context, render) => {
-    if (!ts.isCallSignatureDeclaration(node)) return null
+export const convertMethodDeclaration = createSimplePlugin((node, context, render) => {
+    if (!ts.isMethodDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const name = render(node.name)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -19,5 +21,5 @@ export const convertCallSignature = createSimplePlugin((node, context, render) =
 
     const returnType = node.type && render(node.type)
 
-    return `fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+    return `fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
 })

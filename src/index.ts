@@ -6,7 +6,7 @@ import minimatch from "minimatch";
 // import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
 import fs from "fs";
 import path from "path";
-import {commonPrefix, generateOutputFileName} from "./utils/fileName";
+import {commonPrefix, generateTargetFileName} from "./utils/fileName";
 import {ConverterPlugin} from "./converter/plugin";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
@@ -43,6 +43,10 @@ import {traverse} from "./utils/traverse";
 import {createContext} from "./converter/context";
 import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin";
 import {CommentsPlugin} from "./converter/plugins/CommentsPlugin";
+import {convertClassDeclaration} from "./converter/plugins/convertClassDeclaration";
+import {convertMethodDeclaration} from "./converter/plugins/convertMethodDeclaration";
+import {convertConstructorDeclaration} from "./converter/plugins/convertConstructorDeclaration";
+import {TypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -54,6 +58,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertSourceFile(sourceFileRoot),
 
     new CommentsPlugin(),
+    new TypeLiteralPlugin(sourceFileRoot),
 
     convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
 
@@ -77,6 +82,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertModuleDeclaration,
     convertModuleBlock,
     convertInterfaceDeclaration,
+    convertClassDeclaration,
     convertTypeParameterDeclaration,
     convertParameterDeclaration,
     convertTypeReferenceNode,
@@ -84,6 +90,8 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertExpressionWithTypeArguments,
     convertPropertySignature,
     convertMethodSignature,
+    convertMethodDeclaration,
+    convertConstructorDeclaration,
     convertFunctionType,
     convertLiteralType,
     convertArrayType,
@@ -172,13 +180,7 @@ export function process(configuration: Configuration) {
         .forEach(sourceFile => {
             console.log(`Source file: ${sourceFile.fileName}`)
 
-            let targetFileName: string
-
-            if (singlePackage) {
-                targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, path.basename(sourceFile.fileName)))
-            } else {
-                targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, sourceFile.fileName))
-            }
+            const targetFileName = generateTargetFileName(sourceFileRoot, output, sourceFile.fileName, singlePackage)
 
             console.log(`Target file: ${targetFileName}`)
 
@@ -189,10 +191,18 @@ export function process(configuration: Configuration) {
             const convertedFile = render(sourceFile)
 
             fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
-            fs.writeFileSync(targetFileName, convertedFile, {})
+            fs.writeFileSync(targetFileName, convertedFile)
         })
 
     for (const plugin of plugins) {
-        plugin.generate(context)
+        const generated = plugin.generate(context)
+
+        for (const [fileName, content] of Object.entries(generated)) {
+            if (fs.existsSync(fileName)) {
+                fs.appendFileSync(fileName, content)
+            } else {
+                fs.writeFileSync(fileName, content)
+            }
+        }
     }
 }

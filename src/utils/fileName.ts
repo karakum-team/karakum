@@ -1,3 +1,5 @@
+import path from "path";
+
 export function commonPrefix(...sources: string[][]): string[] {
     const [first, second, ...rest] = sources
 
@@ -19,7 +21,7 @@ export function commonPrefix(...sources: string[][]): string[] {
     return commonPrefix(common, ...rest)
 }
 
-export function generateOutputFileName(prefix: string, sourceFileName: string) {
+function generateOutputFileName(prefix: string, sourceFileName: string) {
     return sourceFileName
         .replace(prefix, "")
         .replace(/\.d\.ts$/, ".kt")
@@ -31,4 +33,21 @@ export function generateRelativeFileName(prefix: string, sourceFileName: string)
         .replace(prefix, "")
         .replace(/\.d\.ts$/, "")
         .replace(/\.ts$/, "")
+}
+
+export function generateTargetFileName(
+    prefix: string,
+    output: string,
+    sourceFileName: string,
+    singlePackage: boolean | undefined,
+) {
+    let targetFileName: string
+
+    if (singlePackage) {
+        targetFileName = path.resolve(output, generateOutputFileName(prefix, path.basename(sourceFileName)))
+    } else {
+        targetFileName = path.resolve(output, generateOutputFileName(prefix, sourceFileName))
+    }
+
+    return targetFileName
 }

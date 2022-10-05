@@ -3,6 +3,7 @@ import path from "path";
 
 process({
     input: path.resolve(__dirname, "lib/**"),
-    output: path.resolve(__dirname, "dist"),
+    output: path.resolve(__dirname, "generated"),
     libraryName: "sandbox",
+    verbose: true,
 })
