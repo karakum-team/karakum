@@ -7,8 +7,9 @@ export type Configuration = {
     ignore?: string | string[];
 
     libraryName?: string;
-    singlePackage?: boolean;
-    // TODO: provide file name mapping
+
+    moduleNameMapper?: Record<string, string>
+    packageNameMapper?: Record<string, string>
 
     compilerOptions?: CompilerOptions;
 

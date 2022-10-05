@@ -2,7 +2,7 @@ import {ConverterPlugin} from "../plugin";
 import ts from "typescript";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
-import {capitalize} from "../../utils/capitalize";
+import {capitalize} from "../../utils/strings";
 import {generateTargetFileName} from "../../utils/fileName";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
@@ -20,12 +20,12 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         const output = configurationService?.configuration?.output
         if (output === undefined) throw new Error("Output should be defined in configuration")
 
-        const singlePackage = configurationService?.configuration?.singlePackage
+        const packageNameMapper = configurationService?.configuration?.packageNameMapper
 
         return Object.fromEntries(
             Object.entries(this.generated)
                 .map(([fileName, declarations]) => {
-                    const targetFileName = generateTargetFileName(this.sourceFileRoot, output, fileName, singlePackage)
+                    const targetFileName = generateTargetFileName(this.sourceFileRoot, output, fileName, packageNameMapper)
                     return [targetFileName, declarations.join("\n\n")];
                 })
         );
