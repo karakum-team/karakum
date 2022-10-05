@@ -7,6 +7,9 @@ export type Configuration = {
     ignore?: string | string[];
 
     libraryName?: string;
+    singlePackage?: boolean;
+    // TODO: provide file name mapping
+
     compilerOptions?: CompilerOptions;
 
     verbose?: boolean;

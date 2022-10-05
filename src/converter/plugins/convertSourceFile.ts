@@ -18,6 +18,7 @@ export function convertSourceFile(sourceFileRoot: string) {
         const relativeFileName = generateRelativeFileName(sourceFileRoot, node.fileName)
 
         const libraryName = configurationService?.configuration?.libraryName ?? ""
+        const singlePackage = configurationService?.configuration?.singlePackage ?? false
 
         const module = relativeFileName !== ""
             ? `${libraryName}/${relativeFileName}`
@@ -27,8 +28,14 @@ export function convertSourceFile(sourceFileRoot: string) {
             .map(statement => render(statement))
             .join("\n")
 
-        const packageChunks = module.split("/")
-        packageChunks.pop()
+        let packageChunks: string[]
+
+        if (singlePackage) {
+            packageChunks = [libraryName]
+        } else {
+            packageChunks = module.split("/")
+            packageChunks.pop()
+        }
 
         const packageName = packageChunks
             .map(it => {
@@ -38,6 +45,7 @@ export function convertSourceFile(sourceFileRoot: string) {
                     return it
                 }
             })
+            .map(it => it.replace("-", "."))
             .join(".")
 
         return `

@@ -104,7 +104,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
 ]
 
 export function process(configuration: Configuration) {
-    const {input, output, ignore, compilerOptions} = configuration
+    const {input, output, ignore, singlePackage, compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
     const normalizedIgnore = ignore !== undefined
@@ -172,7 +172,13 @@ export function process(configuration: Configuration) {
         .forEach(sourceFile => {
             console.log(`Source file: ${sourceFile.fileName}`)
 
-            const targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, sourceFile.fileName))
+            let targetFileName: string
+
+            if (singlePackage) {
+                targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, path.basename(sourceFile.fileName)))
+            } else {
+                targetFileName = path.resolve(output, generateOutputFileName(sourceFileRoot, sourceFile.fileName))
+            }
 
             console.log(`Target file: ${targetFileName}`)
 
