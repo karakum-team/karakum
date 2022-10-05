@@ -11,6 +11,8 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
     const readonly = node.modifiers?.find(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword)
     readonly && checkCoverageService?.cover(readonly)
 
+    node.questionToken && checkCoverageService?.cover(node.questionToken)
+
     const modifier = readonly
         ? "val "
         : "var "

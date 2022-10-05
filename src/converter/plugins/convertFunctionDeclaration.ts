@@ -12,6 +12,9 @@ export const convertFunctionDeclaration = createSimplePlugin((node, context, ren
     const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
+    const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+    declareModifier && checkCoverageService?.cover(declareModifier)
+
     // skip body
     node.body && checkCoverageService?.cover(node.body)
 

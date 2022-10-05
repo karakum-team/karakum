@@ -53,7 +53,10 @@ export class CheckCoveragePlugin implements ConverterPlugin {
 
         const {coveredNodes, uncoveredNodes} = this.checkCoverageService.emit( uncoveredNode => {
             if (configurationService?.configuration?.verbose) {
-                console.error(`Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`)
+                const sourceFile = uncoveredNode.getSourceFile()
+                const {line, character} = sourceFile.getLineAndCharacterOfPosition(uncoveredNode.pos)
+
+                console.error(`${uncoveredNode.getSourceFile().fileName}: (${line + 1}, ${character + 1}): Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`)
 
                 console.error("--- Node Start ---");
                 console.error(this.printer.printNode(EmitHint.Unspecified, uncoveredNode, uncoveredNode.getSourceFile()));

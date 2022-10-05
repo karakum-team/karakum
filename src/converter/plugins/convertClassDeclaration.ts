@@ -12,6 +12,9 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
+    const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+    declareModifier && checkCoverageService?.cover(declareModifier)
+
     const name = (node.name && render(node.name)) ?? "Anonymous"
 
     const typeParameters = node.typeParameters
