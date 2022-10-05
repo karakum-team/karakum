@@ -3,6 +3,7 @@ import ts, {EmitHint, Node, SyntaxKind} from "typescript";
 import {Render} from "../render";
 import {ConverterContext} from "../context";
 import {traverse} from "../../utils/traverse";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 
 export const checkCoverageServiceKey = Symbol()
 
@@ -47,15 +48,19 @@ export class CheckCoveragePlugin implements ConverterPlugin {
 
     private readonly printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
 
-    generate(): Record<string, string> {
+    generate(context: ConverterContext): Record<string, string> {
+        const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
+
         const {coveredNodes, uncoveredNodes} = this.checkCoverageService.emit( uncoveredNode => {
-            console.error(`Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`)
+            if (configurationService?.configuration?.verbose) {
+                console.error(`Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`)
 
-            console.error("--- Node Start ---");
-            console.error(this.printer.printNode(EmitHint.Unspecified, uncoveredNode, uncoveredNode.getSourceFile()));
-            console.error("--- Node End ---");
+                console.error("--- Node Start ---");
+                console.error(this.printer.printNode(EmitHint.Unspecified, uncoveredNode, uncoveredNode.getSourceFile()));
+                console.error("--- Node End ---");
 
-            console.error();
+                console.error();
+            }
         })
 
         console.log(`Covered nodes: ${coveredNodes}`)
