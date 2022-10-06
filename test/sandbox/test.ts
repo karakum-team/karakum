@@ -7,3 +7,4 @@ process({
     libraryName: "sandbox",
     verbose: true,
 })
+    .catch(error => console.error(error))

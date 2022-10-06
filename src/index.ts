@@ -7,7 +7,7 @@ import minimatch from "minimatch";
 import fs from "fs";
 import path from "path";
 import {commonPrefix, generateTargetFileName} from "./utils/fileName";
-import {ConverterPlugin} from "./converter/plugin";
+import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
 import {convertSourceFile} from "./converter/plugins/convertSourceFile";
@@ -55,9 +55,6 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),
 
-    convertSourceFile(sourceFileRoot),
-
-    new CommentsPlugin(),
     new NullableUnionTypePlugin(),
     new TypeLiteralPlugin(sourceFileRoot),
 
@@ -111,17 +108,28 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertTypePredicate,
 ]
 
-export function process(configuration: Configuration) {
-    const {input, output, ignore, packageNameMapper, compilerOptions} = configuration
+export const defaultPluginPatterns = [
+    "karakum/**/*.js"
+]
+
+export async function process(configuration: Configuration) {
+    const {input, output, ignore, plugins: pluginPatterns, packageNameMapper, compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
     const normalizedIgnore = ignore !== undefined
         ? typeof ignore === "string" ? [ignore] : ignore
         : []
+    const normalizedPluginPatterns = pluginPatterns !== undefined
+        ? typeof pluginPatterns === "string" ? [pluginPatterns] : pluginPatterns
+        : defaultPluginPatterns
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
         ignore,
+    }))
+
+    const pluginFileNames = normalizedPluginPatterns.flatMap(pattern => glob.sync(pattern, {
+        absolute: true,
     }))
 
     const preparedCompilerOptions = {
@@ -151,7 +159,33 @@ export function process(configuration: Configuration) {
 
     const context = createContext()
 
-    const plugins = createPlugins(sourceFileRoot, configuration)
+    const customPlugins: ConverterPlugin[] = []
+
+    for (const pluginFileName of pluginFileNames) {
+        console.log(`Plugin file: ${pluginFileName}`)
+
+        const pluginModule: { default: unknown } = await import(pluginFileName)
+        const plugin = pluginModule.default
+
+        if (typeof plugin === "function") {
+            customPlugins.push(createSimplePlugin(plugin as SimpleConverterPlugin))
+        } else {
+            customPlugins.push(plugin as ConverterPlugin)
+        }
+    }
+
+    const defaultPlugins = createPlugins(sourceFileRoot, configuration)
+
+    const plugins = [
+        // assosiate first comment in with first expression
+        convertSourceFile(sourceFileRoot),
+
+        // it is important to handle comments at first
+        new CommentsPlugin(),
+
+        ...customPlugins,
+        ...defaultPlugins
+    ]
 
     for (const plugin of plugins) {
         plugin.setup(context)

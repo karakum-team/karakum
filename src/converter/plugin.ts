@@ -12,8 +12,11 @@ export interface ConverterPlugin<TNode extends Node = Node> {
     generate(context: ConverterContext): Record<string, string>
 }
 
+export type SimpleConverterPlugin<TNode extends Node = Node> =
+    (node: TNode, context: ConverterContext, next: Render) => string | null
+
 export function createSimplePlugin<TNode extends Node = Node>(
-    render: (node: TNode, context: ConverterContext, next: Render) => string | null
+    render: SimpleConverterPlugin<TNode>
 ): ConverterPlugin<TNode> {
     return {
         setup: () => undefined,

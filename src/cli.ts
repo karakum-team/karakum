@@ -12,3 +12,4 @@ const argv = yargs(hideBin(process.argv))
 
 // TODO: Specify all config params explicitly
 mainProcess(argv as unknown as Configuration)
+    .catch(error => console.error(error))

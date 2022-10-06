@@ -6,6 +6,8 @@ export type Configuration = {
 
     ignore?: string | string[];
 
+    plugins?: string | string[];
+
     libraryName?: string;
 
     moduleNameMapper?: Record<string, string>
