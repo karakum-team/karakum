@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
@@ -9,6 +9,12 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    exportModifier && checkCoverageService?.cover(exportModifier)
+
+    const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+    declareModifier && checkCoverageService?.cover(declareModifier)
+
     const name = render(node.name)
 
     const typeParameters = node.typeParameters
@@ -16,6 +22,8 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
         ?.join(", ")
 
     if (ts.isTypeLiteralNode(node.type)) {
+        checkCoverageService?.cover(node.type)
+
         const members = node.type.members
             .map(member => render(member))
             .join("\n")

@@ -34,7 +34,7 @@ import {convertVariableDeclaration} from "./converter/plugins/convertVariableDec
 import {convertQualifiedName} from "./converter/plugins/convertQualifiedName";
 import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUnaryExpression";
 import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType";
-import {convertOptionalUnionType} from "./converter/plugins/convertOptionalUnionType";
+import {convertNullableUnionType} from "./converter/plugins/convertNullableUnionType";
 import {convertUnionTypeHierarchy} from "./converter/plugins/convertUnionTypeHierarchy";
 import {convertCallSignature} from "./converter/plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
@@ -104,7 +104,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertQualifiedName,
     convertPrefixUnaryExpression,
     convertParenthesizedType,
-    convertOptionalUnionType,
+    convertNullableUnionType,
     convertUnionTypeHierarchy,
     convertCallSignature,
     convertFunctionDeclaration,

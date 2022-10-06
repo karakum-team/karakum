@@ -8,7 +8,7 @@ export const convertFunctionType = createSimplePlugin((node, context, render) =>
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    if(node.typeParameters) {
+    if (node.typeParameters) {
         // TODO: supports generics
         return "(vararg args: Any?) -> Any?"
     }

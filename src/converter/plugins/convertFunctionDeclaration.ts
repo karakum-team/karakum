@@ -2,6 +2,8 @@ import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {prepareParameters} from "./prepareParameters";
+import {convertParameterDeclarationWithFixedType} from "./convertParameterDeclaration";
 
 export const convertFunctionDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionDeclaration(node)) return null
@@ -24,11 +26,19 @@ export const convertFunctionDeclaration = createSimplePlugin((node, context, ren
         ?.map(typeParameter => render(typeParameter))
         ?.join(", ")
 
-    const parameters = node.parameters
-        ?.map(parameter => render(parameter))
-        ?.join(", ")
+    const signatures = prepareParameters(node, context)
 
     const returnType = node.type && render(node.type)
 
-    return `external fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+    return signatures
+        .map(signature => {
+            const parameters = signature
+                .map(({ parameter, type, nullable}) => {
+                    return convertParameterDeclarationWithFixedType(parameter, type, nullable, context, render);
+                })
+                .join(", ")
+
+            return `external fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+        })
+        .join("\n\n")
 })
