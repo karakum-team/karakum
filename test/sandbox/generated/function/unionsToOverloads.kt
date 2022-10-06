@@ -2,7 +2,13 @@
 @file:JsModule("sandbox/function/unionsToOverloads")
 @file:JsNonModule
 
+@file:Suppress(
+    "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
+)
+
 package sandbox.function
+
+
 
 
 external interface A {
@@ -10,15 +16,18 @@ var brand: String
 }
     
 
+
 external interface B {
 var brand: String
 }
     
 
+
 external interface C {
 var brand: String
 }
     
+
 external fun exampleFn(firstParam: A, secondParam: B, thirdParam: A): Boolean
 
 external fun exampleFn(firstParam: A, secondParam: B, thirdParam: B): Boolean

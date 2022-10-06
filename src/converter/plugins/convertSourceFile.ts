@@ -69,7 +69,7 @@ export function convertSourceFile(sourceFileRoot: string) {
 
         const body = node.statements
             .map(statement => render(statement))
-            .join("\n")
+            .join("\n\n")
 
         return `
 @file:JsModule("${moduleName}")

@@ -2,9 +2,16 @@
 @file:JsModule("sandbox/typeLiteral/functionParameter")
 @file:JsNonModule
 
+@file:Suppress(
+    "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
+)
+
 package sandbox.typeLiteral
 
+
+
 external fun createMemoryRouter(routes: Array<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
+
 
 external class MyClass  {
 constructor (options: MyClassOptions)
