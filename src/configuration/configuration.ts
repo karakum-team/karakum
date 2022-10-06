@@ -11,6 +11,8 @@ export type Configuration = {
     moduleNameMapper?: Record<string, string>
     packageNameMapper?: Record<string, string>
 
+    importInjector?: Record<string, string[]>
+
     compilerOptions?: CompilerOptions;
 
     verbose?: boolean;

@@ -20,6 +20,7 @@ export function convertSourceFile(sourceFileRoot: string) {
         const libraryName = configurationService?.configuration?.libraryName ?? ""
         const moduleNameMapper = configurationService?.configuration?.moduleNameMapper
         const packageNameMapper = configurationService?.configuration?.packageNameMapper
+        const importInjector = configurationService?.configuration?.importInjector
 
         const relativeFileName = generateRelativeFileName(sourceFileRoot, node.fileName)
         const mappedRelativeFileName = applyMapper(relativeFileName, moduleNameMapper)
@@ -51,6 +52,21 @@ export function convertSourceFile(sourceFileRoot: string) {
             })
             .join(".")
 
+        let importSources: string[] = []
+
+        for (const [pattern, imports] of Object.entries(importInjector ?? {})) {
+            const regexp = new RegExp(pattern)
+
+            if (regexp.test(mappedOutputFileName)) {
+                importSources = importSources.concat(imports)
+                break
+            }
+        }
+
+        const imports = importSources
+            .map(it => `import ${it}`)
+            .join("\n")
+
         const body = node.statements
             .map(statement => render(statement))
             .join("\n")
@@ -64,6 +80,8 @@ export function convertSourceFile(sourceFileRoot: string) {
 )
 
 package ${packageName}
+
+${imports}
 
 ${body}
     `
