@@ -1,7 +1,7 @@
 import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "typescript";
 import {ConverterContext} from "../context";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {isNullableType, isNullableUnionType} from "./convertNullableUnionType";
+import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
 
 interface ParameterInfo {
     parameter: ParameterDeclaration,

@@ -34,7 +34,7 @@ import {convertVariableDeclaration} from "./converter/plugins/convertVariableDec
 import {convertQualifiedName} from "./converter/plugins/convertQualifiedName";
 import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUnaryExpression";
 import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType";
-import {convertNullableUnionType} from "./converter/plugins/convertNullableUnionType";
+import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin";
 import {convertUnionTypeHierarchy} from "./converter/plugins/convertUnionTypeHierarchy";
 import {convertCallSignature} from "./converter/plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
@@ -58,14 +58,15 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertSourceFile(sourceFileRoot),
 
     new CommentsPlugin(),
+    new NullableUnionTypePlugin(),
     new TypeLiteralPlugin(sourceFileRoot),
 
     convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),
-    convertPrimitive(hasKind(SyntaxKind.UndefinedKeyword), () => "null"),
-    convertPrimitive(hasKind(SyntaxKind.NullKeyword), () => "null"),
+    convertPrimitive(hasKind(SyntaxKind.UndefinedKeyword), () => ""), // covered by nullability
+    convertPrimitive(hasKind(SyntaxKind.NullKeyword), () => ""), // covered by nullability
     convertPrimitive(hasKind(SyntaxKind.ObjectKeyword), () => "Any"),
     convertPrimitive(hasKind(SyntaxKind.StringKeyword), () => "String"),
     convertPrimitive(hasKind(SyntaxKind.NumberKeyword), () => "Double"),
@@ -104,7 +105,6 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertQualifiedName,
     convertPrefixUnaryExpression,
     convertParenthesizedType,
-    convertNullableUnionType,
     convertUnionTypeHierarchy,
     convertCallSignature,
     convertFunctionDeclaration,
