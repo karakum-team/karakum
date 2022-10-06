@@ -22,7 +22,16 @@ export const convertParameterDeclarationWithFixedType = (
     node.dotDotDotToken && checkCoverageService?.cover(node.dotDotDotToken)
     node.questionToken && checkCoverageService?.cover(node.questionToken)
 
-    const name = render(node.name)
+    const parameterIndex = node.parent.parameters.indexOf(node)
+    let name = parameterIndex === 0
+        ? "param"
+        : `param${parameterIndex}`
+
+    if (ts.isIdentifier(node.name)) {
+        name = render(node.name)
+    } else {
+        checkCoverageService?.deepCover(node.name)
+    }
 
     let renderedType = type && render(type)
 

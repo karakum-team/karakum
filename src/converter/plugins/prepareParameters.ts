@@ -33,7 +33,10 @@ export const prepareParameters = (node: SignatureDeclarationBase, context: Conve
                 const nullable = isNullableUnionType(type)
 
                 for (const subtype of type.types) {
-                    if (isNullableType(subtype)) continue
+                    if (isNullableType(subtype)) {
+                        checkCoverageService?.deepCover(type)
+                        continue
+                    }
 
                     const generatedSignature: Signature = [...signature]
                     const parameterInfo = {
