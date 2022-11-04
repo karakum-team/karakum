@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/union/simple")
+@file:JsModule("sandbox-base/union/simple")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.union
+package sandbox.base.union
 
 
 

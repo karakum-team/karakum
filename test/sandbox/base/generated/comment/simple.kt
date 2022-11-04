@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/comment/simple")
+@file:JsModule("sandbox-base/comment/simple")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.comment
+package sandbox.base.comment
 
 
 

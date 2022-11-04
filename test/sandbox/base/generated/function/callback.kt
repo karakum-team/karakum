@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/function/callback")
+@file:JsModule("sandbox-base/function/callback")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.function
+package sandbox.base.function
 
 
 

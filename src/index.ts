@@ -6,11 +6,10 @@ import minimatch from "minimatch";
 // import {createMergeInterfacesTransformer} from "./preprocessor/transformers/mergeInterfacesTransformer";
 import fs from "fs";
 import path from "path";
-import {commonPrefix, generateTargetFileName} from "./utils/fileName";
+import {commonPrefix} from "./utils/fileName";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
-import {convertSourceFile} from "./converter/plugins/convertSourceFile";
 import {convertPrimitive} from "./converter/plugins/convertPrimitive";
 import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration";
 import {convertModuleBlock} from "./converter/plugins/convertModuleBlock";
@@ -46,7 +45,10 @@ import {CommentsPlugin} from "./converter/plugins/CommentsPlugin";
 import {convertClassDeclaration} from "./converter/plugins/convertClassDeclaration";
 import {convertMethodDeclaration} from "./converter/plugins/convertMethodDeclaration";
 import {convertConstructorDeclaration} from "./converter/plugins/convertConstructorDeclaration";
+import {convertPropertyDeclaration} from "./converter/plugins/convertPropertyDeclaration";
 import {TypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
+import {prepareFileStructure} from "./structure/prepareFileStructure";
+import {createTargetFile} from "./structure/createTargetFile";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -87,6 +89,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertHeritageClause,
     convertExpressionWithTypeArguments,
     convertPropertySignature,
+    convertPropertyDeclaration,
     convertMethodSignature,
     convertMethodDeclaration,
     convertConstructorDeclaration,
@@ -113,7 +116,7 @@ export const defaultPluginPatterns = [
 ]
 
 export async function process(configuration: Configuration) {
-    const {input, output, ignore, plugins: pluginPatterns, packageNameMapper, compilerOptions} = configuration
+    const {input, output, ignore, plugins: pluginPatterns, compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
     const normalizedIgnore = ignore !== undefined
@@ -177,9 +180,6 @@ export async function process(configuration: Configuration) {
     const defaultPlugins = createPlugins(sourceFileRoot, configuration)
 
     const plugins = [
-        // assosiate first comment in with first expression
-        convertSourceFile(sourceFileRoot),
-
         // it is important to handle comments at first
         new CommentsPlugin(),
 
@@ -191,13 +191,17 @@ export async function process(configuration: Configuration) {
         plugin.setup(context)
     }
 
-    program.getSourceFiles().forEach(sourceFile => {
-        traverse(sourceFile, node => {
-            for (const plugin of plugins) {
-                plugin.traverse(node, context)
-            }
+    const fileStructure = prepareFileStructure(sourceFileRoot, program, configuration)
+
+    fileStructure
+        .flatMap(it => it.nodes)
+        .forEach(node => {
+            traverse(node, node => {
+                for (const plugin of plugins) {
+                    plugin.traverse(node, context)
+                }
+            })
         })
-    })
 
     const render = (node: Node) => {
         for (const plugin of plugins) {
@@ -209,25 +213,27 @@ export async function process(configuration: Configuration) {
         return `/* ${node.getText()} */`
     }
 
-    program.getSourceFiles()
-        .filter(sourceFile => {
-            return normalizedIgnore.every(pattern => !minimatch(sourceFile.fileName, pattern))
+    fileStructure
+        .filter(item => {
+            return normalizedIgnore.every(pattern => !minimatch(item.sourceFileName, pattern))
         })
-        .forEach(sourceFile => {
-            console.log(`Source file: ${sourceFile.fileName}`)
+        .forEach(item => {
+            console.log(`Source file: ${item.sourceFileName}`)
+            console.log(`Target file: ${item.targetFileName}`)
 
-            const targetFileName = generateTargetFileName(sourceFileRoot, output, sourceFile.fileName, packageNameMapper)
+            const convertedBody = item.nodes
+                .map(node => render(node))
+                .join("\n\n")
 
-            console.log(`Target file: ${targetFileName}`)
+            const targetFile = createTargetFile(
+                sourceFileRoot,
+                item.sourceFileName,
+                convertedBody,
+                configuration,
+            )
 
-            // const preprocessedFile = preprocess(sourceFile, [
-            //     createMergeInterfacesTransformer(program),
-            // ])
-
-            const convertedFile = render(sourceFile)
-
-            fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
-            fs.writeFileSync(targetFileName, convertedFile)
+            fs.mkdirSync(path.dirname(item.targetFileName), {recursive: true})
+            fs.writeFileSync(item.targetFileName, targetFile)
         })
 
     for (const plugin of plugins) {

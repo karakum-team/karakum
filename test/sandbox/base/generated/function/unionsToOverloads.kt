@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/function/unionsToOverloads")
+@file:JsModule("sandbox-base/function/unionsToOverloads")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.function
+package sandbox.base.function
 
 
 

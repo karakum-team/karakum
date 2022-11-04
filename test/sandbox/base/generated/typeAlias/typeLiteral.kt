@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/typeAlias/typeLiteral")
+@file:JsModule("sandbox-base/typeAlias/typeLiteral")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.typeAlias
+package sandbox.base.typeAlias
 
 
 

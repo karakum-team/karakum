@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/interface/generic")
+@file:JsModule("sandbox-base/interface/generic")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.`interface`
+package sandbox.base.`interface`
 
 
 

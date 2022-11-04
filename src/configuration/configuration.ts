@@ -6,9 +6,11 @@ export type Configuration = {
 
     ignore?: string | string[];
 
-    plugins?: string | string[];
-
     libraryName?: string;
+
+    granularity?: /* TODO: support "bundle"*/ | "file" | "top-level"
+
+    plugins?: string | string[];
 
     moduleNameMapper?: Record<string, string>
     packageNameMapper?: Record<string, string>

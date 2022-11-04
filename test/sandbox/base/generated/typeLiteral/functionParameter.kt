@@ -1,12 +1,12 @@
 
-@file:JsModule("sandbox/typeLiteral/functionParameter")
+@file:JsModule("sandbox-base/typeLiteral/functionParameter")
 @file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.typeLiteral
+package sandbox.base.typeLiteral
 
 
 
