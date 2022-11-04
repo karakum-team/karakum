@@ -29,6 +29,14 @@ const interfaceMatcher: TopLevelMatcher = node => {
     return null
 }
 
+const typeAliasMatcher: TopLevelMatcher = node => {
+    if (ts.isTypeAliasDeclaration(node)) {
+        return node.name.text
+    }
+
+    return null
+}
+
 const enumMatcher: TopLevelMatcher = node => {
     if (ts.isEnumDeclaration(node)) {
         return node.name.text
@@ -48,6 +56,7 @@ const functionMatcher: TopLevelMatcher = node => {
 const topLevelMatchers: TopLevelMatcher[] = [
     classMatcher,
     interfaceMatcher,
+    typeAliasMatcher,
     enumMatcher,
     functionMatcher,
 ]

@@ -18,6 +18,8 @@ interface MyInterface {
     field: boolean
 }
 
+type MyTypeAlias = string
+
 enum MyEnum {
     FIRST,
     SECOND,
