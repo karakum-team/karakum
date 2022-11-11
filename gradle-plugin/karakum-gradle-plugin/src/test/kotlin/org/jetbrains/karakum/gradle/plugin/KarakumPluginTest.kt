@@ -10,7 +10,9 @@ class KarakumPluginTest {
         val project = ProjectBuilder.builder().build()
         project.plugins.apply("org.jetbrains.karakum")
 
-        // Verify the result
-        assertNotNull(project.tasks.findByName("karakum"))
+        // Verify tasks
+        assertNotNull(project.tasks.findByName("extractKarakumBinary"))
+        assertNotNull(project.tasks.findByName("makeKarakumBinaryExecutable"))
+        assertNotNull(project.tasks.findByName("generateExternals"))
     }
 }

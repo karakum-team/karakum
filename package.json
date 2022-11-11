@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf build dist",
+    "clean": "rimraf build gradle-plugin/karakum-gradle-plugin/build/karakum/bin",
     "build": "tsc --project tsconfig.build.json",
-    "pack": "pkg build/cli.js --out-path dist",
+    "pack": "pkg build/cli.js --out-path gradle-plugin/karakum-gradle-plugin/build/karakum/bin",
     "distribute": "npm run clean && npm run build && npm run pack",
     "test": "ts-node test/sandbox/test.ts"
   },

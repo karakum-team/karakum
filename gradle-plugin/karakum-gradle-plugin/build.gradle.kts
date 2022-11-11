@@ -8,6 +8,9 @@ repositories {
     mavenCentral()
 }
 
+group = "org.jetbrains.karakum"
+version = "1.0.0"
+
 dependencies {
     testImplementation(kotlin("test"))
 }
@@ -16,8 +19,9 @@ kotlin {
     jvmToolchain(14)
 }
 
-group = "org.jetbrains.karakum"
-version = "1.0.0"
+tasks.jar {
+  from(project.buildDir.resolve("karakum/bin"))
+}
 
 gradlePlugin {
     val karakum by plugins.creating {
