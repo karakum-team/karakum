@@ -1,2 +1,2 @@
 rootProject.name = "karakum-gradle-plugin"
-include("plugin")
+include("karakum-gradle-plugin")
