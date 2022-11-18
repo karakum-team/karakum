@@ -15,13 +15,13 @@
   "dependencies": {
     "glob": "^8.0.3",
     "minimatch": "^5.1.0",
-    "typescript": "^4.8.4",
-    "yargs": "^17.6.0"
+    "typescript": "^4.9.3",
+    "yargs": "^17.6.2"
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",
     "@types/minimatch": "^5.1.2",
-    "@types/node": "^18.8.2",
+    "@types/node": "^18.11.9",
     "@types/yargs": "^17.0.13",
     "pkg": "^5.8.0",
     "rimraf": "^3.0.2",
