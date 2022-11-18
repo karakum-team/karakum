@@ -4,6 +4,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Exec
+import org.jetbrains.karakum.gradle.plugin.tasks.KarakumConfig
 
 class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -45,6 +46,10 @@ class KarakumPlugin : Plugin<Project> {
             task.dependsOn("makeKarakumBinaryExecutable")
 
             task.commandLine(binaryFile, "--config", "karakum.config.json")
+        }
+
+        project.tasks.register("configureKarakum", KarakumConfig::class.java) { task ->
+            task.group = KARAKUM_GRADLE_PLUGIN_GROUP
         }
     }
 }
