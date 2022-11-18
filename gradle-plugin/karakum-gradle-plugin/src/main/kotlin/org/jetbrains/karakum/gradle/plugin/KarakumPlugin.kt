@@ -45,7 +45,7 @@ class KarakumPlugin : Plugin<Project> {
 
             task.dependsOn("makeKarakumBinaryExecutable")
 
-            task.commandLine(binaryFile, "--config", "karakum.config.json")
+            task.commandLine(binaryFile, "--config", KARAKUM_CONFIG_FILE)
         }
 
         project.tasks.register("configureKarakum", KarakumConfig::class.java) { task ->
