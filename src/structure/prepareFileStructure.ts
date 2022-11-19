@@ -1,10 +1,11 @@
 import path from "path";
 import ts, {Node, Program} from "typescript";
 import {Configuration} from "../configuration/configuration";
-import {generateTargetFileName} from "../utils/fileName";
+import {generateOutputFileName} from "../utils/fileName";
 
 interface FileStructureItem {
     sourceFileName: string,
+    outputFileName: string,
     targetFileName: string,
     nodes: ReadonlyArray<Node>
 }
@@ -77,6 +78,7 @@ function normalizeFileStructure(fileStructure: FileStructure) {
     for (const item of fileStructure) {
         const existingItem = result.get(item.targetFileName) ?? {
             sourceFileName: item.sourceFileName,
+            outputFileName: item.outputFileName,
             targetFileName: item.targetFileName,
             nodes: []
         }
@@ -107,10 +109,12 @@ export function prepareFileStructure(
 
     if (granularity === "file") {
         return sourceFiles.map(it => {
-            const targetFileName = generateTargetFileName(sourceFileRoot, output, it.fileName, packageNameMapper)
+            const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
+            const targetFileName = path.resolve(output, outputFileName)
 
             return ({
                 sourceFileName: it.fileName,
+                outputFileName,
                 targetFileName,
                 nodes: it.statements,
             });
@@ -120,22 +124,29 @@ export function prepareFileStructure(
     if (granularity === "top-level") {
         return normalizeFileStructure(
             sourceFiles.flatMap(it => {
-                const targetFileName = generateTargetFileName(sourceFileRoot, output, it.fileName, packageNameMapper)
+                const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
+                const targetFileName = path.resolve(output, outputFileName)
+
+                const outputDirName = path.dirname(outputFileName)
                 const targetDirName = path.dirname(targetFileName)
 
                 const result: FileStructure = []
 
                 for (const statement of it.statements) {
-                    let fileName = targetFileName
+                    let currentOutputFileName = outputFileName
+                    let currentTargetFileName = targetFileName
+
                     const topLevelName = topLevelMatcher(statement)
 
                     if (topLevelName !== null) {
-                        fileName = `${targetDirName}/${topLevelName}.kt`
+                        currentOutputFileName = `${outputDirName}/${topLevelName}.kt`
+                        currentTargetFileName = `${targetDirName}/${topLevelName}.kt`
                     }
 
                     result.push({
                         sourceFileName: it.fileName,
-                        targetFileName: fileName,
+                        outputFileName: currentOutputFileName,
+                        targetFileName: currentTargetFileName,
                         nodes: [statement]
                     })
                 }

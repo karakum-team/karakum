@@ -3,9 +3,10 @@ import ts from "typescript";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
 import {capitalize} from "../../utils/strings";
-import {generateTargetFileName} from "../../utils/fileName";
+import {generateOutputFileName} from "../../utils/fileName";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import path from "path";
 
 export class TypeLiteralPlugin implements ConverterPlugin {
     private counter = 0
@@ -25,8 +26,8 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         return Object.fromEntries(
             Object.entries(this.generated)
                 .map(([fileName, declarations]) => {
-                    const targetFileName = generateTargetFileName(this.sourceFileRoot, output, fileName, packageNameMapper)
-                    return [targetFileName, declarations.join("\n\n")];
+                    const outputFileName = generateOutputFileName(this.sourceFileRoot, fileName, packageNameMapper)
+                    return [path.resolve(output, outputFileName), declarations.join("\n\n")];
                 })
         );
     }

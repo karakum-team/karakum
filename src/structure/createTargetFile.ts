@@ -1,32 +1,27 @@
 import path from "path";
 import {Configuration} from "../configuration/configuration";
 import {KOTLIN_KEYWORDS} from "../converter/constants";
-import {applyMapper, generateOutputFileName, generateRelativeFileName} from "../utils/fileName";
-import {snakeToCamelCase} from "../utils/strings";
+import {applyMapper, generateRelativeFileName} from "../utils/fileName";
 
 export function createTargetFile(
     sourceFileRoot: string,
     sourceFileName: string,
+    outputFileName: string,
     body: string,
     configuration: Configuration,
 ) {
     const libraryName = configuration.libraryName ?? ""
     const moduleNameMapper = configuration.moduleNameMapper
-    const packageNameMapper = configuration.packageNameMapper
     const importInjector = configuration.importInjector
 
     const relativeFileName = generateRelativeFileName(sourceFileRoot, sourceFileName)
-    const mappedRelativeFileName = applyMapper(
-        relativeFileName, moduleNameMapper)
+    const mappedRelativeFileName = applyMapper(relativeFileName, moduleNameMapper)
 
     const moduleName = mappedRelativeFileName !== ""
         ? `${libraryName}/${mappedRelativeFileName}`
         : libraryName;
 
-    const outputFileName = generateOutputFileName(sourceFileRoot, sourceFileName)
-    const mappedOutputFileName = snakeToCamelCase(applyMapper(outputFileName, packageNameMapper))
-
-    let outputDirName = path.dirname(mappedOutputFileName)
+    let outputDirName = path.dirname(outputFileName)
     outputDirName = outputDirName === "." // handle root dir
         ? ""
         : outputDirName
@@ -51,7 +46,7 @@ export function createTargetFile(
     for (const [pattern, imports] of Object.entries(importInjector ?? {})) {
         const regexp = new RegExp(pattern)
 
-        if (regexp.test(mappedOutputFileName)) {
+        if (regexp.test(outputFileName)) {
             importSources = importSources.concat(imports)
             break
         }

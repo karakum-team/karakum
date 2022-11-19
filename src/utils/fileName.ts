@@ -1,4 +1,3 @@
-import path from "path";
 import {snakeToCamelCase} from "./strings";
 
 export function commonPrefix(...sources: string[][]): string[] {
@@ -34,11 +33,17 @@ export function applyMapper(sourceFileName: string, mapper: Record<string, strin
     return sourceFileName
 }
 
-export function generateOutputFileName(prefix: string, sourceFileName: string) {
-    return sourceFileName
+export function generateOutputFileName(
+    prefix: string,
+    sourceFileName: string,
+    packageNameMapper: Record<string, string> | undefined,
+) {
+    const fileName = sourceFileName
         .replace(prefix, "")
         .replace(/\.d\.ts$/, ".kt")
         .replace(/\.ts$/, ".kt")
+
+    return snakeToCamelCase(applyMapper(fileName, packageNameMapper))
 }
 
 export function generateRelativeFileName(prefix: string, sourceFileName: string) {
@@ -46,16 +51,4 @@ export function generateRelativeFileName(prefix: string, sourceFileName: string)
         .replace(prefix, "")
         .replace(/\.d\.ts$/, "")
         .replace(/\.ts$/, "")
-}
-
-export function generateTargetFileName(
-    prefix: string,
-    output: string,
-    sourceFileName: string,
-    packageNameMapper: Record<string, string> | undefined
-) {
-    const fileName = generateOutputFileName(prefix, sourceFileName)
-    const mappedFileName = snakeToCamelCase(applyMapper(fileName, packageNameMapper))
-
-    return path.resolve(output, mappedFileName)
 }

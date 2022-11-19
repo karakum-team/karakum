@@ -228,6 +228,7 @@ export async function process(configuration: Configuration) {
             const targetFile = createTargetFile(
                 sourceFileRoot,
                 item.sourceFileName,
+                item.outputFileName,
                 convertedBody,
                 configuration,
             )
