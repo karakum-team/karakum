@@ -5,6 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Exec
 import org.jetbrains.karakum.gradle.plugin.tasks.KarakumConfig
+import org.jetbrains.karakum.gradle.plugin.tasks.KarakumPluginsCopy
 
 class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -16,7 +17,7 @@ class KarakumPlugin : Plugin<Project> {
         }
 
         val binaryResource = requireNotNull(KarakumPlugin::class.java.getResource("/$binaryName"))
-        val binaryDir = project.layout.buildDirectory.dir("karakum/bin").get().asFile
+        val binaryDir = project.buildDir.resolve("karakum/bin")
         val binaryFile = binaryDir.resolve(binaryName)
 
         project.tasks.register("extractKarakumBinary") { task ->
@@ -40,16 +41,25 @@ class KarakumPlugin : Plugin<Project> {
             }
         }
 
-        project.tasks.register("generateExternals", Exec::class.java) { task ->
+        project.tasks.register("copyKarakumPlugins", KarakumPluginsCopy::class.java) { task ->
             task.group = KARAKUM_GRADLE_PLUGIN_GROUP
-
-            task.dependsOn("makeKarakumBinaryExecutable")
-
-            task.commandLine(binaryFile, "--config", KARAKUM_CONFIG_FILE)
         }
 
         project.tasks.register("configureKarakum", KarakumConfig::class.java) { task ->
             task.group = KARAKUM_GRADLE_PLUGIN_GROUP
+
+            task.dependsOn("copyKarakumPlugins")
+        }
+
+        project.tasks.register("generateKarakumExternals", Exec::class.java) { task ->
+            task.group = KARAKUM_GRADLE_PLUGIN_GROUP
+
+            task.dependsOn(
+                "makeKarakumBinaryExecutable",
+                "configureKarakum",
+            )
+
+            task.commandLine(binaryFile, "--config", project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE").absolutePath)
         }
     }
 }
