@@ -218,8 +218,10 @@ export async function process(configuration: Configuration) {
             return normalizedIgnore.every(pattern => !minimatch(item.sourceFileName, pattern))
         })
         .forEach(item => {
+            const targetFileName = path.resolve(output, item.outputFileName)
+
             console.log(`Source file: ${item.sourceFileName}`)
-            console.log(`Target file: ${item.targetFileName}`)
+            console.log(`Target file: ${targetFileName}`)
 
             const convertedBody = item.nodes
                 .map(node => render(node))
@@ -233,8 +235,8 @@ export async function process(configuration: Configuration) {
                 configuration,
             )
 
-            fs.mkdirSync(path.dirname(item.targetFileName), {recursive: true})
-            fs.writeFileSync(item.targetFileName, targetFile)
+            fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
+            fs.writeFileSync(targetFileName, targetFile)
         })
 
     for (const plugin of plugins) {

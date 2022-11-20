@@ -6,7 +6,6 @@ import {generateOutputFileName} from "../utils/fileName";
 interface FileStructureItem {
     sourceFileName: string,
     outputFileName: string,
-    targetFileName: string,
     nodes: ReadonlyArray<Node>
 }
 
@@ -76,18 +75,17 @@ function normalizeFileStructure(fileStructure: FileStructure) {
     const result: Map<string, FileStructureItem> = new Map()
 
     for (const item of fileStructure) {
-        const existingItem = result.get(item.targetFileName) ?? {
+        const existingItem = result.get(item.outputFileName) ?? {
             sourceFileName: item.sourceFileName,
             outputFileName: item.outputFileName,
-            targetFileName: item.targetFileName,
             nodes: []
         }
 
-        if (!result.has(item.targetFileName)) {
-            result.set(item.targetFileName, existingItem)
+        if (!result.has(item.outputFileName)) {
+            result.set(item.outputFileName, existingItem)
         }
 
-        result.set(item.targetFileName, {
+        result.set(item.outputFileName, {
             ...existingItem,
             nodes: [...existingItem.nodes, ...item.nodes]
         })
@@ -104,18 +102,15 @@ export function prepareFileStructure(
 ): FileStructure {
     const sourceFiles = program.getSourceFiles()
     const granularity = configuration.granularity ?? "file"
-    const output = configuration.output
     const packageNameMapper = configuration.packageNameMapper
 
     if (granularity === "file") {
         return sourceFiles.map(it => {
             const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
-            const targetFileName = path.resolve(output, outputFileName)
 
             return ({
                 sourceFileName: it.fileName,
                 outputFileName,
-                targetFileName,
                 nodes: it.statements,
             });
         })
@@ -125,28 +120,22 @@ export function prepareFileStructure(
         return normalizeFileStructure(
             sourceFiles.flatMap(it => {
                 const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
-                const targetFileName = path.resolve(output, outputFileName)
-
                 const outputDirName = path.dirname(outputFileName)
-                const targetDirName = path.dirname(targetFileName)
 
                 const result: FileStructure = []
 
                 for (const statement of it.statements) {
                     let currentOutputFileName = outputFileName
-                    let currentTargetFileName = targetFileName
 
                     const topLevelName = topLevelMatcher(statement)
 
                     if (topLevelName !== null) {
                         currentOutputFileName = `${outputDirName}/${topLevelName}.kt`
-                        currentTargetFileName = `${targetDirName}/${topLevelName}.kt`
                     }
 
                     result.push({
                         sourceFileName: it.fileName,
                         outputFileName: currentOutputFileName,
-                        targetFileName: currentTargetFileName,
                         nodes: [statement]
                     })
                 }
