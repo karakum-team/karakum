@@ -231,6 +231,7 @@ export async function process(configuration: Configuration) {
                 sourceFileRoot,
                 item.sourceFileName,
                 item.outputFileName,
+                item.packageName,
                 convertedBody,
                 configuration,
             )

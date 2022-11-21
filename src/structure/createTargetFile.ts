@@ -1,12 +1,11 @@
-import path from "path";
 import {Configuration} from "../configuration/configuration";
-import {KOTLIN_KEYWORDS} from "../converter/constants";
 import {applyMapper, generateRelativeFileName} from "../utils/fileName";
 
 export function createTargetFile(
     sourceFileRoot: string,
     sourceFileName: string,
     outputFileName: string,
+    packageName: string,
     body: string,
     configuration: Configuration,
 ) {
@@ -20,26 +19,6 @@ export function createTargetFile(
     const moduleName = mappedRelativeFileName !== ""
         ? `${libraryName}/${mappedRelativeFileName}`
         : libraryName;
-
-    let outputDirName = path.dirname(outputFileName)
-    outputDirName = outputDirName === "." // handle root dir
-        ? ""
-        : outputDirName
-
-    const preparedLibraryName = libraryName
-        .replace(/[-\/]/g, ".")
-        .replace(/@/g, "")
-
-    const packageName = [preparedLibraryName, ...outputDirName.split("/")]
-        .filter(it => it !== "")
-        .map(it => {
-            if (KOTLIN_KEYWORDS.has(it)) {
-                return `\`${it}\``
-            } else {
-                return it
-            }
-        })
-        .join(".")
 
     let importSources: string[] = []
 

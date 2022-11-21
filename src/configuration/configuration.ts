@@ -7,6 +7,7 @@ export type Configuration = {
     ignore?: string | string[];
 
     libraryName?: string;
+    libraryNameOutputPrefix?: boolean;
 
     granularity?: /* TODO: support "bundle"*/ | "file" | "top-level"
 

@@ -1,11 +1,12 @@
 import path from "path";
 import ts, {Node, Program} from "typescript";
 import {Configuration} from "../configuration/configuration";
-import {generateOutputFileName} from "../utils/fileName";
+import {generateOutputFileInfo} from "./generateOutputFileInfo";
 
 interface FileStructureItem {
     sourceFileName: string,
     outputFileName: string,
+    packageName: string,
     nodes: ReadonlyArray<Node>
 }
 
@@ -78,6 +79,7 @@ function normalizeFileStructure(fileStructure: FileStructure) {
         const existingItem = result.get(item.outputFileName) ?? {
             sourceFileName: item.sourceFileName,
             outputFileName: item.outputFileName,
+            packageName: item.packageName,
             nodes: []
         }
 
@@ -102,15 +104,24 @@ export function prepareFileStructure(
 ): FileStructure {
     const sourceFiles = program.getSourceFiles()
     const granularity = configuration.granularity ?? "file"
+    const libraryName = configuration.libraryName ?? ""
+    const libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?? false
     const packageNameMapper = configuration.packageNameMapper
 
     if (granularity === "file") {
         return sourceFiles.map(it => {
-            const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
+            const {outputFileName, packageName} = generateOutputFileInfo(
+                sourceFileRoot,
+                it.fileName,
+                libraryName,
+                libraryNameOutputPrefix,
+                packageNameMapper,
+            )
 
             return ({
                 sourceFileName: it.fileName,
                 outputFileName,
+                packageName,
                 nodes: it.statements,
             });
         })
@@ -119,7 +130,13 @@ export function prepareFileStructure(
     if (granularity === "top-level") {
         return normalizeFileStructure(
             sourceFiles.flatMap(it => {
-                const outputFileName = generateOutputFileName(sourceFileRoot, it.fileName, packageNameMapper)
+                const {outputFileName, packageName} = generateOutputFileInfo(
+                    sourceFileRoot,
+                    it.fileName,
+                    libraryName,
+                    libraryNameOutputPrefix,
+                    packageNameMapper,
+                );
                 const outputDirName = path.dirname(outputFileName)
 
                 const result: FileStructure = []
@@ -136,6 +153,7 @@ export function prepareFileStructure(
                     result.push({
                         sourceFileName: it.fileName,
                         outputFileName: currentOutputFileName,
+                        packageName,
                         nodes: [statement]
                     })
                 }
