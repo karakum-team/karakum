@@ -11,3 +11,9 @@ export declare class MyClass {
 
     method(options: { third: boolean, fourth: string[] }): string
 }
+
+export interface ShouldRevalidateFunction {
+    (args: {
+        currentUrl: URL;
+    }): boolean;
+}

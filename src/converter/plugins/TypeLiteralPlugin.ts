@@ -80,6 +80,12 @@ export class TypeLiteralPlugin implements ConverterPlugin {
                 parentName = node.parent.parent.name?.text ?? ""
             }
 
+            if (ts.isCallSignatureDeclaration(node.parent.parent)) {
+                if (ts.isInterfaceDeclaration(node.parent.parent.parent)) {
+                    parentName = node.parent.parent.parent.name?.text ?? ""
+                }
+            }
+
             if (ts.isConstructorDeclaration(node.parent.parent)) {
                 parentName = node.parent.parent.parent.name?.text ?? ""
             }

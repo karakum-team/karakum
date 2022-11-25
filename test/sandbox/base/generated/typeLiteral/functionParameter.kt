@@ -18,6 +18,12 @@ constructor (options: MyClassOptions)
 fun method(options: MyClassMethodOptions): String
 }
     
+
+
+external interface ShouldRevalidateFunction {
+fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
+}
+    
     
 external interface CreateMemoryRouterOpts {
 var basename: String?
@@ -38,5 +44,11 @@ var second: Double
 external interface MyClassMethodOptions {
 var third: Boolean
 var fourth: Array<String>
+}
+        
+
+
+external interface ShouldRevalidateFunctionArgs {
+var currentUrl: URL
 }
         
