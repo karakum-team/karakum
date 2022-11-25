@@ -4,38 +4,57 @@ import {ConverterContext} from "../context";
 import {Render} from "../render";
 import {capitalize} from "../../utils/strings";
 import {generateOutputFileInfo} from "../../structure/generateOutputFileInfo";
+import {createGeneratedFile} from "../../structure/createGeneratedFile";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import path from "path";
 
 export class TypeLiteralPlugin implements ConverterPlugin {
     private counter = 0
-    private generated: Record<string, string[]> = {}
+    private generated: Record<string, { name: string, declaration: string }[]> = {}
 
     constructor(private sourceFileRoot: string) {
     }
 
     generate(context: ConverterContext): Record<string, string> {
         const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
+        const configuration = configurationService?.configuration
+        if (configuration === undefined) throw new Error("TypeLiteralPlugin can't work without ConfigurationService")
 
-        const output = configurationService?.configuration?.output
-        if (output === undefined) throw new Error("Output should be defined in configuration")
-
-        const libraryName = configurationService?.configuration?.libraryName ?? ""
-        const libraryNameOutputPrefix = configurationService?.configuration?.libraryNameOutputPrefix ?? false
-        const packageNameMapper = configurationService?.configuration?.packageNameMapper
+        const output = configuration.output
+        const granularity = configuration.granularity ?? "file"
 
         return Object.fromEntries(
             Object.entries(this.generated)
-                .map(([fileName, declarations]) => {
-                    const {outputFileName} = generateOutputFileInfo(
+                .flatMap(([sourceFileName, declarations]) => {
+                    const {outputFileName, packageName} = generateOutputFileInfo(
                         this.sourceFileRoot,
-                        fileName,
-                        libraryName,
-                        libraryNameOutputPrefix,
-                        packageNameMapper,
+                        sourceFileName,
+                        configuration,
                     );
-                    return [path.resolve(output, outputFileName), declarations.join("\n\n")];
+
+                    if (granularity === "top-level") {
+                        return declarations
+                            .map(({name, declaration}) => {
+                                const outputDirName = path.dirname(outputFileName)
+                                const currentOutputFileName = `${outputDirName}/${name}.kt`
+                                const generatedFile = createGeneratedFile(
+                                    this.sourceFileRoot,
+                                    currentOutputFileName,
+                                    packageName,
+                                    declaration,
+                                    configuration,
+                                )
+
+                                return [path.resolve(output, currentOutputFileName), generatedFile];
+                            })
+                    } else {
+                        const generatedFile = declarations
+                            .map(({declaration}) => declaration)
+                            .join("\n\n")
+
+                        return [[path.resolve(output, outputFileName), generatedFile]];
+                    }
                 })
         );
     }
@@ -88,11 +107,16 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             .map(member => next(member))
             .join("\n")
 
-        generatedDeclarations.push(`
+        const declaration = `
 external interface ${generatedName} {
 ${members}
 }
-        `)
+        `
+
+        generatedDeclarations.push({
+            name: generatedName,
+            declaration,
+        })
 
         this.generated[fileName] = generatedDeclarations
 

@@ -1,12 +1,10 @@
 import path from "path";
 import ts, {Node, Program} from "typescript";
 import {Configuration} from "../configuration/configuration";
-import {generateOutputFileInfo} from "./generateOutputFileInfo";
+import {generateOutputFileInfo, OutputFileInfo} from "./generateOutputFileInfo";
 
-interface FileStructureItem {
+interface FileStructureItem extends OutputFileInfo {
     sourceFileName: string,
-    outputFileName: string,
-    packageName: string,
     nodes: ReadonlyArray<Node>
 }
 
@@ -104,18 +102,13 @@ export function prepareFileStructure(
 ): FileStructure {
     const sourceFiles = program.getSourceFiles()
     const granularity = configuration.granularity ?? "file"
-    const libraryName = configuration.libraryName ?? ""
-    const libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?? false
-    const packageNameMapper = configuration.packageNameMapper
 
     if (granularity === "file") {
         return sourceFiles.map(it => {
             const {outputFileName, packageName} = generateOutputFileInfo(
                 sourceFileRoot,
                 it.fileName,
-                libraryName,
-                libraryNameOutputPrefix,
-                packageNameMapper,
+                configuration,
             )
 
             return ({
@@ -133,9 +126,7 @@ export function prepareFileStructure(
                 const {outputFileName, packageName} = generateOutputFileInfo(
                     sourceFileRoot,
                     it.fileName,
-                    libraryName,
-                    libraryNameOutputPrefix,
-                    packageNameMapper,
+                    configuration,
                 );
                 const outputDirName = path.dirname(outputFileName)
 

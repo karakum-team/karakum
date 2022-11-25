@@ -247,6 +247,8 @@ export async function process(configuration: Configuration) {
             if (fs.existsSync(fileName)) {
                 fs.appendFileSync(fileName, content)
             } else {
+                console.log(`Generated file: ${fileName}`)
+
                 fs.writeFileSync(fileName, content)
             }
         }

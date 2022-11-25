@@ -1,5 +1,6 @@
 import {Configuration} from "../configuration/configuration";
 import {applyMapper, generateRelativeFileName} from "../utils/fileName";
+import {generateImports} from "./generateImports";
 
 export function createTargetFile(
     sourceFileRoot: string,
@@ -11,7 +12,6 @@ export function createTargetFile(
 ) {
     const libraryName = configuration.libraryName ?? ""
     const moduleNameMapper = configuration.moduleNameMapper
-    const importInjector = configuration.importInjector
 
     const relativeFileName = generateRelativeFileName(sourceFileRoot, sourceFileName)
     const mappedRelativeFileName = applyMapper(relativeFileName, moduleNameMapper)
@@ -20,21 +20,7 @@ export function createTargetFile(
         ? `${libraryName}/${mappedRelativeFileName}`
         : libraryName;
 
-    let importSources: string[] = []
-
-    for (const [pattern, imports] of Object.entries(importInjector ?? {})) {
-        const regexp = new RegExp(pattern)
-
-        if (regexp.test(outputFileName)) {
-            importSources = importSources.concat(imports)
-            break
-        }
-    }
-
-    const imports = importSources
-        .map(it => `import ${it}`)
-        .join("\n")
-
+    const imports = generateImports(outputFileName, configuration)
 
     return `
 @file:JsModule("${moduleName}")
