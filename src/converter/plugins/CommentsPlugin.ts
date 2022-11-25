@@ -4,6 +4,8 @@ import {ConverterContext} from "../context";
 import {Render} from "../render";
 
 export class CommentsPlugin implements ConverterPlugin {
+    private nestedCommentPattern = /(?<!^)\/\*/g
+
     private coveredComments = new Set<Node>()
 
     private coveredCommentRanges = new Map<SourceFile, CommentRange[]>()
@@ -21,8 +23,8 @@ export class CommentsPlugin implements ConverterPlugin {
         const leadingComments = ts.getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?? []
         const trailingComments = ts.getTrailingCommentRanges(sourceFile.getFullText(), node.getEnd()) ?? []
 
-        const leadingCommentsOutput = this.renderComments(sourceFile, leadingComments, context)
-        const trailingCommentsOutput = this.renderComments(sourceFile, trailingComments, context)
+        const leadingCommentsOutput = this.renderComments(sourceFile, leadingComments)
+        const trailingCommentsOutput = this.renderComments(sourceFile, trailingComments)
 
         return `${leadingCommentsOutput}${next(node)}${trailingCommentsOutput}`
     }
@@ -33,7 +35,7 @@ export class CommentsPlugin implements ConverterPlugin {
     setup(context: ConverterContext): void {
     }
 
-    private renderComments(sourceFile: SourceFile, commentRanges: CommentRange[], context: ConverterContext) {
+    private renderComments(sourceFile: SourceFile, commentRanges: CommentRange[]) {
         const fullText = sourceFile.getFullText()
 
         return commentRanges
@@ -42,7 +44,9 @@ export class CommentsPlugin implements ConverterPlugin {
                 this.coverCommentRange(sourceFile, it)
 
                 const text = fullText.slice(it.pos, it.end)
-                return it.hasTrailingNewLine ? `${text}\n` : text
+                const escapedTest = text.replace(this.nestedCommentPattern, "&#47;*")
+
+                return it.hasTrailingNewLine ? `${escapedTest}\n` : text
             })
             .join("")
     }
