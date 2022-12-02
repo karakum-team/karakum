@@ -1,4 +1,4 @@
-import ts, {SyntaxKind} from "typescript";
+import ts, {SyntaxKind, TypeLiteralNode, TypeReferenceNode} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
@@ -30,6 +30,34 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
 
         return `
 external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
+${members}
+}
+        `
+    }
+
+    if (
+        ts.isIntersectionTypeNode(node.type)
+        && node.type.types.every(it => ts.isTypeReferenceNode(it) || ts.isTypeLiteralNode(it))
+    ) {
+        checkCoverageService?.cover(node.type)
+        node.type.types.forEach(it => checkCoverageService?.cover(it))
+
+        const typeReferences = node.type.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
+        const typeLiterals = node.type.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
+
+        const heritageTypes = typeReferences
+            .map(type => render(type))
+            .join(", ")
+
+        const convertHeritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
+
+        const members = typeLiterals
+            .flatMap(it => it.members)
+            .map(member => render(member))
+            .join("\n")
+
+        return `
+external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${convertHeritageClause} {
 ${members}
 }
         `
