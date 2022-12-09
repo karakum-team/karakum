@@ -48,5 +48,8 @@ export const convertParameterDeclarationWithFixedType = (
         }
     }
 
-    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${nullable ? "?" : ""}${node.questionToken ? " = definedExternally" : ""}`
+    const isDefinedExternally = node.questionToken
+        && !ts.isFunctionTypeNode(node.parent) // Kotlin does not support optional params in function types
+
+    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${nullable ? "?" : ""}${isDefinedExternally ? " = definedExternally" : ""}`
 }
