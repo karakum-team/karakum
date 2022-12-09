@@ -63,6 +63,30 @@ ${members}
         `
     }
 
+    if (
+        ts.isFunctionTypeNode(node.type)
+        && node.type.typeParameters
+    ) {
+        checkCoverageService?.cover(node.type)
+
+        const mergedTypeParameters = [
+            ...node.typeParameters ?? [],
+            ...node.type.typeParameters,
+        ]
+            .map(typeParameter => render(typeParameter))
+            .join(", ")
+
+        const parameters = node.type.parameters
+            ?.map(parameter => render(parameter))
+            ?.join(", ")
+
+        const returnType = render(node.type.type)
+
+        const type = `(${parameters}) -> ${returnType}`
+
+        return `typealias ${name}${ifPresent(mergedTypeParameters, it => `<${it}>`)} = ${type}`
+    }
+
     const type = render(node.type)
 
     return `typealias ${name}${ifPresent(typeParameters, it => `<${it}>`)} = ${type}`
