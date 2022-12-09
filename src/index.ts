@@ -50,6 +50,7 @@ import {convertPropertyDeclaration} from "./converter/plugins/convertPropertyDec
 import {TypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
 import {prepareFileStructure} from "./structure/prepareFileStructure";
 import {createTargetFile} from "./structure/createTargetFile";
+import {convertIndexedAccessTypeNode} from "./converter/plugins/convertIndexedAccessTypeNode";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -108,6 +109,7 @@ const createPlugins = (sourceFileRoot: string, configuration: Configuration): Co
     convertParenthesizedType,
     convertUnionType,
     convertIntersectionType,
+    convertIndexedAccessTypeNode,
     convertCallSignature,
     convertFunctionDeclaration,
     convertTypePredicate,
