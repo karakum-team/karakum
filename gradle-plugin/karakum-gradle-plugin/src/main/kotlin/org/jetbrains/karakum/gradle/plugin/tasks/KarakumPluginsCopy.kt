@@ -87,8 +87,8 @@ constructor(
         val plugins = inputPlugins.get().toList()
 
         project.copy {
-            it.from(*plugins.toTypedArray())
-            it.into(outputPlugins)
+            from(*plugins.toTypedArray())
+            into(outputPlugins)
         }
     }
 }
