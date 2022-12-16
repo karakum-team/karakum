@@ -10,7 +10,7 @@
     "build/"
   ],
   "scripts": {
-    "clean": "rimraf build gradle-plugin/karakum-gradle-plugin/build/karakum/bin",
+    "clean": "rimraf build",
     "build": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run clean && npm run build",
     "test": "ts-node test/sandbox/test.ts"
