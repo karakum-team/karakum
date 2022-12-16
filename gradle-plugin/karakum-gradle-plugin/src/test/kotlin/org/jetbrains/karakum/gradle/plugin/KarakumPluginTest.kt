@@ -8,11 +8,12 @@ class KarakumPluginTest {
     @Test fun `plugin registers task`() {
         // Create a test project and apply the plugin
         val project = ProjectBuilder.builder().build()
+        project.plugins.apply("org.jetbrains.kotlin.js")
         project.plugins.apply("org.jetbrains.karakum")
 
         // Verify tasks
-        assertNotNull(project.tasks.findByName("extractKarakumBinary"))
-        assertNotNull(project.tasks.findByName("makeKarakumBinaryExecutable"))
-        assertNotNull(project.tasks.findByName("generateExternals"))
+        assertNotNull(project.tasks.findByName("copyKarakumPlugins"))
+        assertNotNull(project.tasks.findByName("configureKarakum"))
+        assertNotNull(project.tasks.findByName("generateKarakumExternals"))
     }
 }

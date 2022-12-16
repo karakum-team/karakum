@@ -1,45 +1,28 @@
 package org.jetbrains.karakum.gradle.plugin
 
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Exec
 import org.jetbrains.karakum.gradle.plugin.tasks.KarakumConfig
 import org.jetbrains.karakum.gradle.plugin.tasks.KarakumPluginsCopy
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
+import org.jetbrains.kotlin.gradle.targets.js.KotlinJsTarget
+import org.jetbrains.kotlin.gradle.targets.js.npm.DevNpmDependencyExtension
+import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val binaryName = when {
-            Os.isFamily(Os.FAMILY_WINDOWS) -> "cli-win.exe"
-            Os.isFamily(Os.FAMILY_MAC) -> "cli-macos"
-            Os.isFamily(Os.FAMILY_UNIX) -> "cli-linux"
-            else -> error("Unsupported OS")
+        with(project.dependencies) {
+            val devNpm = extensions.getByName("devNpm") as DevNpmDependencyExtension
+
+            add("compileOnly", devNpm("karakum", "1.0.0-alpha.0"))
+            add("compileOnly", devNpm("typescript", "^4.9.4"))
         }
 
-        val binaryResource = requireNotNull(KarakumPlugin::class.java.getResource("/$binaryName"))
-        val binaryDir = project.buildDir.resolve("karakum/bin")
-        val binaryFile = binaryDir.resolve(binaryName)
-
-        project.tasks.register("extractKarakumBinary") { task ->
-            task.group = KARAKUM_GRADLE_PLUGIN_GROUP
-
-            task.doLast {
-                binaryDir.mkdirs()
-                binaryFile.writeBytes(binaryResource.readBytes())
-            }
-        }
-
-        project.tasks.register("makeKarakumBinaryExecutable", Exec::class.java) { task ->
-            task.group = KARAKUM_GRADLE_PLUGIN_GROUP
-
-            task.dependsOn("extractKarakumBinary")
-
-            if (Os.isFamily(Os.FAMILY_MAC) || Os.isFamily(Os.FAMILY_UNIX)) {
-                task.commandLine("chmod", "+x", binaryFile)
-            } else {
-                task.commandLine("echo", "Karakum: Executable rights granted")
-            }
-        }
+        val kotlinJsTarget = project.kotlinExtension.targets.firstNotNullOf { it as? KotlinJsTarget }
+        val kotlinJsCompilation = kotlinJsTarget.compilations.first { it.name == KotlinCompilation.MAIN_COMPILATION_NAME }
 
         project.tasks.register("copyKarakumPlugins", KarakumPluginsCopy::class.java) { task ->
             task.group = KARAKUM_GRADLE_PLUGIN_GROUP
@@ -54,12 +37,14 @@ class KarakumPlugin : Plugin<Project> {
         project.tasks.register("generateKarakumExternals", Exec::class.java) { task ->
             task.group = KARAKUM_GRADLE_PLUGIN_GROUP
 
-            task.dependsOn(
-                "makeKarakumBinaryExecutable",
-                "configureKarakum",
-            )
+            task.dependsOn("configureKarakum")
 
-            task.commandLine(binaryFile, "--config", project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE").absolutePath)
+            kotlinJsCompilation.npmProject.useTool(
+                task,
+                "karakum/build/cli.js",
+                emptyList(),
+                listOf("--config", project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE").absolutePath)
+            )
         }
     }
 }

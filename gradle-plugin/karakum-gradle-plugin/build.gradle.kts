@@ -12,6 +12,8 @@ group = "org.jetbrains.karakum"
 version = "1.0.0"
 
 dependencies {
+    compileOnly(kotlin("gradle-plugin"))
+
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
 
     testImplementation(kotlin("test"))

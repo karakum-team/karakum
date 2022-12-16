@@ -79,12 +79,19 @@ constructor(
         (configNode as ObjectNode).put("plugins", outputPlugins.asFile.get().absolutePath + "/**/*.js")
     }
 
+    private fun replaceOutput(configNode: JsonNode) {
+        val outputNode = requireNotNull((configNode as ObjectNode).get("output"))
+        val output = outputNode.textValue()
+        configNode.put("output", project.projectDir.resolve(output).absolutePath)
+    }
+
     @TaskAction
     fun configure() {
         val configNode = mapper.readTree(inputConfig.get())
 
         replacePlugins(configNode)
         replaceTokens(configNode)
+        replaceOutput(configNode)
 
         mapper
             .writerWithDefaultPrettyPrinter()
