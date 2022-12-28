@@ -1,7 +1,12 @@
 {
   "name": "karakum",
   "version": "1.0.0-alpha.0",
-  "description": "",
+  "description": "Converter of TypeScript declaration files to Kotlin declarations",
+  "keywords": [
+    "kotlin",
+    "typescript"
+  ],
+  "license": "Apache-2.0",
   "main": "./build/index.js",
   "bin": "./build/cli.js",
   "files": [
@@ -15,8 +20,6 @@
     "prepublishOnly": "npm run clean && npm run build",
     "test": "ts-node test/sandbox/test.ts"
   },
-  "author": "",
-  "license": "Apache-2.0",
   "dependencies": {
     "glob": "^8.0.3",
     "minimatch": "^5.1.0",
