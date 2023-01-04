@@ -3,15 +3,18 @@ import {ConverterContext} from "../context";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
 
-interface ParameterInfo {
+export interface ParameterInfo {
     parameter: ParameterDeclaration,
     type: TypeNode | undefined,
     nullable: boolean
 }
 
-type Signature = ParameterInfo[]
+export type Signature = ParameterInfo[]
 
-export const prepareParameters = (node: SignatureDeclarationBase, context: ConverterContext) => {
+export const prepareParameters = (
+    node: SignatureDeclarationBase,
+    context: ConverterContext,
+): Signature[] => {
     const currentSignatures = [node.parameters.map(it => ({
         parameter: it,
         type: it.type,
