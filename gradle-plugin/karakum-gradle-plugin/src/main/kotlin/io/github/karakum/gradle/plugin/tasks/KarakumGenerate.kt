@@ -1,11 +1,11 @@
-package org.jetbrains.karakum.gradle.plugin.tasks
+package io.github.karakum.gradle.plugin.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
-import org.jetbrains.karakum.gradle.plugin.karakumDependency
-import org.jetbrains.karakum.gradle.plugin.typescriptDependency
+import io.github.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
+import io.github.karakum.gradle.plugin.karakumDependency
+import io.github.karakum.gradle.plugin.typescriptDependency
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation

@@ -1,4 +1,4 @@
-package org.jetbrains.karakum.gradle.plugin
+package io.github.karakum.gradle.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -6,9 +6,9 @@ import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.registering
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.karakum.gradle.plugin.tasks.KarakumConfig
-import org.jetbrains.karakum.gradle.plugin.tasks.KarakumGenerate
-import org.jetbrains.karakum.gradle.plugin.tasks.KarakumPluginsCopy
+import io.github.karakum.gradle.plugin.tasks.KarakumConfig
+import io.github.karakum.gradle.plugin.tasks.KarakumGenerate
+import io.github.karakum.gradle.plugin.tasks.KarakumPluginsCopy
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 
 class KarakumPlugin : Plugin<Project> {

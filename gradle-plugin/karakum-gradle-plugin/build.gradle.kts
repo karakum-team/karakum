@@ -8,7 +8,7 @@ repositories {
     mavenCentral()
 }
 
-group = "org.jetbrains.karakum"
+group = "io.github.karakum"
 version = "1.0.0-alpha.0"
 
 dependencies {
@@ -31,10 +31,10 @@ pluginBundle {
 
 gradlePlugin {
     val karakum by plugins.creating {
-        id = "org.jetbrains.karakum"
+        id = "io.github.karakum"
         displayName = "Karakum Plugin"
         description = "Converter of TypeScript declaration files to Kotlin declarations"
-        implementationClass = "org.jetbrains.karakum.gradle.plugin.KarakumPlugin"
+        implementationClass = "io.github.karakum.gradle.plugin.KarakumPlugin"
     }
 }
 
