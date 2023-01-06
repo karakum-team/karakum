@@ -106,6 +106,27 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             }
         }
 
+        if (ts.isPropertySignature(node.parent)) {
+            let propertyName = ""
+
+            if (ts.isIdentifier(node.parent.name)) {
+                propertyName = node.parent.name.text ?? ""
+            }
+
+            let parentName = ""
+
+            if (
+                ts.isTypeLiteralNode(node.parent.parent)
+                && ts.isTypeAliasDeclaration(node.parent.parent.parent)
+            ) {
+                parentName = node.parent.parent.parent.name.text ?? ""
+            }
+
+            if (parentName || propertyName) {
+                generatedName = `${capitalize(parentName)}${capitalize(propertyName)}`
+            }
+        }
+
         const fileName = node.getSourceFile().fileName
         const generatedDeclarations = this.generated[fileName] ?? []
 
