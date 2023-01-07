@@ -80,7 +80,7 @@ export async function process(configuration: Configuration) {
         }
     }
 
-    const defaultPlugins = createPlugins(sourceFileRoot, configuration)
+    const defaultPlugins = createPlugins(sourceFileRoot, configuration, program)
 
     const plugins = [
         // it is important to handle comments at first

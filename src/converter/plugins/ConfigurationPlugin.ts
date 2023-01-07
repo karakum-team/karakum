@@ -7,10 +7,7 @@ import {Configuration} from "../../configuration/configuration";
 export const configurationServiceKey = Symbol()
 
 export class ConfigurationService {
-    public readonly configuration: Configuration;
-
-    constructor(configuration: Configuration) {
-        this.configuration = configuration;
+    constructor(readonly configuration: Configuration) {
     }
 }
 

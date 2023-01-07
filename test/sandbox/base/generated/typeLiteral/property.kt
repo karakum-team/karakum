@@ -12,11 +12,11 @@ package sandbox.base.typeLiteral
 
 
 external interface FetcherStates<TData /* default is Any? */>  {
-var Idle: FetcherStatesIdle
+var Idle: FetcherStatesIdle<TData>
 }
         
     
-external interface FetcherStatesIdle {
+external interface FetcherStatesIdle<TData> {
 var state: String
 var formMethod: Any? /* some expression */
 var formAction: Any? /* some expression */

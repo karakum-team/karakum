@@ -1,13 +1,16 @@
+import path from "path";
+import ts, {ConditionalTypeNode, TypeLiteralNode} from "typescript";
 import {ConverterPlugin} from "../plugin";
-import ts from "typescript";
 import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {capitalize} from "../../utils/strings";
+import {ifPresent, Render} from "../render";
 import {generateOutputFileInfo} from "../../structure/generateOutputFileInfo";
 import {createGeneratedFile} from "../../structure/createGeneratedFile";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import path from "path";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import {capitalize} from "../../utils/strings";
+import {traverse} from "../../utils/traverse";
+import {findClosest} from "../../utils/findClosest";
 
 export class TypeLiteralPlugin implements ConverterPlugin {
     private counter = 0
@@ -127,6 +130,8 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             }
         }
 
+        const typeParameters = this.extractTypeParameters(node, context).join(", ")
+
         const fileName = node.getSourceFile().fileName
         const generatedDeclarations = this.generated[fileName] ?? []
 
@@ -135,7 +140,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             .join("\n")
 
         const declaration = `
-external interface ${generatedName} {
+external interface ${generatedName}${ifPresent(typeParameters, it => `<${it}>`)} {
 ${members}
 }
         `
@@ -147,7 +152,7 @@ ${members}
 
         this.generated[fileName] = generatedDeclarations
 
-        return generatedName;
+        return `${generatedName}${ifPresent(typeParameters, it => `<${it}>`)}`;
     }
 
     setup(context: ConverterContext): void {
@@ -156,4 +161,41 @@ ${members}
     traverse(node: ts.Node, context: ConverterContext): void {
     }
 
+    private extractTypeParameters(typeLiteralNode: TypeLiteralNode, context: ConverterContext): string[] {
+        const result: string[] = []
+
+        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        const typeChecker = typeScriptService?.program.getTypeChecker()
+
+        traverse(typeLiteralNode, node => {
+            if (ts.isIdentifier(node)) {
+                const symbol = typeChecker?.getSymbolAtLocation(node)
+                const typeParameterDeclarations = (symbol?.declarations ?? [])
+                    .filter(declaration => ts.isTypeParameterDeclaration(declaration))
+
+                for (const declaration of typeParameterDeclarations) {
+                    let typeParameterContainer = declaration.parent
+
+                    if (ts.isInferTypeNode(declaration.parent)) {
+                        const conditionalType = findClosest(
+                            declaration.parent,
+                            (node): node is ConditionalTypeNode => ts.isConditionalTypeNode(node)
+                        )
+
+                        if (conditionalType != undefined) {
+                            typeParameterContainer = conditionalType.trueType
+                        }
+                    }
+
+                    const foundParent = findClosest(typeLiteralNode, node => node === typeParameterContainer)
+
+                    if (foundParent !== undefined) {
+                        result.push(node.text)
+                    }
+                }
+            }
+        })
+
+        return result
+    }
 }

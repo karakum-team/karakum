@@ -1,4 +1,4 @@
-import ts, {Node, SyntaxKind} from "typescript";
+import ts, {Node, Program, SyntaxKind} from "typescript";
 import {Configuration} from "./configuration/configuration";
 import {ConverterPlugin} from "./converter/plugin";
 import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin";
@@ -39,11 +39,17 @@ import {convertIndexedAccessTypeNode} from "./converter/plugins/convertIndexedAc
 import {convertCallSignature} from "./converter/plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
+import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
-export const createPlugins = (sourceFileRoot: string, configuration: Configuration): ConverterPlugin[] => [
+export const createPlugins = (
+    sourceFileRoot: string,
+    configuration: Configuration,
+    program: Program,
+): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
+    new TypeScriptPlugin(program),
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),
 
