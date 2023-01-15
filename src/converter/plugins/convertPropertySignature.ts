@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {isNullableUnionType} from "./NullableUnionTypePlugin";
+import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
 
 export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
@@ -33,6 +33,10 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
         node.questionToken
         && node.type?.kind !== SyntaxKind.UnknownKeyword
         && node.type?.kind !== SyntaxKind.AnyKeyword
+        && !(
+            node.type
+            && isNullableType(node.type)
+        )
         && !(
             node.type
             && ts.isUnionTypeNode(node.type)
