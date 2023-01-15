@@ -17,6 +17,7 @@ var handle2: Any?
 var handle3: String?
 var handle4: Any? /* some expression */
 var handle5: Any? /* some expression */
+var handle6: Any? /* some expression */
 }
         
 
@@ -27,6 +28,7 @@ var handle2: Any?
 var handle3: String?
 var handle4: Any? /* some expression */
 var handle5: Any? /* some expression */
+var handle6: Any? /* some expression */?
 }
     
     

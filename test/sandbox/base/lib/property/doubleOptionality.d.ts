@@ -4,6 +4,7 @@ declare type AgnosticBaseRouteObject = {
     handle3?: string | undefined;
     handle4?: null;
     handle5?: undefined;
+    handle6?;
 };
 
 declare class AgnosticBaseRouteClass {
@@ -12,4 +13,5 @@ declare class AgnosticBaseRouteClass {
     handle3?: string | undefined;
     handle4?: null;
     handle5?: undefined;
+    handle6?;
 }

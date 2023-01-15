@@ -23,23 +23,19 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
     let type = node.type && render(node.type)
 
     if (!type) {
-        // throw new Error(`${name} property signature without type is unsupported`)
-        type = "Any? /* some expression */" // TODO: resolve types
+        type = "Any? /* some expression */"
     }
 
     let isOptional = false
 
     if (
         node.questionToken
-        && node.type?.kind !== SyntaxKind.UnknownKeyword
-        && node.type?.kind !== SyntaxKind.AnyKeyword
+        && node.type
+        && node.type.kind !== SyntaxKind.UnknownKeyword
+        && node.type.kind !== SyntaxKind.AnyKeyword
+        && !isNullableType(node.type)
         && !(
-            node.type
-            && isNullableType(node.type)
-        )
-        && !(
-            node.type
-            && ts.isUnionTypeNode(node.type)
+            ts.isUnionTypeNode(node.type)
             && isNullableUnionType(node.type)
         )
     ) {
