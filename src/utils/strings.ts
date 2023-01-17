@@ -10,3 +10,9 @@ export function snakeToCamelCase(string: string) {
             .replace('_', '')
     );
 }
+
+export function identifier(string: string) {
+    return snakeToCamelCase(
+        string.replace(/\W/g, "-")
+    )
+}

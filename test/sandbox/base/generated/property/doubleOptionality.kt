@@ -4,6 +4,7 @@
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
+    "NAME_CONTAINS_ILLEGAL_CHARS",
 )
 
 package sandbox.base.property
@@ -28,7 +29,7 @@ var handle2: Any?
 var handle3: String?
 var handle4: Any? /* some expression */
 var handle5: Any? /* some expression */
-var handle6: Any? /* some expression */?
+var handle6: Any? /* some expression */
 }
     
     
