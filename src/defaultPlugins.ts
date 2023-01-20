@@ -40,7 +40,7 @@ import {convertCallSignature} from "./converter/plugins/convertCallSignature";
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
 import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
-import {convertStringUnionType} from "./converter/plugins/convertStringUnionType";
+import {convertStringUnionTypeAliasDeclaration} from "./converter/plugins/convertStringUnionTypeAliasDeclaration";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -94,7 +94,7 @@ export const createPlugins = (
     convertLiteralType,
     convertArrayType,
     convertReadonlyArrayType,
-    convertStringUnionType, // should be before TypeAliasDeclaration
+    convertStringUnionTypeAliasDeclaration,
     convertTypeAliasDeclaration,
     convertEnumDeclaration,
     convertEnumMember,

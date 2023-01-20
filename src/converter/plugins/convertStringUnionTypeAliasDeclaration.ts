@@ -1,8 +1,9 @@
-import ts, {LiteralTypeNode, StringLiteral} from "typescript";
+import ts, {LiteralTypeNode, StringLiteral, SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {identifier} from "../../utils/strings";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
-export const convertStringUnionType = createSimplePlugin((node, context, render) => {
+export const convertStringUnionTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (
         ts.isTypeAliasDeclaration(node)
         && ts.isUnionTypeNode(node.type)
@@ -11,11 +12,27 @@ export const convertStringUnionType = createSimplePlugin((node, context, render)
             && ts.isStringLiteral(type.literal)
         ))
     ) {
+        const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        checkCoverageService?.cover(node)
+        checkCoverageService?.cover(node.type)
+
+        const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+        exportModifier && checkCoverageService?.cover(exportModifier)
+
+        const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+        declareModifier && checkCoverageService?.cover(declareModifier)
+
         const entries = node.type.types
             .filter((type): type is LiteralTypeNode => ts.isLiteralTypeNode(type))
-            .map(type => type.literal)
+            .map(type => {
+                checkCoverageService?.cover(type)
+
+                return type.literal
+            })
             .filter((literal): literal is StringLiteral => ts.isStringLiteral(literal))
             .map(literal => {
+                checkCoverageService?.cover(literal)
+
                 const value = literal.text
                 const key = identifier(value)
                 return [key, value] as const
