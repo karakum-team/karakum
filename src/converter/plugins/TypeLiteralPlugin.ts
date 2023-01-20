@@ -83,9 +83,16 @@ export class TypeLiteralPlugin implements ConverterPlugin {
                 parentName = node.parent.parent.name?.text ?? ""
             }
 
+            if (
+                ts.isFunctionTypeNode(node.parent.parent)
+                && ts.isTypeAliasDeclaration(node.parent.parent.parent)
+            ) {
+                parentName = node.parent.parent.parent.name.text
+            }
+
             if (ts.isCallSignatureDeclaration(node.parent.parent)) {
                 if (ts.isInterfaceDeclaration(node.parent.parent.parent)) {
-                    parentName = node.parent.parent.parent.name?.text ?? ""
+                    parentName = node.parent.parent.parent.name.text
                 }
             }
 
@@ -113,7 +120,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             let propertyName = ""
 
             if (ts.isIdentifier(node.parent.name)) {
-                propertyName = node.parent.name.text ?? ""
+                propertyName = node.parent.name.text
             }
 
             let parentName = ""
@@ -122,7 +129,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
                 ts.isTypeLiteralNode(node.parent.parent)
                 && ts.isTypeAliasDeclaration(node.parent.parent.parent)
             ) {
-                parentName = node.parent.parent.parent.name.text ?? ""
+                parentName = node.parent.parent.parent.name.text
             }
 
             if (parentName || propertyName) {

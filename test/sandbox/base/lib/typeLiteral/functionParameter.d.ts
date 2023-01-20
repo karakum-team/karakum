@@ -17,3 +17,9 @@ export interface ShouldRevalidateFunction {
         currentUrl: URL;
     }): boolean;
 }
+
+export declare type BlockerFunction = (args: {
+    currentLocation: Location;
+    nextLocation: Location;
+    historyAction: HistoryAction;
+}) => boolean;

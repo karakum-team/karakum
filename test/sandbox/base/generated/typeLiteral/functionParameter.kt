@@ -25,6 +25,8 @@ external interface ShouldRevalidateFunction {
 fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
 }
     
+
+typealias BlockerFunction = (args: BlockerFunctionArgs) -> Boolean
     
 external interface CreateMemoryRouterOpts {
 var basename: String?
@@ -51,5 +53,13 @@ var fourth: Array<String>
 
 external interface ShouldRevalidateFunctionArgs {
 var currentUrl: URL
+}
+        
+
+
+external interface BlockerFunctionArgs {
+var currentLocation: Location
+var nextLocation: Location
+var historyAction: HistoryAction
 }
         
