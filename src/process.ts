@@ -19,11 +19,14 @@ export const defaultPluginPatterns = [
 ]
 
 export async function process(configuration: Configuration) {
-    const {input, output, ignore, plugins: pluginPatterns, compilerOptions} = configuration
+    const {input, output, ignoreInput, ignoreOutput, plugins: pluginPatterns, compilerOptions} = configuration
 
     const normalizedInput = typeof input === "string" ? [input] : input
-    const normalizedIgnore = ignore !== undefined
-        ? typeof ignore === "string" ? [ignore] : ignore
+    const normalizedIgnoreInput = ignoreInput !== undefined
+        ? typeof ignoreInput === "string" ? [ignoreInput] : ignoreInput
+        : []
+    const normalizedIgnoreOutput = ignoreOutput !== undefined
+        ? typeof ignoreOutput === "string" ? [ignoreOutput] : ignoreOutput
         : []
     const normalizedPluginPatterns = pluginPatterns !== undefined
         ? typeof pluginPatterns === "string" ? [pluginPatterns] : pluginPatterns
@@ -31,7 +34,7 @@ export async function process(configuration: Configuration) {
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
-        ignore,
+        ignore: ignoreInput,
     }))
 
     const pluginFileNames = normalizedPluginPatterns.flatMap(pattern => glob.sync(pattern, {
@@ -47,8 +50,6 @@ export async function process(configuration: Configuration) {
     const compilerHost = ts.createCompilerHost(preparedCompilerOptions, /* setParentNodes */ true);
 
     const program = ts.createProgram(rootNames, preparedCompilerOptions, compilerHost)
-
-    console.log(`Source files count: ${program.getSourceFiles().length}`)
 
     const sources = rootNames.map(fileName => fileName.split("/"))
 
@@ -94,7 +95,14 @@ export async function process(configuration: Configuration) {
         plugin.setup(context)
     }
 
-    const fileStructure = prepareFileStructure(sourceFileRoot, program, configuration)
+    const sourceFiles = program.getSourceFiles()
+        .filter(sourceFile => {
+            return normalizedIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
+        })
+
+    console.log(`Source files count: ${sourceFiles.length}`)
+
+    const fileStructure = prepareFileStructure(sourceFileRoot, sourceFiles, configuration)
 
     fileStructure
         .flatMap(it => it.nodes)
@@ -109,9 +117,6 @@ export async function process(configuration: Configuration) {
     const render = createRender(context, plugins)
 
     fileStructure
-        .filter(item => {
-            return normalizedIgnore.every(pattern => !minimatch(item.sourceFileName, pattern))
-        })
         .forEach(item => {
             const targetFileName = path.resolve(output, item.outputFileName)
 
@@ -131,20 +136,24 @@ export async function process(configuration: Configuration) {
                 configuration,
             )
 
-            fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
-            fs.writeFileSync(targetFileName, targetFile)
+            if (normalizedIgnoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
+                fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
+                fs.writeFileSync(targetFileName, targetFile)
+            }
         })
 
     for (const plugin of plugins) {
         const generated = plugin.generate(context)
 
         for (const [fileName, content] of Object.entries(generated)) {
-            if (fs.existsSync(fileName)) {
-                fs.appendFileSync(fileName, content)
-            } else {
-                console.log(`Generated file: ${fileName}`)
+            if (normalizedIgnoreOutput.every(pattern => !minimatch(fileName, pattern))) {
+                if (fs.existsSync(fileName)) {
+                    fs.appendFileSync(fileName, content)
+                } else {
+                    console.log(`Generated file: ${fileName}`)
 
-                fs.writeFileSync(fileName, content)
+                    fs.writeFileSync(fileName, content)
+                }
             }
         }
     }

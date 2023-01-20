@@ -4,7 +4,8 @@ export type Configuration = {
     input: string | string[];
     output: string;
 
-    ignore?: string | string[];
+    ignoreInput?: string | string[];
+    ignoreOutput?: string | string[];
 
     libraryName?: string;
     libraryNameOutputPrefix?: boolean;

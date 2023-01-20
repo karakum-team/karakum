@@ -1,5 +1,5 @@
 import path from "path";
-import ts, {Node, Program} from "typescript";
+import ts, {Node, SourceFile} from "typescript";
 import {Configuration} from "../configuration/configuration";
 import {generateOutputFileInfo, OutputFileInfo} from "./generateOutputFileInfo";
 
@@ -97,10 +97,9 @@ function normalizeFileStructure(fileStructure: FileStructure) {
 
 export function prepareFileStructure(
     sourceFileRoot: string,
-    program: Program,
+    sourceFiles: SourceFile[],
     configuration: Configuration
 ): FileStructure {
-    const sourceFiles = program.getSourceFiles()
     const granularity = configuration.granularity ?? "file"
 
     if (granularity === "file") {
