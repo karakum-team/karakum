@@ -1,4 +1,4 @@
-package io.github.karakum.gradle.plugin.tasks
+package io.github.sgrishchenko.karakum.gradle.plugin.tasks
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -12,7 +12,7 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import io.github.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
+import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import java.io.File
 import javax.inject.Inject
 

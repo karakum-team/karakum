@@ -1,4 +1,4 @@
-package io.github.karakum.gradle.plugin
+package io.github.sgrishchenko.karakum.gradle.plugin
 
 import org.jetbrains.kotlin.gradle.targets.js.NpmPackageVersion
 
