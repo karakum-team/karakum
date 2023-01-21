@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
+import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.file.FileFactory
@@ -12,7 +13,6 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import java.io.File
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ constructor(
     abstract val outputConfig: Property<File>
 
     @get:OutputDirectory
-    abstract val outputPlugins: DirectoryProperty
+    abstract val outputExtensions: DirectoryProperty
 
     private val mapper = ObjectMapper()
 
@@ -41,8 +41,8 @@ constructor(
 
     init {
         inputConfig.convention(project.projectDir.resolve(KARAKUM_CONFIG_FILE))
-        outputConfig.convention(project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE"))
-        outputPlugins.convention(fileFactory.dir(project.rootProject.buildDir.resolve("js/packages/${project.name}/karakum")))
+        outputConfig.convention(defaultOutputConfig)
+        outputExtensions.convention(fileFactory.dir(defaultOutputExtensions))
     }
 
     private fun String.replaceTokens() = replacements.entries.fold(this) { acc, (from, to) ->
@@ -75,12 +75,15 @@ constructor(
         }
     }
 
-    private fun replacePlugins(configNode: JsonNode) {
-        (configNode as ObjectNode).put("plugins", outputPlugins.asFile.get().absolutePath + "/**/*.js")
+    private fun replaceExtensions(configNode: JsonNode) {
+        configNode as ObjectNode
+        configNode.put("plugins", outputExtensions.asFile.get().absolutePath + "/plugins/*.js")
+        configNode.put("nameResolvers", outputExtensions.asFile.get().absolutePath + "/nameResolvers/*.js")
     }
 
     private fun replaceOutput(configNode: JsonNode) {
-        val outputNode = requireNotNull((configNode as ObjectNode).get("output"))
+        configNode as ObjectNode
+        val outputNode = requireNotNull(configNode.get("output"))
         val output = outputNode.textValue()
         configNode.put("output", project.projectDir.resolve(output).absolutePath)
     }
@@ -89,7 +92,7 @@ constructor(
     fun configure() {
         val configNode = mapper.readTree(inputConfig.get())
 
-        replacePlugins(configNode)
+        replaceExtensions(configNode)
         replaceTokens(configNode)
         replaceOutput(configNode)
 

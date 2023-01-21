@@ -16,11 +16,11 @@ import {createRender} from "./converter/render";
 import {NameResolver} from "./converter/nameResolver";
 
 export const defaultPluginPatterns = [
-    "karakum/*/*.js"
+    "karakum/plugins/*.js"
 ]
 
 export const defaultNameResolverPatterns = [
-    "karakum/nameResolvers/*/*.js"
+    "karakum/nameResolvers/*.js"
 ]
 
 function normalizeGlob(patterns: string | string[] | undefined, defaultValue: string[] = []) {

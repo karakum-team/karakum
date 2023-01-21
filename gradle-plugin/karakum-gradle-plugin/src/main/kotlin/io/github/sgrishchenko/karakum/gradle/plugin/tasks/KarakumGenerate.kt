@@ -1,26 +1,24 @@
 package io.github.sgrishchenko.karakum.gradle.plugin.tasks
 
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.TaskAction
-import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import io.github.sgrishchenko.karakum.gradle.plugin.karakumDependency
 import io.github.sgrishchenko.karakum.gradle.plugin.typescriptDependency
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
+import org.gradle.api.DefaultTask
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.RequiresNpmDependencies
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
+import java.io.File
 
 abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
-    @get:Internal
-    override val compilation: KotlinJsCompilation
-        get() {
-            val extension = project.extensions.getByType(KotlinJsProjectExtension::class.java)
-            val target = extension.js()
 
-            return target.compilations.getByName(MAIN_COMPILATION_NAME)
-        }
+    @get:OutputFile
+    abstract val outputConfig: Property<File>
+
+    @get:Internal
+    override val compilation: KotlinJsCompilation = kotlinJsCompilation
 
     @get:Internal
     override val nodeModulesRequired = true
@@ -31,6 +29,10 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
         typescriptDependency,
     )
 
+    init {
+        outputConfig.convention(defaultOutputConfig)
+    }
+
     @TaskAction
     fun generate() {
         project.exec {
@@ -38,7 +40,7 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
                 this,
                 "karakum/build/cli.js",
                 emptyList(),
-                listOf("--config", project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE").absolutePath)
+                listOf("--config", outputConfig.get().absolutePath)
             )
         }
     }
