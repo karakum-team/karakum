@@ -1,6 +1,7 @@
 import ts, {Node, Program, SyntaxKind} from "typescript";
 import {Configuration} from "./configuration/configuration";
 import {ConverterPlugin} from "./converter/plugin";
+import {NameResolver} from "./converter/nameResolver";
 import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
@@ -48,6 +49,7 @@ const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 export const createPlugins = (
     sourceFileRoot: string,
     configuration: Configuration,
+    nameResolvers: NameResolver[],
     program: Program,
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
@@ -56,7 +58,7 @@ export const createPlugins = (
     new CheckCoveragePlugin(),
 
     new NullableUnionTypePlugin(),
-    new TypeLiteralPlugin(sourceFileRoot),
+    new TypeLiteralPlugin(sourceFileRoot, nameResolvers),
 
     convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
 

@@ -8,15 +8,38 @@ import {createGeneratedFile} from "../../structure/createGeneratedFile";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {capitalize} from "../../utils/strings";
 import {traverse} from "../../utils/traverse";
 import {findClosest} from "../../utils/findClosest";
+import {NameResolver} from "../nameResolver";
+import {resolveFunctionParameterName} from "../nameResolvers/resolveFunctionParameterName";
+import {resolveFunctionTypeParameterName} from "../nameResolvers/resolveFunctionTypeParameterName";
+import {resolveTypeAliasPropertyName} from "../nameResolvers/resolveTypeAliasPropertyName";
+import {resolveCallSignatureParameterName} from "../nameResolvers/resolveCallSignatureParameterName";
+import {resolveConstructorParameterName} from "../nameResolvers/resolveConstructorParameterName";
+import {resolveMethodParameterName} from "../nameResolvers/resolveMethodParameterName";
+
+const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
+    resolveFunctionParameterName,
+    resolveFunctionTypeParameterName,
+    resolveCallSignatureParameterName,
+    resolveConstructorParameterName,
+    resolveMethodParameterName,
+    resolveTypeAliasPropertyName,
+]
 
 export class TypeLiteralPlugin implements ConverterPlugin {
     private counter = 0
-    private generated: Record<string, { name: string, declaration: string }[]> = {}
+    private readonly generated: Record<string, { name: string, declaration: string }[]> = {}
+    private readonly nameResolvers: NameResolver<TypeLiteralNode>[]
 
-    constructor(private sourceFileRoot: string) {
+    constructor(
+        private sourceFileRoot: string,
+        nameResolvers: NameResolver[],
+    ) {
+        this.nameResolvers = [
+            ...nameResolvers,
+            ...defaultNameResolvers,
+        ]
     }
 
     generate(context: ConverterContext): Record<string, string> {
@@ -68,74 +91,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
-        let generatedName = `Temp${this.counter++}`
-
-        if (ts.isParameter(node.parent)) {
-            let parameterName = ""
-
-            if (ts.isIdentifier(node.parent.name)) {
-                parameterName = node.parent.name.text ?? ""
-            }
-
-            let parentName = ""
-
-            if (ts.isFunctionDeclaration(node.parent.parent)) {
-                parentName = node.parent.parent.name?.text ?? ""
-            }
-
-            if (
-                ts.isFunctionTypeNode(node.parent.parent)
-                && ts.isTypeAliasDeclaration(node.parent.parent.parent)
-            ) {
-                parentName = node.parent.parent.parent.name.text
-            }
-
-            if (ts.isCallSignatureDeclaration(node.parent.parent)) {
-                if (ts.isInterfaceDeclaration(node.parent.parent.parent)) {
-                    parentName = node.parent.parent.parent.name.text
-                }
-            }
-
-            if (ts.isConstructorDeclaration(node.parent.parent)) {
-                parentName = node.parent.parent.parent.name?.text ?? ""
-            }
-
-            if (ts.isMethodDeclaration(node.parent.parent)) {
-                const methodName = node.parent.parent.name.getText()
-                let className = ""
-
-                if (ts.isClassDeclaration(node.parent.parent.parent)) {
-                    className = node.parent.parent.parent.name?.text ?? ""
-                }
-
-                parentName = `${capitalize(className)}${capitalize(methodName)}`
-            }
-
-            if (parentName || parameterName) {
-                generatedName = `${capitalize(parentName)}${capitalize(parameterName)}`
-            }
-        }
-
-        if (ts.isPropertySignature(node.parent)) {
-            let propertyName = ""
-
-            if (ts.isIdentifier(node.parent.name)) {
-                propertyName = node.parent.name.text
-            }
-
-            let parentName = ""
-
-            if (
-                ts.isTypeLiteralNode(node.parent.parent)
-                && ts.isTypeAliasDeclaration(node.parent.parent.parent)
-            ) {
-                parentName = node.parent.parent.parent.name.text
-            }
-
-            if (parentName || propertyName) {
-                generatedName = `${capitalize(parentName)}${capitalize(propertyName)}`
-            }
-        }
+        const name = this.resolveName(node, context) ?? `Temp${this.counter++}`
 
         const typeParameters = this.extractTypeParameters(node, context).join(", ")
 
@@ -147,19 +103,19 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             .join("\n")
 
         const declaration = `
-external interface ${generatedName}${ifPresent(typeParameters, it => `<${it}>`)} {
+external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
 ${members}
 }
         `
 
         generatedDeclarations.push({
-            name: generatedName,
+            name,
             declaration,
         })
 
         this.generated[fileName] = generatedDeclarations
 
-        return `${generatedName}${ifPresent(typeParameters, it => `<${it}>`)}`;
+        return `${name}${ifPresent(typeParameters, it => `<${it}>`)}`;
     }
 
     setup(context: ConverterContext): void {
@@ -167,6 +123,17 @@ ${members}
 
     traverse(node: ts.Node, context: ConverterContext): void {
     }
+
+    private resolveName(typeLiteralNode: TypeLiteralNode, context: ConverterContext): string | null {
+        for (const nameResolver of this.nameResolvers) {
+            const result = nameResolver(typeLiteralNode, context)
+
+            if (result !== null) return result
+        }
+
+        return null
+    }
+
 
     private extractTypeParameters(typeLiteralNode: TypeLiteralNode, context: ConverterContext): string[] {
         const result: string[] = []

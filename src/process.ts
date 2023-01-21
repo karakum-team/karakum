@@ -13,31 +13,49 @@ import {traverse} from "./utils/traverse";
 import minimatch from "minimatch";
 import {createTargetFile} from "./structure/createTargetFile";
 import {createRender} from "./converter/render";
+import {NameResolver} from "./converter/nameResolver";
 
 export const defaultPluginPatterns = [
-    "karakum/**/*.js"
+    "karakum/*/*.js"
 ]
 
-export async function process(configuration: Configuration) {
-    const {input, output, ignoreInput, ignoreOutput, plugins: pluginPatterns, compilerOptions} = configuration
+export const defaultNameResolverPatterns = [
+    "karakum/nameResolvers/*/*.js"
+]
 
-    const normalizedInput = typeof input === "string" ? [input] : input
-    const normalizedIgnoreInput = ignoreInput !== undefined
-        ? typeof ignoreInput === "string" ? [ignoreInput] : ignoreInput
-        : []
-    const normalizedIgnoreOutput = ignoreOutput !== undefined
-        ? typeof ignoreOutput === "string" ? [ignoreOutput] : ignoreOutput
-        : []
-    const normalizedPluginPatterns = pluginPatterns !== undefined
-        ? typeof pluginPatterns === "string" ? [pluginPatterns] : pluginPatterns
-        : defaultPluginPatterns
+function normalizeGlob(patterns: string | string[] | undefined, defaultValue: string[] = []) {
+    return patterns !== undefined
+        ? typeof patterns === "string" ? [patterns] : patterns
+        : defaultValue
+}
+
+export async function process(configuration: Configuration) {
+    const {
+        input,
+        output,
+        ignoreInput,
+        ignoreOutput,
+        plugins,
+        nameResolvers,
+        compilerOptions,
+    } = configuration
+
+    const normalizedInput = normalizeGlob(input)
+    const normalizedIgnoreInput = normalizeGlob(ignoreInput)
+    const normalizedIgnoreOutput = normalizeGlob(ignoreOutput)
+    const normalizedPlugins = normalizeGlob(plugins, defaultPluginPatterns)
+    const normalizedNameResolvers = normalizeGlob(nameResolvers, defaultNameResolverPatterns)
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
         ignore: ignoreInput,
     }))
 
-    const pluginFileNames = normalizedPluginPatterns.flatMap(pattern => glob.sync(pattern, {
+    const pluginFileNames = normalizedPlugins.flatMap(pattern => glob.sync(pattern, {
+        absolute: true,
+    }))
+
+    const nameResolverFileNames = normalizedNameResolvers.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
     }))
 
@@ -81,9 +99,20 @@ export async function process(configuration: Configuration) {
         }
     }
 
-    const defaultPlugins = createPlugins(sourceFileRoot, configuration, program)
+    const customNameResolvers: NameResolver[] = []
 
-    const plugins = [
+    for (const nameResolverFileName of nameResolverFileNames) {
+        console.log(`Name Resolver file: ${nameResolverFileName}`)
+
+        const nameResolverModule: { default: unknown } = await import(nameResolverFileName)
+        const nameResolver = nameResolverModule.default
+
+        customNameResolvers.push(nameResolver as NameResolver)
+    }
+
+    const defaultPlugins = createPlugins(sourceFileRoot, configuration, customNameResolvers, program)
+
+    const converterPlugins = [
         // it is important to handle comments at first
         new CommentsPlugin(),
 
@@ -91,7 +120,7 @@ export async function process(configuration: Configuration) {
         ...defaultPlugins
     ]
 
-    for (const plugin of plugins) {
+    for (const plugin of converterPlugins) {
         plugin.setup(context)
     }
 
@@ -108,13 +137,13 @@ export async function process(configuration: Configuration) {
         .flatMap(it => it.nodes)
         .forEach(node => {
             traverse(node, node => {
-                for (const plugin of plugins) {
+                for (const plugin of converterPlugins) {
                     plugin.traverse(node, context)
                 }
             })
         })
 
-    const render = createRender(context, plugins)
+    const render = createRender(context, converterPlugins)
 
     fileStructure
         .forEach(item => {
@@ -142,7 +171,7 @@ export async function process(configuration: Configuration) {
             }
         })
 
-    for (const plugin of plugins) {
+    for (const plugin of converterPlugins) {
         const generated = plugin.generate(context)
 
         for (const [fileName, content] of Object.entries(generated)) {

@@ -14,6 +14,8 @@ export type Configuration = {
 
     plugins?: string | string[];
 
+    nameResolvers?: string | string[];
+
     moduleNameMapper?: Record<string, string>
     packageNameMapper?: Record<string, string>
 
