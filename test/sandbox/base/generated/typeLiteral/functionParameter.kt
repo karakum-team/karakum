@@ -21,6 +21,12 @@ fun method(options: MyClassMethodOptions): String
     
 
 
+external interface MyInterface {
+fun method(options: MyInterfaceMethodOptions): String
+}
+    
+
+
 external interface ShouldRevalidateFunction {
 fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
 }
@@ -47,6 +53,13 @@ var second: Double
 external interface MyClassMethodOptions {
 var third: Boolean
 var fourth: Array<String>
+}
+        
+
+
+external interface MyInterfaceMethodOptions {
+var first: Boolean
+var second: Array<String>
 }
         
 

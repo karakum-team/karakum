@@ -16,14 +16,16 @@ import {resolveFunctionTypeParameterName} from "../nameResolvers/resolveFunction
 import {resolveTypeAliasPropertyName} from "../nameResolvers/resolveTypeAliasPropertyName";
 import {resolveCallSignatureParameterName} from "../nameResolvers/resolveCallSignatureParameterName";
 import {resolveConstructorParameterName} from "../nameResolvers/resolveConstructorParameterName";
-import {resolveMethodParameterName} from "../nameResolvers/resolveMethodParameterName";
+import {resolveClassMethodParameterName} from "../nameResolvers/resolveClassMethodParameterName";
+import {resolveInterfaceMethodParameterName} from "../nameResolvers/resolveInterfaceMethodParameterName";
 
 const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
     resolveFunctionParameterName,
     resolveFunctionTypeParameterName,
     resolveCallSignatureParameterName,
     resolveConstructorParameterName,
-    resolveMethodParameterName,
+    resolveClassMethodParameterName,
+    resolveInterfaceMethodParameterName,
     resolveTypeAliasPropertyName,
 ]
 
