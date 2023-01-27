@@ -13,19 +13,18 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 
 class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = with(project) {
-        val copyKarakum by tasks.registering(KarakumCopy::class) {
+        val copyKarakumExtensions by tasks.registering(KarakumCopy::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
         }
 
         val configureKarakum by tasks.registering(KarakumConfig::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
-
-            dependsOn(copyKarakum)
         }
 
         val generateKarakumExternals by tasks.registering(KarakumGenerate::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
 
+            dependsOn(copyKarakumExtensions)
             dependsOn(configureKarakum)
         }
 

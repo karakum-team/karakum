@@ -8,10 +8,10 @@ export const resolveFunctionTypeParameterName: NameResolver<TypeLiteralNode> = (
 
     const parameterName = node.parent.name.text
 
-    if (!ts.isFunctionDeclaration(node.parent.parent)) return null
-    if (node.parent.parent.name === undefined) return null
+    if (!ts.isFunctionTypeNode(node.parent.parent)) return null
+    if (!ts.isTypeAliasDeclaration(node.parent.parent.parent)) return null
 
-    const parentName = node.parent.parent.name.text
+    const parentName = node.parent.parent.parent.name.text
 
     return `${capitalize(parentName)}${capitalize(parameterName)}`
 }

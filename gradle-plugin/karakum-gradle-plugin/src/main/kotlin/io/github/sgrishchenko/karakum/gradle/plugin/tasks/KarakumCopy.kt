@@ -4,11 +4,11 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.file.FileFactory
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
-import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
@@ -20,39 +20,42 @@ abstract class KarakumCopy
 constructor(
     fileFactory: FileFactory,
 ) : DefaultTask() {
+    @get:Input
+    abstract val extensionBasePaths: Property<Iterable<String>>
+
     @get:InputFiles
     abstract val inputExtensions: Property<Iterable<File>>
 
     @get:OutputDirectory
     abstract val outputExtensions: DirectoryProperty
 
-    private val defaultPatterns = listOf(
-        "<buildSrc>/karakum/**.js",
-        "karakum/**.js",
-    )
-
     init {
+        extensionBasePaths.convention(listOf(
+            project.rootDir.resolve("buildSrc").resolve("karakum").toPath(),
+            project.projectDir.resolve("karakum").toPath()
+        ).map(Path::toString))
+
         inputExtensions.convention(getDefaultInputExtensions())
         outputExtensions.convention(fileFactory.dir(defaultOutputExtensions))
     }
 
+    private val File.basePath
+        get() = extensionBasePaths.get()
+            .map(Path::of)
+            .firstOrNull(toPath()::startsWith)
+            ?: run {
+                val basePathList = extensionBasePaths.get().joinToString(separator = "\n") { "- $it/" }
+                error("Karakum extensions should be placed in one the following directories:\n${basePathList}")
+            }
+
     private fun getDefaultInputExtensions(): Iterable<File> {
-        return defaultPatterns
-            .flatMap { pattern ->
-                val basePath = when {
-                    pattern.startsWith("<buildSrc>/") -> project.rootDir.resolve("buildSrc").toPath()
-                    else -> project.projectDir.toPath()
-                }
-
-                val preparedPattern = pattern.removePrefix("<buildSrc>/")
-
-                val matcher = FileSystems.getDefault().getPathMatcher("glob:$preparedPattern")
-
+        return extensionBasePaths.get()
+            .map(Path::of)
+            .filter { basePath -> Files.exists(basePath) }
+            .flatMap { basePath ->
                 Files.walk(basePath).use { paths ->
                     paths
-                        .map(basePath::relativize)
-                        .filter(matcher::matches)
-                        .map(basePath::resolve)
+                        .filter { file -> !Files.isDirectory(file) }
                         .toList()
                 }
             }
@@ -61,11 +64,19 @@ constructor(
 
     @TaskAction
     fun copy() {
-        val extensions = inputExtensions.get().toList()
+        val extensionGroups = inputExtensions.get().groupBy { it.basePath }
 
-        project.copy {
-            from(*extensions.toTypedArray())
-            into(outputExtensions)
+        for ((basePath, files) in extensionGroups) {
+            project.copy {
+                from(basePath)
+                into(outputExtensions)
+                include(
+                    files
+                        .map(File::toPath)
+                        .map(basePath::relativize)
+                        .map(Path::toString)
+                )
+            }
         }
     }
 }

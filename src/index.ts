@@ -8,6 +8,9 @@ export type {ConverterContext} from "./converter/context"
 export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin"
 export {createSimplePlugin} from "./converter/plugin"
 
+// name resolver
+export type {NameResolver} from "./converter/nameResolver"
+
 // plugin services
 export {checkCoverageServiceKey, type CheckCoverageService} from "./converter/plugins/CheckCoveragePlugin"
 export {configurationServiceKey, type ConfigurationService} from "./converter/plugins/ConfigurationPlugin"

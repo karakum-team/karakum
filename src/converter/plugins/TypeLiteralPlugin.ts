@@ -11,8 +11,8 @@ import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 import {traverse} from "../../utils/traverse";
 import {findClosest} from "../../utils/findClosest";
 import {NameResolver} from "../nameResolver";
-import {resolveFunctionParameterName} from "../nameResolvers/resolveFunctionParameterName";
 import {resolveFunctionTypeParameterName} from "../nameResolvers/resolveFunctionTypeParameterName";
+import {resolveFunctionParameterName} from "../nameResolvers/resolveFunctionParameterName";
 import {resolveTypeAliasPropertyName} from "../nameResolvers/resolveTypeAliasPropertyName";
 import {resolveCallSignatureParameterName} from "../nameResolvers/resolveCallSignatureParameterName";
 import {resolveConstructorParameterName} from "../nameResolvers/resolveConstructorParameterName";
@@ -20,8 +20,8 @@ import {resolveClassMethodParameterName} from "../nameResolvers/resolveClassMeth
 import {resolveInterfaceMethodParameterName} from "../nameResolvers/resolveInterfaceMethodParameterName";
 
 const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
-    resolveFunctionParameterName,
     resolveFunctionTypeParameterName,
+    resolveFunctionParameterName,
     resolveCallSignatureParameterName,
     resolveConstructorParameterName,
     resolveClassMethodParameterName,
