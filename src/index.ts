@@ -24,4 +24,8 @@ export {convertParameterDeclarationWithFixedType} from "./converter/plugins/conv
 export type {Render} from "./converter/render"
 export {ifPresent} from "./converter/render"
 
+// utils
+export {traverse} from "./utils/traverse"
+export {findClosest} from "./utils/findClosest"
+
 export {process} from "./process"
