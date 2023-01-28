@@ -70,6 +70,7 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.PropertyAccessExpression,
     SyntaxKind.ConstructSignature,
     SyntaxKind.ObjectKeyword, // Any
+    SyntaxKind.ImportType,
 ]
 
 export class CheckKindsPlugin implements ConverterPlugin {

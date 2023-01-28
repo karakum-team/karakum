@@ -43,6 +43,7 @@ import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
 import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
 import {convertStringUnionTypeAliasDeclaration} from "./converter/plugins/convertStringUnionTypeAliasDeclaration";
 import {convertTypeOperator} from "./converter/plugins/convertTypeOperator";
+import {convertImportType} from "./converter/plugins/convertImportType";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -113,4 +114,5 @@ export const createPlugins = (
     convertFunctionDeclaration,
     convertTypePredicate,
     convertTypeOperator,
+    convertImportType,
 ]
