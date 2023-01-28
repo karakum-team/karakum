@@ -44,6 +44,7 @@ import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
 import {convertStringUnionTypeAliasDeclaration} from "./converter/plugins/convertStringUnionTypeAliasDeclaration";
 import {convertTypeOperator} from "./converter/plugins/convertTypeOperator";
 import {convertImportType} from "./converter/plugins/convertImportType";
+import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -105,6 +106,7 @@ export const createPlugins = (
     convertVariableStatement,
     convertVariableDeclaration,
     convertQualifiedName,
+    convertPropertyAccessExpression,
     convertPrefixUnaryExpression,
     convertParenthesizedType,
     convertUnionType,
