@@ -11,7 +11,7 @@ export const convertImportType = createSimplePlugin((node, context, render) => {
 
     const qualifier = node.qualifier
         ? render(node.qualifier)
-        : "Any?"
+        : "Any"
 
     return `/* import(${node.argument.getText()}) */ ${qualifier}`
 })
