@@ -3,6 +3,7 @@ import {NameResolver} from "../nameResolver";
 import {capitalize} from "../../utils/strings";
 
 export const resolveFunctionReturnTypeName: NameResolver<TypeLiteralNode> = (node) => {
+    if (!node.parent) return null
     if (!ts.isFunctionDeclaration(node.parent)) return null
     if (node.parent.name === undefined) return null
     if (node.parent.type !== node) return null
