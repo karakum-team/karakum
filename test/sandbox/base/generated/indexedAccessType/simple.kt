@@ -12,9 +12,15 @@ package sandbox.base.indexedAccessType
 
 
 
+external interface AgnosticDataRouteMatch {
+var params: Any /* string | number */
+}
+        
+
+
 external interface MyTypeWithAccessType {
 var currentUrl: URL
-var currentParams: Any /* AgnosticDataRouteMatch["params"] */
+var currentParams: Any /* string | number */
 }
         
     

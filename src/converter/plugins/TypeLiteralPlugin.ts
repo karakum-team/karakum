@@ -103,7 +103,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
 
         const typeParameters = this.extractTypeParameters(node, context).join(", ")
 
-        const fileName = node.getSourceFile().fileName
+        const fileName = node.getSourceFile()?.fileName ?? "generated.d.ts"
         const generatedDeclarations = this.generated[fileName] ?? []
 
         const members = node.members

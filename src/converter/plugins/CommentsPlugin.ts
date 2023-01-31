@@ -19,6 +19,7 @@ export class CommentsPlugin implements ConverterPlugin {
         this.coveredComments.add(node)
 
         const sourceFile = node.getSourceFile()
+        if (!sourceFile) return null
 
         const leadingComments = ts.getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?? []
         const trailingComments = ts.getTrailingCommentRanges(sourceFile.getFullText(), node.getEnd()) ?? []

@@ -1,9 +1,10 @@
 import {ConverterPlugin} from "../plugin";
-import ts, {EmitHint, Node, SyntaxKind} from "typescript";
+import {Node, SyntaxKind} from "typescript";
 import {Render} from "../render";
 import {ConverterContext} from "../context";
 import {traverse} from "../../utils/traverse";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 
 export const checkCoverageServiceKey = Symbol()
 
@@ -46,20 +47,25 @@ export class CheckCoverageService {
 export class CheckCoveragePlugin implements ConverterPlugin {
     private readonly checkCoverageService = new CheckCoverageService()
 
-    private readonly printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
-
     generate(context: ConverterContext): Record<string, string> {
         const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
+        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
         const {coveredNodes, uncoveredNodes} = this.checkCoverageService.emit( uncoveredNode => {
             if (configurationService?.configuration?.verbose) {
+                const message = `Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`
                 const sourceFile = uncoveredNode.getSourceFile()
-                const {line, character} = sourceFile.getLineAndCharacterOfPosition(uncoveredNode.pos)
 
-                console.error(`${uncoveredNode.getSourceFile().fileName}: (${line + 1}, ${character + 1}): Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`)
+                if (sourceFile) {
+                    const {line, character} = sourceFile.getLineAndCharacterOfPosition(uncoveredNode.pos)
+
+                    console.error(`${sourceFile.fileName}: (${line + 1}, ${character + 1}): ${message}`)
+                } else {
+                    console.error(message)
+                }
 
                 console.error("--- Node Start ---");
-                console.error(this.printer.printNode(EmitHint.Unspecified, uncoveredNode, uncoveredNode.getSourceFile()));
+                console.error(typeScriptService?.printNode(uncoveredNode));
                 console.error("--- Node End ---");
 
                 console.error();

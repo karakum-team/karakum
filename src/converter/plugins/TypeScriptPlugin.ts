@@ -1,4 +1,4 @@
-import {Node, Program} from "typescript";
+import ts, {EmitHint, Node, Program, ScriptTarget} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
@@ -6,7 +6,16 @@ import {Render} from "../render";
 export const typeScriptServiceKey = Symbol()
 
 export class TypeScriptService {
+    private virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
+    private readonly printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed})
+
     constructor(public readonly program: Program) {
+    }
+
+    printNode(node: Node) {
+        const sourceFile = node.getSourceFile() ?? this.virtualSourceFile
+
+        return this.printer.printNode(EmitHint.Unspecified, node, sourceFile)
     }
 }
 
