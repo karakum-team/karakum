@@ -1,6 +1,6 @@
 import {Configuration} from "./configuration/configuration";
 import glob from "glob";
-import ts from "typescript";
+import ts, {CompilerOptions} from "typescript";
 import path from "path";
 import {commonPrefix} from "./utils/fileName";
 import fs from "fs";
@@ -21,6 +21,10 @@ export const defaultPluginPatterns = [
 
 export const defaultNameResolverPatterns = [
     "karakum/nameResolvers/*.js"
+]
+
+export const ignoreLibPatterns = [
+    "**/typescript/lib/**"
 ]
 
 function normalizeGlob(patterns: string | string[] | undefined, defaultValue: string[] = []) {
@@ -59,9 +63,10 @@ export async function process(configuration: Configuration) {
         absolute: true,
     }))
 
-    const preparedCompilerOptions = {
-        lib: [],
+    const preparedCompilerOptions: CompilerOptions = {
+        lib: ["lib.esnext.d.ts"],
         types: [],
+        strict: true,
         ...compilerOptions
     }
 
@@ -124,9 +129,14 @@ export async function process(configuration: Configuration) {
         plugin.setup(context)
     }
 
+    const preparedIgnoreInput = [
+        ...normalizedIgnoreInput,
+        ...ignoreLibPatterns,
+    ]
+
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
-            return normalizedIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
+            return preparedIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
         })
 
     console.log(`Source files count: ${sourceFiles.length}`)

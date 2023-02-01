@@ -7,7 +7,10 @@ export const typeScriptServiceKey = Symbol()
 
 export class TypeScriptService {
     private virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private readonly printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed})
+    private readonly printer = ts.createPrinter({
+        removeComments: true,
+        newLine: ts.NewLineKind.LineFeed,
+    })
 
     constructor(public readonly program: Program) {
     }

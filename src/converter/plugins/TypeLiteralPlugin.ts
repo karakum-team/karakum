@@ -99,6 +99,9 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
+        // handle empty type literal
+        if (node.members.length === 0) return "Any"
+
         const name = this.resolveName(node, context) ?? `Temp${this.counter++}`
 
         const typeParameters = this.extractTypeParameters(node, context).join(", ")
