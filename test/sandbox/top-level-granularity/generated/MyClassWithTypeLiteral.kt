@@ -12,7 +12,7 @@ package sandbox.top.level.granularity
 
 
 
-external class MyClassWithTypeLiteral  {
+external class MyClassWithTypeLiteral {
 constructor (options: MyClassWithTypeLiteralOptions)
 fun method(options: MyClassWithTypeLiteralMethodOptions): String
 }

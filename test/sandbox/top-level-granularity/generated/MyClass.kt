@@ -12,7 +12,7 @@ package sandbox.top.level.granularity
 
 
 
-external class MyClass  {
+external class MyClass {
 var field: Boolean
 }
     

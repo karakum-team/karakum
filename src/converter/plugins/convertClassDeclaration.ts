@@ -23,14 +23,14 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const heritageClauses = node.heritageClauses
         ?.map(heritageClause => render(heritageClause))
-        ?.join(" ")
+        ?.join(", ")
 
     const members = node.members
         .map(member => render(member))
         .join("\n")
 
     return `
-external class ${name} ${ifPresent(typeParameters, it => `<${it}> `)}${heritageClauses ?? ""} {
+external class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
 ${members}
 }
     `

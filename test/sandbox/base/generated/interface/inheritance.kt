@@ -30,4 +30,16 @@ external interface ChildInterface : FirstParentInterface, SecondParentInterface 
 var otherField: Boolean
 }
     
+
+
+external class ParentClass {
+
+}
+    
+
+
+external class ChildClass : ParentClass, ChildInterface {
+
+}
+    
     

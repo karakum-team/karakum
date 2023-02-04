@@ -23,7 +23,7 @@ var handle6: Any? /* some expression */
         
 
 
-external class AgnosticBaseRouteClass  {
+external class AgnosticBaseRouteClass {
 var handle1: Any?
 var handle2: Any?
 var handle3: String?

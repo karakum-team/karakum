@@ -19,7 +19,7 @@ var secondField: Double
     
 
 
-external interface GenericInterface<T, U : ExampleInterface>  {
+external interface GenericInterface<T, U : ExampleInterface> {
 var firstField: T
 var secondField: Double
 fun firstMethod(firstParam: String, secondParam: U): Unit
@@ -33,7 +33,7 @@ fun <T, U : ExampleInterface> genericMethod(firstParam: T, secondParam: Double):
     
 
 
-external interface ChildGenericInterface<T>  : GenericInterface<T, ExampleInterface> {
+external interface ChildGenericInterface<T> : GenericInterface<T, ExampleInterface> {
 
 }
     

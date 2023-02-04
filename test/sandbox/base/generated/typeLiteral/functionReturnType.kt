@@ -14,7 +14,7 @@ package sandbox.base.typeLiteral
 external fun useRevalidator(): UseRevalidatorResult
 
 
-external class MyClass  {
+external class MyClass {
 fun getDerivedStateFromProps(): MyClassGetDerivedStateFromPropsResult
 }
     

@@ -11,3 +11,10 @@ export interface SecondParentInterface {
 export interface ChildInterface extends FirstParentInterface, SecondParentInterface {
     otherField: boolean;
 }
+
+declare class ParentClass {
+
+}
+
+declare class ChildClass extends ParentClass implements ChildInterface {
+}

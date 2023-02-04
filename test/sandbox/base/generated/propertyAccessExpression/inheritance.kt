@@ -12,7 +12,7 @@ package sandbox.base.propertyAccessExpression
 
 
 
-external class RenderErrorBoundary  : React.Component<RenderErrorBoundaryProps, RenderErrorBoundaryState> {
+external class RenderErrorBoundary : React.Component<RenderErrorBoundaryProps, RenderErrorBoundaryState> {
 
 }
     

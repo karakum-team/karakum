@@ -20,14 +20,14 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
 
     const heritageClauses = node.heritageClauses
         ?.map(heritageClause => render(heritageClause))
-        ?.join(" ")
+        ?.join(", ")
 
     const members = node.members
         .map(member => render(member))
         .join("\n")
 
     return `
-external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClauses ?? ""} {
+external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
 ${members}
 }
     `

@@ -8,9 +8,7 @@ export const convertHeritageClause = createSimplePlugin((node, context, render) 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    const types = node.types
+    return node.types
         .map(type => render(type))
         .join(", ")
-
-    return " : " + types
 })

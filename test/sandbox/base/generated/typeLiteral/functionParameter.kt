@@ -14,7 +14,7 @@ package sandbox.base.typeLiteral
 external fun createMemoryRouter(routes: Array<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
 
 
-external class MyClass  {
+external class MyClass {
 constructor (options: MyClassOptions)
 fun method(options: MyClassMethodOptions): String
 }
