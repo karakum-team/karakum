@@ -2,11 +2,14 @@ import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 
 export const convertPropertyDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertyDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
     checkCoverageService?.cover(node)
 
     const readonly = node.modifiers?.find(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword)
@@ -28,15 +31,17 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
 
     let isOptional = false
 
+    const resolvedType = node.type && typeScriptService?.resolveType(node.type)
+
     if (
         node.questionToken
-        && node.type
-        && node.type.kind !== SyntaxKind.UnknownKeyword
-        && node.type.kind !== SyntaxKind.AnyKeyword
-        && !isNullableType(node.type)
+        && resolvedType
+        && resolvedType.kind !== SyntaxKind.UnknownKeyword
+        && resolvedType.kind !== SyntaxKind.AnyKeyword
+        && !isNullableType(resolvedType)
         && !(
-            ts.isUnionTypeNode(node.type)
-            && isNullableUnionType(node.type)
+            ts.isUnionTypeNode(resolvedType)
+            && isNullableUnionType(resolvedType)
         )
     ) {
         isOptional = true

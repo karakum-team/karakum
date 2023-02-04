@@ -1,7 +1,8 @@
-import ts, {EmitHint, Node, Program, ScriptTarget} from "typescript";
+import ts, {EmitHint, Node, NodeBuilderFlags, Program, ScriptTarget, TypeNode} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
+import {setParentNodes} from "../../utils/setParentNodes";
 
 export const typeScriptServiceKey = Symbol()
 
@@ -19,6 +20,13 @@ export class TypeScriptService {
         const sourceFile = node.getSourceFile() ?? this.virtualSourceFile
 
         return this.printer.printNode(EmitHint.Unspecified, node, sourceFile)
+    }
+
+    resolveType(node: TypeNode) {
+        const typeChecker = this.program.getTypeChecker()
+        const type = typeChecker.getTypeAtLocation(node)
+        const typeNode = typeChecker.typeToTypeNode(type, undefined, NodeBuilderFlags.NoTruncation)
+        return typeNode && setParentNodes(typeNode)
     }
 }
 
