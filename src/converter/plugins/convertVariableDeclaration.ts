@@ -13,9 +13,7 @@ export const convertVariableDeclaration = createSimplePlugin((node, context, ren
 
     const modifier = node.parent.flags & NodeFlags.Const
         ? "val "
-        : node.parent.flags & NodeFlags.Let
-            ? "var "
-            : ""
+        : "var "
 
     const name = render(node.name)
 

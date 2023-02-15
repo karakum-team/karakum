@@ -8,5 +8,13 @@ export const convertModuleDeclaration = createSimplePlugin((node, context, rende
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    return (node.body && render(node.body)) ?? ""
+    const name = render(node.name)
+
+    const body = node.body && render(node.body)
+
+    return `
+external object ${name} {
+${body}
+}
+    `
 })
