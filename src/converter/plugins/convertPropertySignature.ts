@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
+import {isPossiblyNullableType} from "./NullableUnionTypePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 import {KOTLIN_KEYWORDS} from "../constants";
 
@@ -36,18 +36,13 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
 
     let isOptional = false
 
+    // handle `typeof` case
     const resolvedType = node.type && typeScriptService?.resolveType(node.type)
 
     if (
         node.questionToken
         && resolvedType
-        && resolvedType.kind !== SyntaxKind.UnknownKeyword
-        && resolvedType.kind !== SyntaxKind.AnyKeyword
-        && !isNullableType(resolvedType)
-        && !(
-            ts.isUnionTypeNode(resolvedType)
-            && isNullableUnionType(resolvedType)
-        )
+        && !isPossiblyNullableType(resolvedType)
     ) {
         isOptional = true
     }
