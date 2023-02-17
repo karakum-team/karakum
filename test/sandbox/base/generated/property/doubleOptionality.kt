@@ -16,9 +16,9 @@ external interface AgnosticBaseRouteObject {
 var handle1: Any?
 var handle2: Any?
 var handle3: String?
-var handle4: Any? /* some expression */
-var handle5: Any? /* some expression */
-var handle6: Any? /* some expression */
+var handle4: Nothing?
+var handle5: Nothing?
+var handle6: Any? /* type isn't declared */
 }
         
 
@@ -27,9 +27,9 @@ external class AgnosticBaseRouteClass {
 var handle1: Any?
 var handle2: Any?
 var handle3: String?
-var handle4: Any? /* some expression */
-var handle5: Any? /* some expression */
-var handle6: Any? /* some expression */
+var handle4: Nothing?
+var handle5: Nothing?
+var handle6: Any? /* type isn't declared */
 }
     
     

@@ -17,10 +17,11 @@ export const convertVariableDeclaration = createSimplePlugin((node, context, ren
 
     const name = render(node.name)
 
-    let type = node.type && render(node.type)
+    let type: string
 
-    if (!type) {
-        // throw new Error(`${name} variable declaration without type is unsupported`)
+    if (node.type) {
+        type = render(node.type)
+    } else {
         type = "Any? /* should be inferred */" // TODO: infer types
     }
 

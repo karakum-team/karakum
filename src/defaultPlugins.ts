@@ -66,8 +66,8 @@ export const createPlugins = (
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),
-    convertPrimitive(hasKind(SyntaxKind.UndefinedKeyword), () => ""), // covered by nullability
-    convertPrimitive(hasKind(SyntaxKind.NullKeyword), () => ""), // covered by nullability
+    convertPrimitive(hasKind(SyntaxKind.UndefinedKeyword), () => "Nothing?"),
+    convertPrimitive(hasKind(SyntaxKind.NullKeyword), () => "Nothing?"),
     convertPrimitive(hasKind(SyntaxKind.ObjectKeyword), () => "Any"),
     convertPrimitive(hasKind(SyntaxKind.StringKeyword), () => "String"),
     convertPrimitive(hasKind(SyntaxKind.NumberKeyword), () => "Double"),

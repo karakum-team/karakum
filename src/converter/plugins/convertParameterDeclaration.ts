@@ -108,11 +108,12 @@ const convertParameterDeclarationWithFixedType = (
         checkCoverageService?.deepCover(node.name)
     }
 
-    let renderedType = type && render(type)
+    let renderedType: string
 
-    if (!renderedType) {
-        // throw new Error(`${name} parameter declaration without type is unsupported`)
-        renderedType = "Any? /* some expression */" // TODO: resolve types
+    if (type) {
+        renderedType = render(type)
+    } else {
+        renderedType = "Any? /* type isn't declared */"
     }
 
     if (node.dotDotDotToken) {

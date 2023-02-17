@@ -28,10 +28,12 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
         name = `\`${name}\``
     }
 
-    let type = node.type && render(node.type)
+    let type: string
 
-    if (!type) {
-        type = "Any? /* some expression */"
+    if (node.type) {
+        type = render(node.type)
+    } else {
+        type = "Any? /* type isn't declared */"
     }
 
     let isOptional = false

@@ -10,7 +10,7 @@ export const convertModuleDeclaration = createSimplePlugin((node, context, rende
 
     const name = render(node.name)
 
-    const body = node.body && render(node.body)
+    const body = (node.body && render(node.body)) ?? ""
 
     return `
 external object ${name} {
