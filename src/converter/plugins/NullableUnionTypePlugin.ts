@@ -46,7 +46,7 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
 
             nullableTypes.forEach(it => checkCoverageService?.deepCover(it))
 
-            if (nonNullableTypes.length === 1 && !ts.isFunctionTypeNode(nonNullableTypes[0])) {
+            if (nonNullableTypes.length === 1) {
                 const nonNullableType = nonNullableTypes[0]
                 return `${next(nonNullableType)}?`
             } else {
