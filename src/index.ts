@@ -17,8 +17,10 @@ export {configurationServiceKey, type ConfigurationService} from "./converter/pl
 export {typeScriptServiceKey, type TypeScriptService} from "./converter/plugins/TypeScriptPlugin"
 
 // plugin utils
-export {type ParameterInfo, type Signature, prepareParameters} from "./converter/plugins/prepareParameters"
-export {convertParameterDeclarationWithFixedType} from "./converter/plugins/convertParameterDeclaration"
+export {
+    type ParameterDeclarationsConfiguration,
+    convertParameterDeclarations
+} from "./converter/plugins/convertParameterDeclaration"
 
 // render
 export type {Render} from "./converter/render"
