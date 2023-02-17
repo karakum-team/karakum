@@ -9,7 +9,7 @@ repositories {
 }
 
 group = "io.github.sgrishchenko"
-version = "1.0.0-alpha.0"
+version = "1.0.0-alpha.1"
 
 dependencies {
     compileOnly(kotlin("gradle-plugin"))
