@@ -19,7 +19,7 @@ export const convertCallSignature = createSimplePlugin((node, context, render) =
     return convertParameterDeclarations(node, context, render, {
         strategy: "function",
         template: parameters => {
-            return `fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+            return `operator fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
         }
     })
 })

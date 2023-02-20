@@ -7,12 +7,12 @@ import {ConverterContext} from "../context";
 import {Render} from "../render";
 
 export interface ParameterDeclarationsConfiguration {
-    strategy: "function" | "lambda",
+    strategy: "function" | "lambda" | "inline",
     template: (parameters: string) => string,
 }
 
 export interface ParameterDeclarationConfiguration {
-    strategy: "function" | "lambda",
+    strategy: "function" | "lambda" | "inline",
     type: TypeNode | undefined,
     nullable: boolean,
 }
@@ -45,7 +45,7 @@ export const convertParameterDeclarations = (
 ) => {
     const {strategy, template} = configuration
 
-    if (strategy === "function") {
+    if (strategy === "function" || strategy === "inline") {
         const signatures = prepareParameters(node, context)
 
         return signatures
@@ -124,7 +124,7 @@ const convertParameterDeclarationWithFixedType = (
         }
     }
 
-    const isDefinedExternally = node.questionToken && strategy !== "lambda"
+    const isDefinedExternally = node.questionToken && strategy === "function"
 
     let nullable = configuration.nullable
     let forcedNullable = false

@@ -27,7 +27,7 @@ fun method(options: MyInterfaceMethodOptions): String
 
 
 external interface ShouldRevalidateFunction {
-fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
+operator fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
 }
     
 

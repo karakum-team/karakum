@@ -22,6 +22,11 @@ export {
     convertParameterDeclarations
 } from "./converter/plugins/convertParameterDeclaration"
 
+// controversial plugins
+export {
+    convertCallableInterfaceDeclaration
+} from "./converter/plugins/controversial/convertCallableInterfaceDeclaration"
+
 // render
 export type {Render} from "./converter/render"
 export {ifPresent} from "./converter/render"
