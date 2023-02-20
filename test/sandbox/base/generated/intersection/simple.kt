@@ -1,6 +1,5 @@
 
 @file:JsModule("sandbox-base/intersection/simple")
-@file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
