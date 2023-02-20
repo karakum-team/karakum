@@ -24,7 +24,6 @@ export function createTargetFile(
 
     return `
 @file:JsModule("${moduleName}")
-@file:JsNonModule
 
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
