@@ -8,7 +8,7 @@ import {Render} from "../render";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda" | "inline",
-    template: (parameters: string) => string,
+    template: (parameters: string, signature: Signature) => string,
 }
 
 export interface ParameterDeclarationConfiguration {
@@ -20,7 +20,8 @@ export interface ParameterDeclarationConfiguration {
 export interface ParameterInfo {
     parameter: ParameterDeclaration,
     type: TypeNode | undefined,
-    nullable: boolean
+    nullable: boolean,
+    optional: boolean,
 }
 
 export type Signature = ParameterInfo[]
@@ -44,9 +45,14 @@ export const convertParameterDeclarations = (
     configuration: ParameterDeclarationsConfiguration,
 ) => {
     const {strategy, template} = configuration
+    const initialSignature = extractSignature(node)
 
     if (strategy === "function" || strategy === "inline") {
-        const signatures = prepareParameters(node, context)
+        let signatures = expandUnions(initialSignature, context)
+
+        if (strategy === "inline") {
+            signatures = expandOptionals(signatures)
+        }
 
         return signatures
             .map(signature => {
@@ -56,11 +62,11 @@ export const convertParameterDeclarations = (
                             strategy,
                             type,
                             nullable,
-                        });
+                        })
                     })
                     .join(", ")
 
-                return template(parameters)
+                return template(parameters, signature)
             })
             .join("\n\n")
     }
@@ -72,11 +78,11 @@ export const convertParameterDeclarations = (
                     strategy,
                     type: parameter.type,
                     nullable: false,
-                });
+                })
             })
             .join(", ")
 
-        return template(parameters)
+        return template(parameters, initialSignature)
     }
 
     throw new Error(`Unknown parameter declaration strategy: ${strategy}`)
@@ -145,22 +151,27 @@ const convertParameterDeclarationWithFixedType = (
     return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${nullable ? "?" : ""}${forcedNullable ? " /* use undefined for default */" : ""}${isDefinedExternally ? " = definedExternally" : ""}`
 }
 
-const prepareParameters = (
-    node: SignatureDeclarationBase,
-    context: ConverterContext,
-): Signature[] => {
-    const currentSignatures = [node.parameters.map(it => ({
+const extractSignature = (node: SignatureDeclarationBase) => {
+    return node.parameters.map(it => ({
         parameter: it,
         type: it.type,
-        nullable: false
-    }))]
+        nullable: false,
+        optional: Boolean(it.questionToken)
+    }))
+}
+
+const expandUnions = (
+    signature: Signature,
+    context: ConverterContext,
+): Signature[] => {
+    const currentSignatures = [signature]
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
-    for (let parameterIndex = 0; parameterIndex < node.parameters.length; parameterIndex++) {
+    for (let parameterIndex = 0; parameterIndex < signature.length; parameterIndex++) {
         for (let signatureIndex = 0; signatureIndex < currentSignatures.length; signatureIndex++) {
             const signature = currentSignatures[signatureIndex]
-            const {parameter, type} = signature[parameterIndex]
+            const {parameter, type, optional} = signature[parameterIndex]
 
             if (type && ts.isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
@@ -179,7 +190,8 @@ const prepareParameters = (
                     const parameterInfo = {
                         parameter,
                         type: subtype,
-                        nullable
+                        nullable,
+                        optional,
                     }
                     generatedSignature.splice(parameterIndex, 1, parameterInfo)
                     generatedSignatures.push(generatedSignature)
@@ -191,4 +203,25 @@ const prepareParameters = (
     }
 
     return currentSignatures
+}
+
+const expandOptionals = (signatures: Signature[]): Signature[] => {
+    return signatures.flatMap(signature => {
+        const optionalIndex = signature.findIndex(parameter => parameter.optional)
+
+        if (optionalIndex !== -1) {
+            let parameterCount = signature.length
+            const resultSignatures: Signature[] = []
+
+            while (parameterCount >= optionalIndex) {
+                resultSignatures.push(signature.slice(0, parameterCount))
+
+                parameterCount--
+            }
+
+            return resultSignatures
+        }
+
+        return [signature]
+    })
 }

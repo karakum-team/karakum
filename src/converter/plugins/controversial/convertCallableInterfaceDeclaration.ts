@@ -57,9 +57,9 @@ export const convertCallSignature: SimpleConverterPlugin = (node, context, rende
 
     return convertParameterDeclarations(node, context, render, {
         strategy: "inline",
-        template: parameters => {
-            const parameterNames = node.parameters
-                .map(parameter => render(parameter.name))
+        template: (parameters, signature) => {
+            const parameterNames = signature
+                .map(parameter => render(parameter.parameter.name))
                 .join(", ")
 
             return `
