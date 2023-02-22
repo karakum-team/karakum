@@ -171,6 +171,7 @@ export async function process(configuration: Configuration) {
                 item.sourceFileName,
                 item.outputFileName,
                 item.packageName,
+                item.hasRuntime,
                 convertedBody,
                 configuration,
             )

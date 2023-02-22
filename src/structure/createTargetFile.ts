@@ -7,6 +7,7 @@ export function createTargetFile(
     sourceFileName: string,
     outputFileName: string,
     packageName: string,
+    hasRuntime: boolean,
     body: string,
     configuration: Configuration,
 ) {
@@ -23,11 +24,9 @@ export function createTargetFile(
     const imports = generateImports(outputFileName, configuration)
 
     return `
-@file:JsModule("${moduleName}")
-
+${hasRuntime ? `@file:JsModule("${moduleName}")\n` : ""}
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
-    "NAME_CONTAINS_ILLEGAL_CHARS",
 )
 
 package ${packageName}

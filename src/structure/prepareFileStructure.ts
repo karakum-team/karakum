@@ -5,16 +5,28 @@ import {generateOutputFileInfo, OutputFileInfo} from "./generateOutputFileInfo";
 
 interface FileStructureItem extends OutputFileInfo {
     sourceFileName: string,
-    nodes: ReadonlyArray<Node>
+    nodes: ReadonlyArray<Node>,
+    hasRuntime: boolean,
 }
 
 type FileStructure = FileStructureItem[]
 
-type TopLevelMatcher = (node: Node) => string | null
+interface TopLevelMatch {
+    name: string,
+    hasRuntime: boolean,
+}
+
+type TopLevelMatcher = (node: Node) => TopLevelMatch | null
 
 const classMatcher: TopLevelMatcher = node => {
     if (ts.isClassDeclaration(node)) {
-        return node.name?.text ?? null
+        const name = node.name?.text
+        if (!name) return null
+
+        return {
+            name,
+            hasRuntime: true,
+        }
     }
 
     return null
@@ -22,7 +34,12 @@ const classMatcher: TopLevelMatcher = node => {
 
 const interfaceMatcher: TopLevelMatcher = node => {
     if (ts.isInterfaceDeclaration(node)) {
-        return node.name.text
+        const name = node.name.text;
+
+        return {
+            name,
+            hasRuntime: false,
+        }
     }
 
     return null
@@ -30,7 +47,12 @@ const interfaceMatcher: TopLevelMatcher = node => {
 
 const typeAliasMatcher: TopLevelMatcher = node => {
     if (ts.isTypeAliasDeclaration(node)) {
-        return node.name.text
+        const name = node.name.text;
+
+        return {
+            name,
+            hasRuntime: false,
+        }
     }
 
     return null
@@ -38,7 +60,12 @@ const typeAliasMatcher: TopLevelMatcher = node => {
 
 const enumMatcher: TopLevelMatcher = node => {
     if (ts.isEnumDeclaration(node)) {
-        return node.name.text
+        const name = node.name.text;
+
+        return {
+            name,
+            hasRuntime: true,
+        }
     }
 
     return null
@@ -46,7 +73,13 @@ const enumMatcher: TopLevelMatcher = node => {
 
 const functionMatcher: TopLevelMatcher = node => {
     if (ts.isFunctionDeclaration(node)) {
-        return node.name?.text ?? null
+        const name = node.name?.text
+        if (!name) return null
+
+        return {
+            name,
+            hasRuntime: true,
+        }
     }
 
     return null
@@ -78,7 +111,8 @@ function normalizeFileStructure(fileStructure: FileStructure) {
             sourceFileName: item.sourceFileName,
             outputFileName: item.outputFileName,
             packageName: item.packageName,
-            nodes: []
+            nodes: [],
+            hasRuntime: false
         }
 
         if (!result.has(item.outputFileName)) {
@@ -87,7 +121,8 @@ function normalizeFileStructure(fileStructure: FileStructure) {
 
         result.set(item.outputFileName, {
             ...existingItem,
-            nodes: [...existingItem.nodes, ...item.nodes]
+            nodes: [...existingItem.nodes, ...item.nodes],
+            hasRuntime: existingItem.hasRuntime || item.hasRuntime
         })
     }
 
@@ -115,6 +150,7 @@ export function prepareFileStructure(
                 outputFileName,
                 packageName,
                 nodes: it.statements,
+                hasRuntime: true,
             });
         })
     }
@@ -133,18 +169,21 @@ export function prepareFileStructure(
 
                 for (const statement of it.statements) {
                     let currentOutputFileName = outputFileName
+                    let hasRuntime = true
 
-                    const topLevelName = topLevelMatcher(statement)
+                    const topLevelMatch = topLevelMatcher(statement)
 
-                    if (topLevelName !== null) {
-                        currentOutputFileName = `${outputDirName}/${topLevelName}.kt`
+                    if (topLevelMatch !== null) {
+                        currentOutputFileName = `${outputDirName}/${topLevelMatch.name}.kt`
+                        hasRuntime = topLevelMatch.hasRuntime
                     }
 
                     result.push({
                         sourceFileName: it.fileName,
                         outputFileName: currentOutputFileName,
                         packageName,
-                        nodes: [statement]
+                        nodes: [statement],
+                        hasRuntime,
                     })
                 }
 

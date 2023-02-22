@@ -49,6 +49,7 @@ export const convertStringUnionTypeAliasDeclaration = createSimplePlugin((node, 
             .join(", ")
 
         return `
+@Suppress("NAME_CONTAINS_ILLEGAL_CHARS")
 @JsName("""(/*union*/{${jsName}}/*union*/)""")
 external enum class ${name} {
 ${body},
