@@ -1,39 +1,34 @@
 plugins {
     `kotlin-dsl`
-    kotlin("jvm") version "1.7.20"
-    id("com.gradle.plugin-publish") version "1.1.0"
+    kotlin("jvm")
+    id("com.gradle.plugin-publish")
 }
 
 repositories {
     mavenCentral()
 }
 
-group = "io.github.sgrishchenko"
-version = "1.0.0-alpha.1"
-
 dependencies {
     compileOnly(kotlin("gradle-plugin"))
 
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
+    implementation(libs.jackson.databind)
 
     testImplementation(kotlin("test"))
 }
 
 kotlin {
-    jvmToolchain(14)
-}
-
-pluginBundle {
-    website = "https://github.com/karakum-team/karakum"
-    vcsUrl = "https://github.com/karakum-team/karakum"
-    tags = listOf("kotlin", "typescript")
+    jvmToolchain(17)
 }
 
 gradlePlugin {
+    website.set("https://github.com/karakum-team/karakum")
+    vcsUrl.set("https://github.com/karakum-team/karakum")
+
     val karakum by plugins.creating {
         id = "io.github.sgrishchenko.karakum"
         displayName = "Karakum Plugin"
         description = "Converter of TypeScript declaration files to Kotlin declarations"
+        tags.set(listOf("kotlin", "typescript"))
         implementationClass = "io.github.sgrishchenko.karakum.gradle.plugin.KarakumPlugin"
     }
 }
