@@ -26,15 +26,15 @@ export function isNullableUnionType(node: Node): node is UnionTypeNode {
 }
 
 export class NullableUnionTypePlugin implements ConverterPlugin {
-    private coveredUnion = new Set<Node>()
+    private coveredUnions = new Set<Node>()
 
     generate(context: ConverterContext): Record<string, string> {
         return {};
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
-        if (this.coveredUnion.has(node)) return null
-        this.coveredUnion.add(node)
+        if (this.coveredUnions.has(node)) return null
+        this.coveredUnions.add(node)
 
         if (isNullableUnionType(node)) {
 

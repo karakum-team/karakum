@@ -79,6 +79,7 @@ constructor(
         configNode as ObjectNode
         configNode.put("plugins", outputExtensions.asFile.get().absolutePath + "/plugins/*.js")
         configNode.put("nameResolvers", outputExtensions.asFile.get().absolutePath + "/nameResolvers/*.js")
+        configNode.put("jsNameResolvers", outputExtensions.asFile.get().absolutePath + "/jsNameResolvers/*.js")
     }
 
     private fun replaceOutput(configNode: JsonNode) {

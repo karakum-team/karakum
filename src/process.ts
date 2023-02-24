@@ -14,6 +14,7 @@ import minimatch from "minimatch";
 import {createTargetFile} from "./structure/createTargetFile";
 import {createRender} from "./converter/render";
 import {NameResolver} from "./converter/nameResolver";
+import {JsNamePlugin} from "./converter/plugins/JsNamePlugin";
 
 export const defaultPluginPatterns = [
     "karakum/plugins/*.js"
@@ -21,6 +22,10 @@ export const defaultPluginPatterns = [
 
 export const defaultNameResolverPatterns = [
     "karakum/nameResolvers/*.js"
+]
+
+export const defaultJsNameResolverPatterns = [
+    "karakum/jsNameResolvers/*.js"
 ]
 
 export const ignoreLibPatterns = [
@@ -41,6 +46,7 @@ export async function process(configuration: Configuration) {
         ignoreOutput,
         plugins,
         nameResolvers,
+        jsNameResolvers,
         compilerOptions,
     } = configuration
 
@@ -49,6 +55,7 @@ export async function process(configuration: Configuration) {
     const normalizedIgnoreOutput = normalizeGlob(ignoreOutput)
     const normalizedPlugins = normalizeGlob(plugins, defaultPluginPatterns)
     const normalizedNameResolvers = normalizeGlob(nameResolvers, defaultNameResolverPatterns)
+    const normalizedJsNameResolvers = normalizeGlob(jsNameResolvers, defaultJsNameResolverPatterns)
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
@@ -60,6 +67,10 @@ export async function process(configuration: Configuration) {
     }))
 
     const nameResolverFileNames = normalizedNameResolvers.flatMap(pattern => glob.sync(pattern, {
+        absolute: true,
+    }))
+
+    const jsNameResolverFileNames = normalizedJsNameResolvers.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
     }))
 
@@ -115,11 +126,28 @@ export async function process(configuration: Configuration) {
         customNameResolvers.push(nameResolver as NameResolver)
     }
 
-    const defaultPlugins = createPlugins(sourceFileRoot, configuration, customNameResolvers, program)
+    const customJsNameResolvers: NameResolver[] = []
+
+    for (const jsNameResolverFileName of jsNameResolverFileNames) {
+        console.log(`JsName Resolver file: ${jsNameResolverFileName}`)
+
+        const nameResolverModule: { default: unknown } = await import(jsNameResolverFileName)
+        const nameResolver = nameResolverModule.default
+
+        customJsNameResolvers.push(nameResolver as NameResolver)
+    }
+
+    const defaultPlugins = createPlugins(
+        sourceFileRoot,
+        configuration,
+        customNameResolvers,
+        program,
+    )
 
     const converterPlugins = [
-        // it is important to handle comments at first
+        // it is important to handle comments and JsNames at first
         new CommentsPlugin(),
+        new JsNamePlugin(customJsNameResolvers),
 
         ...customPlugins,
         ...defaultPlugins
