@@ -18,6 +18,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       - run: npm ci
       - run: npm run build
@@ -26,8 +27,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '14'
+          cache: 'gradle'
 
       - uses: gradle/wrapper-validation-action@v1
 
       - working-directory: ./gradle-plugin
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
