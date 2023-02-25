@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '14'
 
       - working-directory: ./gradle-plugin
