@@ -27,10 +27,7 @@ jobs:
           distribution: 'zulu'
           java-version: '14'
 
-      - working-directory: ./gradle-plugin
-        run: |
-          ./gradlew build
+      - uses: gradle/wrapper-validation-action@v1
 
-      - name: Validate Gradle Wrapper
-#        uses: gradle/wrapper-validation-action@v1
-        run: pwd
+      - working-directory: ./gradle-plugin
+        run: ./gradlew build
