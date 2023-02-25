@@ -19,9 +19,12 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
       - run: npm ci
       - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - uses: actions/setup-java@v3
         with:
