@@ -31,7 +31,6 @@ jobs:
         run: |
           ./gradlew build
 
-#      - name: Validate Gradle Wrapper
+      - name: Validate Gradle Wrapper
 #        uses: gradle/wrapper-validation-action@v1
-#        run: |
-#          pwd
+        run: pwd
