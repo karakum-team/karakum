@@ -13,14 +13,17 @@ class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = with(project) {
         val copyKarakumExtensions by tasks.registering(KarakumCopy::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
+            description = "Copies the Karakum extensions to the npm project."
         }
 
         val configureKarakum by tasks.registering(KarakumConfig::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
+            description = "Prepares the Karakum configuration using the Gradle project layout."
         }
 
         val generateKarakumExternals by tasks.registering(KarakumGenerate::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
+            description = "Generates the Kotlin external declarations using Karakum."
 
             dependsOn(copyKarakumExtensions)
             dependsOn(configureKarakum)
