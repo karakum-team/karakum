@@ -31,5 +31,5 @@ jobs:
 
       - uses: gradle/wrapper-validation-action@v1
 
-      - working-directory: ./gradle-plugin
-        run: ./gradlew build --no-daemon
+      - run: ./gradlew build --no-daemon
+        working-directory: ./gradle-plugin
