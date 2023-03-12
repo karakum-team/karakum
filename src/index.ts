@@ -15,6 +15,7 @@ export type {NameResolver} from "./converter/nameResolver"
 export {checkCoverageServiceKey, type CheckCoverageService} from "./converter/plugins/CheckCoveragePlugin"
 export {configurationServiceKey, type ConfigurationService} from "./converter/plugins/ConfigurationPlugin"
 export {typeScriptServiceKey, type TypeScriptService} from "./converter/plugins/TypeScriptPlugin"
+export {inheritanceModifierServiceKey, type InheritanceModifierService} from "./converter/plugins/InheritanceModifierPlugin"
 
 // plugin utils
 export {

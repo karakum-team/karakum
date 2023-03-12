@@ -21,6 +21,7 @@ import {resolveInterfaceMethodParameterName} from "../nameResolvers/resolveInter
 import {resolveFunctionReturnTypeName} from "../nameResolvers/resolveFunctionReturnTypeName";
 import {resolveInterfaceMethodReturnTypeName} from "../nameResolvers/resolveInterfaceMethodReturnTypeName";
 import {resolveClassMethodReturnTypeName} from "../nameResolvers/resolveClassMethodReturnTypeName";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
 
 const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
     resolveFunctionParameterName,
@@ -99,10 +100,14 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
+        const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+
         // handle empty type literal
         if (node.members.length === 0) return "Any"
 
         const name = this.resolveName(node, context) ?? `Temp${this.counter++}`
+
+        const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
         const typeParameters = this.extractTypeParameters(node, context).join(", ")
 
@@ -114,7 +119,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
             .join("\n")
 
         const declaration = `
-external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
 ${members}
 }
         `

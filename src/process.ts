@@ -15,6 +15,7 @@ import {createTargetFile} from "./structure/createTargetFile";
 import {createRender} from "./converter/render";
 import {NameResolver} from "./converter/nameResolver";
 import {JsNamePlugin} from "./converter/plugins/JsNamePlugin";
+import {InheritanceModifier} from "./converter/inheritanceModifier";
 
 export const defaultPluginPatterns = [
     "karakum/plugins/*.js"
@@ -28,14 +29,47 @@ export const defaultJsNameResolverPatterns = [
     "karakum/jsNameResolvers/*.js"
 ]
 
+export const defaultInheritanceModifierPatterns = [
+    "karakum/inheritanceModifiers/*.js"
+]
+
 export const ignoreLibPatterns = [
     "**/typescript/lib/**"
 ]
 
-function normalizeGlob(patterns: string | string[] | undefined, defaultValue: string[] = []) {
+function normalizeGlob(
+    patterns: string | string[] | undefined,
+    defaultValue: string[] = [],
+) {
     return patterns !== undefined
         ? typeof patterns === "string" ? [patterns] : patterns
         : defaultValue
+}
+
+async function loadExtensions<T>(
+    name: string,
+    patterns: string | string[] | undefined,
+    defaultValue: string[],
+    loader: (extension: unknown) => T = extension => extension as T
+): Promise<T[]> {
+    const normalizedPatterns = normalizeGlob(patterns, defaultValue)
+
+    const fileNames = normalizedPatterns.flatMap(pattern => glob.sync(pattern, {
+        absolute: true,
+    }))
+
+    const extensions: T[] = []
+
+    for (const fileName of fileNames) {
+        console.log(`${name} file: ${fileName}`)
+
+        const extensionModule: { default: unknown } = await import(fileName)
+        const extension = extensionModule.default
+
+        extensions.push(loader(extension))
+    }
+
+    return extensions
 }
 
 export async function process(configuration: Configuration) {
@@ -47,31 +81,48 @@ export async function process(configuration: Configuration) {
         plugins,
         nameResolvers,
         jsNameResolvers,
+        inheritanceModifiers,
         compilerOptions,
     } = configuration
 
     const normalizedInput = normalizeGlob(input)
     const normalizedIgnoreInput = normalizeGlob(ignoreInput)
     const normalizedIgnoreOutput = normalizeGlob(ignoreOutput)
-    const normalizedPlugins = normalizeGlob(plugins, defaultPluginPatterns)
-    const normalizedNameResolvers = normalizeGlob(nameResolvers, defaultNameResolverPatterns)
-    const normalizedJsNameResolvers = normalizeGlob(jsNameResolvers, defaultJsNameResolverPatterns)
+
+    const customPlugins = await loadExtensions<ConverterPlugin>(
+        "Plugin",
+        plugins,
+        defaultPluginPatterns,
+        plugin => {
+            if (typeof plugin === "function") {
+                return createSimplePlugin(plugin as SimpleConverterPlugin)
+            } else {
+                return plugin as ConverterPlugin
+            }
+        }
+    )
+
+    const customNameResolvers = await loadExtensions<NameResolver>(
+        "Name Resolver",
+        nameResolvers,
+        defaultNameResolverPatterns,
+    )
+
+    const customJsNameResolvers = await loadExtensions<NameResolver>(
+        "JsName Resolver",
+        jsNameResolvers,
+        defaultJsNameResolverPatterns,
+    )
+
+    const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
+        "Inheritance Modifier",
+        inheritanceModifiers,
+        defaultInheritanceModifierPatterns,
+    )
 
     const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
         ignore: ignoreInput,
-    }))
-
-    const pluginFileNames = normalizedPlugins.flatMap(pattern => glob.sync(pattern, {
-        absolute: true,
-    }))
-
-    const nameResolverFileNames = normalizedNameResolvers.flatMap(pattern => glob.sync(pattern, {
-        absolute: true,
-    }))
-
-    const jsNameResolverFileNames = normalizedJsNameResolvers.flatMap(pattern => glob.sync(pattern, {
-        absolute: true,
     }))
 
     const preparedCompilerOptions: CompilerOptions = {
@@ -100,47 +151,11 @@ export async function process(configuration: Configuration) {
 
     const context = createContext()
 
-    const customPlugins: ConverterPlugin[] = []
-
-    for (const pluginFileName of pluginFileNames) {
-        console.log(`Plugin file: ${pluginFileName}`)
-
-        const pluginModule: { default: unknown } = await import(pluginFileName)
-        const plugin = pluginModule.default
-
-        if (typeof plugin === "function") {
-            customPlugins.push(createSimplePlugin(plugin as SimpleConverterPlugin))
-        } else {
-            customPlugins.push(plugin as ConverterPlugin)
-        }
-    }
-
-    const customNameResolvers: NameResolver[] = []
-
-    for (const nameResolverFileName of nameResolverFileNames) {
-        console.log(`Name Resolver file: ${nameResolverFileName}`)
-
-        const nameResolverModule: { default: unknown } = await import(nameResolverFileName)
-        const nameResolver = nameResolverModule.default
-
-        customNameResolvers.push(nameResolver as NameResolver)
-    }
-
-    const customJsNameResolvers: NameResolver[] = []
-
-    for (const jsNameResolverFileName of jsNameResolverFileNames) {
-        console.log(`JsName Resolver file: ${jsNameResolverFileName}`)
-
-        const nameResolverModule: { default: unknown } = await import(jsNameResolverFileName)
-        const nameResolver = nameResolverModule.default
-
-        customJsNameResolvers.push(nameResolver as NameResolver)
-    }
-
     const defaultPlugins = createPlugins(
         sourceFileRoot,
         configuration,
         customNameResolvers,
+        customInheritanceModifiers,
         program,
     )
 

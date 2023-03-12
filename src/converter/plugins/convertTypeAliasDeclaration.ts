@@ -2,12 +2,15 @@ import ts, {SyntaxKind, TypeLiteralNode, TypeReferenceNode} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
     const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
@@ -16,6 +19,8 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     declareModifier && checkCoverageService?.cover(declareModifier)
 
     const name = render(node.name)
+
+    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -29,7 +34,7 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
             .join("\n")
 
         return `
-external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
 ${members}
 }
         `
@@ -57,7 +62,7 @@ ${members}
             .join("\n")
 
         return `
-external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${convertHeritageClause} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${convertHeritageClause} {
 ${members}
 }
         `

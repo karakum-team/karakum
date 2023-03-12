@@ -18,6 +18,8 @@ export type Configuration = {
 
     jsNameResolvers?: string | string[];
 
+    inheritanceModifiers?: string | string[];
+
     moduleNameMapper?: Record<string, string>
     packageNameMapper?: Record<string, string>
 

@@ -45,6 +45,8 @@ import {convertStringUnionTypeAliasDeclaration} from "./converter/plugins/conver
 import {convertTypeOperator} from "./converter/plugins/convertTypeOperator";
 import {convertImportType} from "./converter/plugins/convertImportType";
 import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression";
+import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin";
+import {InheritanceModifier} from "./converter/inheritanceModifier";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -52,10 +54,12 @@ export const createPlugins = (
     sourceFileRoot: string,
     configuration: Configuration,
     nameResolvers: NameResolver[],
+    inheritanceModifiers: InheritanceModifier[],
     program: Program,
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
     new TypeScriptPlugin(program),
+    new InheritanceModifierPlugin(inheritanceModifiers),
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),
 

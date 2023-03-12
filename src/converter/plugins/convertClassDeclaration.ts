@@ -2,12 +2,15 @@ import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
 
 export const convertClassDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isClassDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
     const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
@@ -16,6 +19,8 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     declareModifier && checkCoverageService?.cover(declareModifier)
 
     const name = (node.name && render(node.name)) ?? "Anonymous"
+
+    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -30,7 +35,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         .join("\n")
 
     return `
-external class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
 ${members}
 }
     `

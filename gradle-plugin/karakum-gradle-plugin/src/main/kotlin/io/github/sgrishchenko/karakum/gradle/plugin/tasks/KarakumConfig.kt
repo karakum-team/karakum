@@ -80,6 +80,7 @@ constructor(
         configNode.put("plugins", outputExtensions.asFile.get().absolutePath + "/plugins/*.js")
         configNode.put("nameResolvers", outputExtensions.asFile.get().absolutePath + "/nameResolvers/*.js")
         configNode.put("jsNameResolvers", outputExtensions.asFile.get().absolutePath + "/jsNameResolvers/*.js")
+        configNode.put("inheritanceModifiers", outputExtensions.asFile.get().absolutePath + "/inheritanceModifiers/*.js")
     }
 
     private fun replaceOutput(configNode: JsonNode) {
