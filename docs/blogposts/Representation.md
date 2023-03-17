@@ -104,7 +104,7 @@ Now we can install the library we want to convert, for simplicity I propose to i
 npm install js-file-download
 ```
 
-Now it is to the configuration, let's create `karakum.config.json` file and write this down in it:
+Now it is time to the configuration, let's create `karakum.config.json` file and write this down in it:
 
 ```json
 {
@@ -114,7 +114,7 @@ Now it is to the configuration, let's create `karakum.config.json` file and writ
 }
 ```
 
-After that, we can run Karakum to generate kotlin declarations for us:
+After that, we can run Karakum to generate Kotlin declarations for us:
 
 ```shell
 npx karakum --config karakum.config.json
@@ -144,7 +144,7 @@ external object String {
 
 But there are a couple of problems with this generated file. First of all, we have a strange JS module 
 `js-file-download/js-file-download`. It was generated this way because we wrote `"libraryName": "js-file-download"` 
-in our configuration and the file we converted also is named as `js-file-download.d.ts`. By default, Karakum preserves 
+in our configuration and the file we converted also is named `js-file-download.d.ts`. By default, Karakum preserves 
 an original file structure of converted TypeScript files. It may be convenient if we're converting a huge library, 
 and we want to provide an opportunity for a user to import only JS files he/she really uses. But in our case it is 
 an overkill, so we can to use just `js-file-download` as name for our JS module, to achieve it just add these lines to
@@ -171,7 +171,7 @@ external object String {
 }
 ```
 
-It is representation if this piece of code in original typings for `js-file-download`:
+It is the representation of this code block in original typings for `js-file-download`:
 
 ```typescript
 declare module 'js-file-download' {
@@ -193,7 +193,7 @@ declare namespace MyNamespace {
 ```
 
 As you can see `MyClass` and `MyNamespace.MyClass` are completely different declarations, so if we ignore namespaces 
-during conversion, we will receive something like thi in Kotlin:
+during conversion, we will receive something like this in Kotlin:
 
 ```kotlin
 external class MyClass
@@ -204,8 +204,8 @@ external class MyClass
 It is obviously an incorrect code, that is why Karakum tries to emulate TypeScript namespaces using Kotlin objects. 
 But in our case, the declared namespace is actually global, it just says to Typescript that there is JS module 
 `js-file-download`. But we already declared this piece of information in `@file:JsModule("js-file-download")`, 
-so we just skip this namespace declaration. Now we can write a simple plugin for Karakum to customize this behaviour.
-Let's create `karakum/plugins/convertNamespace.js` in our project file and write there next code:
+so we can just skip this namespace declaration. Now we can write a simple plugin for Karakum to customize this behaviour.
+Let's create `karakum/plugins/convertNamespace.js` file in our project and write next code there:
 
 ```javascript
 const ts = require("typescript");
@@ -217,8 +217,8 @@ module.exports = (node, context, render) => {
 
 Here is the declaration of simplest Karakum plugin. In Karakum, plugins are applied to each AST node one by one,
 so if a particular plugin doesn't know what to do with passed AST node, it can just return `null` to say:
-"It is not my area of responsibility to handle this type if AST node, just try to use some another plugin to convert
-it". Right now our plugin doesn't know what to do with any ast node yet. To handle some type of nodes, let's use
+"It is not my area of responsibility to handle this type of AST nodes, just try to use some another plugin to convert
+it". Right now our plugin does know nothing about any AST node. To handle some type of nodes, let's use
 Typescript to select some node by its kind:
 
 ```diff
@@ -250,8 +250,8 @@ module.exports = (node, context, render) => {
 ```
 
 And now we need to make a last step, let's go through namespace members and convert each of them. `render` callback, 
-that we have as last parameter in out plugin function is some kind of continuation, it receives AST node, passes it 
-through the plugin chain and returns a string as the result of conversion. Knowing this, we can write this code:
+that we have as the last parameter in our plugin function is some kind of continuation, it receives AST node, passes it 
+through the plugin chain and returns a string as the result of conversion. Knowing that, we can write this code:
 
 ```diff
 const ts = require("typescript");
@@ -267,7 +267,7 @@ module.exports = (node, context, render) => {
 }
 ```
 
-Now we can run Karakum again, and we should receive somethinf like this:
+Now we can run Karakum again, and we should receive something like this:
 
 ```kotlin
 @file:JsModule("js-file-download")
