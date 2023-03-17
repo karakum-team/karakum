@@ -65,7 +65,7 @@ and so on and so forth. But from my prospective, there are downsides, and here i
   it.
 * **Isolation:** TypeScript is a complex, really complex language because it always evolves. If you have
   your own compiler for it, you need to update it every time TypeScript releases a new version. Moreover, if you
-  implement some type checking mechanics, your implementation can be not 100% synchronized with the original 
+  implement some type checking mechanics, your implementation can be not 100% synchronized with the original
   implementation, so you may face with surprising results in your solution.
 
 Karakum is not a compiler, it is a tool on top of the existing TypeScript compiler. So it still has access to AST
@@ -80,7 +80,7 @@ and that also was added to Karakum:
 * **Package control:** you can define what Kotlin package will be used for generated declarations.
 * **File structure:** Karakum can generate output declaration files per TypeScript file or per top-level entity.
 * **JS docs:** Karakum tries to preserve it for generated declarations.
-* **Imports:** if you convert some library that depends on another converted library, you can explain it to Karakum 
+* **Imports:** if you convert some library that depends on another converted library, you can explain it to Karakum
   to generate correct imports.
 
 ## Usage example
@@ -97,7 +97,7 @@ Next install Karakum and TypeScript as a dev dependencies:
 npm install karakum typescript -D
 ```
 
-Now we can install the library we want to convert, for simplicity I propose to install 
+Now we can install the library we want to convert, for simplicity I propose to install
 [js-file-download](https://github.com/kennethjiang/js-file-download):
 
 ```shell
@@ -123,6 +123,7 @@ npx karakum --config karakum.config.json
 When we execute it, we will receive something like that in `generated/jsFileDownload.kt`
 
 ```kotlin
+// @formatter:off
 @file:JsModule("js-file-download/js-file-download")
 
 @file:Suppress(
@@ -140,15 +141,16 @@ external object String {
     
     external fun fileDownload(data: Blob, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
 }
+// @formatter:on 
 ```
 
-But there are a couple of problems with this generated file. First of all, we have a strange JS module 
-`js-file-download/js-file-download`. It was generated this way because we wrote `"libraryName": "js-file-download"` 
-in our configuration and the file we converted also is named `js-file-download.d.ts`. By default, Karakum preserves 
-an original file structure of converted TypeScript files. It may be convenient if we're converting a huge library, 
-and we want to provide an opportunity for a user to import only JS files he/she really uses. But in our case it is 
+But there are a couple of problems with this generated file. First of all, we have a strange JS module
+`js-file-download/js-file-download`. It was generated this way because we wrote `"libraryName": "js-file-download"`
+in our configuration and the file we converted also is named `js-file-download.d.ts`. By default, Karakum preserves
+an original file structure of converted TypeScript files. It may be convenient if we're converting a huge library,
+and we want to provide an opportunity for a user to import only JS files he/she really uses. But in our case it is
 an overkill, so we can to use just `js-file-download` as name for our JS module, to achieve it just add these lines to
-`karakum.config.json`: 
+`karakum.config.json`:
 
 ```diff
 {
@@ -187,12 +189,12 @@ declare class MyClass {
 }
 
 declare namespace MyNamespace {
-  class MyClass {
-  }
+    class MyClass {
+    }
 }
 ```
 
-As you can see `MyClass` and `MyNamespace.MyClass` are completely different declarations, so if we ignore namespaces 
+As you can see `MyClass` and `MyNamespace.MyClass` are completely different declarations, so if we ignore namespaces
 during conversion, we will receive something like this in Kotlin:
 
 ```kotlin
@@ -201,11 +203,11 @@ external class MyClass
 external class MyClass
 ```
 
-It is obviously an incorrect code, that is why Karakum tries to emulate TypeScript namespaces using Kotlin objects. 
-But in our case, the declared namespace is actually global, it just says to Typescript that there is JS module 
-`js-file-download`. But we already declared this piece of information in `@file:JsModule("js-file-download")`, 
-so we can just skip this namespace declaration. Now we can write a simple plugin for Karakum to customize this behaviour.
-Let's create `karakum/plugins/convertNamespace.js` file in our project and write next code there:
+It is obviously an incorrect code, that is why Karakum tries to emulate TypeScript namespaces using Kotlin objects.
+But in our case, the declared namespace is actually global, it just says to Typescript that there is JS module
+`js-file-download`. But we already declared this piece of information in `@file:JsModule("js-file-download")`,
+so we can just skip this namespace declaration. Now we can write a simple plugin for Karakum to customize this
+behaviour. Let's create `karakum/plugins/convertNamespace.js` file in our project and write next code there:
 
 ```javascript
 const ts = require("typescript");
@@ -249,8 +251,8 @@ module.exports = (node, context, render) => {
 }
 ```
 
-And now we need to make a last step, let's go through namespace members and convert each of them. `render` callback, 
-that we have as the last parameter in our plugin function is some kind of continuation, it receives AST node, passes it 
+And now we need to make a last step, let's go through namespace members and convert each of them. `render` callback,
+that we have as the last parameter in our plugin function is some kind of continuation, it receives AST node, passes it
 through the plugin chain and returns a string as the result of conversion. Knowing that, we can write this code:
 
 ```diff
@@ -270,6 +272,7 @@ module.exports = (node, context, render) => {
 Now we can run Karakum again, and we should receive something like this:
 
 ```kotlin
+// @formatter:off
 @file:JsModule("js-file-download")
 
 @file:Suppress(
@@ -285,6 +288,7 @@ external fun fileDownload(data: ArrayBuffer, filename: String, mime: String = de
 external fun fileDownload(data: ArrayBufferView, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
 
 external fun fileDownload(data: Blob, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
+// @formatter:on 
 ```
 
 If you want to know more about Karakum or see examples of more complex projects, you can visit next places:
