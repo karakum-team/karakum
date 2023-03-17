@@ -287,6 +287,12 @@ external fun fileDownload(data: ArrayBufferView, filename: String, mime: String 
 external fun fileDownload(data: Blob, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
 ```
 
+If you want to know more about Karakum or see examples of more complex projects, you can visit next places:
+
+* [Remix Router](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-remix-run-router)
+* [React Router](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-react-router)
+* [React Router DOM](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-react-router-dom)
+
 ## Interesting problems
 
 ```kotlin
