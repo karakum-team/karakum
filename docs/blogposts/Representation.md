@@ -448,7 +448,43 @@ Karakum can't do this for you right now, but it seems it would be a good improve
 ### Declaration merging
 
 TypeScript [can merge declarations](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) from separate
-AST nodes in a single type entity. 
-It is similar to [Kotlin extensions](https://kotlinlang.org/docs/extensions.html) works. 
+AST nodes in a single type entity.
+It is similar to [Kotlin extensions](https://kotlinlang.org/docs/extensions.html) works.
 Now Karakum can't recognize such declarations and generate single declaration from few TypeScript AST nodes,
-but it can be implemented using dedicated Type Checker API. 
+but it can be implemented using dedicated Type Checker API.
+
+### Type predicates
+
+If you have a custom checker function for some JS structure, you can express it in Typescript using
+[Type predicates](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates).
+In Kotlin, we can emulate it
+using [Contracts](https://github.com/Kotlin/KEEP/blob/master/proposals/kotlin-contracts.md),
+but it is not so simple.
+Kotlin contracts are implemented now as the first expression in a function body, but external functions don't have body.
+Also, Kotlin doesn't allow us to write contracts for external classes and interfaces.
+Of course, the first expression limitation of contracts can be hacked using a thin wrapper,
+and compiler check for external interface can be suppressed:
+
+```kotlin
+@Suppress(
+    "CANNOT_CHECK_FOR_EXTERNAL_INTERFACE",
+)
+fun isBinaryExpression(node: Node): Boolean {
+    contract {
+        returns(true) implies (node is BinaryExpression)
+    }
+
+    return typescript.raw.isBinaryExpression(node)
+}
+```
+
+But right now Karakum can't do this for you, maybe at some point in the future it will become smart enough to do it.
+
+## Conclusion
+
+As you can notice, TypeScript and Kotlin are similar and quite different languages at the same time.
+The conversion between these two languages can't be performed ideally (at least for now).
+But we can try to explore this area and figure out what can be done and what can't.
+Some problems are already solved, some problems still are challenging but can be solved.
+But the results of this work already help [FlySto](https://www.flysto.net/home) development team
+to build their solution, and, I believe, it may help with adoption of Kotlin/JS in many other projects.
