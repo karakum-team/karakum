@@ -7,8 +7,8 @@ Frontend development is not an exception, [npm](https://www.npmjs.com/) contains
 frameworks. Kotlin/JS definitely has means for integration and interoperation with those libraries, but it is a huge and
 complicated task to write [external declarations](https://kotlinlang.org/docs/js-interop.html#external-modifier) for
 existing libraries. [Karakum](https://github.com/karakum-team/karakum) is a tool for automatic conversion of existing
-TypeScript declarations to Kotlin external
-declaration. It helps to speed up and simplify adoption of existing npm libraries in your Kotlin/JS project.
+TypeScript declarations to Kotlin external declaration.
+It helps to speed up and simplify adoption of existing npm libraries in your Kotlin/JS project.
 
 ## Motivation
 
@@ -299,6 +299,156 @@ If you want to know more about Karakum or see examples of more complex projects,
 
 ## Interesting problems
 
-```kotlin
-// TODO
+### Type literals
+
+In TypeScript, you're able to create types ad-hoc, just in place.
+This syntax construction is called a type literal.
+Let's consider next example:
+
+```typescript
+interface MyInterface {
+    myField: { someOption: string }
+}
 ```
+
+It is impossible to convert this type to Kotlin as is, but we can extract type literal to a separate type:
+
+```kotlin
+external interface MyInterfaceMyField {
+    val someOption: String
+}
+
+external interface MyInterface {
+    val myField: MyInterfaceMyField
+}
+```
+
+For now, it was quite simple, but there are more complex situations, let's modify our example:
+
+```typescript
+interface MyInterface<T> {
+    myField: { someOption: T }
+}
+```
+
+So now we have to analyze `{ someOption: T }` AST node, find all type references that linked with generic of the outer
+type, and declare these generics for a new extracted type:
+
+```kotlin
+external interface MyInterfaceMyField<T> {
+    val someOption: T
+}
+
+external interface MyInterface<T> {
+    val myField: MyInterfaceMyField<T>
+}
+```
+
+It is similar to how IntelliJ IDEA extracts some block of code to separate function.
+This mechanism is added to Karakum now, so it helps a lot in such situations.
+
+### Indexed access types
+
+In TypeScript, there is a feature that allows us to refer to a type of some object field:
+
+```typescript
+interface MyInterface {
+    myField: string
+}
+
+interface AnotherInterface {
+    myField: MyInterface["myField"]
+}
+```
+
+Here we try to say: "I want to declare `AnotherInterface` and I want `myField` be the same type as field `myField`
+in `MyInterface`".
+Of course, it is impossible to declare exactly the same in Kotlin, but what we can do with it?
+TypeScript compiler has a special Type Checker API that can extract type information from an AST node.
+Also, Type Checker can build AST node from any type that was constructed during type checking.
+So we can extract a type from `MyInterface["myField"]`, than we can construct AST and convert it to Kotlin using
+existing Karakum plugins.
+As a result, we will have something like this after conversion:
+
+```kotlin
+external interface MyInterface {
+    val myField: String
+}
+
+external interface AnotherInterface {
+    val myField: String
+}
+```
+
+Yes, we lost the link between `MyInterface` and `AnotherInterface`,
+but at least we have valid Kotlin code and probably correct types.
+
+## Open issues
+
+Union types are always a pain for the Kotlin type system.
+Sometimes we can do something with it, for example, if we have a function with a union type parameter,
+we can separate this union type to separate types and add overload with these types.
+For next TypeScript code:
+
+```typescript
+declare function myFunction(param: string | number)
+```
+
+it may look like this in Kotlin
+
+```kotlin
+external fun myFunction(param: String)
+
+external fun myFunction(param: Double)
+```
+
+But unfortunately, most of the time it's not possible to solve the problem with unions this way.
+Next code isn't related to function overloading:
+
+```typescript
+interface MyInterface {
+    myField: string | number
+}
+
+declare const MY_CONST: string | number
+```
+
+For such places we have to use `Any` type in Kotlin.
+But there is an area where union types can be emulated.
+Let's consider next code:
+
+```typescript
+interface A {
+    a: string
+}
+
+interface B {
+    b: string
+}
+
+type C = A | B
+```
+
+In Kotlin, we can emulate this using inheritance:
+
+```kotlin
+external interface C
+
+external interface A : C {
+    val a: String
+}
+
+external interface A : B {
+    val b: String
+}
+```
+
+Karakum can't do this for you right now, but it seems it would be a good improvement.
+
+### Declaration merging
+
+TypeScript [can merge declarations](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) from separate
+AST nodes in a single type entity. 
+It is similar to [Kotlin extensions](https://kotlinlang.org/docs/extensions.html) works. 
+Now Karakum can't recognize such declarations and generate single declaration from few TypeScript AST nodes,
+but it can be implemented using dedicated Type Checker API. 
