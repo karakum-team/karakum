@@ -14,7 +14,7 @@ It helps to speed up and simplify adoption of existing npm libraries in your Kot
 
 There is a [kotlin-wrappers](https://github.com/JetBrains/kotlin-wrappers) project, where we try to make Kotlin
 declarations for popular npm libraries that are used in such projects as [Space](https://www.jetbrains.com/space/) and
-[FlySto](https://www.flysto.net/home). Writing Kotlin declarations by hand is complicated task because of text reasons:
+[FlySto](https://www.flysto.net/home). Writing Kotlin declarations by hand is complicated task because of next reasons:
 
 * Libraries can be huge, you may have to learn tones of documentation to build quality Kotlin declarations for them.
 * It is slow, it can take months (even years) to deliver some typings for a library.
@@ -30,7 +30,7 @@ we need to invent a bicycle? There are some differences between Karakum and Duca
 
 ### Flexibility
 
-Karakum is designed to be flexible. Lest consider next code in TypeScript:
+Karakum is designed to be flexible. Let's consider next code in TypeScript:
 
 ```typescript
 export declare function Outlet(props: OutletProps): ReactElement | null;
@@ -69,7 +69,7 @@ and so on and so forth. But from my prospective, there are downsides, and here i
   implementation, so you may face with surprising results in your solution.
 
 Karakum is not a compiler, it is a tool on top of the existing TypeScript compiler. So it still has access to AST
-(but it can't modify or extend it), but using the existing solution, I'm always in sync with an actual version of
+(but it can't modify or extend it), but using the existing solution, it always in sync with an actual version of
 TypeScript language.
 
 ### Other advantages
@@ -120,7 +120,7 @@ After that, we can run Karakum to generate Kotlin declarations for us:
 npx karakum --config karakum.config.json
 ```
 
-When we execute it, we will receive something like that in `generated/jsFileDownload.kt`
+When we execute it, we will receive something like that in `generated/jsFileDownload.kt`:
 
 ```kotlin
 // @formatter:off
@@ -236,7 +236,7 @@ module.exports = (node, context, render) => {
 ```
 
 In TypeScript, a body of namespace can be another namespace or list of body members. I propose not to consider the case
-with embedded namespaces and to handle only plain namespaces:
+with embedded namespaces and to handle only flat namespaces:
 
 ```diff
 const ts = require("typescript");
@@ -365,7 +365,7 @@ Here we try to say: "I want to declare `AnotherInterface` and I want `myField` b
 in `MyInterface`".
 Of course, it is impossible to declare exactly the same in Kotlin, but what we can do with it?
 TypeScript compiler has a special Type Checker API that can extract type information from an AST node.
-Also, Type Checker can build AST node from any type that was constructed during type checking.
+Also, Type Checker can build AST node from any type that was found during type checking.
 So we can extract a type from `MyInterface["myField"]`, than we can construct AST and convert it to Kotlin using
 existing Karakum plugins.
 As a result, we will have something like this after conversion:
@@ -387,7 +387,7 @@ but at least we have valid Kotlin code and probably correct types.
 
 Union types are always a pain for the Kotlin type system.
 Sometimes we can do something with it, for example, if we have a function with a union type parameter,
-we can separate this union type to separate types and add overload with these types.
+we can break this union type down to separate types and add overload with these types.
 For next TypeScript code:
 
 ```typescript
@@ -449,7 +449,7 @@ Karakum can't do this for you right now, but it seems it would be a good improve
 
 TypeScript [can merge declarations](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) from separate
 AST nodes in a single type entity.
-It is similar to [Kotlin extensions](https://kotlinlang.org/docs/extensions.html) works.
+It is similar to how [Kotlin extensions](https://kotlinlang.org/docs/extensions.html) works.
 Now Karakum can't recognize such declarations and generate single declaration from few TypeScript AST nodes,
 but it can be implemented using dedicated Type Checker API.
 
