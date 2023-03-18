@@ -251,7 +251,7 @@ module.exports = (node, context, render) => {
 }
 ```
 
-And now we need to make a last step, let's go through namespace members and convert each of them. `render` callback,
+And now we need to make the last step, let's go through namespace members and convert each of them. `render` callback,
 that we have as the last parameter in our plugin function is some kind of continuation, it receives AST node, passes it
 through the plugin chain and returns a string as the result of conversion. Knowing that, we can write this code:
 
@@ -384,6 +384,8 @@ Yes, we lost the link between `MyInterface` and `AnotherInterface`,
 but at least we have valid Kotlin code and probably correct types.
 
 ## Open issues
+
+### Union types
 
 Union types are always a pain for the Kotlin type system.
 Sometimes we can do something with it, for example, if we have a function with a union type parameter,
