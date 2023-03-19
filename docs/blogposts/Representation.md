@@ -12,7 +12,7 @@ It helps to speed up and simplify adoption of existing npm libraries in your Kot
 
 ## Motivation
 
-There is a [kotlin-wrappers](https://github.com/JetBrains/kotlin-wrappers) project, where we try to make Kotlin
+There is a [Kotlin Wrappers](https://github.com/JetBrains/kotlin-wrappers) project, where we try to make Kotlin
 declarations for popular npm libraries that are used in such projects as [Space](https://www.jetbrains.com/space/) and
 [FlySto](https://www.flysto.net/home). Writing Kotlin declarations by hand is complicated task because of next reasons:
 
@@ -21,7 +21,7 @@ declarations for popular npm libraries that are used in such projects as [Space]
 * Existing libraries are being developed, when you convert some library, you need to stay in tune with releases of that
   library and actualize your declaration according to changes there.
 
-That is why we decided to create some tool to make the development and maintenance of kotlin-wrappers simpler.
+That is why we decided to create some tool to make the development and maintenance of Kotlin Wrappers simpler.
 
 ## Comparison with existing solutions
 
@@ -69,12 +69,12 @@ and so on and so forth. But from my prospective, there are downsides, and here i
   implementation, so you may face with surprising results in your solution.
 
 Karakum is not a compiler, it is a tool on top of the existing TypeScript compiler. So it still has access to AST
-(but it can't modify or extend it), but using the existing solution, it always in sync with an actual version of
+(but it can't modify or extend it), but using the existing solution, it is always in sync with an actual version of
 TypeScript language.
 
 ### Other advantages
 
-The next couple of things are quite small but neat improvements that the kotlin-wrappers team was interested in,
+The next couple of things are quite small but neat improvements that the Kotlin Wrappers team was interested in,
 and that also was added to Karakum:
 
 * **Package control:** you can define what Kotlin package will be used for generated declarations.
@@ -481,6 +481,18 @@ fun isBinaryExpression(node: Node): Boolean {
 ```
 
 But right now Karakum can't do this for you, maybe at some point in the future it will become smart enough to do it.
+
+### Integration with the standard library
+
+It would be nice if Karakum could generate imports for such entities as `ArrayBuffer` or `Promise` automatically.
+But it is harder than it may seem.
+Technically, you can declare functions, classes or interfaces with names that intersect with names in the ECMAScript
+standard environment. 
+There is a trick here, we can check is some entity imported in file, or it is used from global namespace. 
+If an entity is global, probably it is some standard thing, and we can try to find import for it in 
+[kotlin-js](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-js) or 
+[kotlin-browser](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-browser). 
+Unfortunately, it doesn't work this way in Karakum right now, but definitely it is room for improvement. 
 
 ## Conclusion
 
