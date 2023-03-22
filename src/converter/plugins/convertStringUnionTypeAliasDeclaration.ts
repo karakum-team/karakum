@@ -42,19 +42,24 @@ export const convertStringUnionTypeAliasDeclaration = createSimplePlugin((node, 
 
         const keys = entries.map(([key]) => key)
 
-        const body = keys.join(",\n")
+        const body = keys
+            .map(key => `val ${key}: ${name}`)
+            .join("\n")
 
         const jsName = entries
             .map(([key, value]) => `${key}: '${value}'`)
             .join(", ")
 
         return `
-@Suppress("NAME_CONTAINS_ILLEGAL_CHARS")
+@Suppress(
+    "NAME_CONTAINS_ILLEGAL_CHARS",
+    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
+)
 @JsName("""(/*union*/{${jsName}}/*union*/)""")
-external enum class ${name} {
-${body},
-
-    ;
+sealed external interface ${name} {
+companion object {
+${body}
+}
 }
         `
     }

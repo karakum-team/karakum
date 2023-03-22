@@ -44,7 +44,7 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.TypeAliasDeclaration, // typealias name<params> = type
     SyntaxKind.ExportKeyword, // skip
     SyntaxKind.IntersectionType, // TODO: convert intersection to inheritance
-    SyntaxKind.EnumDeclaration, // enum class name { members }
+    SyntaxKind.EnumDeclaration, // sealed external interface name { companion object { members } }
     SyntaxKind.EnumMember, // node.name
     SyntaxKind.NumericLiteral, // node.text
     SyntaxKind.QualifiedName, // left.right

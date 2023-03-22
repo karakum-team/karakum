@@ -11,12 +11,15 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
     const name = render(node.name)
 
     const members = node.members
-        .map(member => render(member))
-        .join(",\n")
+        .map(member => `${render(member)}: ${name}`)
+        .join("\n")
 
     return `
-external enum class ${name} {
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+sealed external interface ${name} {
+companion object {
 ${members}
+}
 }
     `
 })

@@ -10,9 +10,12 @@ package sandbox.top.level.granularity
 
 
 
-external enum class MyEnum {
-FIRST,
-SECOND
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+sealed external interface MyEnum {
+companion object {
+val FIRST: MyEnum
+val SECOND: MyEnum
+}
 }
     
     

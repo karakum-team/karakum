@@ -11,5 +11,5 @@ export const convertEnumMember = createSimplePlugin((node, context, render) => {
     // skip initializer
     node.initializer && checkCoverageService?.cover(node.initializer)
 
-    return render(node.name)
+    return `val ${render(node.name)}`
 })
