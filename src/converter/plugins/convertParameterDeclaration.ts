@@ -7,12 +7,12 @@ import {ConverterContext} from "../context";
 import {Render} from "../render";
 
 export interface ParameterDeclarationsConfiguration {
-    strategy: "function" | "lambda" | "inline",
+    strategy: "function" | "lambda",
     template: (parameters: string, signature: Signature) => string,
 }
 
 export interface ParameterDeclarationConfiguration {
-    strategy: "function" | "lambda" | "inline",
+    strategy: "function" | "lambda",
     type: TypeNode | undefined,
     nullable: boolean,
 }
@@ -47,12 +47,8 @@ export const convertParameterDeclarations = (
     const {strategy, template} = configuration
     const initialSignature = extractSignature(node)
 
-    if (strategy === "function" || strategy === "inline") {
-        let signatures = expandUnions(initialSignature, context)
-
-        if (strategy === "inline") {
-            signatures = expandOptionals(signatures)
-        }
+    if (strategy === "function") {
+        const signatures = expandUnions(initialSignature, context)
 
         return signatures
             .map(signature => {
@@ -203,25 +199,4 @@ const expandUnions = (
     }
 
     return currentSignatures
-}
-
-const expandOptionals = (signatures: Signature[]): Signature[] => {
-    return signatures.flatMap(signature => {
-        const optionalIndex = signature.findIndex(parameter => parameter.optional)
-
-        if (optionalIndex !== -1) {
-            let parameterCount = signature.length
-            const resultSignatures: Signature[] = []
-
-            while (parameterCount >= optionalIndex) {
-                resultSignatures.push(signature.slice(0, parameterCount))
-
-                parameterCount--
-            }
-
-            return resultSignatures
-        }
-
-        return [signature]
-    })
 }
