@@ -6,7 +6,9 @@ When you work with some technology today, usually you rely on an ecosystem and f
 Frontend development is not an exception, [npm](https://www.npmjs.com/) contains tones of useful libraries and
 frameworks. Kotlin/JS definitely has means for integration and interoperation with those libraries, but it is a huge and
 complicated task to write [external declarations](https://kotlinlang.org/docs/js-interop.html#external-modifier) for
-existing libraries. [Karakum](https://github.com/karakum-team/karakum) is a tool for automatic conversion of existing
+existing libraries. 
+
+[Karakum](https://github.com/karakum-team/karakum) is a tool for automatic conversion of existing
 TypeScript declarations to Kotlin external declaration.
 It helps to speed up and simplify adoption of existing npm libraries in your Kotlin/JS project.
 
