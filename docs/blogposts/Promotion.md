@@ -39,8 +39,8 @@ That is why we decided to create some tool to make the development and maintenan
 
 ## Comparison with existing solutions
 
-You may know that there already is a tool to solve similar problems: [Ducat](https://github.com/Kotlin/dukat). So why do
-we need to invent a bicycle? There are some differences between Karakum and Ducat, I will try to list them.
+You may know that there already is a tool to solve similar problems: [Dukat](https://github.com/Kotlin/dukat). So why do
+we need to invent a bicycle? There are some differences between Karakum and Dukat, I will try to list them.
 
 ### Flexibility
 
@@ -69,7 +69,7 @@ can customize your conversion and achieve your concrete goals.
 
 ### Lightness
 
-If we dig deep and explore Ducat, we can see that it is a compiler, a big independent complete compiler.
+If we dig deep and explore Dukat, we can see that it is a compiler, a big independent complete compiler.
 The decision to be a compiler has upsides and downsides. The biggest upside, I can see, is that you have full control
 of [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) that means you literally can construct language
 structures and manipulate them as you want, you can collect your own metadata and store it directly in AST nodes
