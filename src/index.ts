@@ -8,8 +8,14 @@ export type {ConverterContext} from "./converter/context"
 export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin"
 export {createSimplePlugin} from "./converter/plugin"
 
+// annotation
+export type {Annotation} from "./converter/annotation"
+
 // name resolver
 export type {NameResolver} from "./converter/nameResolver"
+
+// inheritance modifier
+export type {InheritanceModifier} from "./converter/inheritanceModifier"
 
 // plugin services
 export {checkCoverageServiceKey, type CheckCoverageService} from "./converter/plugins/CheckCoveragePlugin"

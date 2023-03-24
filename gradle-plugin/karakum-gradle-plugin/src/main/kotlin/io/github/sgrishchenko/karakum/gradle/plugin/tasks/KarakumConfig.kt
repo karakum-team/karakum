@@ -78,8 +78,8 @@ constructor(
     private fun replaceExtensions(configNode: JsonNode) {
         configNode as ObjectNode
         configNode.put("plugins", outputExtensions.asFile.get().absolutePath + "/plugins/*.js")
+        configNode.put("annotations", outputExtensions.asFile.get().absolutePath + "/annotations/*.js")
         configNode.put("nameResolvers", outputExtensions.asFile.get().absolutePath + "/nameResolvers/*.js")
-        configNode.put("jsNameResolvers", outputExtensions.asFile.get().absolutePath + "/jsNameResolvers/*.js")
         configNode.put("inheritanceModifiers", outputExtensions.asFile.get().absolutePath + "/inheritanceModifiers/*.js")
     }
 

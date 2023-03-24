@@ -14,9 +14,9 @@ export type Configuration = {
 
     plugins?: string | string[];
 
-    nameResolvers?: string | string[];
+    annotations?: string | string[];
 
-    jsNameResolvers?: string | string[];
+    nameResolvers?: string | string[];
 
     inheritanceModifiers?: string | string[];
 

@@ -14,19 +14,20 @@ import minimatch from "minimatch";
 import {createTargetFile} from "./structure/createTargetFile";
 import {createRender} from "./converter/render";
 import {NameResolver} from "./converter/nameResolver";
-import {JsNamePlugin} from "./converter/plugins/JsNamePlugin";
+import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin";
 import {InheritanceModifier} from "./converter/inheritanceModifier";
+import {Annotation} from "./converter/annotation";
 
 export const defaultPluginPatterns = [
     "karakum/plugins/*.js"
 ]
 
-export const defaultNameResolverPatterns = [
-    "karakum/nameResolvers/*.js"
+export const defaultAnnotationPatterns = [
+    "karakum/annotations/*.js"
 ]
 
-export const defaultJsNameResolverPatterns = [
-    "karakum/jsNameResolvers/*.js"
+export const defaultNameResolverPatterns = [
+    "karakum/nameResolvers/*.js"
 ]
 
 export const defaultInheritanceModifierPatterns = [
@@ -79,8 +80,8 @@ export async function process(configuration: Configuration) {
         ignoreInput,
         ignoreOutput,
         plugins,
+        annotations,
         nameResolvers,
-        jsNameResolvers,
         inheritanceModifiers,
         compilerOptions,
     } = configuration
@@ -102,16 +103,16 @@ export async function process(configuration: Configuration) {
         }
     )
 
+    const customAnnotations= await loadExtensions<Annotation>(
+        "Annotation",
+        annotations,
+        defaultAnnotationPatterns,
+    )
+
     const customNameResolvers = await loadExtensions<NameResolver>(
         "Name Resolver",
         nameResolvers,
         defaultNameResolverPatterns,
-    )
-
-    const customJsNameResolvers = await loadExtensions<NameResolver>(
-        "JsName Resolver",
-        jsNameResolvers,
-        defaultJsNameResolverPatterns,
     )
 
     const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
@@ -160,9 +161,9 @@ export async function process(configuration: Configuration) {
     )
 
     const converterPlugins = [
-        // it is important to handle comments and JsNames at first
+        // it is important to handle comments and annotations at first
         new CommentsPlugin(),
-        new JsNamePlugin(customJsNameResolvers),
+        new AnnotationsPlugin(customAnnotations),
 
         ...customPlugins,
         ...defaultPlugins
