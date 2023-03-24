@@ -1,4 +1,4 @@
-# Simple usage
+# Basic usage
 
 At first, initialize npm project:
 
