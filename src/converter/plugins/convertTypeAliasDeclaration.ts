@@ -1,4 +1,4 @@
-import ts, {SyntaxKind, TypeLiteralNode, TypeReferenceNode} from "typescript";
+import ts, {MappedTypeNode, SyntaxKind, TypeLiteralNode, TypeReferenceNode} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
@@ -40,30 +40,51 @@ ${members}
         `
     }
 
+    if (ts.isMappedTypeNode(node.type)) {
+        const accessors = render(node.type)
+
+        return `
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
+${accessors}
+}
+        `
+    }
+
     if (
         ts.isIntersectionTypeNode(node.type)
-        && node.type.types.every(it => ts.isTypeReferenceNode(it) || ts.isTypeLiteralNode(it))
+        && node.type.types.every(it => (
+            ts.isTypeReferenceNode(it)
+            || ts.isTypeLiteralNode(it)
+            || ts.isMappedTypeNode(it)
+        ))
     ) {
         checkCoverageService?.cover(node.type)
         node.type.types.forEach(it => checkCoverageService?.cover(it))
 
         const typeReferences = node.type.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
         const typeLiterals = node.type.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
+        const mappedType = node.type.types.find((it): it is MappedTypeNode => ts.isMappedTypeNode(it))
 
         const heritageTypes = typeReferences
             .map(type => render(type))
             .join(", ")
 
-        const convertHeritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
+        const heritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
 
         const members = typeLiterals
             .flatMap(it => it.members)
             .map(member => render(member))
             .join("\n")
 
+        let accessors = ""
+
+        if (mappedType) {
+            accessors = render(mappedType)
+        }
+
         return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${convertHeritageClause} {
-${members}
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClause} {
+${ifPresent(accessors, it => `${it}\n`)}${members}
 }
         `
     }

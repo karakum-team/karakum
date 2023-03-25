@@ -47,6 +47,7 @@ import {convertImportType} from "./converter/plugins/convertImportType";
 import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression";
 import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin";
 import {InheritanceModifier} from "./converter/inheritanceModifier";
+import {convertMappedType} from "./converter/plugins/convertMappedType";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -121,4 +122,5 @@ export const createPlugins = (
     convertTypePredicate,
     convertTypeOperator,
     convertImportType,
+    convertMappedType,
 ]

@@ -26,7 +26,11 @@ fun method(options: MyInterfaceMethodOptions): String
 
 
 external interface ShouldRevalidateFunction {
+
+@Suppress("DEPRECATION")
+@nativeInvoke
 operator fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
+            
 }
     
 
