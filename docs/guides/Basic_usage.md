@@ -150,8 +150,8 @@ module.exports = (node, context, render) => {
 }
 ```
 
-In TypeScript, a body of a namespace can be another namespace or a list of members. Let's forget about embedded namespaces 
-for now and handle only flat namespaces:
+In TypeScript, a body of a namespace can be another namespace or a list of members. Let's forget about embedded
+namespaces for now and handle only flat namespaces:
 
 ```diff
 const ts = require("typescript");
@@ -167,8 +167,8 @@ module.exports = (node, context, render) => {
 ```
 
 And now we need to make the last step: let's go through namespace members and convert each of them. `render` callback,
-that we have as the last parameter in our plugin function is some kind of continuation, it receives an AST node, passes it
-through the plugin chain and returns a string as the conversion result. Knowing that, we can write this code:
+that we have as the last parameter in our plugin function is some kind of continuation, it receives an AST node, passes
+it through the plugin chain and returns a string as the conversion result. Knowing that, we can write this code:
 
 ```diff
 const ts = require("typescript");

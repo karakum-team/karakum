@@ -77,7 +77,8 @@ If you have a custom checker function for some JS structure, you can express it 
 In Kotlin, we can emulate it
 using [Contracts](https://github.com/Kotlin/KEEP/blob/master/proposals/kotlin-contracts.md),
 but it is not so simple.
-Kotlin contracts are implemented now as the first expression in a function body, but external functions don't have a body.
+Kotlin contracts are implemented now as the first expression in a function body, but external functions don't have a
+body.
 Also, Kotlin doesn't allow us to write contracts for external classes and interfaces.
 Of course, the first expression limitation of contracts can be hacked using a thin wrapper,
 and the compiler check for external interface can be suppressed:
@@ -100,9 +101,9 @@ But right now Karakum can't do this for you, maybe at some point in the future i
 ## Integration with the standard library
 
 It would be nice if Karakum could generate imports for such entities as `ArrayBuffer` or `Promise` automatically,
-but it is harder than it may seem. Technically, you can declare functions, classes or interfaces with names that 
-clash with the names in the ECMAScript standard environment. The following trick is possible: we can check if some 
-entity is imported in a file. If it's not, it is probably some standard thing, and we can try to find an import for it in
-[kotlin-js](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-js) or
+but it is harder than it may seem. Technically, you can declare functions, classes or interfaces with names that
+clash with the names in the ECMAScript standard environment. The following trick is possible: we can check if some
+entity is imported in a file. If it's not, it is probably some standard thing, and we can try to find an import for it
+in [kotlin-js](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-js) or
 [kotlin-browser](https://github.com/JetBrains/kotlin-wrappers/tree/master/kotlin-browser).
 Unfortunately, it doesn't work this way in Karakum right now, but it is possible to implement.
