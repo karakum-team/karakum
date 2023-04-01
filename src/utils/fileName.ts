@@ -1,3 +1,5 @@
+import {KOTLIN_KEYWORDS} from "../converter/constants";
+
 export function commonPrefix(...sources: string[][]): string[] {
     const [first, second, ...rest] = sources
 
@@ -31,16 +33,19 @@ export function applyMapper(sourceFileName: string, mapper: Record<string, strin
     return sourceFileName
 }
 
-export function generateOutputFileName(prefix: string, sourceFileName: string) {
-    return sourceFileName
-        .replace(prefix, "")
-        .replace(/\.d\.ts$/, ".kt")
-        .replace(/\.ts$/, ".kt")
-}
+export function dirNameToPackage(dirName: string) {
+    const preparedDirName = dirName === "." // handle root dir
+        ? ""
+        : dirName
 
-export function generateRelativeFileName(prefix: string, sourceFileName: string) {
-    return sourceFileName
-        .replace(prefix, "")
-        .replace(/\.d\.ts$/, "")
-        .replace(/\.ts$/, "")
+    return preparedDirName.split("/")
+        .filter(it => it !== "")
+        .map(it => {
+            if (KOTLIN_KEYWORDS.has(it)) {
+                return `\`${it}\``
+            } else {
+                return it
+            }
+        })
+        .join(".")
 }

@@ -203,22 +203,21 @@ export async function process(configuration: Configuration) {
         .forEach(item => {
             const targetFileName = path.resolve(output, item.outputFileName)
 
-            console.log(`Source file: ${item.sourceFileName}`)
+            if (item.sourceFileName !== undefined) {
+                console.log(`Source file: ${item.sourceFileName}`)
+            }
+
+            if (item.namespaceName !== undefined) {
+                console.log(`Namespace: ${item.namespaceName}`)
+            }
+
             console.log(`Target file: ${targetFileName}`)
 
             const convertedBody = item.nodes
                 .map(node => render(node))
                 .join("\n\n")
 
-            const targetFile = createTargetFile(
-                sourceFileRoot,
-                item.sourceFileName,
-                item.outputFileName,
-                item.packageName,
-                item.hasRuntime,
-                convertedBody,
-                configuration,
-            )
+            const targetFile = createTargetFile(item, convertedBody, configuration)
 
             if (normalizedIgnoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
                 fs.mkdirSync(path.dirname(targetFileName), {recursive: true})

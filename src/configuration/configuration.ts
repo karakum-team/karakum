@@ -1,5 +1,9 @@
 import {CompilerOptions} from "typescript";
 
+export type Granularity = /* TODO: support "bundle" | */ "file" | "top-level"
+
+export type NamespaceStrategy = "ignore" | "object" | "package"
+
 export type Configuration = {
     input: string | string[];
     output: string;
@@ -10,7 +14,7 @@ export type Configuration = {
     libraryName?: string;
     libraryNameOutputPrefix?: boolean;
 
-    granularity?: /* TODO: support "bundle"*/ | "file" | "top-level"
+    granularity?: Granularity
 
     plugins?: string | string[];
 
@@ -24,6 +28,8 @@ export type Configuration = {
     packageNameMapper?: Record<string, string>
 
     importInjector?: Record<string, string[]>
+
+    namespaceStrategy?: Record<string, NamespaceStrategy>
 
     compilerOptions?: CompilerOptions;
 

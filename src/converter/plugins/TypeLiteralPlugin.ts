@@ -72,7 +72,7 @@ export class TypeLiteralPlugin implements ConverterPlugin {
                         return declarations
                             .map(({name, declaration}) => {
                                 const outputDirName = path.dirname(outputFileName)
-                                const currentOutputFileName = `${outputDirName}/${name}.kt`
+                                const currentOutputFileName = path.join(outputDirName, `${name}.kt`)
                                 const generatedFile = createGeneratedFile(
                                     this.sourceFileRoot,
                                     currentOutputFileName,

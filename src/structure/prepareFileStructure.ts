@@ -1,12 +1,15 @@
 import path from "path";
 import ts, {Node, SourceFile} from "typescript";
 import {Configuration} from "../configuration/configuration";
-import {generateOutputFileInfo, OutputFileInfo} from "./generateOutputFileInfo";
+import {generateOutputFileInfo} from "./generateOutputFileInfo";
+import {collectNamespaceInfo} from "./namespace/collectNamespaceInfo";
+import {TargetFileInfo} from "./createTargetFile";
 
-interface FileStructureItem extends OutputFileInfo {
-    sourceFileName: string,
+interface FileStructureItem extends TargetFileInfo {
     nodes: ReadonlyArray<Node>,
-    hasRuntime: boolean,
+
+    sourceFileName: string | undefined,
+    namespaceName: string | undefined,
 }
 
 type FileStructure = FileStructureItem[]
@@ -108,9 +111,12 @@ function normalizeFileStructure(fileStructure: FileStructure) {
 
     for (const item of fileStructure) {
         const existingItem = result.get(item.outputFileName) ?? {
-            sourceFileName: item.sourceFileName,
             outputFileName: item.outputFileName,
             packageName: item.packageName,
+            moduleName: item.moduleName,
+            qualifier: item.qualifier,
+            sourceFileName: item.sourceFileName,
+            namespaceName: item.namespaceName,
             nodes: [],
             hasRuntime: false
         }
@@ -133,57 +139,81 @@ function normalizeFileStructure(fileStructure: FileStructure) {
 export function prepareFileStructure(
     sourceFileRoot: string,
     sourceFiles: SourceFile[],
-    configuration: Configuration
+    configuration: Configuration,
 ): FileStructure {
     const granularity = configuration.granularity ?? "file"
 
-    if (granularity === "file") {
-        return sourceFiles.map(it => {
-            const {outputFileName, packageName} = generateOutputFileInfo(
+    const namespaceInfo = collectNamespaceInfo(sourceFileRoot, sourceFiles, configuration)
+
+    const files: FileStructure = sourceFiles
+        .map(it => {
+            const {outputFileName, packageName, moduleName} = generateOutputFileInfo(
                 sourceFileRoot,
                 it.fileName,
                 configuration,
             )
 
-            return ({
-                sourceFileName: it.fileName,
+            return {
                 outputFileName,
                 packageName,
-                nodes: it.statements,
+                moduleName,
+                qualifier: undefined,
                 hasRuntime: true,
-            });
+
+                nodes: it.statements,
+
+                sourceFileName: it.fileName,
+                namespaceName: undefined
+            };
         })
+
+    const namespaces: FileStructure = namespaceInfo
+        .filter(it => it.strategy === "package")
+        .map(it => {
+            return {
+                outputFileName: it.outputFileName,
+                packageName: it.packageName,
+                moduleName: it.moduleName,
+                qualifier: it.qualifier,
+                hasRuntime: true,
+
+                nodes: it.nodes,
+
+                sourceFileName: undefined,
+                namespaceName: it.name,
+            }
+        })
+
+    const fileStructure = [...files, ...namespaces]
+
+    if (granularity === "file") {
+        return fileStructure
     }
 
     if (granularity === "top-level") {
         return normalizeFileStructure(
-            sourceFiles.flatMap(it => {
-                const {outputFileName, packageName} = generateOutputFileInfo(
-                    sourceFileRoot,
-                    it.fileName,
-                    configuration,
-                );
-                const outputDirName = path.dirname(outputFileName)
+            fileStructure.flatMap(it => {
+                const outputDirName = path.dirname(it.outputFileName)
 
                 const result: FileStructure = []
 
-                for (const statement of it.statements) {
-                    let currentOutputFileName = outputFileName
+                for (const node of it.nodes) {
+                    let outputFileName = it.outputFileName
                     let hasRuntime = true
 
-                    const topLevelMatch = topLevelMatcher(statement)
+                    const topLevelMatch = topLevelMatcher(node)
 
                     if (topLevelMatch !== null) {
-                        currentOutputFileName = `${outputDirName}/${topLevelMatch.name}.kt`
+                        outputFileName = path.join(outputDirName, `${topLevelMatch.name}.kt`)
                         hasRuntime = topLevelMatch.hasRuntime
                     }
 
                     result.push({
-                        sourceFileName: it.fileName,
-                        outputFileName: currentOutputFileName,
-                        packageName,
-                        nodes: [statement],
+                        ...it,
+
+                        outputFileName,
                         hasRuntime,
+                        nodes: [node],
                     })
                 }
 

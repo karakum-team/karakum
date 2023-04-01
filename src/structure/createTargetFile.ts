@@ -1,33 +1,45 @@
 import {Configuration} from "../configuration/configuration";
-import {applyMapper, generateRelativeFileName} from "../utils/fileName";
 import {generateImports} from "./generateImports";
+import {OutputFileInfo} from "./generateOutputFileInfo";
+
+export interface TargetFileInfo extends OutputFileInfo {
+    qualifier: string | undefined
+    hasRuntime: boolean
+}
 
 export function createTargetFile(
-    sourceFileRoot: string,
-    sourceFileName: string,
-    outputFileName: string,
-    packageName: string,
-    hasRuntime: boolean,
+    targetFileInfo: TargetFileInfo,
     body: string,
     configuration: Configuration,
 ) {
-    const libraryName = configuration.libraryName ?? ""
-    const moduleNameMapper = configuration.moduleNameMapper
-
-    const relativeFileName = generateRelativeFileName(sourceFileRoot, sourceFileName)
-    const mappedRelativeFileName = applyMapper(relativeFileName, moduleNameMapper)
-
-    const moduleName = mappedRelativeFileName !== ""
-        ? `${libraryName}/${mappedRelativeFileName}`
-        : libraryName;
+    const {
+        outputFileName,
+        packageName,
+        moduleName,
+        qualifier,
+        hasRuntime,
+    } = targetFileInfo
 
     const imports = generateImports(outputFileName, configuration)
 
-    return `
-${hasRuntime ? `@file:JsModule("${moduleName}")\n` : ""}
+    const jsModule = hasRuntime ? `@file:JsModule("${moduleName}")` : ""
+    const jsQualifier = hasRuntime && qualifier !== undefined ? `@file:JsQualifier("${qualifier}")` : ""
+    const typeAliasSuppress = `
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
+    `.trim()
+
+    const fileAnnotations = [
+        jsModule,
+        jsQualifier,
+        typeAliasSuppress
+    ]
+        .filter(Boolean)
+        .join("\n")
+
+    return `
+${fileAnnotations}
 
 package ${packageName}
 
