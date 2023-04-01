@@ -22,6 +22,7 @@ export {checkCoverageServiceKey, type CheckCoverageService} from "./converter/pl
 export {configurationServiceKey, type ConfigurationService} from "./converter/plugins/ConfigurationPlugin"
 export {typeScriptServiceKey, type TypeScriptService} from "./converter/plugins/TypeScriptPlugin"
 export {inheritanceModifierServiceKey, type InheritanceModifierService} from "./converter/plugins/InheritanceModifierPlugin"
+export {namespaceInfoServiceKey, type NamespaceInfoService} from "./converter/plugins/NamespaceInfoPlugin"
 
 // plugin utils
 export {

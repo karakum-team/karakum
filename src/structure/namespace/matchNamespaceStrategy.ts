@@ -34,7 +34,7 @@ function namespaceNameToDir(namespaceName: string) {
         .join("/")
 }
 
-function extractNamespaceName(
+export function extractNamespaceName(
     namespace: ModuleDeclaration,
     suffix: NamespaceNameChunk[] = []
 ): NamespaceNameChunk[] {
@@ -80,7 +80,7 @@ export function matchNamespaceStrategy(
     const outputDirName = name.map(it => it.dirName).join("/")
     const preparedOutputDirName = applyMapper(outputDirName, packageNameMapper)
     const packageName = dirNameToPackage(preparedOutputDirName)
-    const outputFileName = path.join(outputDirName, "namespace.kt")
+    const outputFileName = path.join(preparedOutputDirName, "namespace.kt")
 
     let moduleName: string | undefined = undefined
     let qualifier: string | undefined = simpleName

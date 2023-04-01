@@ -7,7 +7,7 @@ import {setParentNodes} from "../../utils/setParentNodes";
 export const typeScriptServiceKey = Symbol()
 
 export class TypeScriptService {
-    private virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
+    private readonly virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
     private readonly printer = ts.createPrinter({
         removeComments: true,
         newLine: ts.NewLineKind.LineFeed,

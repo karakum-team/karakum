@@ -2,7 +2,7 @@ import path from "path";
 import ts, {Node, SourceFile} from "typescript";
 import {Configuration} from "../configuration/configuration";
 import {generateOutputFileInfo} from "./generateOutputFileInfo";
-import {collectNamespaceInfo} from "./namespace/collectNamespaceInfo";
+import {NamespaceInfo} from "./namespace/collectNamespaceInfo";
 import {TargetFileInfo} from "./createTargetFile";
 
 interface FileStructureItem extends TargetFileInfo {
@@ -140,10 +140,9 @@ export function prepareFileStructure(
     sourceFileRoot: string,
     sourceFiles: SourceFile[],
     configuration: Configuration,
+    namespaceInfo: NamespaceInfo,
 ): FileStructure {
     const granularity = configuration.granularity ?? "file"
-
-    const namespaceInfo = collectNamespaceInfo(sourceFileRoot, sourceFiles, configuration)
 
     const files: FileStructure = sourceFiles
         .map(it => {

@@ -60,12 +60,10 @@ export function collectNamespaceInfo(
                         .filter(statement => !ts.isModuleDeclaration(statement))
                 }
 
-                if (statements.length > 0) {
-                    result.push({
-                        ...namespaceMatch,
-                        nodes: statements
-                    })
-                }
+                result.push({
+                    ...namespaceMatch,
+                    nodes: statements
+                })
             }
         })
     })

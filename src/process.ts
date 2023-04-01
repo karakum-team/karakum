@@ -17,6 +17,7 @@ import {NameResolver} from "./converter/nameResolver";
 import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin";
 import {InheritanceModifier} from "./converter/inheritanceModifier";
 import {Annotation} from "./converter/annotation";
+import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
 
 export const defaultPluginPatterns = [
     "karakum/plugins/*.js"
@@ -150,29 +151,6 @@ export async function process(configuration: Configuration) {
     }
     fs.mkdirSync(output, {recursive: true})
 
-    const context = createContext()
-
-    const defaultPlugins = createPlugins(
-        sourceFileRoot,
-        configuration,
-        customNameResolvers,
-        customInheritanceModifiers,
-        program,
-    )
-
-    const converterPlugins = [
-        // it is important to handle comments and annotations at first
-        new CommentsPlugin(),
-        new AnnotationsPlugin(customAnnotations),
-
-        ...customPlugins,
-        ...defaultPlugins
-    ]
-
-    for (const plugin of converterPlugins) {
-        plugin.setup(context)
-    }
-
     const preparedIgnoreInput = [
         ...normalizedIgnoreInput,
         ...ignoreLibPatterns,
@@ -185,7 +163,32 @@ export async function process(configuration: Configuration) {
 
     console.log(`Source files count: ${sourceFiles.length}`)
 
-    const fileStructure = prepareFileStructure(sourceFileRoot, sourceFiles, configuration)
+    const namespaceInfo = collectNamespaceInfo(sourceFileRoot, sourceFiles, configuration)
+    const fileStructure = prepareFileStructure(sourceFileRoot, sourceFiles, configuration, namespaceInfo)
+
+    const defaultPlugins = createPlugins(
+        sourceFileRoot,
+        configuration,
+        customNameResolvers,
+        customInheritanceModifiers,
+        program,
+        namespaceInfo,
+    )
+
+    const converterPlugins = [
+        // it is important to handle comments and annotations at first
+        new CommentsPlugin(),
+        new AnnotationsPlugin(customAnnotations),
+
+        ...customPlugins,
+        ...defaultPlugins
+    ]
+
+    const context = createContext()
+
+    for (const plugin of converterPlugins) {
+        plugin.setup(context)
+    }
 
     fileStructure
         .flatMap(it => it.nodes)

@@ -20,3 +20,21 @@ process({
     verbose: true,
 })
     .catch(error => console.error(error))
+
+process({
+    input: path.resolve(__dirname, "namespace/lib/**"),
+    output: path.resolve(__dirname, "namespace/generated"),
+    libraryName: "sandbox-namespace",
+    granularity: "top-level",
+    verbose: true,
+    packageNameMapper: {
+        "will/be/mapped/andthis": "was/mapped/nested",
+        "will/be/mapped": "was/mapped/main"
+    },
+    namespaceStrategy: {
+        "package-namespace": "package",
+        "IgnoreNamespace": "ignore",
+        "will-be-mapped": "package",
+    }
+})
+    .catch(error => console.error(error))

@@ -14,9 +14,9 @@ external object String {
 external object NS {
 external val x: Double
 }
-    
+        
 }
-    
+        
 
 
 external object Some {
@@ -26,9 +26,9 @@ external object Nested {
 external object NS {
 external val x: Double
 }
-    
+        
 }
-    
+        
 }
-    
+        
     

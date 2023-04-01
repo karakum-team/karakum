@@ -48,6 +48,8 @@ import {convertPropertyAccessExpression} from "./converter/plugins/convertProper
 import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin";
 import {InheritanceModifier} from "./converter/inheritanceModifier";
 import {convertMappedType} from "./converter/plugins/convertMappedType";
+import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin";
+import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -57,10 +59,12 @@ export const createPlugins = (
     nameResolvers: NameResolver[],
     inheritanceModifiers: InheritanceModifier[],
     program: Program,
+    namespaceInfo: NamespaceInfo,
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
     new TypeScriptPlugin(program),
     new InheritanceModifierPlugin(inheritanceModifiers),
+    new NamespaceInfoPlugin(namespaceInfo),
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),
 
