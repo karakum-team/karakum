@@ -1,24 +1,23 @@
 import {Configuration} from "../configuration/configuration";
 import {generateImports} from "./generateImports";
-import {OutputFileInfo} from "./generateOutputFileInfo";
-
-export interface TargetFileInfo extends OutputFileInfo {
-    qualifier: string | undefined
-    hasRuntime: boolean
-}
+import {OutputStructureItem} from "./structure";
+import {packageToOutputFileName} from "./package/packageToFileName";
+import {createPackageName} from "./package/createPackageName";
 
 export function createTargetFile(
-    targetFileInfo: TargetFileInfo,
-    body: string,
+    item: OutputStructureItem,
     configuration: Configuration,
 ) {
     const {
-        outputFileName,
-        packageName,
         moduleName,
         qualifier,
         hasRuntime,
-    } = targetFileInfo
+        body
+    } = item
+
+    const packageName = createPackageName(item.package)
+
+    const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
 
     const imports = generateImports(outputFileName, configuration)
 

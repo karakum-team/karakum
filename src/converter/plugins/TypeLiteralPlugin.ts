@@ -3,7 +3,6 @@ import ts, {ConditionalTypeNode, TypeLiteralNode} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ConverterContext} from "../context";
 import {ifPresent, Render} from "../render";
-import {generateOutputFileInfo} from "../../structure/generateOutputFileInfo";
 import {createGeneratedFile} from "../../structure/createGeneratedFile";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
@@ -22,6 +21,10 @@ import {resolveFunctionReturnTypeName} from "../nameResolvers/resolveFunctionRet
 import {resolveInterfaceMethodReturnTypeName} from "../nameResolvers/resolveInterfaceMethodReturnTypeName";
 import {resolveClassMethodReturnTypeName} from "../nameResolvers/resolveClassMethodReturnTypeName";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
+import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem";
+import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper";
+import {createPackageName} from "../../structure/package/createPackageName";
+import {packageToOutputFileName} from "../../structure/package/packageToFileName";
 
 const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
     resolveFunctionParameterName,
@@ -62,31 +65,56 @@ export class TypeLiteralPlugin implements ConverterPlugin {
         return Object.fromEntries(
             Object.entries(this.generated)
                 .flatMap(([sourceFileName, declarations]) => {
-                    const {outputFileName, packageName} = generateOutputFileInfo(
+                    const sourceFileInfoItem = createSourceFileInfoItem(
                         this.sourceFileRoot,
                         sourceFileName,
                         configuration,
-                    );
+                    )
 
                     if (granularity === "top-level") {
                         return declarations
                             .map(({name, declaration}) => {
-                                const outputDirName = path.dirname(outputFileName)
-                                const currentOutputFileName = path.join(outputDirName, `${name}.kt`)
+                                const fileName = `${name}.kt`
+
+                                const packageMappingResult = applyPackageNameMapper(
+                                    sourceFileInfoItem.package,
+                                    fileName,
+                                    configuration,
+                                )
+
+                                const packageName = createPackageName(packageMappingResult.package)
+
+                                const outputFileName = packageToOutputFileName(
+                                    packageMappingResult.package,
+                                    fileName,
+                                    configuration,
+                                )
+
                                 const generatedFile = createGeneratedFile(
-                                    this.sourceFileRoot,
-                                    currentOutputFileName,
+                                    outputFileName,
                                     packageName,
                                     declaration,
                                     configuration,
                                 )
 
-                                return [path.resolve(output, currentOutputFileName), generatedFile];
+                                return [path.resolve(output, outputFileName), generatedFile];
                             })
                     } else {
                         const generatedFile = declarations
                             .map(({declaration}) => declaration)
                             .join("\n\n")
+
+                        const packageMappingResult = applyPackageNameMapper(
+                            sourceFileInfoItem.package,
+                            sourceFileInfoItem.fileName,
+                            configuration,
+                        )
+
+                        const outputFileName = packageToOutputFileName(
+                            packageMappingResult.package,
+                            packageMappingResult.fileName,
+                            configuration,
+                        )
 
                         return [[path.resolve(output, outputFileName), generatedFile]];
                     }

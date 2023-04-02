@@ -8,7 +8,7 @@ import {createContext} from "./converter/context";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
 import {createPlugins} from "./defaultPlugins";
 import {CommentsPlugin} from "./converter/plugins/CommentsPlugin";
-import {prepareFileStructure} from "./structure/prepareFileStructure";
+import {prepareStructure} from "./structure/prepareStructure";
 import {traverse} from "./utils/traverse";
 import minimatch from "minimatch";
 import {createTargetFile} from "./structure/createTargetFile";
@@ -18,6 +18,8 @@ import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin";
 import {InheritanceModifier} from "./converter/inheritanceModifier";
 import {Annotation} from "./converter/annotation";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
+import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo";
+import {packageToOutputFileName} from "./structure/package/packageToFileName";
 
 export const defaultPluginPatterns = [
     "karakum/plugins/*.js"
@@ -104,7 +106,7 @@ export async function process(configuration: Configuration) {
         }
     )
 
-    const customAnnotations= await loadExtensions<Annotation>(
+    const customAnnotations = await loadExtensions<Annotation>(
         "Annotation",
         annotations,
         defaultAnnotationPatterns,
@@ -164,7 +166,15 @@ export async function process(configuration: Configuration) {
     console.log(`Source files count: ${sourceFiles.length}`)
 
     const namespaceInfo = collectNamespaceInfo(sourceFileRoot, sourceFiles, configuration)
-    const fileStructure = prepareFileStructure(sourceFileRoot, sourceFiles, configuration, namespaceInfo)
+    const sourceFileInfo = collectSourceFileInfo(sourceFileRoot, sourceFiles, configuration)
+
+    const structure = prepareStructure(
+        [
+            ...namespaceInfo,
+            ...sourceFileInfo,
+        ],
+        configuration,
+    )
 
     const defaultPlugins = createPlugins(
         sourceFileRoot,
@@ -190,8 +200,8 @@ export async function process(configuration: Configuration) {
         plugin.setup(context)
     }
 
-    fileStructure
-        .flatMap(it => it.nodes)
+    structure
+        .flatMap(it => it.statements)
         .forEach(node => {
             traverse(node, node => {
                 for (const plugin of converterPlugins) {
@@ -202,25 +212,27 @@ export async function process(configuration: Configuration) {
 
     const render = createRender(context, converterPlugins)
 
-    fileStructure
+    structure
         .forEach(item => {
-            const targetFileName = path.resolve(output, item.outputFileName)
+            console.log(`${item.meta.type}: ${item.meta.name}`)
 
-            if (item.sourceFileName !== undefined) {
-                console.log(`Source file: ${item.sourceFileName}`)
-            }
+            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration,)
 
-            if (item.namespaceName !== undefined) {
-                console.log(`Namespace: ${item.namespaceName}`)
-            }
+            const targetFileName = path.resolve(output, outputFileName)
 
             console.log(`Target file: ${targetFileName}`)
 
-            const convertedBody = item.nodes
+            const convertedBody = item.statements
                 .map(node => render(node))
                 .join("\n\n")
 
-            const targetFile = createTargetFile(item, convertedBody, configuration)
+            const targetFile = createTargetFile(
+                {
+                    ...item,
+                    body: convertedBody,
+                },
+                configuration,
+            )
 
             if (normalizedIgnoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
                 fs.mkdirSync(path.dirname(targetFileName), {recursive: true})

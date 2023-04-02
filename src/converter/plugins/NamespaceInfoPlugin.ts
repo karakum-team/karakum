@@ -4,7 +4,7 @@ import {ConverterContext} from "../context";
 import {Render} from "../render";
 import {NamespaceStrategy} from "../../configuration/configuration";
 import {NamespaceInfo} from "../../structure/namespace/collectNamespaceInfo";
-import {extractNamespaceName} from "../../structure/namespace/matchNamespaceStrategy";
+import {extractNamespaceName} from "../../structure/namespace/createNamespaceInfoItem";
 
 export const namespaceInfoServiceKey = Symbol()
 

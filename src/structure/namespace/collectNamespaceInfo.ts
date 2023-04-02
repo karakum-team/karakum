@@ -1,41 +1,14 @@
 import ts, {SourceFile, Statement} from "typescript";
 import {Configuration} from "../../configuration/configuration";
 import {traverse} from "../../utils/traverse";
-import {matchNamespaceStrategy, NamespaceMatch} from "./matchNamespaceStrategy";
-import {generateModuleName} from "../generateModuleName";
+import {createNamespaceInfoItem, NamespaceInfoItem} from "./createNamespaceInfoItem";
+import {InputStructureItem} from "../structure";
+import {extractModuleName} from "../module/extractModuleName";
 
-export interface NamespaceInfoItem extends NamespaceMatch {
-    nodes: ReadonlyArray<Statement>,
+interface InputNamespaceInfoItem extends NamespaceInfoItem, InputStructureItem {
 }
 
-export type NamespaceInfo = NamespaceInfoItem[]
-
-function normalizeNamespaceInfo(namespaceInfo: NamespaceInfo) {
-    const result: Map<string, NamespaceInfoItem> = new Map()
-
-    for (const item of namespaceInfo) {
-        const existingItem = result.get(item.name) ?? {
-            name: item.name,
-            packageName: item.packageName,
-            outputFileName: item.outputFileName,
-            moduleName: item.moduleName,
-            qualifier: item.qualifier,
-            strategy: item.strategy,
-            nodes: [],
-        }
-
-        if (!result.has(item.name)) {
-            result.set(item.name, existingItem)
-        }
-
-        result.set(item.name, {
-            ...existingItem,
-            nodes: [...existingItem.nodes, ...item.nodes],
-        })
-    }
-
-    return Array.from(result.values())
-}
+export type NamespaceInfo = InputNamespaceInfoItem[]
 
 export function collectNamespaceInfo(
     sourceFileRoot: string,
@@ -45,13 +18,13 @@ export function collectNamespaceInfo(
     const result: NamespaceInfo = []
 
     sourceFiles.forEach(sourceFile => {
-        const defaultModuleName = generateModuleName(sourceFileRoot, sourceFile.fileName, configuration)
+        const defaultModuleName = extractModuleName(sourceFileRoot, sourceFile.fileName, configuration)
 
         traverse(sourceFile, node => {
             if (
                 ts.isModuleDeclaration(node)
             ) {
-                const namespaceMatch = matchNamespaceStrategy(node, configuration, defaultModuleName)
+                const item = createNamespaceInfoItem(node, defaultModuleName, configuration)
 
                 let statements: Statement[] = []
 
@@ -61,12 +34,16 @@ export function collectNamespaceInfo(
                 }
 
                 result.push({
-                    ...namespaceMatch,
-                    nodes: statements
+                    ...item,
+                    statements,
+                    meta: {
+                        type: "Namespace",
+                        name: item.name
+                    }
                 })
             }
         })
     })
 
-    return normalizeNamespaceInfo(result)
+    return result
 }

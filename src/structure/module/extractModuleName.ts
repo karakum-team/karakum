@@ -1,6 +1,5 @@
 import path from "path";
-import {applyMapper} from "../utils/fileName";
-import {Configuration} from "../configuration/configuration";
+import {Configuration} from "../../configuration/configuration";
 
 function generateRelativeFileName(prefix: string, sourceFileName: string) {
     return sourceFileName
@@ -9,17 +8,14 @@ function generateRelativeFileName(prefix: string, sourceFileName: string) {
         .replace(/\.ts$/, "")
 }
 
-export function generateModuleName(
+export function extractModuleName(
     prefix: string,
     sourceFileName: string,
     configuration: Configuration,
 ) {
     const libraryName = configuration.libraryName ?? ""
-    const moduleNameMapper = configuration.moduleNameMapper
 
     const relativeFileName = generateRelativeFileName(prefix, sourceFileName)
 
-    const mappedRelativeFileName = applyMapper(relativeFileName, moduleNameMapper)
-
-    return path.join(libraryName, mappedRelativeFileName)
+    return path.join(libraryName, relativeFileName)
 }

@@ -2,7 +2,6 @@ import {Configuration} from "../configuration/configuration";
 import {generateImports} from "./generateImports";
 
 export function createGeneratedFile(
-    sourceFileRoot: string,
     outputFileName: string,
     packageName: string,
     body: string,
