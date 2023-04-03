@@ -102,7 +102,11 @@ function normalizeStructure(items: InputStructureItem[]) {
     for (const item of items) {
         const fileName = packageToFileName(item.package, item.fileName)
 
-        const existingItem = result.get(fileName) ?? item
+        const existingItem = result.get(fileName) ?? {
+            ...item,
+            statements: [],
+            hasRuntime: false,
+        }
 
         if (!result.has(fileName)) {
             result.set(fileName, existingItem)

@@ -170,7 +170,7 @@ export async function process(configuration: Configuration) {
 
     const structure = prepareStructure(
         [
-            ...namespaceInfo,
+            ...namespaceInfo.filter(it => it.strategy === "package"),
             ...sourceFileInfo,
         ],
         configuration,
@@ -216,7 +216,7 @@ export async function process(configuration: Configuration) {
         .forEach(item => {
             console.log(`${item.meta.type}: ${item.meta.name}`)
 
-            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration,)
+            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
 
             const targetFileName = path.resolve(output, outputFileName)
 

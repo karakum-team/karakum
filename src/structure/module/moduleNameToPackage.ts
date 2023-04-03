@@ -9,5 +9,4 @@ export function moduleNameToPackage(moduleName: string): string[] {
         .split(/[-:.\/]/)
         .map(it => it.replace(/\W/g, ""))
         .filter(it => it !== "")
-        .map(it => it.toLowerCase())
 }

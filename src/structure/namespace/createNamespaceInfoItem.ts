@@ -25,7 +25,7 @@ export function extractNamespaceName(
     const detailedName = ts.isIdentifier(namespace.name)
         ? simpleName
         : `"${simpleName}"`
-    const packageChunks = moduleNameToPackage(simpleName)
+    const packageChunks = moduleNameToPackage(simpleName).map(it => it.toLowerCase())
     const isAmbient = ts.isStringLiteral(namespace.name)
 
     const nameChunk = {

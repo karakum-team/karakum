@@ -8,9 +8,15 @@ export interface SourceFileInfoItem extends StructureItem {
 }
 
 function extractDirName(prefix: string, sourceFileName: string) {
-    const dirName = path.dirname(sourceFileName)
+    const relativeFileName = sourceFileName.replace(prefix, "")
 
-    return dirName.replace(prefix, "")
+    const dirName = path.dirname(relativeFileName)
+
+    if (dirName === ".") {
+        return ""
+    }
+
+    return dirName
 }
 
 function extractFileName(sourceFileName: string) {

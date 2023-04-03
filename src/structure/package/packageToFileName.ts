@@ -27,7 +27,7 @@ export function packageToOutputFileName(
         return result
     }
 
-    const basePackage = moduleNameToPackage(libraryName).join("/")
+    const basePackage = moduleNameToPackage(libraryName).join("/") + "/"
 
     if (!result.startsWith(basePackage)) {
         return result

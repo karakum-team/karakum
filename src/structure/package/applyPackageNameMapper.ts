@@ -21,7 +21,7 @@ export function applyPackageNameMapper(
     const mappedFilePath = applyMapper(filePath, packageNameMapper)
 
     const dirName = path.dirname(mappedFilePath)
-    const baseName = path.dirname(mappedFilePath)
+    const baseName = path.basename(mappedFilePath)
 
     return {
         fileName: baseName,
