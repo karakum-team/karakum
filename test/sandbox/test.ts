@@ -15,7 +15,7 @@ process({
     libraryName: "sandbox-top-level-granularity",
     granularity: "top-level",
     moduleNameMapper: {
-        ".*": ""
+        ".*": "sandbox-top-level-granularity"
     },
     verbose: true,
 })
