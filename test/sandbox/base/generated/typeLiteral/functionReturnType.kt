@@ -12,7 +12,12 @@ external fun useRevalidator(): UseRevalidatorResult
 
 
 external class MyClass {
+
+        
+companion object {
 fun getDerivedStateFromProps(): MyClassGetDerivedStateFromPropsResult
+}
+        
 }
     
 

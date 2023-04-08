@@ -22,11 +22,14 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.TypeReference, // typeName.right or typeName (typeArguments)
     SyntaxKind.HeritageClause, // :
     SyntaxKind.ExpressionWithTypeArguments, // expression (typeArguments)
+    SyntaxKind.Constructor, // constructor(params)
     SyntaxKind.PropertySignature, // var name: type(?)
+    SyntaxKind.PropertyDeclaration, // var name: type(?)
     SyntaxKind.AnyKeyword, // Any?
     SyntaxKind.ReadonlyKeyword, // skip, handled by PropertySignature and readonly arrays converter
     SyntaxKind.NumberKeyword, // Double TODO: detect integers
     SyntaxKind.MethodSignature, // fun <params> name(params): returnType
+    SyntaxKind.MethodDeclaration, // fun <params> name(params): returnType
     SyntaxKind.BooleanKeyword, // Boolean
     SyntaxKind.VoidKeyword, // Unit
     SyntaxKind.UnionType, // optional types are supported TODO: preprocess unions
@@ -64,6 +67,8 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.ObjectBindingPattern, // TODO: infer name
     SyntaxKind.BindingElement, // ignore
     SyntaxKind.UnknownKeyword, // Any?
+    SyntaxKind.SymbolKeyword, // js.core.Symbol
+    SyntaxKind.StaticKeyword, // companion object
     SyntaxKind.ExportAssignment, // ignore
     SyntaxKind.EndOfFileToken, // skip
     SyntaxKind.ComputedPropertyName,
@@ -71,6 +76,7 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.ConstructSignature,
     SyntaxKind.ObjectKeyword, // Any
     SyntaxKind.ImportType,
+    SyntaxKind.MappedType,
 ]
 
 export class CheckKindsPlugin implements ConverterPlugin {
