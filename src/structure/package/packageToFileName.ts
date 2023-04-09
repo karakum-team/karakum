@@ -1,5 +1,4 @@
 import path from "path";
-import {snakeToCamelCase} from "../../utils/strings";
 import {Configuration} from "../../configuration/configuration";
 import {moduleNameToPackage} from "../module/moduleNameToPackage";
 
@@ -8,8 +7,8 @@ export function packageToFileName(
     fileName: string,
 ) {
     return path.join(
-        packageChunks.join("/"),
-        snakeToCamelCase(fileName),
+        ...packageChunks,
+        fileName,
     )
 }
 
