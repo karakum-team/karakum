@@ -50,6 +50,7 @@ import {InheritanceModifier} from "./converter/inheritanceModifier";
 import {convertMappedType} from "./converter/plugins/convertMappedType";
 import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin";
 import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
+import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -70,8 +71,7 @@ export const createPlugins = (
 
     new NullableUnionTypePlugin(),
     new TypeLiteralPlugin(sourceFileRoot, nameResolvers),
-
-    convertPrimitive(hasKind(SyntaxKind.DeclareKeyword), () => ""),
+    new AccessorsPlugin(),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),

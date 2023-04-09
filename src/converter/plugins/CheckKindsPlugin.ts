@@ -25,6 +25,8 @@ const supportedKinds: SyntaxKind[] = [
     SyntaxKind.Constructor, // constructor(params)
     SyntaxKind.PropertySignature, // var name: type(?)
     SyntaxKind.PropertyDeclaration, // var name: type(?)
+    SyntaxKind.GetAccessor, // val/var name: type(?)
+    SyntaxKind.SetAccessor, // var name: type(?)
     SyntaxKind.AnyKeyword, // Any?
     SyntaxKind.ReadonlyKeyword, // skip, handled by PropertySignature and readonly arrays converter
     SyntaxKind.NumberKeyword, // Double TODO: detect integers
