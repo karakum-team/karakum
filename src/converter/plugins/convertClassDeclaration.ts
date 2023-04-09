@@ -60,12 +60,20 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const supportedMembers = filterSupportedMembers(node.members)
 
-    const members = supportedMembers
+    const publicMembers = supportedMembers
+        .filter(member => (member.modifiers ?? []).every(it => it.kind !== SyntaxKind.PrivateKeyword))
+
+    // cover private members
+    supportedMembers
+        .filter(member => (member.modifiers ?? []).some(it => it.kind === SyntaxKind.PrivateKeyword))
+        .forEach(member => checkCoverageService?.cover(member))
+
+    const members = publicMembers
         .filter(member => (member.modifiers ?? []).every(it => it.kind !== SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 
-    const staticMembers = supportedMembers
+    const staticMembers = publicMembers
         .filter(member => (member.modifiers ?? []).some(it => it.kind === SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
