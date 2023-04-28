@@ -4,7 +4,7 @@ import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {convertParameterDeclarations} from "./convertParameterDeclaration";
 
-export const convertCallSignature = createSimplePlugin((node, context, render) => {
+export const convertCallSignatureDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isCallSignatureDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

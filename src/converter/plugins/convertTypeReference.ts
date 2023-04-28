@@ -3,7 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {convertNodeWithTypeArguments} from "./convertNodeWithTypeArguments";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
-export const convertTypeReferenceNode = createSimplePlugin((node, context, render) => {
+export const convertTypeReference = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeReferenceNode(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

@@ -14,7 +14,7 @@ import {convertInterfaceDeclaration} from "./converter/plugins/convertInterfaceD
 import {convertClassDeclaration} from "./converter/plugins/convertClassDeclaration";
 import {convertTypeParameterDeclaration} from "./converter/plugins/convertTypeParameterDeclaration";
 import {convertParameterDeclaration} from "./converter/plugins/convertParameterDeclaration";
-import {convertTypeReferenceNode} from "./converter/plugins/convertTypeReferenceNode";
+import {convertTypeReference} from "./converter/plugins/convertTypeReference";
 import {convertHeritageClause} from "./converter/plugins/convertHeritageClause";
 import {convertExpressionWithTypeArguments} from "./converter/plugins/convertExpressionWithTypeArguments";
 import {convertPropertySignature} from "./converter/plugins/convertPropertySignature";
@@ -36,8 +36,8 @@ import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUna
 import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType";
 import {convertUnionType} from "./converter/plugins/convertUnionType";
 import {convertIntersectionType} from "./converter/plugins/convertIntersectionType";
-import {convertIndexedAccessTypeNode} from "./converter/plugins/convertIndexedAccessTypeNode";
-import {convertCallSignature} from "./converter/plugins/convertCallSignature";
+import {convertIndexedAccessType} from "./converter/plugins/convertIndexedAccessType";
+import {convertCallSignatureDeclaration} from "./converter/plugins/convertCallSignatureDeclaration";
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
 import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
@@ -98,7 +98,7 @@ export const createPlugins = (
     convertClassDeclaration,
     convertTypeParameterDeclaration,
     convertParameterDeclaration,
-    convertTypeReferenceNode,
+    convertTypeReference,
     convertHeritageClause,
     convertExpressionWithTypeArguments,
     convertPropertySignature,
@@ -122,8 +122,8 @@ export const createPlugins = (
     convertParenthesizedType,
     convertUnionType,
     convertIntersectionType,
-    convertIndexedAccessTypeNode,
-    convertCallSignature,
+    convertIndexedAccessType,
+    convertCallSignatureDeclaration,
     convertFunctionDeclaration,
     convertTypePredicate,
     convertTypeOperator,

@@ -3,7 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 
-export const convertIndexedAccessTypeNode = createSimplePlugin((node, context, render) => {
+export const convertIndexedAccessType = createSimplePlugin((node, context, render) => {
     if (!ts.isIndexedAccessTypeNode(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
