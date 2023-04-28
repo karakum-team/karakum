@@ -99,14 +99,20 @@ const convertParameterDeclarationWithFixedType = (
     node.dotDotDotToken && checkCoverageService?.cover(node.dotDotDotToken)
     node.questionToken && checkCoverageService?.cover(node.questionToken)
 
-    const parameterIndex = node.parent.parameters.indexOf(node)
-    let name = parameterIndex === 0
-        ? "param"
-        : `param${parameterIndex}`
+    let name: string
 
     if (ts.isIdentifier(node.name)) {
         name = render(node.name)
     } else {
+        const parameterIndex = node.parent.parameters.indexOf(node)
+
+        const anonymousParameters = node.parent.parameters
+            .filter(parameter => !ts.isIdentifier(parameter.name))
+
+        name = anonymousParameters.length === 1
+            ? "options"
+            : `param${parameterIndex}`
+
         checkCoverageService?.deepCover(node.name)
     }
 
