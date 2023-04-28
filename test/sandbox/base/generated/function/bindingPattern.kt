@@ -16,5 +16,5 @@ var hash: String
 }
     
 
-external fun createPath(param: Path): String
+external fun createPath(options: Path): String
     
