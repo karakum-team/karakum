@@ -51,6 +51,7 @@ import {convertMappedType} from "./converter/plugins/convertMappedType";
 import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin";
 import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
 import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin";
+import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -85,6 +86,7 @@ export const createPlugins = (
     convertPrimitive(hasKind(SyntaxKind.TrueKeyword), () => "Boolean"),
     convertPrimitive(hasKind(SyntaxKind.VoidKeyword), () => "Unit"),
     convertPrimitive(hasKind(SyntaxKind.NeverKeyword), () => "Nothing"),
+    convertPrimitive(hasKind(SyntaxKind.SymbolKeyword), () => "js.core.Symbol"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),
     convertPrimitive(ts.isStringLiteral, () => "String"),
@@ -127,4 +129,5 @@ export const createPlugins = (
     convertTypeOperator,
     convertImportType,
     convertMappedType,
+    convertIndexedSignatureDeclaration,
 ]
