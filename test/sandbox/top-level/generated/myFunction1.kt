@@ -1,10 +1,10 @@
 
-@file:JsModule("sandbox-top-level-granularity")
+@file:JsModule("sandbox-top-level")
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package sandbox.top.level.granularity
+package sandbox.top.level
 
 
 

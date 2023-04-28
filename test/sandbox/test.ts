@@ -10,12 +10,12 @@ process({
     .catch(error => console.error(error))
 
 process({
-    input: path.resolve(__dirname, "top-level-granularity/lib/**"),
-    output: path.resolve(__dirname, "top-level-granularity/generated"),
-    libraryName: "sandbox-top-level-granularity",
+    input: path.resolve(__dirname, "top-level/lib/**"),
+    output: path.resolve(__dirname, "top-level/generated"),
+    libraryName: "sandbox-top-level",
     granularity: "top-level",
     moduleNameMapper: {
-        ".*": "sandbox-top-level-granularity"
+        ".*": "sandbox-top-level"
     },
     verbose: true,
 })

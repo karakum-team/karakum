@@ -2,7 +2,7 @@ export function capitalize(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function snakeToCamelCase(string: string) {
+export function camelize(string: string) {
     return string.replace(/([-_][a-z])/g, group =>
         group
             .toUpperCase()
@@ -12,7 +12,7 @@ export function snakeToCamelCase(string: string) {
 }
 
 export function identifier(string: string) {
-    return snakeToCamelCase(
+    return camelize(
         string.replace(/\W/g, "-")
     )
 }
