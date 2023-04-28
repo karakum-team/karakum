@@ -118,11 +118,11 @@ const convertParameterDeclarationWithFixedType = (
         renderedType = "Any? /* type isn't declared */"
     }
 
-    if (node.dotDotDotToken) {
+    if (type && node.dotDotDotToken) {
         if (renderedType.startsWith("Array")) {
             renderedType = renderedType.replace(/^Array<(.+)>$/, "$1")
         } else {
-            throw new Error(`Unhandled vararg declaration for ${name} parameter`)
+            renderedType = `Any? /* ${renderedType} */`
         }
     }
 
