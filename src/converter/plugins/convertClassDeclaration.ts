@@ -20,10 +20,6 @@ function extractModifiers(member: Declaration): ModifierLike[] {
     return []
 }
 
-function filterPublicMembers(members: Declaration[]): readonly Declaration[] {
-    return members.filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.PrivateKeyword))
-}
-
 export const convertClassDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isClassDeclaration(node)) return null
 
@@ -31,6 +27,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     checkCoverageService?.cover(node)
 
     const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    declarationMergingService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
@@ -59,12 +56,15 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.PrivateKeyword))
         .forEach(member => checkCoverageService?.cover(member))
 
-    const members = filterPublicMembers(mergedMembers)
+    const publicMembers = mergedMembers
+        .filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.PrivateKeyword))
+
+    const members = publicMembers
+        .filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 
-    // do not use merging for static members
-    const staticMembers = filterPublicMembers(Array.from(node.members))
+    const staticMembers = publicMembers
         .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")

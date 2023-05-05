@@ -1,4 +1,4 @@
-import ts, {Declaration, NamedDeclaration, Node, Program} from "typescript";
+import ts, {Declaration, NamedDeclaration, Program} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
@@ -11,38 +11,48 @@ export class DeclarationMergingService {
 
     private coveredSymbols = new Set<ts.Symbol>()
 
-    isCovered(node: Node, declaration: Node): boolean {
-        const typeChecker = this.program.getTypeChecker()
-        const symbol = typeChecker.getSymbolAtLocation(node)
+    isCovered(node: NamedDeclaration): boolean {
+        const symbol = this.getSymbol(node)
         if (!symbol) return false
 
         if (this.coveredSymbols.has(symbol)) return true
 
-        const declarations = symbol.declarations
-        // if there are no declarations, it is nothing to merge
-        if (!declarations) return false
-
         const valueDeclaration = symbol.valueDeclaration
+
         // it is one of the additional declarations, and it will be covered in value declaration
-        if (valueDeclaration && declaration !== symbol.valueDeclaration) return true
+        return valueDeclaration !== undefined
+            && ts.isClassDeclaration(valueDeclaration)
+            && node !== valueDeclaration;
+    }
+
+    cover(node: NamedDeclaration) {
+        const symbol = this.getSymbol(node)
+        if (!symbol) return
 
         this.coveredSymbols.add(symbol)
-        return false
     }
 
     getMembers(node: NamedDeclaration): Declaration[] | undefined {
-        if (!node.name) return undefined
-
-        const typeChecker = this.program.getTypeChecker()
-        const symbol = typeChecker.getSymbolAtLocation(node.name)
-
+        const symbol = this.getSymbol(node)
         if (!symbol) return undefined
-        if (!symbol.members) return undefined
 
-        return Array.from(symbol.members.values())
+        const members = Array.from(symbol.members?.values() ?? [])
             .map(member => member?.declarations?.[0])
             .filter((member): member is Declaration => member !== undefined)
             .filter(member => !ts.isTypeParameterDeclaration(member))
+
+        const exports = Array.from(symbol.exports?.values() ?? [])
+            .map(member => member?.declarations?.[0])
+            .filter((member): member is Declaration => member !== undefined)
+
+        return [...members, ...exports]
+    }
+
+    private getSymbol(node: NamedDeclaration): ts.Symbol | undefined {
+        if (!node.name) return undefined
+
+        const typeChecker = this.program.getTypeChecker()
+        return typeChecker.getSymbolAtLocation(node.name)
     }
 }
 

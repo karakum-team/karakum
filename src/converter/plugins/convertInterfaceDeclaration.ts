@@ -12,7 +12,8 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
     checkCoverageService?.cover(node)
 
     const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
-    if (declarationMergingService?.isCovered(node.name, node)) return ""
+    if (declarationMergingService?.isCovered(node)) return ""
+    declarationMergingService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 

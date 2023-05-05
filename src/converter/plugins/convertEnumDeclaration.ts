@@ -1,6 +1,7 @@
 import ts from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
 
 export const convertEnumDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumDeclaration(node)) return null
@@ -8,9 +9,13 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    if (declarationMergingService?.isCovered(node)) return ""
+    declarationMergingService?.cover(node)
+
     const name = render(node.name)
 
-    const members = node.members
+    const members = (declarationMergingService?.getMembers(node) ?? node.members)
         .map(member => `${render(member)}: ${name}`)
         .join("\n")
 
