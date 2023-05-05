@@ -1,35 +1,27 @@
-import ts, {
-    ClassElement,
-    ConstructorDeclaration,
-    GetAccessorDeclaration, IndexSignatureDeclaration,
-    MethodDeclaration,
-    PropertyDeclaration, SetAccessorDeclaration,
-    SyntaxKind
-} from "typescript";
+import ts, {Declaration, ModifierLike, SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
 
-type SupportedClassElement =
-    | PropertyDeclaration
-    | MethodDeclaration
-    | ConstructorDeclaration
-    | GetAccessorDeclaration
-    | SetAccessorDeclaration
-    | IndexSignatureDeclaration
+function extractModifiers(member: Declaration): ModifierLike[] {
+    if (
+        ts.isPropertyDeclaration(member)
+        || ts.isMethodDeclaration(member)
+        || ts.isConstructorDeclaration(member)
+        || ts.isGetAccessorDeclaration(member)
+        || ts.isSetAccessorDeclaration(member)
+        || ts.isIndexSignatureDeclaration(member)
+    ) {
+        return Array.from(member.modifiers ?? [])
+    }
 
-function filterSupportedMembers(members: readonly ClassElement[]): readonly SupportedClassElement[] {
-    return members.filter((member): member is SupportedClassElement => {
-        return (
-            ts.isPropertyDeclaration(member)
-            || ts.isMethodDeclaration(member)
-            || ts.isConstructorDeclaration(member)
-            || ts.isGetAccessorDeclaration(member)
-            || ts.isSetAccessorDeclaration(member)
-            || ts.isIndexSignatureDeclaration(member)
-        )
-    })
+    return []
+}
+
+function filterPublicMembers(members: Declaration[]): readonly Declaration[] {
+    return members.filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.PrivateKeyword))
 }
 
 export const convertClassDeclaration = createSimplePlugin((node, context, render) => {
@@ -37,6 +29,8 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
@@ -58,23 +52,20 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         ?.map(heritageClause => render(heritageClause))
         ?.join(", ")
 
-    const supportedMembers = filterSupportedMembers(node.members)
-
-    const publicMembers = supportedMembers
-        .filter(member => (member.modifiers ?? []).every(it => it.kind !== SyntaxKind.PrivateKeyword))
+    const mergedMembers = declarationMergingService?.getMembers(node) ?? Array.from(node.members)
 
     // cover private members
-    supportedMembers
-        .filter(member => (member.modifiers ?? []).some(it => it.kind === SyntaxKind.PrivateKeyword))
+    mergedMembers
+        .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.PrivateKeyword))
         .forEach(member => checkCoverageService?.cover(member))
 
-    const members = publicMembers
-        .filter(member => (member.modifiers ?? []).every(it => it.kind !== SyntaxKind.StaticKeyword))
+    const members = filterPublicMembers(mergedMembers)
         .map(member => render(member))
         .join("\n")
 
-    const staticMembers = publicMembers
-        .filter(member => (member.modifiers ?? []).some(it => it.kind === SyntaxKind.StaticKeyword))
+    // do not use merging for static members
+    const staticMembers = filterPublicMembers(Array.from(node.members))
+        .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 

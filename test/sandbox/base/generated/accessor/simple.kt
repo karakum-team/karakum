@@ -13,7 +13,6 @@ external class Simple {
 
 var property: String
             
-
 }
     
 
@@ -22,7 +21,6 @@ external class DifferentTypes {
 
 var property: String
             
-
 }
     
 

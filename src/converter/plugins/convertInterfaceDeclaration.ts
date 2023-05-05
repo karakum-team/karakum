@@ -31,7 +31,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
         ?.map(heritageClause => render(heritageClause))
         ?.join(", ")
 
-    const members = (declarationMergingService?.getAllInterfaceMembers(node) ?? node.members)
+    const members = (declarationMergingService?.getMembers(node) ?? node.members)
         .map(member => render(member))
         .join("\n")
 

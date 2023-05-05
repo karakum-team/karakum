@@ -1,4 +1,4 @@
-import ts, {Declaration, InterfaceDeclaration, Node, Program} from "typescript";
+import ts, {Declaration, NamedDeclaration, Node, Program} from "typescript";
 import {ConverterPlugin} from "../plugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
@@ -30,11 +30,14 @@ export class DeclarationMergingService {
         return false
     }
 
-    getAllInterfaceMembers(node: InterfaceDeclaration): Declaration[] {
+    getMembers(node: NamedDeclaration): Declaration[] | undefined {
+        if (!node.name) return undefined
+
         const typeChecker = this.program.getTypeChecker()
         const symbol = typeChecker.getSymbolAtLocation(node.name)
-        if (!symbol) return Array.from(node.members)
-        if (!symbol.members) return Array.from(node.members)
+
+        if (!symbol) return undefined
+        if (!symbol.members) return undefined
 
         return Array.from(symbol.members.values())
             .map(member => member?.declarations?.[0])
