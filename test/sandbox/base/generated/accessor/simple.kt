@@ -51,10 +51,6 @@ var property: String
     
 
 
-external interface Split {
-
-}
-    
 
 
 external interface Anonymous {

@@ -3,12 +3,16 @@ import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
 
 export const convertInterfaceDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isInterfaceDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    if (declarationMergingService?.isCovered(node.name, node)) return ""
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
@@ -27,7 +31,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
         ?.map(heritageClause => render(heritageClause))
         ?.join(", ")
 
-    const members = node.members
+    const members = (declarationMergingService?.getAllInterfaceMembers(node) ?? node.members)
         .map(member => render(member))
         .join("\n")
 

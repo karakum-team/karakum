@@ -52,6 +52,7 @@ import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin";
 import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
 import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin";
 import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration";
+import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -67,6 +68,7 @@ export const createPlugins = (
     new TypeScriptPlugin(program),
     new InheritanceModifierPlugin(inheritanceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),
+    new DeclarationMergingPlugin(program),
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),
 

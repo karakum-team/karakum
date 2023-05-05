@@ -23,6 +23,7 @@ export {configurationServiceKey, type ConfigurationService} from "./converter/pl
 export {typeScriptServiceKey, type TypeScriptService} from "./converter/plugins/TypeScriptPlugin"
 export {inheritanceModifierServiceKey, type InheritanceModifierService} from "./converter/plugins/InheritanceModifierPlugin"
 export {namespaceInfoServiceKey, type NamespaceInfoService} from "./converter/plugins/NamespaceInfoPlugin"
+export {declarationMergingServiceKey, type DeclarationMergingService} from "./converter/plugins/DeclarationMergingPlugin"
 
 // plugin utils
 export {
