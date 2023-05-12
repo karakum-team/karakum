@@ -1,4 +1,4 @@
-import ts, {Node, Program, SyntaxKind} from "typescript";
+import ts, {isThisTypeNode, Node, Program, SyntaxKind} from "typescript";
 import {Configuration} from "./configuration/configuration";
 import {ConverterPlugin} from "./converter/plugin";
 import {NameResolver} from "./converter/nameResolver";
@@ -93,6 +93,7 @@ export const createPlugins = (
     convertPrimitive(ts.isIdentifier, node => node.text),
     convertPrimitive(ts.isStringLiteral, () => "String"),
     convertPrimitive(ts.isNumericLiteral, () => "Double"),
+    convertPrimitive(ts.isThisTypeNode, () => "Unit"),
 
     convertModuleDeclaration,
     convertModuleBlock,
