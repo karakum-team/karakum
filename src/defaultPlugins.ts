@@ -1,4 +1,4 @@
-import ts, {isThisTypeNode, Node, Program, SyntaxKind} from "typescript";
+import ts, {Node, Program, SyntaxKind} from "typescript";
 import {Configuration} from "./configuration/configuration";
 import {ConverterPlugin} from "./converter/plugin";
 import {NameResolver} from "./converter/nameResolver";
