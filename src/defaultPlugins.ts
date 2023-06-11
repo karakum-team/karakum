@@ -41,7 +41,6 @@ import {convertCallSignatureDeclaration} from "./converter/plugins/convertCallSi
 import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
 import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
 import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
-import {convertStringUnionTypeAliasDeclaration} from "./converter/plugins/convertStringUnionTypeAliasDeclaration";
 import {convertTypeOperator} from "./converter/plugins/convertTypeOperator";
 import {convertImportType} from "./converter/plugins/convertImportType";
 import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression";
@@ -54,6 +53,7 @@ import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin";
 import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration";
 import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin";
 import {convertTypeQuery} from "./converter/plugins/convertTypeQuery";
+import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -77,6 +77,7 @@ export const createPlugins = (
     new AccessorsPlugin(),
 
     createTypeLiteralPlugin(sourceFileRoot, nameResolvers),
+    createStringUnionTypePlugin(sourceFileRoot, nameResolvers),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),
@@ -115,7 +116,6 @@ export const createPlugins = (
     convertLiteralType,
     convertArrayType,
     convertReadonlyArrayType,
-    convertStringUnionTypeAliasDeclaration,
     convertTypeAliasDeclaration,
     convertEnumDeclaration,
     convertEnumMember,

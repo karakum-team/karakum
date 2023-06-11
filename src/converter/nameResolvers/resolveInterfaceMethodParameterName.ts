@@ -1,8 +1,8 @@
-import ts, {TypeLiteralNode} from "typescript";
+import ts from "typescript";
 import {NameResolver} from "../nameResolver";
 import {capitalize} from "../../utils/strings";
 
-export const resolveInterfaceMethodParameterName: NameResolver<TypeLiteralNode> = (node) => {
+export const resolveInterfaceMethodParameterName: NameResolver = (node) => {
     if (!node.parent) return null
     if (!ts.isParameter(node.parent)) return null
     if (!ts.isIdentifier(node.parent.name)) return null

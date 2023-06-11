@@ -1,34 +1,11 @@
-import ts, {TypeLiteralNode} from "typescript";
+import ts from "typescript";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {NameResolver} from "../nameResolver";
-import {resolveFunctionTypeAliasParameterName} from "../nameResolvers/resolveFunctionTypeAliasParameterName";
-import {resolveFunctionParameterName} from "../nameResolvers/resolveFunctionParameterName";
-import {resolveTypeAliasPropertyName} from "../nameResolvers/resolveTypeAliasPropertyName";
-import {resolveCallSignatureParameterName} from "../nameResolvers/resolveCallSignatureParameterName";
-import {resolveConstructorParameterName} from "../nameResolvers/resolveConstructorParameterName";
-import {resolveClassMethodParameterName} from "../nameResolvers/resolveClassMethodParameterName";
-import {resolveInterfaceMethodParameterName} from "../nameResolvers/resolveInterfaceMethodParameterName";
-import {resolveFunctionReturnTypeName} from "../nameResolvers/resolveFunctionReturnTypeName";
-import {resolveInterfaceMethodReturnTypeName} from "../nameResolvers/resolveInterfaceMethodReturnTypeName";
-import {resolveClassMethodReturnTypeName} from "../nameResolvers/resolveClassMethodReturnTypeName";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin";
 import {extractTypeParameters} from "../../utils/extractTypeParameters";
-
-const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
-    resolveFunctionParameterName,
-    resolveFunctionReturnTypeName,
-    resolveFunctionTypeAliasParameterName,
-    resolveCallSignatureParameterName,
-    resolveConstructorParameterName,
-    resolveClassMethodParameterName,
-    resolveClassMethodReturnTypeName,
-    resolveInterfaceMethodParameterName,
-    resolveInterfaceMethodReturnTypeName,
-    resolveTypeAliasPropertyName,
-]
+import {defaultNameResolvers} from "../defaultNameResolvers";
 
 export const createTypeLiteralPlugin = createAnonymousDeclarationPlugin(
     defaultNameResolvers,

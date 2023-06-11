@@ -20,5 +20,19 @@ val applicationXWwwFormUrlencoded: FormEncType
 val multipartFormData: FormEncType
 }
 }
-        
+    
+
+external fun switcher(): SwitcherResult
+    
+@Suppress(
+    "NAME_CONTAINS_ILLEGAL_CHARS",
+    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
+)
+@JsName("""(/*union*/{on: 'on', off: 'off'}/*union*/)""")
+sealed external interface SwitcherResult {
+companion object {
+val on: SwitcherResult
+val off: SwitcherResult
+}
+}
     

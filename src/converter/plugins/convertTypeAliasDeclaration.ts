@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
+import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -48,6 +49,10 @@ ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifP
 ${accessors}
 }
         `
+    }
+
+    if (isStringUnionType(node.type)) {
+        return convertStringUnionType(node.type, name, context)
     }
 
     if (
