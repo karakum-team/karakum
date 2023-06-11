@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 import {isNullableType, isNullableUnionType, isPossiblyNullableType} from "./NullableUnionTypePlugin";
+import {isStringUnionType} from "./StringUnionTypePlugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
 
@@ -174,6 +175,8 @@ const expandUnions = (
         for (let signatureIndex = 0; signatureIndex < currentSignatures.length; signatureIndex++) {
             const signature = currentSignatures[signatureIndex]
             const {parameter, type, optional} = signature[parameterIndex]
+
+            if (type && isStringUnionType(type)) continue
 
             if (type && ts.isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
