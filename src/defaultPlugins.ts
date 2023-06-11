@@ -6,8 +6,8 @@ import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
 import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin";
-import {TypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
 import {convertPrimitive} from "./converter/plugins/convertPrimitive";
+import {createTypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
 import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration";
 import {convertModuleBlock} from "./converter/plugins/convertModuleBlock";
 import {convertInterfaceDeclaration} from "./converter/plugins/convertInterfaceDeclaration";
@@ -74,8 +74,9 @@ export const createPlugins = (
     new CheckCoveragePlugin(),
 
     new NullableUnionTypePlugin(),
-    new TypeLiteralPlugin(sourceFileRoot, nameResolvers),
     new AccessorsPlugin(),
+
+    createTypeLiteralPlugin(sourceFileRoot, nameResolvers),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),

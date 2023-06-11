@@ -1,14 +1,7 @@
-import path from "path";
-import ts, {ConditionalTypeNode, TypeLiteralNode} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {ConverterContext} from "../context";
-import {ifPresent, Render} from "../render";
-import {createGeneratedFile} from "../../structure/createGeneratedFile";
-import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
+import ts, {TypeLiteralNode} from "typescript";
+import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {traverse} from "../../utils/traverse";
-import {findClosest} from "../../utils/findClosest";
 import {NameResolver} from "../nameResolver";
 import {resolveFunctionTypeAliasParameterName} from "../nameResolvers/resolveFunctionTypeAliasParameterName";
 import {resolveFunctionParameterName} from "../nameResolvers/resolveFunctionParameterName";
@@ -21,10 +14,8 @@ import {resolveFunctionReturnTypeName} from "../nameResolvers/resolveFunctionRet
 import {resolveInterfaceMethodReturnTypeName} from "../nameResolvers/resolveInterfaceMethodReturnTypeName";
 import {resolveClassMethodReturnTypeName} from "../nameResolvers/resolveClassMethodReturnTypeName";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
-import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem";
-import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper";
-import {createPackageName} from "../../structure/package/createPackageName";
-import {packageToOutputFileName} from "../../structure/package/packageToFileName";
+import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin";
+import {extractTypeParameters} from "../../utils/extractTypeParameters";
 
 const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
     resolveFunctionParameterName,
@@ -39,111 +30,29 @@ const defaultNameResolvers: NameResolver<TypeLiteralNode>[] = [
     resolveTypeAliasPropertyName,
 ]
 
-export class TypeLiteralPlugin implements ConverterPlugin {
-    private counter = 0
-    private readonly generated: Record<string, { name: string, declaration: string }[]> = {}
-    private readonly nameResolvers: NameResolver<TypeLiteralNode>[]
-
-    constructor(
-        private sourceFileRoot: string,
-        nameResolvers: NameResolver[],
-    ) {
-        this.nameResolvers = [
-            ...nameResolvers,
-            ...defaultNameResolvers,
-        ]
-    }
-
-    generate(context: ConverterContext): Record<string, string> {
-        const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
-        const configuration = configurationService?.configuration
-        if (configuration === undefined) throw new Error("TypeLiteralPlugin can't work without ConfigurationService")
-
-        const output = configuration.output
-        const granularity = configuration.granularity ?? "file"
-
-        return Object.fromEntries(
-            Object.entries(this.generated)
-                .flatMap(([sourceFileName, declarations]) => {
-                    const sourceFileInfoItem = createSourceFileInfoItem(
-                        this.sourceFileRoot,
-                        sourceFileName,
-                        configuration,
-                    )
-
-                    if (granularity === "top-level") {
-                        return declarations
-                            .map(({name, declaration}) => {
-                                const fileName = `${name}.kt`
-
-                                const packageMappingResult = applyPackageNameMapper(
-                                    sourceFileInfoItem.package,
-                                    fileName,
-                                    configuration,
-                                )
-
-                                const packageName = createPackageName(packageMappingResult.package)
-
-                                const outputFileName = packageToOutputFileName(
-                                    packageMappingResult.package,
-                                    fileName,
-                                    configuration,
-                                )
-
-                                const generatedFile = createGeneratedFile(
-                                    outputFileName,
-                                    packageName,
-                                    declaration,
-                                    configuration,
-                                )
-
-                                return [path.resolve(output, outputFileName), generatedFile];
-                            })
-                    } else {
-                        const generatedFile = declarations
-                            .map(({declaration}) => declaration)
-                            .join("\n\n")
-
-                        const packageMappingResult = applyPackageNameMapper(
-                            sourceFileInfoItem.package,
-                            sourceFileInfoItem.fileName,
-                            configuration,
-                        )
-
-                        const outputFileName = packageToOutputFileName(
-                            packageMappingResult.package,
-                            packageMappingResult.fileName,
-                            configuration,
-                        )
-
-                        return [[path.resolve(output, outputFileName), generatedFile]];
-                    }
-                })
-        );
-    }
-
-    render(node: ts.Node, context: ConverterContext, next: Render): string | null {
+export const createTypeLiteralPlugin = createAnonymousDeclarationPlugin(
+    defaultNameResolvers,
+    (node, context, render) => {
         if (!ts.isTypeLiteralNode(node)) return null
 
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
-        const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
-
         // handle empty type literal
         if (node.members.length === 0) return "Any"
 
-        const name = this.resolveName(node, context) ?? `Temp${this.counter++}`
+        const name = context.resolveName(node)
+
+        const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+
+        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
         const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
-        const typeParameters = this.extractTypeParameters(node, context).join(", ")
-
-        const fileName = node.getSourceFile()?.fileName ?? "generated.d.ts"
-        const generatedDeclarations = this.generated[fileName] ?? []
+        const typeParameters = extractTypeParameters(node, typeScriptService?.program).join(", ")
 
         const members = node.members
-            .map(member => next(member))
+            .map(member => render(member))
             .join("\n")
 
         const declaration = `
@@ -152,68 +61,8 @@ ${members}
 }
         `
 
-        generatedDeclarations.push({
-            name,
-            declaration,
-        })
+        const reference = `${name}${ifPresent(typeParameters, it => `<${it}>`)}`
 
-        this.generated[fileName] = generatedDeclarations
-
-        return `${name}${ifPresent(typeParameters, it => `<${it}>`)}`;
+        return {name, declaration, reference};
     }
-
-    setup(context: ConverterContext): void {
-    }
-
-    traverse(node: ts.Node, context: ConverterContext): void {
-    }
-
-    private resolveName(typeLiteralNode: TypeLiteralNode, context: ConverterContext): string | null {
-        for (const nameResolver of this.nameResolvers) {
-            const result = nameResolver(typeLiteralNode, context)
-
-            if (result !== null) return result
-        }
-
-        return null
-    }
-
-
-    private extractTypeParameters(typeLiteralNode: TypeLiteralNode, context: ConverterContext): string[] {
-        const result: string[] = []
-
-        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-        const typeChecker = typeScriptService?.program.getTypeChecker()
-
-        traverse(typeLiteralNode, node => {
-            if (ts.isIdentifier(node)) {
-                const symbol = typeChecker?.getSymbolAtLocation(node)
-                const typeParameterDeclarations = (symbol?.declarations ?? [])
-                    .filter(declaration => ts.isTypeParameterDeclaration(declaration))
-
-                for (const declaration of typeParameterDeclarations) {
-                    let typeParameterContainer = declaration.parent
-
-                    if (ts.isInferTypeNode(declaration.parent)) {
-                        const conditionalType = findClosest(
-                            declaration.parent,
-                            (node): node is ConditionalTypeNode => ts.isConditionalTypeNode(node)
-                        )
-
-                        if (conditionalType != undefined) {
-                            typeParameterContainer = conditionalType.trueType
-                        }
-                    }
-
-                    const foundParent = findClosest(typeLiteralNode, node => node === typeParameterContainer)
-
-                    if (foundParent !== undefined) {
-                        result.push(node.text)
-                    }
-                }
-            }
-        })
-
-        return result
-    }
-}
+)
