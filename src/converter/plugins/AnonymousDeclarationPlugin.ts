@@ -158,7 +158,7 @@ export function createAnonymousDeclarationPlugin<TNode extends Node = Node>(
     defaultNameResolvers: NameResolver<TNode>[],
     render: AnonymousDeclarationRender,
 ) {
-    return (sourceFileRoot: string, nameResolvers: NameResolver[]) => {
+    return (sourceFileRoot: string, nameResolvers: NameResolver[]): ConverterPlugin => {
         return new AnonymousDeclarationPlugin(
             sourceFileRoot,
             [
