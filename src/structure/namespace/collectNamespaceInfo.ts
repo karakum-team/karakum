@@ -11,14 +11,14 @@ interface InputNamespaceInfoItem extends NamespaceInfoItem, InputStructureItem {
 export type NamespaceInfo = InputNamespaceInfoItem[]
 
 export function collectNamespaceInfo(
-    sourceFileRoot: string,
+    sourceFileRoots: string[],
     sourceFiles: SourceFile[],
     configuration: Configuration,
 ): NamespaceInfo {
     const result: NamespaceInfo = []
 
     sourceFiles.forEach(sourceFile => {
-        const defaultModuleName = extractModuleName(sourceFileRoot, sourceFile.fileName, configuration)
+        const defaultModuleName = extractModuleName(sourceFileRoots, sourceFile.fileName, configuration)
 
         traverse(sourceFile, node => {
             if (

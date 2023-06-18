@@ -58,7 +58,6 @@ import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePl
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
 export const createPlugins = (
-    sourceFileRoot: string,
     configuration: Configuration,
     nameResolvers: NameResolver[],
     inheritanceModifiers: InheritanceModifier[],
@@ -76,8 +75,8 @@ export const createPlugins = (
     new NullableUnionTypePlugin(),
     new AccessorsPlugin(),
 
-    createTypeLiteralPlugin(sourceFileRoot, nameResolvers),
-    createStringUnionTypePlugin(sourceFileRoot, nameResolvers),
+    createTypeLiteralPlugin(nameResolvers),
+    createStringUnionTypePlugin(nameResolvers),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),

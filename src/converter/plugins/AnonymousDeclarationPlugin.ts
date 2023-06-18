@@ -32,7 +32,6 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
     private readonly generated: Record<string, { name: string, declaration: string }[]> = {}
 
     constructor(
-        private sourceFileRoot: string,
         private nameResolvers: NameResolver<TNode>[],
         private anonymousDeclarationRender: AnonymousDeclarationRender,
     ) {
@@ -43,6 +42,8 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         const configuration = configurationService?.configuration
         if (configuration === undefined) throw new Error("TypeLiteralPlugin can't work without ConfigurationService")
 
+        // TODO: defaultize configuration
+        const inputRoots = configuration.inputRoots as string[]
         const output = configuration.output
         const granularity = configuration.granularity ?? "file"
 
@@ -50,7 +51,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
             Object.entries(this.generated)
                 .flatMap(([sourceFileName, declarations]) => {
                     const sourceFileInfoItem = createSourceFileInfoItem(
-                        this.sourceFileRoot,
+                        inputRoots,
                         sourceFileName,
                         configuration,
                     )
@@ -158,9 +159,8 @@ export function createAnonymousDeclarationPlugin<TNode extends Node = Node>(
     defaultNameResolvers: NameResolver<TNode>[],
     render: AnonymousDeclarationRender,
 ) {
-    return (sourceFileRoot: string, nameResolvers: NameResolver[]): ConverterPlugin => {
+    return (nameResolvers: NameResolver[]): ConverterPlugin => {
         return new AnonymousDeclarationPlugin(
-            sourceFileRoot,
             [
                 ...nameResolvers,
                 ...defaultNameResolvers,

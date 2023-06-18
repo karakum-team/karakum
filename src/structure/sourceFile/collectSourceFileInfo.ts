@@ -9,13 +9,13 @@ interface InputSourceFileInfoItem extends SourceFileInfoItem, InputStructureItem
 export type SourceFileInfo = InputSourceFileInfoItem[]
 
 export function collectSourceFileInfo(
-    sourceFileRoot: string,
+    sourceFileRoots: string[],
     sourceFiles: SourceFile[],
     configuration: Configuration,
 ): SourceFileInfo {
     return sourceFiles.map(sourceFile => {
         const item = createSourceFileInfoItem(
-            sourceFileRoot,
+            sourceFileRoots,
             sourceFile.fileName,
             configuration,
         )

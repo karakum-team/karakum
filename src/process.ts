@@ -41,7 +41,7 @@ export const ignoreLibPatterns = [
     "**/typescript/lib/**"
 ]
 
-function normalizeGlob(
+function normalizeOption(
     patterns: string | string[] | undefined,
     defaultValue: string[] = [],
 ) {
@@ -56,7 +56,7 @@ async function loadExtensions<T>(
     defaultValue: string[],
     loader: (extension: unknown) => T = extension => extension as T
 ): Promise<T[]> {
-    const normalizedPatterns = normalizeGlob(patterns, defaultValue)
+    const normalizedPatterns = normalizeOption(patterns, defaultValue)
 
     const fileNames = normalizedPatterns.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
@@ -79,6 +79,7 @@ async function loadExtensions<T>(
 export async function process(configuration: Configuration) {
     const {
         input,
+        inputRoots,
         output,
         ignoreInput,
         ignoreOutput,
@@ -89,9 +90,9 @@ export async function process(configuration: Configuration) {
         compilerOptions,
     } = configuration
 
-    const normalizedInput = normalizeGlob(input)
-    const normalizedIgnoreInput = normalizeGlob(ignoreInput)
-    const normalizedIgnoreOutput = normalizeGlob(ignoreOutput)
+    const normalizedInput = normalizeOption(input)
+    const normalizedIgnoreInput = normalizeOption(ignoreInput)
+    const normalizedIgnoreOutput = normalizeOption(ignoreOutput)
 
     const customPlugins = await loadExtensions<ConverterPlugin>(
         "Plugin",
@@ -142,11 +143,21 @@ export async function process(configuration: Configuration) {
 
     const sources = rootNames.map(fileName => fileName.split("/"))
 
-    const sourceFileRoot = rootNames.length === 1
+    const defaultInputRoot = rootNames.length === 1
         ? path.dirname(rootNames[0]) + "/"
         : commonPrefix(...sources).join("/") + "/"
 
-    console.log(`Source files root: ${sourceFileRoot}`)
+    const normalizedInputRoots = normalizeOption(inputRoots, [defaultInputRoot])
+
+    const fixedConfiguration = {
+        ...configuration,
+        inputRoots: normalizedInputRoots,
+    }
+
+    for (const inputRoot of normalizedInputRoots) {
+        console.log(`Source files root: ${inputRoot}`)
+    }
+
 
     if (fs.existsSync(output)) {
         fs.rmSync(output, {recursive: true})
@@ -165,20 +176,19 @@ export async function process(configuration: Configuration) {
 
     console.log(`Source files count: ${sourceFiles.length}`)
 
-    const namespaceInfo = collectNamespaceInfo(sourceFileRoot, sourceFiles, configuration)
-    const sourceFileInfo = collectSourceFileInfo(sourceFileRoot, sourceFiles, configuration)
+    const namespaceInfo = collectNamespaceInfo(normalizedInputRoots, sourceFiles, fixedConfiguration)
+    const sourceFileInfo = collectSourceFileInfo(normalizedInputRoots, sourceFiles, fixedConfiguration)
 
     const structure = prepareStructure(
         [
             ...namespaceInfo.filter(it => it.strategy === "package"),
             ...sourceFileInfo,
         ],
-        configuration,
+        fixedConfiguration,
     )
 
     const defaultPlugins = createPlugins(
-        sourceFileRoot,
-        configuration,
+        fixedConfiguration,
         customNameResolvers,
         customInheritanceModifiers,
         program,
@@ -216,7 +226,7 @@ export async function process(configuration: Configuration) {
         .forEach(item => {
             console.log(`${item.meta.type}: ${item.meta.name}`)
 
-            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
+            const outputFileName = packageToOutputFileName(item.package, item.fileName, fixedConfiguration)
 
             const targetFileName = path.resolve(output, outputFileName)
 
@@ -231,7 +241,7 @@ export async function process(configuration: Configuration) {
                     ...item,
                     body: convertedBody,
                 },
-                configuration,
+                fixedConfiguration,
             )
 
             if (normalizedIgnoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {

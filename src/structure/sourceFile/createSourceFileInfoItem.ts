@@ -1,14 +1,15 @@
 import {Configuration} from "../../configuration/configuration";
 import path from "path";
 import {StructureItem} from "../structure";
+import {removePrefix} from "../removePrefix";
 import {moduleNameToPackage} from "../module/moduleNameToPackage";
 import {extractModuleName} from "../module/extractModuleName";
 
 export interface SourceFileInfoItem extends StructureItem {
 }
 
-function extractDirName(prefix: string, sourceFileName: string) {
-    const relativeFileName = sourceFileName.replace(prefix, "")
+function extractDirName(prefixes: string[], sourceFileName: string) {
+    const relativeFileName = removePrefix(sourceFileName, prefixes)
 
     const dirName = path.dirname(relativeFileName)
 
@@ -26,13 +27,13 @@ function extractFileName(sourceFileName: string) {
 }
 
 export function createSourceFileInfoItem(
-    prefix: string,
+    prefixes: string[],
     sourceFileName: string,
     configuration: Configuration,
 ): SourceFileInfoItem {
     const libraryName = configuration.libraryName ?? ""
 
-    const dirName = extractDirName(prefix, sourceFileName)
+    const dirName = extractDirName(prefixes, sourceFileName)
     const fileName = extractFileName(sourceFileName)
 
     const packageChunks = [
@@ -40,7 +41,7 @@ export function createSourceFileInfoItem(
         ...moduleNameToPackage(dirName)
     ]
 
-    const moduleName = extractModuleName(prefix, sourceFileName, configuration)
+    const moduleName = extractModuleName(prefixes, sourceFileName, configuration)
 
     const hasRuntime = true
 

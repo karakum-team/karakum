@@ -6,6 +6,7 @@ export type NamespaceStrategy = "ignore" | "object" | "package"
 
 export type Configuration = {
     input: string | string[];
+    inputRoots?: string | string[],
     output: string;
 
     ignoreInput?: string | string[];
