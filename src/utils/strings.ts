@@ -11,14 +11,26 @@ export function camelize(string: string) {
     );
 }
 
+function escapeIdentifier(string: string) {
+    if (/^\d/.test(string)) {
+        return `\`${string}\``
+    }
+
+    return string
+}
+
 export function identifier(string: string) {
-    return camelize(
-        string.replace(/\W/g, "-")
+    return escapeIdentifier(
+        camelize(
+            string.replace(/\W/g, "-")
+        )
     )
 }
 
 export function constIdentifier(string: string) {
-    return string
+    return escapeIdentifier(
+        string
         .replace(/\W/g, "_")
         .toUpperCase()
+    )
 }
