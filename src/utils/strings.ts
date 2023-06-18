@@ -16,3 +16,9 @@ export function identifier(string: string) {
         string.replace(/\W/g, "-")
     )
 }
+
+export function constIdentifier(string: string) {
+    return string
+        .replace(/\W/g, "_")
+        .toUpperCase()
+}
