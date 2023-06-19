@@ -3,11 +3,11 @@ export function capitalize(string: string) {
 }
 
 export function camelize(string: string) {
-    return string.replace(/([-_][a-z])/g, group =>
+    return string.replace(/([-_][A-Za-z])/g, group =>
         group
             .toUpperCase()
-            .replace('-', '')
-            .replace('_', '')
+            .replace("-", "")
+            .replace("_", "")
     );
 }
 
@@ -30,7 +30,7 @@ export function identifier(string: string) {
 export function constIdentifier(string: string) {
     return escapeIdentifier(
         string
-        .replace(/\W/g, "_")
-        .toUpperCase()
+            .replace(/\W/g, "_")
+            .toUpperCase()
     )
 }
