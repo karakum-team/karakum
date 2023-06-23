@@ -9,7 +9,7 @@ package sandbox.base.namespace
 
 
 
-external object String {
+external object String /* "*.css" */ {
 
 external object NS {
 external val x: Double

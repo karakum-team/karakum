@@ -54,6 +54,7 @@ import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertInd
 import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin";
 import {convertTypeQuery} from "./converter/plugins/convertTypeQuery";
 import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin";
+import {convertLiteral} from "./converter/plugins/convertLiteral";
 
 const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -93,9 +94,12 @@ export const createPlugins = (
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword), () => "js.core.Symbol"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),
-    convertPrimitive(ts.isStringLiteral, () => "String"),
-    convertPrimitive(ts.isNumericLiteral, () => "Double"),
-    convertPrimitive(ts.isThisTypeNode, () => "Unit"),
+
+    convertLiteral(ts.isStringLiteral, () => "String"),
+    convertLiteral(ts.isNumericLiteral, () => "Double"),
+    convertLiteral(ts.isBigIntLiteral, () => "js.core.BigInt"),
+
+    convertLiteral(ts.isThisTypeNode, () => "Unit"),
 
     convertModuleDeclaration,
     convertModuleBlock,

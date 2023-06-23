@@ -15,7 +15,7 @@ var Idle: FetcherStatesIdle<TData>
         
     
 external interface FetcherStatesIdle<TData> {
-var state: String
+var state: String /* "idle" */
 var formMethod: Nothing?
 var formAction: Nothing?
 var formEncType: Nothing?
