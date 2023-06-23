@@ -36,8 +36,9 @@ export const convertStringUnionType = (node: UnionTypeNode, name: string, contex
         })
 
     const keys = entries.map(([key]) => escapeIdentifier(key))
+    const uniqueKeys = Array.from(new Set(keys))
 
-    const body = keys
+    const body = uniqueKeys
         .map(key => `val ${key}: ${name}`)
         .join("\n")
 
