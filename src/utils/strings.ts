@@ -1,3 +1,5 @@
+import {KOTLIN_KEYWORDS} from "./constants";
+
 export function capitalize(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -11,7 +13,11 @@ export function camelize(string: string) {
     );
 }
 
-function escapeIdentifier(string: string) {
+export function escapeIdentifier(string: string) {
+    if (KOTLIN_KEYWORDS.has(string)) {
+        return `\`${string}\``
+    }
+
     if (/^\d/.test(string)) {
         return `\`${string}\``
     }

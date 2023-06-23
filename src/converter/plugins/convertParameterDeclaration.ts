@@ -6,6 +6,7 @@ import {isNullableType, isNullableUnionType, isPossiblyNullableType} from "./Nul
 import {isStringUnionType} from "./StringUnionTypePlugin";
 import {ConverterContext} from "../context";
 import {Render} from "../render";
+import {escapeIdentifier} from "../../utils/strings";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
@@ -103,7 +104,7 @@ const convertParameterDeclarationWithFixedType = (
     let name: string
 
     if (ts.isIdentifier(node.name)) {
-        name = render(node.name)
+        name = escapeIdentifier(render(node.name))
     } else {
         const parameterIndex = node.parent.parameters.indexOf(node)
 

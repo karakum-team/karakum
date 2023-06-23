@@ -3,7 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {isPossiblyNullableType} from "./NullableUnionTypePlugin";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {KOTLIN_KEYWORDS} from "../constants";
+import {escapeIdentifier} from "../../utils/strings";
 
 export const convertPropertyDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertyDeclaration(node)) return null
@@ -22,11 +22,7 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
         ? "val "
         : "var "
 
-    let name = render(node.name)
-
-    if (KOTLIN_KEYWORDS.has(name)) {
-        name = `\`${name}\``
-    }
+    const name = escapeIdentifier(render(node.name))
 
     let type: string
 

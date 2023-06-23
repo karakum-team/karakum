@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin";
 import {ifPresent} from "../render";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {convertParameterDeclarations} from "./convertParameterDeclaration";
+import {escapeIdentifier} from "../../utils/strings";
 
 export const convertMethodDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isMethodDeclaration(node)) return null
@@ -10,7 +11,7 @@ export const convertMethodDeclaration = createSimplePlugin((node, context, rende
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    const name = render(node.name)
+    const name = escapeIdentifier(render(node.name))
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))

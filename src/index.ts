@@ -56,7 +56,7 @@ export {ifPresent} from "./converter/render"
 // utils
 export {traverse} from "./utils/traverse"
 export {findClosest} from "./utils/findClosest"
-export {capitalize, camelize, identifier, constIdentifier} from "./utils/strings"
+export {capitalize, camelize, escapeIdentifier, identifier, constIdentifier} from "./utils/strings"
 
 // structure
 export {applyPackageNameMapper, type PackageMappingResult} from "./structure/package/applyPackageNameMapper"

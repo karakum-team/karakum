@@ -1,5 +1,5 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {identifier} from "../../utils/strings";
+import {escapeIdentifier, identifier} from "../../utils/strings";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
 import {ConverterContext} from "../context";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin";
@@ -35,7 +35,7 @@ export const convertStringUnionType = (node: UnionTypeNode, name: string, contex
             return [key, value] as const
         })
 
-    const keys = entries.map(([key]) => key)
+    const keys = entries.map(([key]) => escapeIdentifier(key))
 
     const body = keys
         .map(key => `val ${key}: ${name}`)
