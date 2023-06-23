@@ -2,7 +2,7 @@ import ts from "typescript";
 import {NameResolver} from "../nameResolver";
 
 export function resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
-    return (node, context) => {
+    const parenthesizedResolver: NameResolver = (node, context) => {
         if (
             !node.parent
             || !ts.isParenthesizedTypeNode(node.parent)
@@ -10,6 +10,8 @@ export function resolveParenthesizedTypeName(resolver: NameResolver): NameResolv
             return resolver(node, context)
         }
 
-        return resolver(node.parent, context)
+        return parenthesizedResolver(node.parent, context)
     }
+
+    return parenthesizedResolver
 }
