@@ -15,6 +15,10 @@ export const convertFunctionType = createSimplePlugin((node, context, render) =>
         return `Function<Any?> /* ${typeScriptService?.printNode(node)} */`
     }
 
+    if (node.parameters.some(parameter => parameter.dotDotDotToken)) {
+        return `Function<Any?> /* ${typeScriptService?.printNode(node)} */`
+    }
+
     const parameters = node.parameters
         ?.map(parameter => render(parameter))
         ?.join(", ")
