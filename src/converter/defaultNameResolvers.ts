@@ -10,6 +10,8 @@ import {resolveInterfaceMethodParameterName} from "./nameResolvers/resolveInterf
 import {resolveInterfaceMethodReturnTypeName} from "./nameResolvers/resolveInterfaceMethodReturnTypeName";
 import {resolveTypeAliasPropertyName} from "./nameResolvers/resolveTypeAliasPropertyName";
 import {resolveParenthesizedTypeName} from "./nameResolvers/resolveParenthesizedTypeName";
+import {resolveClassPropertyName} from "./nameResolvers/resolveClassPropertyName";
+import {resolveInterfacePropertyName} from "./nameResolvers/resolveInterfacePropertyName";
 
 export const defaultNameResolvers: NameResolver[] = [
     resolveFunctionParameterName,
@@ -19,7 +21,9 @@ export const defaultNameResolvers: NameResolver[] = [
     resolveConstructorParameterName,
     resolveClassMethodParameterName,
     resolveClassMethodReturnTypeName,
+    resolveClassPropertyName,
     resolveInterfaceMethodParameterName,
     resolveInterfaceMethodReturnTypeName,
+    resolveInterfacePropertyName,
     resolveTypeAliasPropertyName,
 ].map(resolveParenthesizedTypeName)
