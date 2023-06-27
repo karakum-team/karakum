@@ -1,0 +1,15 @@
+{
+  "name": "kotlin-js-file-download",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": " karakum --config karakum.config.json"
+  },
+  "devDependencies": {
+    "karakum": "^1.0.0-alpha.14",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "js-file-download": "^0.4.12"
+  }
+}
