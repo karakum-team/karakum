@@ -35,7 +35,7 @@ After that, we can run Karakum to generate Kotlin declarations for us:
 npx karakum --config karakum.config.json
 ```
 
-When we execute it, we will see something like this in `generated/jsFileDownload.kt`:
+When we execute it, we will see something like this in `generated/JsFileDownload.kt`:
 
 ```kotlin
 // @formatter:off
@@ -47,7 +47,7 @@ When we execute it, we will see something like this in `generated/jsFileDownload
 
 package js.file.download
 
-external object String {
+external object String /* 'js-file-download' */ {
     external fun fileDownload(data: String, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
     
     external fun fileDownload(data: ArrayBuffer, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
@@ -73,17 +73,17 @@ an overkill, so we can just use `js-file-download` as the name for our JS module
   "output": "generated",
   "libraryName": "js-file-download",
 +  "moduleNameMapper": {
-+    ".*": ""
++    ".*": "js-file-download"
 +  }
 }
 ```
 
-This instructs Karakum to remove all symbols (regex `.*`) after `libraryName` in JS module.
+This instructs Karakum to replace all symbols in JS module names (regex `.*`) with `js-file-download`.
 
 Another problem is more interesting. We can see some strange construct in the generated code:
 
 ```kotlin
-external object String {
+external object String /* 'js-file-download' */ {
     // ...
 }
 ```
@@ -121,66 +121,19 @@ external class MyClass
 It is obviously incorrect code, that is why Karakum tries to emulate TypeScript namespaces using Kotlin objects.
 But in our case, the declared namespace is actually global, it just tells TypeScript that there is a JS module
 `js-file-download`. Since we already declared this piece of information in `@file:JsModule("js-file-download")`,
-we can just skip this namespace declaration. Now we can write a simple plugin for Karakum to customize this
-behaviour. Let's create `karakum/plugins/convertNamespace.js` file in our project and write the following code there:
-
-```javascript
-const ts = require("typescript");
-
-module.exports = (node, context, render) => {
-    return null
-}
-```
-
-Here is the declaration of a simplest Karakum plugin. In Karakum, plugins are applied to each AST node one by one,
-so if a particular plugin doesn't know what to do with the passed AST node, it can just return `null` to say:
-"It is not my area of responsibility to handle this type of AST nodes, just try to use some other plugin to convert
-it". Right now our plugin knows nothing about any AST node. To handle some type of nodes, let's use
-TypeScript to select some node by its kind:
+we can just skip this namespace declaration. Karakum has the special configuration option for namespace ignoring:
 
 ```diff
-const ts = require("typescript");
-
-module.exports = (node, context, render) => {
-+    if (ts.isModuleDeclaration(node)) {
-+
-+    }
-
-  return null
-}
-```
-
-In TypeScript, a body of a namespace can be another namespace or a list of members. Let's forget about embedded
-namespaces for now and handle only flat namespaces:
-
-```diff
-const ts = require("typescript");
-
-module.exports = (node, context, render) => {
--   if (ts.isModuleDeclaration(node)) {
-+   if (ts.isModuleDeclaration(node) && ts.isModuleBlock(node.body)) {
-
-  }
-
-  return null
-}
-```
-
-And now we need to make the last step: let's go through namespace members and convert each of them. `render` callback,
-that we have as the last parameter in our plugin function is some kind of continuation, it receives an AST node, passes
-it through the plugin chain and returns a string as the conversion result. Knowing that, we can write this code:
-
-```diff
-const ts = require("typescript");
-
-module.exports = (node, context, render) => {
-  if (ts.isModuleDeclaration(node) && ts.isModuleBlock(node.body)) {
-+     return node.body.statements
-+         .map(statement => render(statement))
-+         .join("\n")
-  }
-
-  return null
+{
+  "input": "node_modules/js-file-download/js-file-download.d.ts",
+  "output": "generated",
+  "libraryName": "js-file-download",
+  "moduleNameMapper": {
+    ".*": "js-file-download"
+  },
++  "namespaceStrategy": {
++    "js-file-download": "ignore"
++  }
 }
 ```
 
