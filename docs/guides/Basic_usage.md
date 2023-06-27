@@ -35,7 +35,7 @@ After that, we can run Karakum to generate Kotlin declarations for us:
 npx karakum --config karakum.config.json
 ```
 
-When we execute it, we will see something like this in `generated/JsFileDownload.kt`:
+When we execute it, we will see something like this in `generated/jsFileDownload.kt`:
 
 ```kotlin
 // @formatter:off
