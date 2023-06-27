@@ -15,7 +15,3 @@ export interface InputStructureItem extends StructureItem {
         name: string
     }
 }
-
-export interface OutputStructureItem extends StructureItem {
-    body: string
-}

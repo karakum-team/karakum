@@ -238,10 +238,8 @@ export async function process(configuration: Configuration) {
                 .join("\n\n")
 
             const targetFile = createTargetFile(
-                {
-                    ...item,
-                    body: convertedBody,
-                },
+                item,
+                convertedBody,
                 fixedConfiguration,
             )
 

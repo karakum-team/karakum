@@ -1,18 +1,18 @@
 import {Configuration} from "../configuration/configuration";
 import {generateImports} from "./generateImports";
-import {OutputStructureItem} from "./structure";
+import {StructureItem} from "./structure";
 import {packageToOutputFileName} from "./package/packageToFileName";
 import {createPackageName} from "./package/createPackageName";
 
 export function createTargetFile(
-    item: OutputStructureItem,
+    item: StructureItem,
+    body: string,
     configuration: Configuration,
 ) {
     const {
         moduleName,
         qualifier,
         hasRuntime,
-        body
     } = item
 
     const packageName = createPackageName(item.package)
