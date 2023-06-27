@@ -4,6 +4,7 @@ import {StructureItem} from "../structure";
 import {removePrefix} from "../removePrefix";
 import {moduleNameToPackage} from "../module/moduleNameToPackage";
 import {extractModuleName} from "../module/extractModuleName";
+import {camelize, capitalize} from "../../utils/strings";
 
 export interface SourceFileInfoItem extends StructureItem {
 }
@@ -21,9 +22,14 @@ function extractDirName(prefixes: string[], sourceFileName: string) {
 }
 
 function extractFileName(sourceFileName: string) {
-    return path.basename(sourceFileName)
-        .replace(/\.d\.ts$/, ".kt")
-        .replace(/\.ts$/, ".kt")
+    return capitalize(
+        camelize(
+            path.basename(sourceFileName)
+                .replace(/\.d\.ts$/, ".kt")
+                .replace(/\.ts$/, ".kt")
+                .toLowerCase()
+        )
+    )
 }
 
 export function createSourceFileInfoItem(
