@@ -2,8 +2,9 @@ import {Configuration} from "./configuration/configuration";
 import glob from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "path";
-import {commonPrefix} from "./utils/fileName";
+import nodeProcess from "process";
 import fs from "fs";
+import {commonPrefix} from "./utils/fileName";
 import {createContext} from "./converter/context";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
 import {createPlugins} from "./defaultPlugins";
@@ -35,10 +36,6 @@ export const defaultNameResolverPatterns = [
 
 export const defaultInheritanceModifierPatterns = [
     "karakum/inheritanceModifiers/*.js"
-]
-
-export const ignoreLibPatterns = [
-    "**/typescript/lib/**"
 ]
 
 function normalizeOption(
@@ -164,14 +161,18 @@ export async function process(configuration: Configuration) {
     }
     fs.mkdirSync(output, {recursive: true})
 
-    const preparedIgnoreInput = [
-        ...normalizedIgnoreInput,
-        ...ignoreLibPatterns,
-    ]
+    const absoluteInput = normalizedInput
+        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
+
+    const absoluteIgnoreInput = normalizedIgnoreInput
+        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
 
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
-            return preparedIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
+            return absoluteInput.every(pattern => minimatch(sourceFile.fileName, pattern))
+        })
+        .filter(sourceFile => {
+            return absoluteIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
         })
 
     console.log(`Source files count: ${sourceFiles.length}`)
