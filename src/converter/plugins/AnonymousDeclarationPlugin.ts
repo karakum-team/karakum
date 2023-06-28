@@ -8,7 +8,6 @@ import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlug
 import {NameResolver} from "../nameResolver";
 import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem";
 import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper";
-import {createPackageName} from "../../structure/package/createPackageName";
 import {packageToOutputFileName} from "../../structure/package/packageToFileName";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
@@ -67,8 +66,6 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
                                     configuration,
                                 )
 
-                                const packageName = createPackageName(packageMappingResult.package)
-
                                 const outputFileName = packageToOutputFileName(
                                     packageMappingResult.package,
                                     fileName,
@@ -76,8 +73,8 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
                                 )
 
                                 const generatedFile = createGeneratedFile(
-                                    outputFileName,
-                                    packageName,
+                                    packageMappingResult.package,
+                                    packageMappingResult.fileName,
                                     declaration,
                                     configuration,
                                 )

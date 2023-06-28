@@ -62,15 +62,11 @@ export {capitalize, camelize, escapeIdentifier, identifier, constIdentifier} fro
 export {applyPackageNameMapper, type PackageMappingResult} from "./structure/package/applyPackageNameMapper"
 export {applyModuleNameMapper, type ModuleMappingResult} from "./structure/module/applyModuleNameMapper"
 
-export {createPackageName} from "./structure/package/createPackageName"
-
 export {packageToOutputFileName} from "./structure/package/packageToFileName"
-export {moduleNameToPackage} from "./structure/module/moduleNameToPackage"
-
 export {createGeneratedFile} from "./structure/createGeneratedFile"
 
 export type {StructureItem} from "./structure/structure"
-export {createSourceFileInfoItem, SourceFileInfoItem} from "./structure/sourceFile/createSourceFileInfoItem"
-export {createNamespaceInfoItem, NamespaceInfoItem} from "./structure/namespace/createNamespaceInfoItem"
+export {createSourceFileInfoItem, type SourceFileInfoItem} from "./structure/sourceFile/createSourceFileInfoItem"
+export {createNamespaceInfoItem, type NamespaceInfoItem} from "./structure/namespace/createNamespaceInfoItem"
 
 export {process} from "./process"
