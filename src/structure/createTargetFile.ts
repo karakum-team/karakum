@@ -17,7 +17,7 @@ export function createTargetFile(
         hasRuntime,
     } = item
 
-    const granularity = configuration.granularity ?? "file"
+    const {granularity} = configuration
 
     const packageName = createPackageName(packageChunks)
 

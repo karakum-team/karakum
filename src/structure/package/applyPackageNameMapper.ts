@@ -14,7 +14,7 @@ export function applyPackageNameMapper(
     fileName: string,
     configuration: Configuration,
 ): PackageMappingResult {
-    const packageNameMapper = configuration.packageNameMapper
+    const {packageNameMapper} = configuration
 
     const filePath = packageToFileName(packageChunks, fileName)
 

@@ -41,16 +41,12 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         const configuration = configurationService?.configuration
         if (configuration === undefined) throw new Error("TypeLiteralPlugin can't work without ConfigurationService")
 
-        // TODO: defaultize configuration
-        const inputRoots = configuration.inputRoots as string[]
-        const output = configuration.output
-        const granularity = configuration.granularity ?? "file"
+        const {output, granularity} = configuration
 
         return Object.fromEntries(
             Object.entries(this.generated)
                 .flatMap(([sourceFileName, declarations]) => {
                     const sourceFileInfoItem = createSourceFileInfoItem(
-                        inputRoots,
                         sourceFileName,
                         configuration,
                     )

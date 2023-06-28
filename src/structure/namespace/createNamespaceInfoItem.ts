@@ -51,7 +51,7 @@ export function createNamespaceInfoItem(
     defaultModuleName: string,
     configuration: Configuration,
 ): NamespaceInfoItem {
-    const namespaceStrategy = configuration.namespaceStrategy
+    const {namespaceStrategy} = configuration
 
     const name = extractNamespaceName(namespace)
 
@@ -77,7 +77,7 @@ export function createNamespaceInfoItem(
         }
     }
 
-    for (const [pattern, strategy] of Object.entries(namespaceStrategy ?? {})) {
+    for (const [pattern, strategy] of Object.entries(namespaceStrategy)) {
         const regexp = new RegExp(pattern)
 
         if (regexp.test(detailedName) || regexp.test(simpleName)) {

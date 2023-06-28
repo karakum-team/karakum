@@ -9,13 +9,12 @@ function generateRelativeFileName(prefixes: string[], sourceFileName: string) {
 }
 
 export function extractModuleName(
-    prefixes: string[],
     sourceFileName: string,
     configuration: Configuration,
 ) {
-    const libraryName = configuration.libraryName ?? ""
+    const {inputRoots, libraryName} = configuration
 
-    const relativeFileName = generateRelativeFileName(prefixes, sourceFileName)
+    const relativeFileName = generateRelativeFileName(inputRoots, sourceFileName)
 
     return path.join(libraryName, relativeFileName)
 }

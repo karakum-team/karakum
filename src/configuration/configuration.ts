@@ -1,29 +1,30 @@
-import {CompilerOptions} from "typescript";
+import {CompilerOptions} from "typescript"
 
 export type Granularity = /* TODO: support "bundle" | */ "file" | "top-level"
 
 export type NamespaceStrategy = "ignore" | "object" | "package"
 
-export type Configuration = {
-    input: string | string[];
-    inputRoots?: string | string[],
-    output: string;
+export interface PartialConfiguration {
+    inputRoots?: string | string[]
 
-    ignoreInput?: string | string[];
-    ignoreOutput?: string | string[];
+    input: string | string[]
+    output: string
 
-    libraryName?: string;
-    libraryNameOutputPrefix?: boolean;
+    ignoreInput?: string | string[]
+    ignoreOutput?: string | string[]
+
+    libraryName?: string
+    libraryNameOutputPrefix?: boolean
 
     granularity?: Granularity
 
-    plugins?: string | string[];
+    plugins?: string | string[]
 
-    annotations?: string | string[];
+    annotations?: string | string[]
 
-    nameResolvers?: string | string[];
+    nameResolvers?: string | string[]
 
-    inheritanceModifiers?: string | string[];
+    inheritanceModifiers?: string | string[]
 
     moduleNameMapper?: Record<string, string>
     packageNameMapper?: Record<string, string>
@@ -32,7 +33,42 @@ export type Configuration = {
 
     namespaceStrategy?: Record<string, NamespaceStrategy>
 
-    compilerOptions?: CompilerOptions;
+    compilerOptions?: CompilerOptions
 
-    verbose?: boolean;
+    verbose?: boolean
+}
+
+export interface Configuration extends PartialConfiguration {
+    inputRoots: string[]
+
+    input: string[]
+    inputFileNames: string[]
+    output: string
+
+    ignoreInput: string[]
+    ignoreOutput: string[]
+
+    libraryName: string
+    libraryNameOutputPrefix: boolean
+
+    granularity: Granularity
+
+    plugins: string[]
+
+    annotations: string[]
+
+    nameResolvers: string[]
+
+    inheritanceModifiers: string[]
+
+    moduleNameMapper: Record<string, string>
+    packageNameMapper: Record<string, string>
+
+    importInjector: Record<string, string[]>
+
+    namespaceStrategy: Record<string, NamespaceStrategy>
+
+    compilerOptions: CompilerOptions
+
+    verbose: boolean
 }

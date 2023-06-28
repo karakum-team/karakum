@@ -30,13 +30,12 @@ function extractFileName(sourceFileName: string) {
 }
 
 export function createSourceFileInfoItem(
-    prefixes: string[],
     sourceFileName: string,
     configuration: Configuration,
 ): SourceFileInfoItem {
-    const libraryName = configuration.libraryName ?? ""
+    const {inputRoots, libraryName} = configuration
 
-    const dirName = extractDirName(prefixes, sourceFileName)
+    const dirName = extractDirName(inputRoots, sourceFileName)
     const fileName = extractFileName(sourceFileName)
 
     const packageChunks = [
@@ -44,7 +43,7 @@ export function createSourceFileInfoItem(
         ...moduleNameToPackage(dirName)
     ]
 
-    const moduleName = extractModuleName(prefixes, sourceFileName, configuration)
+    const moduleName = extractModuleName(sourceFileName, configuration)
 
     const hasRuntime = true
 

@@ -3,7 +3,7 @@
 import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
 import {process as mainProcess} from ".";
-import {Configuration} from "./configuration/configuration";
+import {PartialConfiguration} from "./configuration/configuration";
 
 const argv = yargs(hideBin(process.argv))
     .config("config")
@@ -13,5 +13,5 @@ const argv = yargs(hideBin(process.argv))
     .parseSync()
 
 // TODO: Specify all config params explicitly
-mainProcess(argv as unknown as Configuration)
+mainProcess(argv as unknown as PartialConfiguration)
     .catch(error => console.error(error))

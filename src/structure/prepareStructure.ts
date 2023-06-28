@@ -126,7 +126,7 @@ function applyGranularity(
     items: InputStructureItem[],
     configuration: Configuration,
 ): InputStructureItem[] {
-    const granularity = configuration.granularity ?? "file"
+    const {granularity} = configuration
 
     if (granularity === "file") {
         return normalizeStructure(items)

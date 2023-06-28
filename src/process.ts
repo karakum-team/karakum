@@ -1,10 +1,10 @@
-import {Configuration} from "./configuration/configuration";
+import {PartialConfiguration} from "./configuration/configuration";
+import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration";
 import glob from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "path";
 import nodeProcess from "process";
 import fs from "fs";
-import {commonPrefix} from "./utils/fileName";
 import {createContext} from "./converter/context";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
 import {createPlugins} from "./defaultPlugins";
@@ -22,40 +22,12 @@ import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo";
 import {packageToOutputFileName} from "./structure/package/packageToFileName";
 
-export const defaultPluginPatterns = [
-    "karakum/plugins/*.js"
-]
-
-export const defaultAnnotationPatterns = [
-    "karakum/annotations/*.js"
-]
-
-export const defaultNameResolverPatterns = [
-    "karakum/nameResolvers/*.js"
-]
-
-export const defaultInheritanceModifierPatterns = [
-    "karakum/inheritanceModifiers/*.js"
-]
-
-function normalizeOption(
-    patterns: string | string[] | undefined,
-    defaultValue: string[] = [],
-) {
-    return patterns !== undefined
-        ? typeof patterns === "string" ? [patterns] : patterns
-        : defaultValue
-}
-
 async function loadExtensions<T>(
     name: string,
-    patterns: string | string[] | undefined,
-    defaultValue: string[],
+    patterns: string[],
     loader: (extension: unknown) => T = extension => extension as T
 ): Promise<T[]> {
-    const normalizedPatterns = normalizeOption(patterns, defaultValue)
-
-    const fileNames = normalizedPatterns.flatMap(pattern => glob.sync(pattern, {
+    const fileNames = patterns.flatMap(pattern => glob.sync(pattern, {
         absolute: true,
     }))
 
@@ -73,10 +45,13 @@ async function loadExtensions<T>(
     return extensions
 }
 
-export async function process(configuration: Configuration) {
+export async function process(partialConfiguration: PartialConfiguration) {
+    const configuration = defaultizeConfiguration(partialConfiguration)
+
     const {
-        input,
         inputRoots,
+        inputFileNames,
+        input,
         output,
         ignoreInput,
         ignoreOutput,
@@ -87,14 +62,9 @@ export async function process(configuration: Configuration) {
         compilerOptions,
     } = configuration
 
-    const normalizedInput = normalizeOption(input)
-    const normalizedIgnoreInput = normalizeOption(ignoreInput)
-    const normalizedIgnoreOutput = normalizeOption(ignoreOutput)
-
     const customPlugins = await loadExtensions<ConverterPlugin>(
         "Plugin",
         plugins,
-        defaultPluginPatterns,
         plugin => {
             if (typeof plugin === "function") {
                 return createSimplePlugin(plugin as SimpleConverterPlugin)
@@ -107,25 +77,17 @@ export async function process(configuration: Configuration) {
     const customAnnotations = await loadExtensions<Annotation>(
         "Annotation",
         annotations,
-        defaultAnnotationPatterns,
     )
 
     const customNameResolvers = await loadExtensions<NameResolver>(
         "Name Resolver",
         nameResolvers,
-        defaultNameResolverPatterns,
     )
 
     const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
         inheritanceModifiers,
-        defaultInheritanceModifierPatterns,
     )
-
-    const rootNames = normalizedInput.flatMap(pattern => glob.sync(pattern, {
-        absolute: true,
-        ignore: ignoreInput,
-    }))
 
     const preparedCompilerOptions: CompilerOptions = {
         lib: ["lib.esnext.d.ts"],
@@ -136,22 +98,9 @@ export async function process(configuration: Configuration) {
 
     const compilerHost = ts.createCompilerHost(preparedCompilerOptions, /* setParentNodes */ true);
 
-    const program = ts.createProgram(rootNames, preparedCompilerOptions, compilerHost)
+    const program = ts.createProgram(inputFileNames, preparedCompilerOptions, compilerHost)
 
-    const sources = rootNames.map(fileName => fileName.split("/"))
-
-    const defaultInputRoot = rootNames.length === 1
-        ? path.dirname(rootNames[0]) + "/"
-        : commonPrefix(...sources).join("/") + "/"
-
-    const normalizedInputRoots = normalizeOption(inputRoots, [defaultInputRoot])
-
-    const fixedConfiguration = {
-        ...configuration,
-        inputRoots: normalizedInputRoots,
-    }
-
-    for (const inputRoot of normalizedInputRoots) {
+    for (const inputRoot of inputRoots) {
         console.log(`Source files root: ${inputRoot}`)
     }
 
@@ -161,10 +110,10 @@ export async function process(configuration: Configuration) {
     }
     fs.mkdirSync(output, {recursive: true})
 
-    const absoluteInput = normalizedInput
+    const absoluteInput = input
         .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
 
-    const absoluteIgnoreInput = normalizedIgnoreInput
+    const absoluteIgnoreInput = ignoreInput
         .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
 
     const sourceFiles = program.getSourceFiles()
@@ -177,19 +126,19 @@ export async function process(configuration: Configuration) {
 
     console.log(`Source files count: ${sourceFiles.length}`)
 
-    const namespaceInfo = collectNamespaceInfo(normalizedInputRoots, sourceFiles, fixedConfiguration)
-    const sourceFileInfo = collectSourceFileInfo(normalizedInputRoots, sourceFiles, fixedConfiguration)
+    const namespaceInfo = collectNamespaceInfo(sourceFiles, configuration)
+    const sourceFileInfo = collectSourceFileInfo(sourceFiles, configuration)
 
     const structure = prepareStructure(
         [
             ...namespaceInfo.filter(it => it.strategy === "package"),
             ...sourceFileInfo,
         ],
-        fixedConfiguration,
+        configuration,
     )
 
     const defaultPlugins = createPlugins(
-        fixedConfiguration,
+        configuration,
         customNameResolvers,
         customInheritanceModifiers,
         program,
@@ -227,7 +176,7 @@ export async function process(configuration: Configuration) {
         .forEach(item => {
             console.log(`${item.meta.type}: ${item.meta.name}`)
 
-            const outputFileName = packageToOutputFileName(item.package, item.fileName, fixedConfiguration)
+            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
 
             const targetFileName = path.resolve(output, outputFileName)
 
@@ -240,10 +189,10 @@ export async function process(configuration: Configuration) {
             const targetFile = createTargetFile(
                 item,
                 convertedBody,
-                fixedConfiguration,
+                configuration,
             )
 
-            if (normalizedIgnoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
+            if (ignoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
                 fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
                 fs.writeFileSync(targetFileName, targetFile)
             }
@@ -253,7 +202,7 @@ export async function process(configuration: Configuration) {
         const generated = plugin.generate(context)
 
         for (const [fileName, content] of Object.entries(generated)) {
-            if (normalizedIgnoreOutput.every(pattern => !minimatch(fileName, pattern))) {
+            if (ignoreOutput.every(pattern => !minimatch(fileName, pattern))) {
                 if (fs.existsSync(fileName)) {
                     fs.appendFileSync(fileName, content)
                 } else {

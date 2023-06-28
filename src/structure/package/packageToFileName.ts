@@ -17,8 +17,7 @@ export function packageToOutputFileName(
     fileName: string,
     configuration: Configuration,
 ) {
-    const libraryName = configuration.libraryName ?? ""
-    const libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?? false
+    const {libraryName, libraryNameOutputPrefix} = configuration
 
     const result = packageToFileName(packageChunks, fileName)
 

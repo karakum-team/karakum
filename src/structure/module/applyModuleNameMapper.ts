@@ -9,9 +9,9 @@ export function applyModuleNameMapper(
     moduleName: string,
     configuration: Configuration,
 ): ModuleMappingResult {
-    const packageNameMapper = configuration.moduleNameMapper
+    const {moduleNameMapper} = configuration
 
     return {
-        moduleName: applyMapper(moduleName, packageNameMapper)
+        moduleName: applyMapper(moduleName, moduleNameMapper)
     }
 }
