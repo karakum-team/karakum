@@ -10,20 +10,24 @@ export function createTargetFile(
     configuration: Configuration,
 ) {
     const {
+        fileName,
+        package: packageChunks,
         moduleName,
         qualifier,
         hasRuntime,
     } = item
 
-    const packageName = createPackageName(item.package)
+    const granularity = configuration.granularity ?? "file"
 
-    const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
+    const packageName = createPackageName(packageChunks)
+
+    const outputFileName = packageToOutputFileName(packageChunks, fileName, configuration)
 
     const imports = generateImports(outputFileName, configuration)
 
     const jsModule = hasRuntime ? `@file:JsModule("${moduleName}")` : ""
     const jsQualifier = hasRuntime && qualifier !== undefined ? `@file:JsQualifier("${qualifier}")` : ""
-    const typeAliasSuppress = `
+    const typeAliasSuppress = granularity === "top-level" ? "" : `
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )

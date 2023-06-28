@@ -1,8 +1,5 @@
 
 @file:JsModule("sandbox-namespace/index")
-@file:Suppress(
-    "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
-)
 
 package sandbox.namespace
 
