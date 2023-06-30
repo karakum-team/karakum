@@ -12,6 +12,12 @@ import {resolveTypeAliasPropertyName} from "./nameResolvers/resolveTypeAliasProp
 import {resolveParenthesizedTypeName} from "./nameResolvers/resolveParenthesizedTypeName";
 import {resolveClassPropertyName} from "./nameResolvers/resolveClassPropertyName";
 import {resolveInterfacePropertyName} from "./nameResolvers/resolveInterfacePropertyName";
+import {resolveClassMethodCallbackParameterName} from "./nameResolvers/resolveClassMethodCallbackParameterName";
+import {resolveInterfaceMethodCallbackParameterName} from "./nameResolvers/resolveInterfaceMethodCallbackParameterName";
+import {resolveClassPropertyCallbackParameterName} from "./nameResolvers/resolveClassPropertyCallbackParameterName";
+import {
+    resolveInterfacePropertyCallbackParameterName
+} from "./nameResolvers/resolveInterfacePropertyCallbackParameterName";
 
 export const defaultNameResolvers: NameResolver[] = [
     resolveFunctionParameterName,
@@ -21,9 +27,13 @@ export const defaultNameResolvers: NameResolver[] = [
     resolveConstructorParameterName,
     resolveClassMethodParameterName,
     resolveClassMethodReturnTypeName,
+    resolveClassMethodCallbackParameterName,
     resolveClassPropertyName,
+    resolveClassPropertyCallbackParameterName,
     resolveInterfaceMethodParameterName,
     resolveInterfaceMethodReturnTypeName,
+    resolveInterfaceMethodCallbackParameterName,
     resolveInterfacePropertyName,
+    resolveInterfacePropertyCallbackParameterName,
     resolveTypeAliasPropertyName,
 ].map(resolveParenthesizedTypeName)
