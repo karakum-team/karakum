@@ -26,7 +26,7 @@ export function createTargetFile(
     const imports = generateImports(outputFileName, configuration)
 
     const jsModule = hasRuntime ? `@file:JsModule("${moduleName}")` : ""
-    const jsQualifier = hasRuntime && qualifier !== undefined ? `@file:JsQualifier("${qualifier}")` : ""
+    const jsQualifier = hasRuntime && qualifier ? `@file:JsQualifier("${qualifier}")` : ""
     const typeAliasSuppress = granularity === "top-level" ? "" : `
 @file:Suppress(
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",

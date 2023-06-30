@@ -1,6 +1,6 @@
 
-@file:JsModule("will-be-mapped")
-@file:JsQualifier("AndThis")
+@file:JsModule("was-mapped")
+@file:JsQualifier("Nested")
 
 package was.mapped.nested
 

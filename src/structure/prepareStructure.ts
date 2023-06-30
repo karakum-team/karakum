@@ -178,6 +178,7 @@ function applyMappers(
 
         const moduleMappingResult = applyModuleNameMapper(
             item.moduleName,
+            item.qualifier,
             configuration,
         )
 
