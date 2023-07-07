@@ -1,7 +1,7 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {escapeIdentifier} from "../../utils/strings";
+import {escapeIdentifier, isValidIdentifier} from "../../utils/strings";
 import {renderNullable} from "../render";
 
 export const convertPropertyDeclaration = createSimplePlugin((node, context, render) => {
@@ -20,7 +20,19 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
         ? "val "
         : "var "
 
-    const name = escapeIdentifier(render(node.name))
+    let name: string
+
+    if (ts.isStringLiteral(node.name)) {
+        if (!isValidIdentifier(node.name.text)) {
+            // TODO: generate inline getter
+            return null
+        }
+        name = escapeIdentifier(node.name.text)
+    } else if (ts.isNumericLiteral(node.name)) {
+        name = escapeIdentifier(node.name.text)
+    } else {
+        name = escapeIdentifier(render(node.name))
+    }
 
     const isOptional = Boolean(node.questionToken)
 

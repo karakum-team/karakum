@@ -13,6 +13,10 @@ export function camelize(string: string) {
     );
 }
 
+export function isValidIdentifier(string: string) {
+    return /^[\w$]+$/.test(string)
+}
+
 export function escapeIdentifier(string: string) {
     if (KOTLIN_KEYWORDS.has(string)) {
         return `\`${string}\``
