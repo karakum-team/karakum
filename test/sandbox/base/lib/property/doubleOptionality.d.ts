@@ -1,3 +1,7 @@
+declare type BaseAgnosticBaseRouteObject = {
+    params: string | undefined
+}
+
 declare type AgnosticBaseRouteObject = {
     handle1?: any;
     handle2?: unknown;
@@ -5,6 +9,7 @@ declare type AgnosticBaseRouteObject = {
     handle4?: null;
     handle5?: undefined;
     handle6?;
+    handle7: BaseAgnosticBaseRouteObject["params"] | undefined;
 };
 
 declare class AgnosticBaseRouteClass {
@@ -14,4 +19,5 @@ declare class AgnosticBaseRouteClass {
     handle4?: null;
     handle5?: undefined;
     handle6?;
+    handle7: BaseAgnosticBaseRouteObject["params"] | undefined;
 }

@@ -47,7 +47,7 @@ export function renderNullable(
     if (
         isNullable
         && resolvedType
-        && !isPossiblyNullableType(resolvedType)
+        && !isPossiblyNullableType(resolvedType, context)
     ) {
         isReallyNullable = true
     }

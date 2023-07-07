@@ -163,7 +163,7 @@ const expandUnions = (
 
                 const generatedSignatures: Signature[] = []
 
-                const nullable = isNullableUnionType(type)
+                const nullable = isNullableUnionType(type, context)
 
                 for (const subtype of type.types) {
                     if (isNullableType(subtype)) {

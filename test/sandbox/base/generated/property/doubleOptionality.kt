@@ -9,6 +9,12 @@ package sandbox.base.property
 
 
 
+external interface BaseAgnosticBaseRouteObject {
+var params: String?
+}
+        
+
+
 external interface AgnosticBaseRouteObject {
 var handle1: Any?
 var handle2: Any?
@@ -16,6 +22,7 @@ var handle3: String?
 var handle4: Nothing?
 var handle5: Nothing?
 var handle6: Any? /* type isn't declared */
+var handle7: String?
 }
         
 
@@ -27,6 +34,7 @@ var handle3: String?
 var handle4: Nothing?
 var handle5: Nothing?
 var handle6: Any? /* type isn't declared */
+var handle7: String?
 }
     
     
