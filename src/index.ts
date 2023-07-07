@@ -51,7 +51,7 @@ export {
 
 // render
 export type {Render} from "./converter/render"
-export {ifPresent} from "./converter/render"
+export {ifPresent, renderNullable} from "./converter/render"
 
 // utils
 export {traverse} from "./utils/traverse"

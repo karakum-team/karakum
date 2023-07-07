@@ -1,15 +1,12 @@
 import {createSimplePlugin} from "../plugin";
 import ts, {SyntaxKind} from "typescript";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {isPossiblyNullableType} from "./NullableUnionTypePlugin";
-import {ifPresent} from "../render";
+import {ifPresent, renderNullable} from "../render";
 
 export const convertMappedType = createSimplePlugin((node, context, render) => {
     if (!ts.isMappedTypeNode(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     checkCoverageService?.cover(node)
 
@@ -17,25 +14,7 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
 
     const typeParameter = render(node.typeParameter)
 
-    let type: string
-
-    if (node.type) {
-        type = render(node.type)
-    } else {
-        type = "Any? /* type isn't declared */"
-    }
-
-    // handle `typeof` case
-    const resolvedType = node.type && typeScriptService?.resolveType(node.type)
-
-    let nullable = true
-
-    if (
-        !resolvedType
-        || isPossiblyNullableType(resolvedType)
-    ) {
-        nullable = false
-    }
+    const type = renderNullable(node.type, true, context, render)
 
     let keyType: string
 
@@ -51,7 +30,7 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
     "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
 )
 @nativeGetter
-operator fun <${typeParameter}> get(key: ${keyType}): ${type}${nullable ? "?" : ""}
+operator fun <${typeParameter}> get(key: ${keyType}): ${type}
     `
 
     let setter = ""
@@ -63,7 +42,7 @@ operator fun <${typeParameter}> get(key: ${keyType}): ${type}${nullable ? "?" : 
     "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
 )
 @nativeSetter
-operator fun <${typeParameter}> set(key: ${keyType}, value: ${type}${nullable ? "?" : ""})
+operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
         `
     }
 

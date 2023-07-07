@@ -1,11 +1,10 @@
 import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {isNullableType, isNullableUnionType, isPossiblyNullableType} from "./NullableUnionTypePlugin";
+import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
 import {isStringUnionType} from "./StringUnionTypePlugin";
 import {ConverterContext} from "../context";
-import {Render} from "../render";
+import {Render, renderNullable} from "../render";
 import {escapeIdentifier} from "../../utils/strings";
 
 export interface ParameterDeclarationsConfiguration {
@@ -95,7 +94,6 @@ const convertParameterDeclarationWithFixedType = (
     const {type, strategy} = configuration
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     checkCoverageService?.cover(node)
     node.dotDotDotToken && checkCoverageService?.cover(node.dotDotDotToken)
@@ -118,13 +116,11 @@ const convertParameterDeclarationWithFixedType = (
         checkCoverageService?.deepCover(node.name)
     }
 
-    let renderedType: string
+    const isOptional = strategy === "lambda" && Boolean(node.questionToken)
 
-    if (type) {
-        renderedType = render(type)
-    } else {
-        renderedType = "Any? /* type isn't declared */"
-    }
+    const isDefinedExternally = strategy === "function" && Boolean(node.questionToken)
+
+    let renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
 
     if (type && node.dotDotDotToken) {
         if (renderedType.startsWith("Array")) {
@@ -134,25 +130,8 @@ const convertParameterDeclarationWithFixedType = (
         }
     }
 
-    const isDefinedExternally = node.questionToken && strategy === "function"
 
-    let nullable = configuration.nullable
-    let forcedNullable = false
-
-    // handle `typeof` case
-    const resolvedType = node.type && typeScriptService?.resolveType(node.type)
-
-    if (
-        strategy === "lambda"
-        && node.questionToken
-        && resolvedType
-        && !isPossiblyNullableType(resolvedType)
-    ) {
-        nullable = true
-        forcedNullable = true
-    }
-
-    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${nullable ? "?" : ""}${forcedNullable ? " /* use undefined for default */" : ""}${isDefinedExternally ? " = definedExternally" : ""}`
+    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${isOptional ? " /* use undefined for default */" : ""}${isDefinedExternally ? " = definedExternally" : ""}`
 }
 
 const extractSignature = (node: SignatureDeclarationBase) => {

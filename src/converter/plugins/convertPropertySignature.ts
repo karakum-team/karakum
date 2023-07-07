@@ -1,15 +1,13 @@
 import ts, {SyntaxKind} from "typescript";
 import {createSimplePlugin} from "../plugin";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {isPossiblyNullableType} from "./NullableUnionTypePlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
 import {escapeIdentifier} from "../../utils/strings";
+import {renderNullable} from "../render";
 
 export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     checkCoverageService?.cover(node)
 
@@ -24,26 +22,9 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
 
     const name = escapeIdentifier(render(node.name))
 
-    let type: string
+    const isOptional = Boolean(node.questionToken)
 
-    if (node.type) {
-        type = render(node.type)
-    } else {
-        type = "Any? /* type isn't declared */"
-    }
+    const type = renderNullable(node.type, isOptional, context, render)
 
-    let isOptional = false
-
-    // handle `typeof` case
-    const resolvedType = node.type && typeScriptService?.resolveType(node.type)
-
-    if (
-        node.questionToken
-        && resolvedType
-        && !isPossiblyNullableType(resolvedType)
-    ) {
-        isOptional = true
-    }
-
-    return `${modifier}${name}: ${type}${isOptional ? "?" : ""}`
+    return `${modifier}${name}: ${type}`
 })

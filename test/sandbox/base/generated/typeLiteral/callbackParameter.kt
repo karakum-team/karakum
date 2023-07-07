@@ -10,14 +10,14 @@ package sandbox.base.typeLiteral
 
 
 external class MyClass {
-var conflictHandler: (conflictType: MyClassConflictTypeConflictType) -> Boolean?
+var conflictHandler: ((conflictType: MyClassConflictTypeConflictType) -> Boolean)?
 fun method(cb: (options: MyClassMethodCbOptions) -> Unit): String
 }
     
 
 
 external interface MyInterface {
-var conflictHandler: (conflictType: MyInterfaceConflictTypeConflictType) -> Boolean?
+var conflictHandler: ((conflictType: MyInterfaceConflictTypeConflictType) -> Boolean)?
 fun method(cb: (options: MyInterfaceMethodCbOptions) -> Unit): String
 }
     
