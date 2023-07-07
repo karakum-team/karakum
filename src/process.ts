@@ -118,7 +118,7 @@ export async function process(partialConfiguration: PartialConfiguration) {
 
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
-            return absoluteInput.every(pattern => minimatch(sourceFile.fileName, pattern))
+            return absoluteInput.some(pattern => minimatch(sourceFile.fileName, pattern))
         })
         .filter(sourceFile => {
             return absoluteIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
