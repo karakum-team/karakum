@@ -1,7 +1,7 @@
-import {Configuration} from "../configuration/configuration";
-import {generateImports} from "./generateImports";
-import {createPackageName} from "./package/createPackageName";
-import {packageToOutputFileName} from "./package/packageToFileName";
+import {Configuration} from "../configuration/configuration.js";
+import {generateImports} from "./generateImports.js";
+import {createPackageName} from "./package/createPackageName.js";
+import {packageToOutputFileName} from "./package/packageToFileName.js";
 
 export function createGeneratedFile(
     packageChunks: string[],

@@ -1,7 +1,7 @@
 import glob from "glob";
 import path from "path";
-import {PartialConfiguration, Configuration} from "./configuration";
-import {commonPrefix} from "../utils/fileName";
+import {PartialConfiguration, Configuration} from "./configuration.js";
+import {commonPrefix} from "../utils/fileName.js";
 
 const defaultPluginPatterns = [
     "karakum/plugins/*.js"

@@ -1,11 +1,11 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export const convertReadonlyArrayType = createSimplePlugin((node, context, render) => {
     if (
         ts.isTypeOperatorNode(node) &&
-        node.operator === SyntaxKind.ReadonlyKeyword &&
+        node.operator === ts.SyntaxKind.ReadonlyKeyword &&
         ts.isArrayTypeNode(node.type)
     ) {
 

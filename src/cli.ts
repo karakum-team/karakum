@@ -2,8 +2,8 @@
 
 import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
-import {process as mainProcess} from ".";
-import {PartialConfiguration} from "./configuration/configuration";
+import {process as mainProcess} from "./process.js";
+import {PartialConfiguration} from "./configuration/configuration.js";
 
 const argv = yargs(hideBin(process.argv))
     .config("config")

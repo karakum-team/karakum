@@ -1,9 +1,9 @@
-import ts, {Declaration, ModifierLike, SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
-import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
+import ts, {Declaration, ModifierLike} from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 
 function extractModifiers(member: Declaration): ModifierLike[] {
     if (
@@ -31,10 +31,10 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
-    const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+    const declareModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.DeclareKeyword)
     declareModifier && checkCoverageService?.cover(declareModifier)
 
     const name = (node.name && render(node.name)) ?? "Anonymous"
@@ -53,19 +53,19 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     // cover private members
     mergedMembers
-        .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.PrivateKeyword))
+        .filter(member => extractModifiers(member).some(it => it.kind === ts.SyntaxKind.PrivateKeyword))
         .forEach(member => checkCoverageService?.cover(member))
 
     const publicMembers = mergedMembers
-        .filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.PrivateKeyword))
+        .filter(member => extractModifiers(member).every(it => it.kind !== ts.SyntaxKind.PrivateKeyword))
 
     const members = publicMembers
-        .filter(member => extractModifiers(member).every(it => it.kind !== SyntaxKind.StaticKeyword))
+        .filter(member => extractModifiers(member).every(it => it.kind !== ts.SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 
     const staticMembers = publicMembers
-        .filter(member => extractModifiers(member).some(it => it.kind === SyntaxKind.StaticKeyword))
+        .filter(member => extractModifiers(member).some(it => it.kind === ts.SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 

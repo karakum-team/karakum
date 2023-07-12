@@ -1,13 +1,13 @@
-import ts, {EmitHint, Node, NodeBuilderFlags, Program, ScriptTarget, TypeNode} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {setParentNodes} from "../../utils/setParentNodes";
+import ts, {Node, Program, TypeNode} from "typescript";
+import {ConverterPlugin} from "../plugin.js";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {setParentNodes} from "../../utils/setParentNodes.js";
 
 export const typeScriptServiceKey = Symbol()
 
 export class TypeScriptService {
-    private readonly virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
+    private readonly virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ts.ScriptTarget.Latest)
     private readonly printer = ts.createPrinter({
         removeComments: true,
         newLine: ts.NewLineKind.LineFeed,
@@ -19,13 +19,13 @@ export class TypeScriptService {
     printNode(node: Node) {
         const sourceFile = node.getSourceFile() ?? this.virtualSourceFile
 
-        return this.printer.printNode(EmitHint.Unspecified, node, sourceFile)
+        return this.printer.printNode(ts.EmitHint.Unspecified, node, sourceFile)
     }
 
     resolveType(node: TypeNode) {
         const typeChecker = this.program.getTypeChecker()
         const type = typeChecker.getTypeAtLocation(node)
-        const typeNode = typeChecker.typeToTypeNode(type, undefined, NodeBuilderFlags.NoTruncation)
+        const typeNode = typeChecker.typeToTypeNode(type, undefined, ts.NodeBuilderFlags.NoTruncation)
         return typeNode && setParentNodes(typeNode)
     }
 }

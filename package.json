@@ -9,6 +9,7 @@
   "license": "Apache-2.0",
   "main": "./build/index.js",
   "bin": "./build/cli.js",
+  "type": "module",
   "files": [
     "LICENSE",
     "README.md",
@@ -18,7 +19,7 @@
     "clean": "rimraf build",
     "build": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "ts-node test/sandbox/test.ts"
+    "test": "ts-node --esm test/sandbox/test.ts"
   },
   "dependencies": {
     "glob": "^9.3.4",

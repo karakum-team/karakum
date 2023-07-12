@@ -1,6 +1,6 @@
 import path from "path";
-import {Configuration} from "../../configuration/configuration";
-import {moduleNameToPackage} from "../module/moduleNameToPackage";
+import {Configuration} from "../../configuration/configuration.js";
+import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
 
 export function packageToFileName(
     packageChunks: string[],

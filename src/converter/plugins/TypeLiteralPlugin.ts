@@ -1,11 +1,11 @@
 import ts from "typescript";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
-import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin";
-import {extractTypeParameters} from "../../utils/extractTypeParameters";
-import {defaultNameResolvers} from "../defaultNameResolvers";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
+import {extractTypeParameters} from "../../utils/extractTypeParameters.js";
+import {defaultNameResolvers} from "../defaultNameResolvers.js";
 
 export const createTypeLiteralPlugin = createAnonymousDeclarationPlugin(
     defaultNameResolvers,

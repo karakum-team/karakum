@@ -1,8 +1,8 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {convertParameterDeclarations} from "./convertParameterDeclaration";
+import {createSimplePlugin} from "../plugin.js";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
 
 export const convertCallSignatureDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isCallSignatureDeclaration(node)) return null

@@ -1,26 +1,26 @@
-import {PartialConfiguration} from "./configuration/configuration";
-import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration";
+import {PartialConfiguration} from "./configuration/configuration.js";
+import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.js";
 import glob from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "path";
 import nodeProcess from "process";
 import fs from "fs";
-import {createContext} from "./converter/context";
-import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin";
-import {createPlugins} from "./defaultPlugins";
-import {CommentsPlugin} from "./converter/plugins/CommentsPlugin";
-import {prepareStructure} from "./structure/prepareStructure";
-import {traverse} from "./utils/traverse";
+import {createContext} from "./converter/context.js";
+import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
+import {createPlugins} from "./defaultPlugins.js";
+import {CommentsPlugin} from "./converter/plugins/CommentsPlugin.js";
+import {prepareStructure} from "./structure/prepareStructure.js";
+import {traverse} from "./utils/traverse.js";
 import minimatch from "minimatch";
-import {createTargetFile} from "./structure/createTargetFile";
-import {createRender} from "./converter/render";
-import {NameResolver} from "./converter/nameResolver";
-import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin";
-import {InheritanceModifier} from "./converter/inheritanceModifier";
-import {Annotation} from "./converter/annotation";
-import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
-import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo";
-import {packageToOutputFileName} from "./structure/package/packageToFileName";
+import {createTargetFile} from "./structure/createTargetFile.js";
+import {createRender} from "./converter/render.js";
+import {NameResolver} from "./converter/nameResolver.js";
+import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin.js";
+import {InheritanceModifier} from "./converter/inheritanceModifier.js";
+import {Annotation} from "./converter/annotation.js";
+import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
+import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
+import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
 
 async function loadExtensions<T>(
     name: string,

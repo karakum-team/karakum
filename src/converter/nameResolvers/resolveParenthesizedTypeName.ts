@@ -1,5 +1,5 @@
 import ts from "typescript";
-import {NameResolver} from "../nameResolver";
+import {NameResolver} from "../nameResolver.js";
 
 export function resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
     const parenthesizedResolver: NameResolver = (node, context) => {

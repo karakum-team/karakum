@@ -1,17 +1,20 @@
-import {process} from "../../src";
+import {process} from "../../src/process.js";
 import path from "path";
+import url from "url";
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 process({
-    input: path.resolve(__dirname, "base/lib/**"),
-    output: path.resolve(__dirname, "base/generated"),
+    input: path.resolve(dirname, "base/lib/**"),
+    output: path.resolve(dirname, "base/generated"),
     libraryName: "sandbox-base",
     verbose: true,
 })
     .catch(error => console.error(error))
 
 process({
-    input: path.resolve(__dirname, "top-level/lib/**"),
-    output: path.resolve(__dirname, "top-level/generated"),
+    input: path.resolve(dirname, "top-level/lib/**"),
+    output: path.resolve(dirname, "top-level/generated"),
     libraryName: "sandbox-top-level",
     granularity: "top-level",
     moduleNameMapper: {
@@ -22,8 +25,8 @@ process({
     .catch(error => console.error(error))
 
 process({
-    input: path.resolve(__dirname, "namespace/lib/**"),
-    output: path.resolve(__dirname, "namespace/generated"),
+    input: path.resolve(dirname, "namespace/lib/**"),
+    output: path.resolve(dirname, "namespace/generated"),
     libraryName: "sandbox-namespace",
     granularity: "top-level",
     verbose: true,

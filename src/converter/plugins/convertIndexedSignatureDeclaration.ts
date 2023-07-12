@@ -1,7 +1,7 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {ifPresent, renderNullable} from "../render";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {ifPresent, renderNullable} from "../render.js";
 
 export const convertIndexedSignatureDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isIndexSignatureDeclaration(node)) return null
@@ -10,7 +10,7 @@ export const convertIndexedSignatureDeclaration = createSimplePlugin((node, cont
 
     checkCoverageService?.cover(node)
 
-    const readonly = node.modifiers?.find(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword)
+    const readonly = node.modifiers?.find(modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword)
     readonly && checkCoverageService?.cover(readonly)
 
     let keyType: string

@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {convertParameterDeclarations} from "./convertParameterDeclaration";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
 
 export const convertConstructorDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isConstructorDeclaration(node)) return null

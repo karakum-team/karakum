@@ -1,9 +1,9 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
-import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 
 export const convertInterfaceDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isInterfaceDeclaration(node)) return null
@@ -17,7 +17,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
     const name = render(node.name)

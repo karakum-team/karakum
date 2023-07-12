@@ -1,5 +1,5 @@
-import {ConverterContext} from "./context";
-import {Render} from "./render";
+import {ConverterContext} from "./context.js";
+import {Render} from "./render.js";
 import {Node} from "typescript"
 
 export interface ConverterPlugin<TNode extends Node = Node> {

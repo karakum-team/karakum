@@ -1,6 +1,6 @@
 import {NodeWithTypeArguments} from "typescript";
-import {ifPresent} from "../render";
-import {createSimplePlugin} from "../plugin";
+import {ifPresent} from "../render.js";
+import {createSimplePlugin} from "../plugin.js";
 
 export const convertNodeWithTypeArguments = createSimplePlugin<NodeWithTypeArguments>((node, context, render) =>  {
     const typeArguments = node.typeArguments

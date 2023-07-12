@@ -1,10 +1,10 @@
-import {ConverterPlugin} from "../plugin";
-import {Node, SyntaxKind} from "typescript";
-import {Render} from "../render";
-import {ConverterContext} from "../context";
-import {traverse} from "../../utils/traverse";
-import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import {ConverterPlugin} from "../plugin.js";
+import ts, {Node} from "typescript";
+import {Render} from "../render.js";
+import {ConverterContext} from "../context.js";
+import {traverse} from "../../utils/traverse.js";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const checkCoverageServiceKey = Symbol()
 
@@ -53,7 +53,7 @@ export class CheckCoveragePlugin implements ConverterPlugin {
 
         const {coveredNodes, uncoveredNodes} = this.checkCoverageService.emit( uncoveredNode => {
             if (configurationService?.configuration?.verbose) {
-                const message = `Node with kind ${SyntaxKind[uncoveredNode.kind]} is uncovered`
+                const message = `Node with kind ${ts.SyntaxKind[uncoveredNode.kind]} is uncovered`
                 const sourceFile = uncoveredNode.getSourceFile()
 
                 if (sourceFile) {

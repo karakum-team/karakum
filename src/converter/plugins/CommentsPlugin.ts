@@ -1,7 +1,7 @@
-import {ConverterPlugin} from "../plugin";
+import {ConverterPlugin} from "../plugin.js";
 import ts, {CommentRange, Node, SourceFile} from "typescript";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
 
 export class CommentsPlugin implements ConverterPlugin {
     private nestedCommentPattern = /(?<!^)\/\*/g

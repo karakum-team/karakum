@@ -1,8 +1,8 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {escapeIdentifier, isValidIdentifier} from "../../utils/strings";
-import {renderNullable} from "../render";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {escapeIdentifier, isValidIdentifier} from "../../utils/strings.js";
+import {renderNullable} from "../render.js";
 
 export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
@@ -11,7 +11,7 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
 
     checkCoverageService?.cover(node)
 
-    const readonly = node.modifiers?.find(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword)
+    const readonly = node.modifiers?.find(modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword)
     readonly && checkCoverageService?.cover(readonly)
 
     node.questionToken && checkCoverageService?.cover(node.questionToken)

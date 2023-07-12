@@ -1,11 +1,11 @@
 import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin";
-import {isStringUnionType} from "./StringUnionTypePlugin";
-import {ConverterContext} from "../context";
-import {Render, renderNullable} from "../render";
-import {escapeIdentifier} from "../../utils/strings";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
+import {isStringUnionType} from "./StringUnionTypePlugin.js";
+import {ConverterContext} from "../context.js";
+import {Render, renderNullable} from "../render.js";
+import {escapeIdentifier} from "../../utils/strings.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",

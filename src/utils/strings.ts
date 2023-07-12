@@ -1,4 +1,4 @@
-import {KOTLIN_KEYWORDS} from "./constants";
+import {KOTLIN_KEYWORDS} from "./constants.js";
 
 export function capitalize(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

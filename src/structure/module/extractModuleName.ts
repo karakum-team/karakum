@@ -1,6 +1,6 @@
 import path from "path";
-import {Configuration} from "../../configuration/configuration";
-import {removePrefix} from "../removePrefix";
+import {Configuration} from "../../configuration/configuration.js";
+import {removePrefix} from "../removePrefix.js";
 
 function generateRelativeFileName(prefixes: string[], sourceFileName: string) {
     return removePrefix(sourceFileName, prefixes)

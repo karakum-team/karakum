@@ -1,7 +1,7 @@
 import {SourceFile} from "typescript";
-import {Configuration} from "../../configuration/configuration";
-import {InputStructureItem} from "../structure";
-import {createSourceFileInfoItem, SourceFileInfoItem} from "./createSourceFileInfoItem";
+import {Configuration} from "../../configuration/configuration.js";
+import {InputStructureItem} from "../structure.js";
+import {createSourceFileInfoItem, SourceFileInfoItem} from "./createSourceFileInfoItem.js";
 
 interface InputSourceFileInfoItem extends SourceFileInfoItem, InputStructureItem {
 }

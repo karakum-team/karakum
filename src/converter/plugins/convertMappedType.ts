@@ -1,7 +1,7 @@
-import {createSimplePlugin} from "../plugin";
-import ts, {SyntaxKind} from "typescript";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {ifPresent, renderNullable} from "../render";
+import {createSimplePlugin} from "../plugin.js";
+import ts from "typescript";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {ifPresent, renderNullable} from "../render.js";
 
 export const convertMappedType = createSimplePlugin((node, context, render) => {
     if (!ts.isMappedTypeNode(node)) return null
@@ -10,7 +10,7 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
 
     checkCoverageService?.cover(node)
 
-    const readonly = node.readonlyToken && node.readonlyToken.kind !== SyntaxKind.MinusToken
+    const readonly = node.readonlyToken && node.readonlyToken.kind !== ts.SyntaxKind.MinusToken
 
     const typeParameter = render(node.typeParameter)
 

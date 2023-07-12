@@ -1,9 +1,9 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {convertParameterDeclarations} from "./convertParameterDeclaration";
-import {escapeIdentifier} from "../../utils/strings";
+import {createSimplePlugin} from "../plugin.js";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
+import {escapeIdentifier} from "../../utils/strings.js";
 
 export const convertMethodDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isMethodDeclaration(node)) return null

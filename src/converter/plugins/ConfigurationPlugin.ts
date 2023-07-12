@@ -1,8 +1,8 @@
-import {ConverterPlugin} from "../plugin";
+import {ConverterPlugin} from "../plugin.js";
 import {Node} from "typescript";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {Configuration} from "../../configuration/configuration";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {Configuration} from "../../configuration/configuration.js";
 
 export const configurationServiceKey = Symbol()
 

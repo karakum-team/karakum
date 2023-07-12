@@ -1,8 +1,8 @@
 import path from "path";
-import {Configuration} from "../../configuration/configuration";
-import {applyMapper} from "../../utils/fileName";
-import {moduleNameToPackage} from "../module/moduleNameToPackage";
-import {packageToFileName} from "./packageToFileName";
+import {Configuration} from "../../configuration/configuration.js";
+import {applyMapper} from "../../utils/fileName.js";
+import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
+import {packageToFileName} from "./packageToFileName.js";
 
 export interface PackageMappingResult {
     fileName: string

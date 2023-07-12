@@ -1,8 +1,8 @@
-import {Configuration} from "../configuration/configuration";
-import {generateImports} from "./generateImports";
-import {StructureItem} from "./structure";
-import {packageToOutputFileName} from "./package/packageToFileName";
-import {createPackageName} from "./package/createPackageName";
+import {Configuration} from "../configuration/configuration.js";
+import {generateImports} from "./generateImports.js";
+import {StructureItem} from "./structure.js";
+import {packageToOutputFileName} from "./package/packageToFileName.js";
+import {createPackageName} from "./package/createPackageName.js";
 
 export function createTargetFile(
     item: StructureItem,

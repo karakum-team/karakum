@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {createSimplePlugin} from "../plugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export const convertTypeQuery = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeQueryNode(node)) return null

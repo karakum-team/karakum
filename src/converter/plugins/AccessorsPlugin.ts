@@ -1,9 +1,9 @@
 import ts, {GetAccessorDeclaration, SetAccessorDeclaration} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import {ConverterPlugin} from "../plugin.js";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 interface AccessorInfo {
     getter: GetAccessorDeclaration | undefined

@@ -1,4 +1,4 @@
-import {escapeIdentifier} from "../../utils/strings";
+import {escapeIdentifier} from "../../utils/strings.js";
 
 export function createPackageName(packageChunks: string[]) {
     return packageChunks

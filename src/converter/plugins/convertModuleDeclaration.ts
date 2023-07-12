@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 export const convertModuleDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isModuleDeclaration(node)) return null

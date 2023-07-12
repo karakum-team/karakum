@@ -1,5 +1,5 @@
-import {Configuration} from "../../configuration/configuration";
-import {applyMapper} from "../../utils/fileName";
+import {Configuration} from "../../configuration/configuration.js";
+import {applyMapper} from "../../utils/fileName.js";
 
 export interface ModuleMappingResult {
     moduleName: string

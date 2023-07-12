@@ -1,13 +1,13 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export const convertTypeOperator = createSimplePlugin((node, context) => {
     if (!ts.isTypeOperatorNode(node)) return null
 
     if (
-        node.operator === SyntaxKind.UniqueKeyword
-        && node.type.kind === SyntaxKind.SymbolKeyword
+        node.operator === ts.SyntaxKind.UniqueKeyword
+        && node.type.kind === ts.SyntaxKind.SymbolKeyword
     ) {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)

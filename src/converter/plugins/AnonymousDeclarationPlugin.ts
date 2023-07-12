@@ -1,14 +1,14 @@
 import path from "path";
 import ts, {Node} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {createGeneratedFile} from "../../structure/createGeneratedFile";
-import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin";
-import {NameResolver} from "../nameResolver";
-import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem";
-import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper";
-import {packageToOutputFileName} from "../../structure/package/packageToFileName";
+import {ConverterPlugin} from "../plugin.js";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {createGeneratedFile} from "../../structure/createGeneratedFile.js";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
+import {NameResolver} from "../nameResolver.js";
+import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem.js";
+import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper.js";
+import {packageToOutputFileName} from "../../structure/package/packageToFileName.js";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
     resolveName(node: Node): string

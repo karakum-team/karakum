@@ -1,8 +1,8 @@
-import {ConverterPlugin, createSimplePlugin} from "../plugin";
+import {ConverterPlugin, createSimplePlugin} from "../plugin.js";
 import {Node} from "typescript";
-import {Render} from "../render";
-import {convertPrimitive} from "./convertPrimitive";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import {Render} from "../render.js";
+import {convertPrimitive} from "./convertPrimitive.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export function convertLiteral<TNode extends Node = Node>(
     predicate: (node: Node) => node is TNode,

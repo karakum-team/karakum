@@ -1,62 +1,62 @@
-import ts, {Node, Program, SyntaxKind} from "typescript";
-import {Configuration} from "./configuration/configuration";
-import {ConverterPlugin} from "./converter/plugin";
-import {NameResolver} from "./converter/nameResolver";
-import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin";
-import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin";
-import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin";
-import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin";
-import {convertPrimitive} from "./converter/plugins/convertPrimitive";
-import {createTypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin";
-import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration";
-import {convertModuleBlock} from "./converter/plugins/convertModuleBlock";
-import {convertInterfaceDeclaration} from "./converter/plugins/convertInterfaceDeclaration";
-import {convertClassDeclaration} from "./converter/plugins/convertClassDeclaration";
-import {convertTypeParameterDeclaration} from "./converter/plugins/convertTypeParameterDeclaration";
-import {convertParameterDeclaration} from "./converter/plugins/convertParameterDeclaration";
-import {convertTypeReference} from "./converter/plugins/convertTypeReference";
-import {convertHeritageClause} from "./converter/plugins/convertHeritageClause";
-import {convertExpressionWithTypeArguments} from "./converter/plugins/convertExpressionWithTypeArguments";
-import {convertPropertySignature} from "./converter/plugins/convertPropertySignature";
-import {convertPropertyDeclaration} from "./converter/plugins/convertPropertyDeclaration";
-import {convertMethodSignature} from "./converter/plugins/convertMethodSignature";
-import {convertMethodDeclaration} from "./converter/plugins/convertMethodDeclaration";
-import {convertConstructorDeclaration} from "./converter/plugins/convertConstructorDeclaration";
-import {convertFunctionType} from "./converter/plugins/convertFunctionType";
-import {convertLiteralType} from "./converter/plugins/convertLiteralType";
-import {convertArrayType} from "./converter/plugins/convertArrayType";
-import {convertReadonlyArrayType} from "./converter/plugins/convertReadonlyArrayType";
-import {convertTypeAliasDeclaration} from "./converter/plugins/convertTypeAliasDeclaration";
-import {convertEnumDeclaration} from "./converter/plugins/convertEnumDeclaration";
-import {convertEnumMember} from "./converter/plugins/convertEnumMember";
-import {convertVariableStatement} from "./converter/plugins/convertVariableStatement";
-import {convertVariableDeclaration} from "./converter/plugins/convertVariableDeclaration";
-import {convertQualifiedName} from "./converter/plugins/convertQualifiedName";
-import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUnaryExpression";
-import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType";
-import {convertUnionType} from "./converter/plugins/convertUnionType";
-import {convertIntersectionType} from "./converter/plugins/convertIntersectionType";
-import {convertIndexedAccessType} from "./converter/plugins/convertIndexedAccessType";
-import {convertCallSignatureDeclaration} from "./converter/plugins/convertCallSignatureDeclaration";
-import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration";
-import {convertTypePredicate} from "./converter/plugins/convertTypePredicate";
-import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin";
-import {convertTypeOperator} from "./converter/plugins/convertTypeOperator";
-import {convertImportType} from "./converter/plugins/convertImportType";
-import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression";
-import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin";
-import {InheritanceModifier} from "./converter/inheritanceModifier";
-import {convertMappedType} from "./converter/plugins/convertMappedType";
-import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin";
-import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo";
-import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin";
-import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration";
-import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin";
-import {convertTypeQuery} from "./converter/plugins/convertTypeQuery";
-import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin";
-import {convertLiteral} from "./converter/plugins/convertLiteral";
+import ts, {Node, Program} from "typescript";
+import {Configuration} from "./configuration/configuration.js";
+import {ConverterPlugin} from "./converter/plugin.js";
+import {NameResolver} from "./converter/nameResolver.js";
+import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin.js";
+import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin.js";
+import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin.js";
+import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin.js";
+import {convertPrimitive} from "./converter/plugins/convertPrimitive.js";
+import {createTypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin.js";
+import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration.js";
+import {convertModuleBlock} from "./converter/plugins/convertModuleBlock.js";
+import {convertInterfaceDeclaration} from "./converter/plugins/convertInterfaceDeclaration.js";
+import {convertClassDeclaration} from "./converter/plugins/convertClassDeclaration.js";
+import {convertTypeParameterDeclaration} from "./converter/plugins/convertTypeParameterDeclaration.js";
+import {convertParameterDeclaration} from "./converter/plugins/convertParameterDeclaration.js";
+import {convertTypeReference} from "./converter/plugins/convertTypeReference.js";
+import {convertHeritageClause} from "./converter/plugins/convertHeritageClause.js";
+import {convertExpressionWithTypeArguments} from "./converter/plugins/convertExpressionWithTypeArguments.js";
+import {convertPropertySignature} from "./converter/plugins/convertPropertySignature.js";
+import {convertPropertyDeclaration} from "./converter/plugins/convertPropertyDeclaration.js";
+import {convertMethodSignature} from "./converter/plugins/convertMethodSignature.js";
+import {convertMethodDeclaration} from "./converter/plugins/convertMethodDeclaration.js";
+import {convertConstructorDeclaration} from "./converter/plugins/convertConstructorDeclaration.js";
+import {convertFunctionType} from "./converter/plugins/convertFunctionType.js";
+import {convertLiteralType} from "./converter/plugins/convertLiteralType.js";
+import {convertArrayType} from "./converter/plugins/convertArrayType.js";
+import {convertReadonlyArrayType} from "./converter/plugins/convertReadonlyArrayType.js";
+import {convertTypeAliasDeclaration} from "./converter/plugins/convertTypeAliasDeclaration.js";
+import {convertEnumDeclaration} from "./converter/plugins/convertEnumDeclaration.js";
+import {convertEnumMember} from "./converter/plugins/convertEnumMember.js";
+import {convertVariableStatement} from "./converter/plugins/convertVariableStatement.js";
+import {convertVariableDeclaration} from "./converter/plugins/convertVariableDeclaration.js";
+import {convertQualifiedName} from "./converter/plugins/convertQualifiedName.js";
+import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUnaryExpression.js";
+import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType.js";
+import {convertUnionType} from "./converter/plugins/convertUnionType.js";
+import {convertIntersectionType} from "./converter/plugins/convertIntersectionType.js";
+import {convertIndexedAccessType} from "./converter/plugins/convertIndexedAccessType.js";
+import {convertCallSignatureDeclaration} from "./converter/plugins/convertCallSignatureDeclaration.js";
+import {convertFunctionDeclaration} from "./converter/plugins/convertFunctionDeclaration.js";
+import {convertTypePredicate} from "./converter/plugins/convertTypePredicate.js";
+import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin.js";
+import {convertTypeOperator} from "./converter/plugins/convertTypeOperator.js";
+import {convertImportType} from "./converter/plugins/convertImportType.js";
+import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression.js";
+import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin.js";
+import {InheritanceModifier} from "./converter/inheritanceModifier.js";
+import {convertMappedType} from "./converter/plugins/convertMappedType.js";
+import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin.js";
+import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
+import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin.js";
+import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration.js";
+import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin.js";
+import {convertTypeQuery} from "./converter/plugins/convertTypeQuery.js";
+import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
+import {convertLiteral} from "./converter/plugins/convertLiteral.js";
 
-const hasKind = (kind: SyntaxKind) => (node: Node) => node.kind === kind
+const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
 export const createPlugins = (
     configuration: Configuration,
@@ -79,19 +79,19 @@ export const createPlugins = (
     createTypeLiteralPlugin(nameResolvers),
     createStringUnionTypePlugin(nameResolvers),
 
-    convertPrimitive(hasKind(SyntaxKind.AnyKeyword), () => "Any?"),
-    convertPrimitive(hasKind(SyntaxKind.UnknownKeyword), () => "Any?"),
-    convertPrimitive(hasKind(SyntaxKind.UndefinedKeyword), () => "Nothing?"),
-    convertPrimitive(hasKind(SyntaxKind.NullKeyword), () => "Nothing?"),
-    convertPrimitive(hasKind(SyntaxKind.ObjectKeyword), () => "Any"),
-    convertPrimitive(hasKind(SyntaxKind.StringKeyword), () => "String"),
-    convertPrimitive(hasKind(SyntaxKind.NumberKeyword), () => "Double"),
-    convertPrimitive(hasKind(SyntaxKind.BooleanKeyword), () => "Boolean"),
-    convertPrimitive(hasKind(SyntaxKind.FalseKeyword), () => "Boolean"),
-    convertPrimitive(hasKind(SyntaxKind.TrueKeyword), () => "Boolean"),
-    convertPrimitive(hasKind(SyntaxKind.VoidKeyword), () => "Unit"),
-    convertPrimitive(hasKind(SyntaxKind.NeverKeyword), () => "Nothing"),
-    convertPrimitive(hasKind(SyntaxKind.SymbolKeyword), () => "js.core.Symbol"),
+    convertPrimitive(hasKind(ts.SyntaxKind.AnyKeyword), () => "Any?"),
+    convertPrimitive(hasKind(ts.SyntaxKind.UnknownKeyword), () => "Any?"),
+    convertPrimitive(hasKind(ts.SyntaxKind.UndefinedKeyword), () => "Nothing?"),
+    convertPrimitive(hasKind(ts.SyntaxKind.NullKeyword), () => "Nothing?"),
+    convertPrimitive(hasKind(ts.SyntaxKind.ObjectKeyword), () => "Any"),
+    convertPrimitive(hasKind(ts.SyntaxKind.StringKeyword), () => "String"),
+    convertPrimitive(hasKind(ts.SyntaxKind.NumberKeyword), () => "Double"),
+    convertPrimitive(hasKind(ts.SyntaxKind.BooleanKeyword), () => "Boolean"),
+    convertPrimitive(hasKind(ts.SyntaxKind.FalseKeyword), () => "Boolean"),
+    convertPrimitive(hasKind(ts.SyntaxKind.TrueKeyword), () => "Boolean"),
+    convertPrimitive(hasKind(ts.SyntaxKind.VoidKeyword), () => "Unit"),
+    convertPrimitive(hasKind(ts.SyntaxKind.NeverKeyword), () => "Nothing"),
+    convertPrimitive(hasKind(ts.SyntaxKind.SymbolKeyword), () => "js.core.Symbol"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),
 

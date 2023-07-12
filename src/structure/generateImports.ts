@@ -1,4 +1,4 @@
-import {Configuration} from "../configuration/configuration";
+import {Configuration} from "../configuration/configuration.js";
 
 export function generateImports(
     outputFileName: string,

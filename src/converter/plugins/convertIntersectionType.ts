@@ -1,6 +1,6 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import {createSimplePlugin} from "../plugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const convertIntersectionType = createSimplePlugin((node, context, render) => {
     if (!ts.isIntersectionTypeNode(node)) return null

@@ -1,6 +1,6 @@
-import ts, {SyntaxKind} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import ts from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export const convertVariableStatement = createSimplePlugin((node, context, render) => {
     if (!ts.isVariableStatement(node)) return null
@@ -9,7 +9,7 @@ export const convertVariableStatement = createSimplePlugin((node, context, rende
     checkCoverageService?.cover(node)
     checkCoverageService?.cover(node.declarationList)
 
-    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
     return node.declarationList.declarations

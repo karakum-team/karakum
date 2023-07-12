@@ -1,7 +1,7 @@
 import ts, {ModuleDeclaration} from "typescript";
-import {Configuration, NamespaceStrategy} from "../../configuration/configuration";
-import {StructureItem} from "../structure";
-import {moduleNameToPackage} from "../module/moduleNameToPackage";
+import {Configuration, NamespaceStrategy} from "../../configuration/configuration.js";
+import {StructureItem} from "../structure.js";
+import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
 
 export interface NamespaceInfoItem extends StructureItem {
     name: string

@@ -1,9 +1,9 @@
-import ts, {MappedTypeNode, SyntaxKind, TypeLiteralNode, TypeReferenceNode} from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {ifPresent} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin";
-import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin";
+import ts, {MappedTypeNode, TypeLiteralNode, TypeReferenceNode} from "typescript";
+import {createSimplePlugin} from "../plugin.js";
+import {ifPresent} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin.js";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -13,10 +13,10 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const exportModifier = node.modifiers?.find(it => it.kind === SyntaxKind.ExportKeyword)
+    const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
 
-    const declareModifier = node.modifiers?.find(it => it.kind === SyntaxKind.DeclareKeyword)
+    const declareModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.DeclareKeyword)
     declareModifier && checkCoverageService?.cover(declareModifier)
 
     const name = render(node.name)

@@ -1,13 +1,13 @@
-import ts, {Declaration, NamedDeclaration, Program, SignatureDeclaration, SymbolTable, EmitHint, ScriptTarget} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {DeepMap} from "../../utils/deepMap";
+import ts, {Declaration, NamedDeclaration, Program, SignatureDeclaration, SymbolTable} from "typescript";
+import {ConverterPlugin} from "../plugin.js";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {DeepMap} from "../../utils/deepMap.js";
 
 export const declarationMergingServiceKey = Symbol()
 
 export class DeclarationMergingService {
-    private readonly virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
+    private readonly virtualSourceFile = ts.createSourceFile("virtual.d.ts", "", ts.ScriptTarget.Latest)
     private readonly printer = ts.createPrinter({
         removeComments: true,
         newLine: ts.NewLineKind.LineFeed,
@@ -103,7 +103,7 @@ export class DeclarationMergingService {
     private printNode(node: ts.Node) {
         const sourceFile = node.getSourceFile() ?? this.virtualSourceFile
 
-        return this.printer.printNode(EmitHint.Unspecified, node, sourceFile)
+        return this.printer.printNode(ts.EmitHint.Unspecified, node, sourceFile)
     }
 }
 

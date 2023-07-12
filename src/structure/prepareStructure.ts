@@ -1,9 +1,9 @@
 import ts, {Node} from "typescript";
-import {Configuration} from "../configuration/configuration";
-import {InputStructureItem} from "./structure";
-import {applyPackageNameMapper} from "./package/applyPackageNameMapper";
-import {applyModuleNameMapper} from "./module/applyModuleNameMapper";
-import {packageToFileName} from "./package/packageToFileName";
+import {Configuration} from "../configuration/configuration.js";
+import {InputStructureItem} from "./structure.js";
+import {applyPackageNameMapper} from "./package/applyPackageNameMapper.js";
+import {applyModuleNameMapper} from "./module/applyModuleNameMapper.js";
+import {packageToFileName} from "./package/packageToFileName.js";
 
 interface TopLevelMatch {
     name: string,

@@ -1,6 +1,6 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export const convertArrayType = createSimplePlugin((node, context, render) => {
     if (!ts.isArrayTypeNode(node)) return null

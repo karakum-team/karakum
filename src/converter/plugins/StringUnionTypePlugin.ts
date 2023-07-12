@@ -1,9 +1,9 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {escapeIdentifier, identifier} from "../../utils/strings";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {ConverterContext} from "../context";
-import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin";
-import {defaultNameResolvers} from "../defaultNameResolvers";
+import {escapeIdentifier, identifier} from "../../utils/strings.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {ConverterContext} from "../context.js";
+import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
+import {defaultNameResolvers} from "../defaultNameResolvers.js";
 
 export function isStringUnionType(node: ts.Node): node is UnionTypeNode {
     return (

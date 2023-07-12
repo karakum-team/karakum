@@ -1,10 +1,10 @@
-import {Configuration} from "../../configuration/configuration";
+import {Configuration} from "../../configuration/configuration.js";
 import path from "path";
-import {StructureItem} from "../structure";
-import {removePrefix} from "../removePrefix";
-import {moduleNameToPackage} from "../module/moduleNameToPackage";
-import {extractModuleName} from "../module/extractModuleName";
-import {camelize} from "../../utils/strings";
+import {StructureItem} from "../structure.js";
+import {removePrefix} from "../removePrefix.js";
+import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
+import {extractModuleName} from "../module/extractModuleName.js";
+import {camelize} from "../../utils/strings.js";
 
 export interface SourceFileInfoItem extends StructureItem {
 }

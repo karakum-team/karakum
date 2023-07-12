@@ -1,8 +1,8 @@
-import {ConverterPlugin} from "../plugin";
+import {ConverterPlugin} from "../plugin.js";
 import ts, {Node} from "typescript";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {InheritanceModifier} from "../inheritanceModifier";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {InheritanceModifier} from "../inheritanceModifier.js";
 
 export const inheritanceModifierServiceKey = Symbol()
 

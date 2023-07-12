@@ -1,14 +1,14 @@
-import ts, {Node, SyntaxKind, TypeNode, UnionTypeNode} from "typescript";
-import {ConverterPlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin";
+import ts, {Node, TypeNode, UnionTypeNode} from "typescript";
+import {ConverterPlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
-const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === SyntaxKind.NullKeyword
-const isUndefined = (type: Node) => type.kind === SyntaxKind.UndefinedKeyword
-const isUnknown = (type: Node) => type.kind === SyntaxKind.UnknownKeyword
-const isAny = (type: Node) => type.kind === SyntaxKind.AnyKeyword
+const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
+const isUndefined = (type: Node) => type.kind === ts.SyntaxKind.UndefinedKeyword
+const isUnknown = (type: Node) => type.kind === ts.SyntaxKind.UnknownKeyword
+const isAny = (type: Node) => type.kind === ts.SyntaxKind.AnyKeyword
 
 export const isNullableType = (type: Node) => isNull(type) || isUndefined(type)
 

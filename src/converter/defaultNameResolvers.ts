@@ -1,23 +1,23 @@
-import {NameResolver} from "./nameResolver";
-import {resolveFunctionParameterName} from "./nameResolvers/resolveFunctionParameterName";
-import {resolveFunctionReturnTypeName} from "./nameResolvers/resolveFunctionReturnTypeName";
-import {resolveFunctionTypeAliasParameterName} from "./nameResolvers/resolveFunctionTypeAliasParameterName";
-import {resolveCallSignatureParameterName} from "./nameResolvers/resolveCallSignatureParameterName";
-import {resolveConstructorParameterName} from "./nameResolvers/resolveConstructorParameterName";
-import {resolveClassMethodParameterName} from "./nameResolvers/resolveClassMethodParameterName";
-import {resolveClassMethodReturnTypeName} from "./nameResolvers/resolveClassMethodReturnTypeName";
-import {resolveInterfaceMethodParameterName} from "./nameResolvers/resolveInterfaceMethodParameterName";
-import {resolveInterfaceMethodReturnTypeName} from "./nameResolvers/resolveInterfaceMethodReturnTypeName";
-import {resolveTypeAliasPropertyName} from "./nameResolvers/resolveTypeAliasPropertyName";
-import {resolveParenthesizedTypeName} from "./nameResolvers/resolveParenthesizedTypeName";
-import {resolveClassPropertyName} from "./nameResolvers/resolveClassPropertyName";
-import {resolveInterfacePropertyName} from "./nameResolvers/resolveInterfacePropertyName";
-import {resolveClassMethodCallbackParameterName} from "./nameResolvers/resolveClassMethodCallbackParameterName";
-import {resolveInterfaceMethodCallbackParameterName} from "./nameResolvers/resolveInterfaceMethodCallbackParameterName";
-import {resolveClassPropertyCallbackParameterName} from "./nameResolvers/resolveClassPropertyCallbackParameterName";
+import {NameResolver} from "./nameResolver.js";
+import {resolveFunctionParameterName} from "./nameResolvers/resolveFunctionParameterName.js";
+import {resolveFunctionReturnTypeName} from "./nameResolvers/resolveFunctionReturnTypeName.js";
+import {resolveFunctionTypeAliasParameterName} from "./nameResolvers/resolveFunctionTypeAliasParameterName.js";
+import {resolveCallSignatureParameterName} from "./nameResolvers/resolveCallSignatureParameterName.js";
+import {resolveConstructorParameterName} from "./nameResolvers/resolveConstructorParameterName.js";
+import {resolveClassMethodParameterName} from "./nameResolvers/resolveClassMethodParameterName.js";
+import {resolveClassMethodReturnTypeName} from "./nameResolvers/resolveClassMethodReturnTypeName.js";
+import {resolveInterfaceMethodParameterName} from "./nameResolvers/resolveInterfaceMethodParameterName.js";
+import {resolveInterfaceMethodReturnTypeName} from "./nameResolvers/resolveInterfaceMethodReturnTypeName.js";
+import {resolveTypeAliasPropertyName} from "./nameResolvers/resolveTypeAliasPropertyName.js";
+import {resolveParenthesizedTypeName} from "./nameResolvers/resolveParenthesizedTypeName.js";
+import {resolveClassPropertyName} from "./nameResolvers/resolveClassPropertyName.js";
+import {resolveInterfacePropertyName} from "./nameResolvers/resolveInterfacePropertyName.js";
+import {resolveClassMethodCallbackParameterName} from "./nameResolvers/resolveClassMethodCallbackParameterName.js";
+import {resolveInterfaceMethodCallbackParameterName} from "./nameResolvers/resolveInterfaceMethodCallbackParameterName.js";
+import {resolveClassPropertyCallbackParameterName} from "./nameResolvers/resolveClassPropertyCallbackParameterName.js";
 import {
     resolveInterfacePropertyCallbackParameterName
-} from "./nameResolvers/resolveInterfacePropertyCallbackParameterName";
+} from "./nameResolvers/resolveInterfacePropertyCallbackParameterName.js";
 
 export const defaultNameResolvers: NameResolver[] = [
     resolveFunctionParameterName,

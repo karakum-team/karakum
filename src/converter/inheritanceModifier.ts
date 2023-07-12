@@ -1,4 +1,4 @@
-import {ConverterContext} from "./context";
+import {ConverterContext} from "./context.js";
 import {Node} from "typescript"
 
 export type InheritanceModifier<TNode extends Node = Node> =

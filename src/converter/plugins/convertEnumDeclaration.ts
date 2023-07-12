@@ -1,7 +1,7 @@
 import ts from "typescript";
-import {createSimplePlugin} from "../plugin";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
-import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin";
+import {createSimplePlugin} from "../plugin.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 
 export const convertEnumDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumDeclaration(node)) return null

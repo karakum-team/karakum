@@ -1,6 +1,6 @@
 import ts from "typescript";
-import {NameResolver} from "../nameResolver";
-import {capitalize} from "../../utils/strings";
+import {NameResolver} from "../nameResolver.js";
+import {capitalize} from "../../utils/strings.js";
 
 export const resolveClassMethodReturnTypeName: NameResolver = (node) => {
     if (!node.parent) return null

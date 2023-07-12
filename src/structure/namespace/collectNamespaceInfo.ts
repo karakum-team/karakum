@@ -1,9 +1,9 @@
 import ts, {SourceFile, Statement} from "typescript";
-import {Configuration} from "../../configuration/configuration";
-import {traverse} from "../../utils/traverse";
-import {createNamespaceInfoItem, NamespaceInfoItem} from "./createNamespaceInfoItem";
-import {InputStructureItem} from "../structure";
-import {extractModuleName} from "../module/extractModuleName";
+import {Configuration} from "../../configuration/configuration.js";
+import {traverse} from "../../utils/traverse.js";
+import {createNamespaceInfoItem, NamespaceInfoItem} from "./createNamespaceInfoItem.js";
+import {InputStructureItem} from "../structure.js";
+import {extractModuleName} from "../module/extractModuleName.js";
 
 interface InputNamespaceInfoItem extends NamespaceInfoItem, InputStructureItem {
 }

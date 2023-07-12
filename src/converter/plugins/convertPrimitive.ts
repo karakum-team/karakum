@@ -1,7 +1,7 @@
-import {ConverterPlugin, createSimplePlugin} from "../plugin";
+import {ConverterPlugin, createSimplePlugin} from "../plugin.js";
 import {Node} from "typescript";
-import {Render} from "../render";
-import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin";
+import {Render} from "../render.js";
+import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 
 export function convertPrimitive<TNode extends Node = Node>(
     predicate: (node: Node) => node is TNode,

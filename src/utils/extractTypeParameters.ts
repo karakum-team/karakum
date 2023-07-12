@@ -1,6 +1,6 @@
 import ts, {Program, ConditionalTypeNode} from "typescript";
-import {traverse} from "./traverse";
-import {findClosest} from "./findClosest";
+import {traverse} from "./traverse.js";
+import {findClosest} from "./findClosest.js";
 
 export function extractTypeParameters(node: ts.Node, program: Program | undefined): string[] {
     const result: string[] = []

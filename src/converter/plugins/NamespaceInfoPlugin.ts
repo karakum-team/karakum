@@ -1,10 +1,10 @@
-import {ConverterPlugin} from "../plugin";
+import {ConverterPlugin} from "../plugin.js";
 import {ModuleDeclaration, Node} from "typescript";
-import {ConverterContext} from "../context";
-import {Render} from "../render";
-import {NamespaceStrategy} from "../../configuration/configuration";
-import {NamespaceInfo} from "../../structure/namespace/collectNamespaceInfo";
-import {extractNamespaceName} from "../../structure/namespace/createNamespaceInfoItem";
+import {ConverterContext} from "../context.js";
+import {Render} from "../render.js";
+import {NamespaceStrategy} from "../../configuration/configuration.js";
+import {NamespaceInfo} from "../../structure/namespace/collectNamespaceInfo.js";
+import {extractNamespaceName} from "../../structure/namespace/createNamespaceInfoItem.js";
 
 export const namespaceInfoServiceKey = Symbol()
 

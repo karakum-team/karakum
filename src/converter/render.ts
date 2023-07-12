@@ -1,8 +1,8 @@
-import ts, {SyntaxKind, Node, TypeNode} from "typescript";
-import {ConverterContext} from "./context";
-import {ConverterPlugin} from "./plugin";
-import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugin";
-import {isPossiblyNullableType} from "./plugins/NullableUnionTypePlugin";
+import ts, {Node, TypeNode} from "typescript";
+import {ConverterContext} from "./context.js";
+import {ConverterPlugin} from "./plugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugin.js";
+import {isPossiblyNullableType} from "./plugins/NullableUnionTypePlugin.js";
 
 export type Render<TNode extends Node = Node> = (node: TNode) => string
 
@@ -11,16 +11,16 @@ export function ifPresent(part: string | null | undefined, render: (part: string
 }
 
 const primitiveKinds = new Set([
-    SyntaxKind.AnyKeyword,
-    SyntaxKind.UnknownKeyword,
-    SyntaxKind.UndefinedKeyword,
-    SyntaxKind.ObjectKeyword,
-    SyntaxKind.StringKeyword,
-    SyntaxKind.NumberKeyword,
-    SyntaxKind.BooleanKeyword,
-    SyntaxKind.VoidKeyword,
-    SyntaxKind.NeverKeyword,
-    SyntaxKind.SymbolKeyword,
+    ts.SyntaxKind.AnyKeyword,
+    ts.SyntaxKind.UnknownKeyword,
+    ts.SyntaxKind.UndefinedKeyword,
+    ts.SyntaxKind.ObjectKeyword,
+    ts.SyntaxKind.StringKeyword,
+    ts.SyntaxKind.NumberKeyword,
+    ts.SyntaxKind.BooleanKeyword,
+    ts.SyntaxKind.VoidKeyword,
+    ts.SyntaxKind.NeverKeyword,
+    ts.SyntaxKind.SymbolKeyword,
 ])
 
 function isPrimitiveType(node: Node) {
