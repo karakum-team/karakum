@@ -24,7 +24,7 @@
   "dependencies": {
     "glob": "^10.3.3",
     "minimatch": "^9.0.3",
-    "yargs": "^17.7.1"
+    "yargs": "^17.7.2"
   },
   "peerDependencies": {
     "typescript": "^5.1.3"
