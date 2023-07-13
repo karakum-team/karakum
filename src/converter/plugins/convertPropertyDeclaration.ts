@@ -29,7 +29,8 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
         }
         name = escapeIdentifier(node.name.text)
     } else if (ts.isNumericLiteral(node.name)) {
-        name = escapeIdentifier(node.name.text)
+        // TODO: generate inline getter
+        return null
     } else {
         name = escapeIdentifier(render(node.name))
     }

@@ -12,6 +12,7 @@ package sandbox.base.property
 external interface InterfaceWithTrickyField {
 var _hasFetcherDoneAnything: Boolean?
 /* " _hasFetcherDoneAnything "?: boolean; */
+/* "123test"?: boolean; */
 }
     
     

@@ -29,7 +29,8 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
         }
         name = escapeIdentifier(node.name.text)
     } else if (ts.isNumericLiteral(node.name)) {
-        name = escapeIdentifier(node.name.text)
+        // TODO: generate inline getter
+        return null
     } else {
         name = escapeIdentifier(render(node.name))
     }

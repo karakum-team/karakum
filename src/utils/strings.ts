@@ -14,7 +14,10 @@ export function camelize(string: string) {
 }
 
 export function isValidIdentifier(string: string) {
-    return /^[\w$]+$/.test(string)
+    return (
+        /^[\w$]+$/.test(string)
+        && !/^\d/.test(string)
+    )
 }
 
 export function escapeIdentifier(string: string) {
