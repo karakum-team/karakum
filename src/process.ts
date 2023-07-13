@@ -1,6 +1,6 @@
 import {PartialConfiguration} from "./configuration/configuration.js";
 import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.js";
-import glob from "glob";
+import {glob} from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "node:path";
 import nodeProcess from "node:process";
@@ -11,7 +11,7 @@ import {createPlugins} from "./defaultPlugins.js";
 import {CommentsPlugin} from "./converter/plugins/CommentsPlugin.js";
 import {prepareStructure} from "./structure/prepareStructure.js";
 import {traverse} from "./utils/traverse.js";
-import minimatch from "minimatch";
+import {minimatch} from "minimatch";
 import {createTargetFile} from "./structure/createTargetFile.js";
 import {createRender} from "./converter/render.js";
 import {NameResolver} from "./converter/nameResolver.js";

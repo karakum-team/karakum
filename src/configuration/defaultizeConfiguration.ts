@@ -1,4 +1,4 @@
-import glob from "glob";
+import {glob} from "glob";
 import path from "node:path";
 import {PartialConfiguration, Configuration} from "./configuration.js";
 import {commonPrefix} from "../utils/fileName.js";

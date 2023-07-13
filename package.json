@@ -22,8 +22,8 @@
     "test": "ts-node --esm test/sandbox/test.ts"
   },
   "dependencies": {
-    "glob": "^9.3.4",
-    "minimatch": "^8.0.3",
+    "glob": "^10.3.3",
+    "minimatch": "^9.0.3",
     "yargs": "^17.7.1"
   },
   "peerDependencies": {
