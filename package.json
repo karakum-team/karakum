@@ -26,9 +26,6 @@
     "minimatch": "^9.0.3",
     "yargs": "^17.7.2"
   },
-  "peerDependencies": {
-    "typescript": "^5.1.3"
-  },
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/minimatch": "^5.1.2",
@@ -36,5 +33,8 @@
     "@types/yargs": "^17.0.22",
     "rimraf": "^4.1.2",
     "ts-node": "^10.9.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.1.6"
   }
 }
