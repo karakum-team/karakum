@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs'
+import process from 'node:process'
 import {hideBin} from 'yargs/helpers'
 import {process as mainProcess} from "./process.js";
 

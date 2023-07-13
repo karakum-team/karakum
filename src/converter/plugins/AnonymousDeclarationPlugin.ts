@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import ts, {Node} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";

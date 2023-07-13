@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import {Configuration} from "../../configuration/configuration.js";
 import {applyMapper} from "../../utils/fileName.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";

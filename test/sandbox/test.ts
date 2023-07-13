@@ -1,6 +1,6 @@
 import {process} from "../../src/process.js";
-import path from "path";
-import url from "url";
+import path from "node:path";
+import url from "node:url";
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 

@@ -1,5 +1,5 @@
 import {Configuration} from "../../configuration/configuration.js";
-import path from "path";
+import path from "node:path";
 import {StructureItem} from "../structure.js";
 import {removePrefix} from "../removePrefix.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
