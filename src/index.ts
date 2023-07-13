@@ -69,4 +69,4 @@ export type {StructureItem} from "./structure/structure.js"
 export {createSourceFileInfoItem, type SourceFileInfoItem} from "./structure/sourceFile/createSourceFileInfoItem.js"
 export {createNamespaceInfoItem, type NamespaceInfoItem} from "./structure/namespace/createNamespaceInfoItem.js"
 
-export {process} from "./process.js"
+export {generate} from "./generate.js"

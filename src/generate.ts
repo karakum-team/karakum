@@ -3,7 +3,7 @@ import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.j
 import {glob} from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "node:path";
-import nodeProcess from "node:process";
+import process from "node:process";
 import fs from "node:fs";
 import {createContext} from "./converter/context.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
@@ -45,7 +45,7 @@ async function loadExtensions<T>(
     return extensions
 }
 
-export async function process(partialConfiguration: PartialConfiguration) {
+export async function generate(partialConfiguration: PartialConfiguration) {
     const configuration = defaultizeConfiguration(partialConfiguration)
 
     const {
@@ -111,10 +111,10 @@ export async function process(partialConfiguration: PartialConfiguration) {
     fs.mkdirSync(output, {recursive: true})
 
     const absoluteInput = input
-        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
+        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(process.cwd(), pattern))
 
     const absoluteIgnoreInput = ignoreInput
-        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(nodeProcess.cwd(), pattern))
+        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(process.cwd(), pattern))
 
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {

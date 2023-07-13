@@ -1,10 +1,10 @@
-import {process} from "../../src/process.js";
 import path from "node:path";
 import url from "node:url";
+import {generate} from "../../src/generate.js";
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-process({
+generate({
     input: path.resolve(dirname, "base/lib/**"),
     output: path.resolve(dirname, "base/generated"),
     libraryName: "sandbox-base",
@@ -12,7 +12,7 @@ process({
 })
     .catch(error => console.error(error))
 
-process({
+generate({
     input: path.resolve(dirname, "top-level/lib/**"),
     output: path.resolve(dirname, "top-level/generated"),
     libraryName: "sandbox-top-level",
@@ -24,7 +24,7 @@ process({
 })
     .catch(error => console.error(error))
 
-process({
+generate({
     input: path.resolve(dirname, "namespace/lib/**"),
     output: path.resolve(dirname, "namespace/generated"),
     libraryName: "sandbox-namespace",
