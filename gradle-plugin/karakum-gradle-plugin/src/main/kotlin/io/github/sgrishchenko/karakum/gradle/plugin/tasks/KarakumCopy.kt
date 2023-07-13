@@ -12,6 +12,8 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
+import kotlin.io.path.exists
+import kotlin.io.path.writeText
 import kotlin.streams.toList
 
 
@@ -77,6 +79,17 @@ constructor(
                         .map(Path::toString)
                 )
             }
+        }
+
+        val extensionPackageJson = outputExtensions.asFile.get().toPath().resolve("package.json")
+
+        if (!extensionPackageJson.exists()) {
+            extensionPackageJson.writeText("""
+                {
+                    "private": true,
+                    "type": "module"
+                }
+            """.trimIndent())
         }
     }
 }

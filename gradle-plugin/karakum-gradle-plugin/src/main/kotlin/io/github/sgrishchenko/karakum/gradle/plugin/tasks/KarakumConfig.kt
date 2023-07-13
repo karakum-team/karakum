@@ -76,11 +76,29 @@ constructor(
     }
 
     private fun replaceExtensions(configNode: JsonNode) {
+        val extensionPath = outputExtensions.asFile.get().absolutePath
+
         configNode as ObjectNode
-        configNode.put("plugins", outputExtensions.asFile.get().absolutePath + "/plugins/*.js")
-        configNode.put("annotations", outputExtensions.asFile.get().absolutePath + "/annotations/*.js")
-        configNode.put("nameResolvers", outputExtensions.asFile.get().absolutePath + "/nameResolvers/*.js")
-        configNode.put("inheritanceModifiers", outputExtensions.asFile.get().absolutePath + "/inheritanceModifiers/*.js")
+        configNode
+            .withArray("plugins")
+            .add("$extensionPath/plugins/*.js")
+            .add("$extensionPath/plugins/*.mjs")
+            .add("$extensionPath/plugins/*.cjs")
+        configNode
+            .withArray("annotations")
+            .add("$extensionPath/annotations/*.js")
+            .add("$extensionPath/annotations/*.mjs")
+            .add("$extensionPath/annotations/*.cjs")
+        configNode
+            .withArray("nameResolvers")
+            .add("$extensionPath/nameResolvers/*.js")
+            .add("$extensionPath/nameResolvers/*.mjs")
+            .add("$extensionPath/nameResolvers/*.cjs")
+        configNode
+            .withArray("inheritanceModifiers")
+            .add("$extensionPath/inheritanceModifiers/*.js")
+            .add("$extensionPath/inheritanceModifiers/*.mjs")
+            .add("$extensionPath/inheritanceModifiers/*.cjs")
     }
 
     private fun replaceOutput(configNode: JsonNode) {
