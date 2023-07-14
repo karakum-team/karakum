@@ -51,8 +51,8 @@ ${accessors}
         `
     }
 
-    if (isStringUnionType(node.type)) {
-        return convertStringUnionType(node.type, name, context)
+    if (isStringUnionType(node.type, context)) {
+        return convertStringUnionType(node.type, name, context).declaration
     }
 
     if (

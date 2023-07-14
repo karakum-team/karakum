@@ -4,13 +4,27 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {defaultNameResolvers} from "../defaultNameResolvers.js";
+import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
 
-export function isStringUnionType(node: ts.Node): node is UnionTypeNode {
+export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
         ts.isUnionTypeNode(node)
-        && node.types.every(type => (
+        && flatUnionTypes(node, context).every(type => (
             ts.isLiteralTypeNode(type)
             && ts.isStringLiteral(type.literal)
+        ))
+    )
+}
+
+export function isNullableStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
+    return (
+        ts.isUnionTypeNode(node)
+        && flatUnionTypes(node, context).every(type => (
+            isNullableType(type)
+            || (
+                ts.isLiteralTypeNode(type)
+                && ts.isStringLiteral(type.literal)
+            )
         ))
     )
 }
@@ -19,7 +33,12 @@ export const convertStringUnionType = (node: UnionTypeNode, name: string, contex
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    const entries = node.types
+    const types = flatUnionTypes(node, context)
+
+    const nonNullableTypes = types.filter(type => !isNullableType(type))
+    const nullableTypes = types.filter(type => isNullableType(type))
+
+    const entries = nonNullableTypes
         .filter((type): type is LiteralTypeNode => ts.isLiteralTypeNode(type))
         .map(type => {
             checkCoverageService?.cover(type)
@@ -46,7 +65,7 @@ export const convertStringUnionType = (node: UnionTypeNode, name: string, contex
         .map(([key, value]) => `${key}: '${value}'`)
         .join(", ")
 
-    return `
+    const declaration = `
 @Suppress(
     "NAME_CONTAINS_ILLEGAL_CHARS",
     "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
@@ -58,18 +77,25 @@ ${body}
 }
 }
     `
+
+    const nullable = nullableTypes.length > 0
+
+    return {
+        declaration,
+        nullable,
+    }
 };
 
 export const createStringUnionTypePlugin = createAnonymousDeclarationPlugin(
     defaultNameResolvers,
     (node, context) => {
-        if (!isStringUnionType(node)) return null
+        if (!isNullableStringUnionType(node, context)) return null
 
         const name = context.resolveName(node)
 
-        const declaration = convertStringUnionType(node, name, context)
+        const {declaration, nullable} = convertStringUnionType(node, name, context)
 
-        const reference = name
+        const reference = nullable ? `${name}?` : name
 
         return {name, declaration, reference};
     }

@@ -1,8 +1,8 @@
 import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
-import {isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
-import {isStringUnionType} from "./StringUnionTypePlugin.js";
+import {flatUnionTypes, isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
+import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
 import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
@@ -156,7 +156,7 @@ const expandUnions = (
             const signature = currentSignatures[signatureIndex]
             const {parameter, type, optional} = signature[parameterIndex]
 
-            if (type && isStringUnionType(type)) continue
+            if (type && isNullableStringUnionType(type, context)) continue
 
             if (type && ts.isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
@@ -165,7 +165,9 @@ const expandUnions = (
 
                 const nullable = isNullableUnionType(type, context)
 
-                for (const subtype of type.types) {
+                const types = flatUnionTypes(type, context)
+
+                for (const subtype of types) {
                     if (isNullableType(subtype)) {
                         checkCoverageService?.deepCover(type)
                         continue

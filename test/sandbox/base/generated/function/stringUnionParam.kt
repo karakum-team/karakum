@@ -15,6 +15,8 @@ external fun getGPUInfo2(infoType: (GetGPUInfo2InfoType)): Any?
 external fun getGPUInfo3(infoType: ((GetGPUInfo3InfoType))): Any?
 
 external fun getGPUInfo4(infoType: (((GetGPUInfo4InfoType)))): Any?
+
+external fun setVibrancy(type: SetVibrancyType?): Unit
     
 @Suppress(
     "NAME_CONTAINS_ILLEGAL_CHARS",
@@ -67,6 +69,20 @@ sealed external interface GetGPUInfo4InfoType {
 companion object {
 val basic: GetGPUInfo4InfoType
 val complete: GetGPUInfo4InfoType
+}
+}
+    
+
+
+@Suppress(
+    "NAME_CONTAINS_ILLEGAL_CHARS",
+    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
+)
+@JsName("""(/*union*/{light: 'light', dark: 'dark'}/*union*/)""")
+sealed external interface SetVibrancyType {
+companion object {
+val light: SetVibrancyType
+val dark: SetVibrancyType
 }
 }
     

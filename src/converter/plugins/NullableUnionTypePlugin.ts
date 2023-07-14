@@ -4,6 +4,8 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {resolveParenthesizedType} from "../../utils/resolveParenthesizedType.js";
+import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
 const isUndefined = (type: Node) => type.kind === ts.SyntaxKind.UndefinedKeyword
@@ -25,7 +27,7 @@ export function isNullableUnionType(node: Node, context: ConverterContext): node
     return flatUnionTypes(node, context).some(type => isNullableType(type))
 }
 
-function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
+export function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
     let result: TypeNode[] = []
 
     for (const type of node.types) {
@@ -38,6 +40,14 @@ function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
                 result = result.concat(flatUnionTypes(resolvedType, context))
             } else {
                 result.push(type)
+            }
+        } else if (ts.isParenthesizedTypeNode(type)) {
+            const resolvedType = resolveParenthesizedType(type)
+
+            if (ts.isUnionTypeNode(resolvedType)) {
+                result = result.concat(flatUnionTypes(resolvedType, context))
+            } else {
+                result.push(resolvedType)
             }
         } else {
             result.push(type)
@@ -55,6 +65,8 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
+        if (isNullableStringUnionType(node, context)) return null
+
         if (this.coveredUnions.has(node)) return null
         this.coveredUnions.add(node)
 
