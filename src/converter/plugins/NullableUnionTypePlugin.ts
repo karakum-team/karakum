@@ -2,7 +2,7 @@ import ts, {Node, TypeNode, UnionTypeNode} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
-import {Render} from "../render.js";
+import {Render, renderResolvedNullable} from "../render.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {resolveParenthesizedType} from "../../utils/resolveParenthesizedType.js";
 import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
@@ -84,7 +84,7 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
 
             if (nonNullableTypes.length === 1) {
                 const nonNullableType = nonNullableTypes[0]
-                return `${next(nonNullableType)}?`
+                return renderResolvedNullable(nonNullableType, true, context, next)
             } else {
                 return `(${next(node)})?`
             }

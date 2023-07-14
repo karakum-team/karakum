@@ -8,5 +8,5 @@ package sandbox.base.importType
 
 
 
-external val DataRouterStateContext: React.Context</* import("@remix-run/router") */ RouterState?>
+external val DataRouterStateContext: React.Context<(/* import("@remix-run/router") */ RouterState)?>
     

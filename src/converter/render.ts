@@ -39,19 +39,24 @@ export function renderNullable(
 ) {
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    let isReallyNullable = false
-
     // handle double nullability
     const resolvedType = node && typeScriptService?.resolveType(node)
 
-    if (
+    const isReallyNullable = (
         isNullable
-        && resolvedType
+        && !!resolvedType
         && !isPossiblyNullableType(resolvedType, context)
-    ) {
-        isReallyNullable = true
-    }
+    )
 
+    return renderResolvedNullable(node, isReallyNullable, context, render)
+}
+
+export function renderResolvedNullable(
+    node: TypeNode | null | undefined,
+    isNullable: boolean,
+    context: ConverterContext,
+    render: Render,
+) {
     let type: string
 
     if (node) {
@@ -59,7 +64,7 @@ export function renderNullable(
 
         // wrap complex types in parentheses
         if (
-            isReallyNullable
+            isNullable
             && !isPrimitiveType(node)
             && !ts.isArrayTypeNode(node)
             && !ts.isTypeReferenceNode(node)
@@ -71,7 +76,7 @@ export function renderNullable(
         type = "Any? /* type isn't declared */"
     }
 
-    return `${type}${isReallyNullable ? "?" : ""}`
+    return `${type}${isNullable ? "?" : ""}`
 }
 
 export function createRender(context: ConverterContext, plugins: ConverterPlugin[]): Render {
