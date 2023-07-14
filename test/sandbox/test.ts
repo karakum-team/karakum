@@ -47,7 +47,7 @@ generate({
 
 generate({
     input: path.resolve(dirname, "bundle/lib/**"),
-    output: path.resolve(dirname, "namespace/generated/customBundle.kt"),
+    output: path.resolve(dirname, "bundle/generated/customBundle.kt"),
     libraryName: "sandbox-bundle",
     granularity: "bundle",
     verbose: true,
