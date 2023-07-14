@@ -5,12 +5,15 @@ export function capitalize(string: string) {
 }
 
 export function camelize(string: string) {
-    return string.replace(/([-_][A-Za-z])/g, group =>
-        group
-            .toUpperCase()
-            .replace("-", "")
-            .replace("_", "")
-    );
+    return string
+        .replace(/([-_][A-Za-z])/g, group =>
+            group
+                .toUpperCase()
+                .replace("-", "")
+                .replace("_", "")
+        )
+        // remove leading and trailing delimiters
+        .replace(/[-_]/g, "");
 }
 
 export function isValidIdentifier(string: string) {
