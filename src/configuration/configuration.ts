@@ -1,6 +1,6 @@
 import {CompilerOptions} from "typescript"
 
-export type Granularity = /* TODO: support "bundle" | */ "file" | "top-level"
+export type Granularity = "bundle" | "file" | "top-level"
 
 export type NamespaceStrategy = "ignore" | "object" | "package"
 
@@ -44,6 +44,7 @@ export interface Configuration extends PartialConfiguration {
     input: string[]
     inputFileNames: string[]
     output: string
+    outputFileName?: string
 
     ignoreInput: string[]
     ignoreOutput: string[]

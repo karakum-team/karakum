@@ -29,7 +29,6 @@ generate({
     output: path.resolve(dirname, "namespace/generated"),
     libraryName: "sandbox-namespace",
     granularity: "top-level",
-    verbose: true,
     packageNameMapper: {
         "will/be/mapped/andthis": "was/mapped/nested",
         "will/be/mapped": "was/mapped/main"
@@ -41,6 +40,16 @@ generate({
         "package-namespace": "package",
         "IgnoreNamespace": "ignore",
         "will-be-mapped": "package",
-    }
+    },
+    verbose: true,
+})
+    .catch(error => console.error(error))
+
+generate({
+    input: path.resolve(dirname, "bundle/lib/**"),
+    output: path.resolve(dirname, "namespace/generated/customBundle.kt"),
+    libraryName: "sandbox-bundle",
+    granularity: "bundle",
+    verbose: true,
 })
     .catch(error => console.error(error))

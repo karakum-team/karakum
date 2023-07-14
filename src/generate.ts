@@ -53,6 +53,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         inputFileNames,
         input,
         output,
+        outputFileName,
         ignoreInput,
         ignoreOutput,
         plugins,
@@ -105,8 +106,14 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     }
 
 
-    if (fs.existsSync(output)) {
-        fs.rmSync(output, {recursive: true})
+    if (outputFileName) {
+        if (fs.existsSync(outputFileName)) {
+            fs.rmSync(outputFileName, {recursive: true})
+        }
+    } else {
+        if (fs.existsSync(output)) {
+            fs.rmSync(output, {recursive: true})
+        }
     }
     fs.mkdirSync(output, {recursive: true})
 

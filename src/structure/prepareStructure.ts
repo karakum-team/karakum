@@ -4,6 +4,7 @@ import {InputStructureItem} from "./structure.js";
 import {applyPackageNameMapper} from "./package/applyPackageNameMapper.js";
 import {applyModuleNameMapper} from "./module/applyModuleNameMapper.js";
 import {packageToFileName} from "./package/packageToFileName.js";
+import {createBundleInfoItem} from "./bundle/createBundleInfoItem.js";
 
 interface TopLevelMatch {
     name: string,
@@ -130,6 +131,21 @@ function applyGranularity(
 
     if (granularity === "file") {
         return normalizeStructure(items)
+    }
+
+    if (granularity === "bundle") {
+        const bundleItem = createBundleInfoItem(configuration)
+
+        return [{
+            ...bundleItem,
+            statements: items.flatMap(item => item.statements),
+            meta: {
+                type: "Bundle",
+                name: items
+                    .map(item => `\n\t${item.meta.name} [${item.meta.type}]`)
+                    .join("")
+            }
+        }]
     }
 
     if (granularity === "top-level") {

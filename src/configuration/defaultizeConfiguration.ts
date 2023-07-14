@@ -45,6 +45,14 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
         ? path.dirname(inputFileNames[0]) + "/"
         : commonPrefix(...inputPathChunks).join("/") + "/"
 
+    let output = configuration.output
+    let outputFileName = undefined
+
+    if (output.endsWith(".kt")) {
+        output = path.dirname(configuration.output)
+        outputFileName = configuration.output
+    }
+
     return {
         ...configuration,
 
@@ -52,7 +60,9 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
         inputFileNames,
 
         input,
-        output: configuration.output,
+        output,
+
+        outputFileName,
 
         ignoreInput,
         ignoreOutput,

@@ -9,6 +9,7 @@ import {NameResolver} from "../nameResolver.js";
 import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem.js";
 import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper.js";
 import {packageToOutputFileName} from "../../structure/package/packageToFileName.js";
+import {createBundleInfoItem} from "../../structure/bundle/createBundleInfoItem.js";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
     resolveName(node: Node): string
@@ -77,8 +78,28 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
 
                                 return [path.resolve(output, outputFileName), generatedFile];
                             })
+                    } else if (granularity === "bundle") {
+                        const bundleItem = createBundleInfoItem(configuration)
+
+                        const generatedBody = declarations
+                            .map(({declaration}) => declaration)
+                            .join("\n\n")
+
+                        const packageMappingResult = applyPackageNameMapper(
+                            bundleItem.package,
+                            bundleItem.fileName,
+                            configuration,
+                        )
+
+                        const outputFileName = packageToOutputFileName(
+                            packageMappingResult.package,
+                            packageMappingResult.fileName,
+                            configuration,
+                        )
+
+                        return [[path.resolve(output, outputFileName), generatedBody]];
                     } else {
-                        const generatedFile = declarations
+                        const generatedBody = declarations
                             .map(({declaration}) => declaration)
                             .join("\n\n")
 
@@ -94,7 +115,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
                             configuration,
                         )
 
-                        return [[path.resolve(output, outputFileName), generatedFile]];
+                        return [[path.resolve(output, outputFileName), generatedBody]];
                     }
                 })
         );
