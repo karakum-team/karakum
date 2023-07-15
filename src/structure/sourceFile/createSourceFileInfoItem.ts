@@ -5,6 +5,7 @@ import {removePrefix} from "../removePrefix.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
 import {extractModuleName} from "../module/extractModuleName.js";
 import {camelize} from "../../utils/strings.js";
+import {dirNameToPackage} from "../package/packageToFileName.js";
 
 export interface SourceFileInfoItem extends StructureItem {
 }
@@ -40,7 +41,7 @@ export function createSourceFileInfoItem(
 
     const packageChunks = [
         ...moduleNameToPackage(libraryName),
-        ...moduleNameToPackage(dirName)
+        ...dirNameToPackage(dirName)
     ]
 
     const moduleName = extractModuleName(sourceFileName, configuration)

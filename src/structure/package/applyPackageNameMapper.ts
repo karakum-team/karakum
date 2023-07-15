@@ -1,8 +1,7 @@
 import path from "node:path";
 import {Configuration} from "../../configuration/configuration.js";
 import {applyMapper} from "../../utils/fileName.js";
-import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
-import {packageToFileName} from "./packageToFileName.js";
+import {dirNameToPackage, packageToFileName} from "./packageToFileName.js";
 
 export interface PackageMappingResult {
     fileName: string
@@ -25,6 +24,6 @@ export function applyPackageNameMapper(
 
     return {
         fileName: baseName,
-        package: moduleNameToPackage(dirName)
+        package: dirNameToPackage(dirName)
     }
 }

@@ -2,11 +2,17 @@ import path from "node:path";
 import {Configuration} from "../../configuration/configuration.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
 
+export function dirNameToPackage(dirName: string) {
+    return dirName
+        .split(path.posix.sep)
+        .filter(it => it !== "")
+}
+
 export function packageToFileName(
     packageChunks: string[],
     fileName: string,
 ) {
-    return path.join(
+    return path.posix.join(
         ...packageChunks,
         fileName,
     )
@@ -25,7 +31,7 @@ export function packageToOutputFileName(
         return result
     }
 
-    const basePackage = moduleNameToPackage(libraryName).join("/") + "/"
+    const basePackage = path.posix.join(...moduleNameToPackage(libraryName)) + path.posix.sep
 
     if (!result.startsWith(basePackage)) {
         return result
