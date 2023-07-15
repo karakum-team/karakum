@@ -1,5 +1,6 @@
 import {glob} from "glob";
 import path from "node:path";
+import process from "node:process";
 import {PartialConfiguration, Configuration} from "./configuration.js";
 import {commonPrefix} from "../utils/fileName.js";
 
@@ -29,28 +30,35 @@ function normalizeOption(
 }
 
 export function defaultizeConfiguration(configuration: PartialConfiguration): Configuration {
+    const cwd = configuration.cwd ?? process.cwd()
+
     const input = normalizeOption(configuration.input)
 
     const ignoreInput = normalizeOption(configuration.ignoreInput)
     const ignoreOutput = normalizeOption(configuration.ignoreOutput)
 
     const inputFileNames = input.flatMap(pattern => glob.sync(pattern, {
+        cwd,
         absolute: true,
         ignore: ignoreInput,
     }))
 
-    const inputPathChunks = inputFileNames.map(fileName => fileName.split("/"))
+    const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.sep))
 
     const defaultInputRoot = inputFileNames.length === 1
-        ? path.dirname(inputFileNames[0]) + "/"
-        : commonPrefix(...inputPathChunks).join("/") + "/"
+        ? path.dirname(inputFileNames[0]) + path.sep
+        : commonPrefix(...inputPathChunks).join(path.sep) + path.sep
 
-    let output = configuration.output
+    const absoluteOutput = path.isAbsolute(configuration.output)
+        ? configuration.output
+        : path.join(cwd, configuration.output)
+
+    let output = absoluteOutput
     let outputFileName = undefined
 
     if (output.endsWith(".kt")) {
-        output = path.dirname(configuration.output)
-        outputFileName = configuration.output
+        output = path.dirname(absoluteOutput)
+        outputFileName = absoluteOutput
     }
 
     return {
@@ -90,5 +98,6 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
         compilerOptions: configuration.compilerOptions ?? {},
 
         verbose: configuration.verbose ?? false,
+        cwd,
     }
 }

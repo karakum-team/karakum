@@ -25,9 +25,11 @@ import {packageToOutputFileName} from "./structure/package/packageToFileName.js"
 async function loadExtensions<T>(
     name: string,
     patterns: string[],
+    cwd: string,
     loader: (extension: unknown) => T = extension => extension as T
 ): Promise<T[]> {
     const fileNames = patterns.flatMap(pattern => glob.sync(pattern, {
+        cwd,
         absolute: true,
     }))
 
@@ -61,11 +63,13 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         nameResolvers,
         inheritanceModifiers,
         compilerOptions,
+        cwd,
     } = configuration
 
     const customPlugins = await loadExtensions<ConverterPlugin>(
         "Plugin",
         plugins,
+        cwd,
         plugin => {
             if (typeof plugin === "function") {
                 return createSimplePlugin(plugin as SimpleConverterPlugin)
@@ -78,16 +82,19 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const customAnnotations = await loadExtensions<Annotation>(
         "Annotation",
         annotations,
+        cwd,
     )
 
     const customNameResolvers = await loadExtensions<NameResolver>(
         "Name Resolver",
         nameResolvers,
+        cwd,
     )
 
     const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
         inheritanceModifiers,
+        cwd,
     )
 
     const preparedCompilerOptions: CompilerOptions = {

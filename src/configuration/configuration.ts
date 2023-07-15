@@ -36,6 +36,7 @@ export interface PartialConfiguration {
     compilerOptions?: CompilerOptions
 
     verbose?: boolean
+    cwd?: string
 }
 
 export interface Configuration extends PartialConfiguration {
@@ -72,4 +73,5 @@ export interface Configuration extends PartialConfiguration {
     compilerOptions: CompilerOptions
 
     verbose: boolean
+    cwd: string
 }

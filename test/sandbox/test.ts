@@ -5,28 +5,30 @@ import {generate} from "../../src/generate.js";
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 generate({
-    input: path.resolve(dirname, "base/lib/**"),
-    output: path.resolve(dirname, "base/generated"),
+    input: "base/lib/**",
+    output: "base/generated",
     libraryName: "sandbox-base",
     verbose: true,
+    cwd: dirname,
 })
     .catch(error => console.error(error))
 
 generate({
-    input: path.resolve(dirname, "top-level/lib/**"),
-    output: path.resolve(dirname, "top-level/generated"),
+    input: "top-level/lib/**",
+    output: "top-level/generated",
     libraryName: "sandbox-top-level",
     granularity: "top-level",
     moduleNameMapper: {
         ".*": "sandbox-top-level"
     },
     verbose: true,
+    cwd: dirname,
 })
     .catch(error => console.error(error))
 
 generate({
-    input: path.resolve(dirname, "namespace/lib/**"),
-    output: path.resolve(dirname, "namespace/generated"),
+    input: "namespace/lib/!**",
+    output: "namespace/generated",
     libraryName: "sandbox-namespace",
     granularity: "top-level",
     packageNameMapper: {
@@ -42,14 +44,16 @@ generate({
         "will-be-mapped": "package",
     },
     verbose: true,
+    cwd: dirname,
 })
     .catch(error => console.error(error))
 
 generate({
-    input: path.resolve(dirname, "bundle/lib/**"),
-    output: path.resolve(dirname, "bundle/generated/customBundle.kt"),
+    input: "bundle/lib/**",
+    output: "bundle/generated/customBundle.kt",
     libraryName: "sandbox-bundle",
     granularity: "bundle",
     verbose: true,
+    cwd: dirname,
 })
     .catch(error => console.error(error))
