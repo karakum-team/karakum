@@ -27,7 +27,7 @@ generate({
     .catch(error => console.error(error))
 
 generate({
-    input: "namespace/lib/!**",
+    input: "namespace/lib/**",
     output: "namespace/generated",
     libraryName: "sandbox-namespace",
     granularity: "top-level",

@@ -16,5 +16,5 @@ export function extractModuleName(
 
     const relativeFileName = generateRelativeFileName(inputRoots, sourceFileName)
 
-    return path.join(libraryName, relativeFileName)
+    return path.posix.join(libraryName, relativeFileName)
 }
