@@ -1,6 +1,5 @@
 import {glob} from "glob";
-import defaultPath from "node:path";
-import path from "node:path/posix";
+import path from "node:path";
 import process from "node:process";
 import {PartialConfiguration, Configuration} from "./configuration.js";
 import {commonPrefix} from "../utils/fileName.js";
@@ -31,8 +30,8 @@ function normalizeOption(
 }
 
 function normalizePath(input: string) {
-    return defaultPath.sep === path.win32.sep
-        ? input.replaceAll(path.win32.sep, path.sep)
+    return path.sep === path.win32.sep
+        ? path.toNamespacedPath(input).replaceAll(path.win32.sep, path.posix.sep)
         : input
 }
 
@@ -51,16 +50,16 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
         ignore: ignoreInput,
     }))
 
-    const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.sep))
+    const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.posix.sep))
 
     // TODO: handle non-default relative root (UNC prefix)
     const defaultInputRoot = inputFileNames.length === 1
-        ? path.dirname(inputFileNames[0]) + path.sep
-        : commonPrefix(...inputPathChunks).join(path.sep) + path.sep
+        ? path.dirname(inputFileNames[0]) + path.posix.sep
+        : commonPrefix(...inputPathChunks).join(path.posix.sep) + path.posix.sep
 
     const absoluteOutput = path.isAbsolute(configuration.output)
         ? configuration.output
-        : path.join(cwd, configuration.output)
+        : normalizePath(path.join(cwd, configuration.output))
 
     let output = absoluteOutput
     let outputFileName = undefined
