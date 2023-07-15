@@ -31,6 +31,7 @@ async function loadExtensions<T>(
     const fileNames = patterns.flatMap(pattern => glob.sync(pattern, {
         cwd,
         absolute: true,
+        posix: true,
     }))
 
     const extensions: T[] = []
