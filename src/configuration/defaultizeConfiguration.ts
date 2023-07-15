@@ -3,6 +3,7 @@ import path from "node:path";
 import process from "node:process";
 import {PartialConfiguration, Configuration} from "./configuration.js";
 import {commonPrefix} from "../utils/fileName.js";
+import {toPosix, toAbsolute} from "../utils/path.js";
 
 const defaultPluginPatterns = [
     "karakum/plugins/*.js"
@@ -29,14 +30,8 @@ function normalizeOption(
         : defaultValue
 }
 
-function normalizePath(input: string) {
-    return path.sep === path.win32.sep
-        ? path.toNamespacedPath(input).replaceAll(path.win32.sep, path.posix.sep)
-        : input
-}
-
 export function defaultizeConfiguration(configuration: PartialConfiguration): Configuration {
-    const cwd = normalizePath(configuration.cwd ?? process.cwd())
+    const cwd = toPosix(configuration.cwd ?? process.cwd())
 
     const input = normalizeOption(configuration.input)
 
@@ -57,9 +52,7 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
         ? path.dirname(inputFileNames[0]) + path.posix.sep
         : commonPrefix(...inputPathChunks).join(path.posix.sep) + path.posix.sep
 
-    const absoluteOutput = path.isAbsolute(configuration.output)
-        ? configuration.output
-        : normalizePath(path.join(cwd, configuration.output))
+    const absoluteOutput = toAbsolute(configuration.output, cwd)
 
     let output = absoluteOutput
     let outputFileName = undefined

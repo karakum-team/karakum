@@ -3,7 +3,6 @@ import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.j
 import {glob} from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "node:path";
-import process from "node:process";
 import fs from "node:fs";
 import {createContext} from "./converter/context.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
@@ -21,6 +20,7 @@ import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
+import {toAbsolute, toPosix} from "./utils/path.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -125,11 +125,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     }
     fs.mkdirSync(output, {recursive: true})
 
-    const absoluteInput = input
-        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(process.cwd(), pattern))
-
-    const absoluteIgnoreInput = ignoreInput
-        .map(pattern => path.isAbsolute(pattern) ? pattern : path.join(process.cwd(), pattern))
+    const absoluteInput = input.map(pattern => toAbsolute(pattern, cwd))
+    const absoluteIgnoreInput = ignoreInput.map(pattern =>  toAbsolute(pattern, cwd))
 
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
@@ -195,7 +192,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
             const targetFileName = path.resolve(output, outputFileName)
 
-            console.log(`Target file: ${targetFileName}`)
+            console.log(`Target file: ${toPosix(targetFileName)}`)
 
             const convertedBody = item.statements
                 .map(node => render(node))
