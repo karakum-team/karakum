@@ -20,7 +20,7 @@ import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
-import {toAbsolute, toPosix} from "./utils/path.js";
+import {toPosix} from "./utils/path.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -125,15 +125,14 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     }
     fs.mkdirSync(output, {recursive: true})
 
-    const absoluteInput = input.map(pattern => toAbsolute(pattern, cwd))
-    const absoluteIgnoreInput = ignoreInput.map(pattern =>  toAbsolute(pattern, cwd))
-
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
-            return absoluteInput.some(pattern => minimatch(sourceFile.fileName, pattern))
+            const relativeFileName = path.relative(cwd, sourceFile.fileName)
+            return input.some(pattern => minimatch(relativeFileName, pattern))
         })
         .filter(sourceFile => {
-            return absoluteIgnoreInput.every(pattern => !minimatch(sourceFile.fileName, pattern))
+            const relativeFileName = path.relative(cwd, sourceFile.fileName)
+            return ignoreInput.every(pattern => !minimatch(relativeFileName, pattern))
         })
 
     console.log(`Source files count: ${sourceFiles.length}`)
