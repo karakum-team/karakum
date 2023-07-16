@@ -1,6 +1,7 @@
 import path from "node:path";
 import {Configuration} from "../../configuration/configuration.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
+import {removePrefix} from "../removePrefix.js";
 
 export function dirNameToPackage(dirName: string) {
     return dirName
@@ -33,9 +34,5 @@ export function packageToOutputFileName(
 
     const basePackage = path.posix.join(...moduleNameToPackage(libraryName)) + path.posix.sep
 
-    if (!result.startsWith(basePackage)) {
-        return result
-    }
-
-    return result.replace(basePackage, "")
+    return removePrefix(result, [basePackage])
 }
