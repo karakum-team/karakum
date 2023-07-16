@@ -128,11 +128,23 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
             const relativeFileName = path.relative(cwd, sourceFile.fileName)
-            return input.some(pattern => minimatch(relativeFileName, pattern))
+            return input.some(pattern => {
+                if (path.isAbsolute(pattern)) {
+                    return minimatch(sourceFile.fileName, pattern);
+                } else {
+                    return minimatch(relativeFileName, pattern);
+                }
+            })
         })
         .filter(sourceFile => {
             const relativeFileName = path.relative(cwd, sourceFile.fileName)
-            return ignoreInput.every(pattern => !minimatch(relativeFileName, pattern))
+            return ignoreInput.every(pattern => {
+                if (path.isAbsolute(pattern)) {
+                    return !minimatch(sourceFile.fileName, pattern);
+                } else {
+                    return !minimatch(relativeFileName, pattern);
+                }
+            })
         })
 
     console.log(`Source files count: ${sourceFiles.length}`)
