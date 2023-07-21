@@ -20,7 +20,7 @@ import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
-import {toPosix} from "./utils/path.js";
+import {toPosix, toModuleName} from "./utils/path.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -39,7 +39,7 @@ async function loadExtensions<T>(
     for (const fileName of fileNames) {
         console.log(`${name} file: ${fileName}`)
 
-        const extensionModule: { default: unknown } = await import(fileName)
+        const extensionModule: { default: unknown } = await import(toModuleName(fileName))
         const extension = extensionModule.default
 
         extensions.push(loader(extension))
@@ -229,7 +229,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
                 if (fs.existsSync(fileName)) {
                     fs.appendFileSync(fileName, content)
                 } else {
-                    console.log(`Generated file: ${fileName}`)
+                    console.log(`Generated file: ${toPosix(fileName)}`)
 
                     fs.writeFileSync(fileName, content)
                 }
