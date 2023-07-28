@@ -8,7 +8,6 @@ let fail = false
 
 const source = run({
     concurrency: true,
-    timeout: 10000,
     files: await glob("test/**/*.test.ts"),
 }).once("test:fail", () => {
     fail = true
