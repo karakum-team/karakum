@@ -38,7 +38,7 @@ export function testGeneration(name: string, fileUrl: string, configuration: Par
 
             return context.test(relativeFileName, async () => {
                 const actualFile = await fs.readFile(actualFileName, "utf8")
-                const expectedFile = await fs.readFile(expectedFileName, "utf8")
+                const expectedFile = (await fs.readFile(expectedFileName, "utf8")).replaceAll("\r\n", "\n")
 
                 assert.equal(actualFile, expectedFile)
             })
