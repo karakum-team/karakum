@@ -40,7 +40,7 @@ export function testGeneration(name: string, fileUrl: string, configuration: Par
                 const actualFile = await fs.readFile(actualFileName, "utf8")
                 const expectedFile = await fs.readFile(expectedFileName, "utf8")
 
-                assert.equal(actualFile, expectedFile)
+                assert.equal(actualFile, expectedFile + "!")
             })
         }))
     });
