@@ -8,9 +8,9 @@ interface Schema {
 
 const exec = util.promisify(childProcess.exec)
 
-const granularitySchemaFileName = "schemas/granularity-schema.json"
-const namespaceStrategySchemaFileName = "schemas/namespace-strategy-schema.json"
-const configurationSchemaFileName = "schemas/karakum-schema.json"
+const granularitySchemaFileName = "schema/granularity-schema.json"
+const namespaceStrategySchemaFileName = "schema/namespace-strategy-schema.json"
+const configurationSchemaFileName = "schema/karakum-schema.json"
 
 await Promise.all([
     exec(`typescript-json-schema --titles --include src/configuration/configuration.ts --out ${granularitySchemaFileName} tsconfig.json Granularity`),
