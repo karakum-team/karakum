@@ -7,7 +7,7 @@ import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin.js";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin.js";
 import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin.js";
 import {convertPrimitive} from "./converter/plugins/convertPrimitive.js";
-import {createTypeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin.js";
+import {typeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin.js";
 import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration.js";
 import {convertModuleBlock} from "./converter/plugins/convertModuleBlock.js";
 import {convertInterfaceDeclaration} from "./converter/plugins/convertInterfaceDeclaration.js";
@@ -44,6 +44,7 @@ import {TypeScriptPlugin} from "./converter/plugins/TypeScriptPlugin.js";
 import {convertTypeOperator} from "./converter/plugins/convertTypeOperator.js";
 import {convertImportType} from "./converter/plugins/convertImportType.js";
 import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression.js";
+import {NameResolverPlugin} from "./converter/plugins/NameResolverPlugin.js";
 import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin.js";
 import {InheritanceModifier} from "./converter/inheritanceModifier.js";
 import {convertMappedType} from "./converter/plugins/convertMappedType.js";
@@ -53,7 +54,7 @@ import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin.js";
 import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertIndexedSignatureDeclaration.js";
 import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin.js";
 import {convertTypeQuery} from "./converter/plugins/convertTypeQuery.js";
-import {createStringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
+import {stringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
 import {convertLiteral} from "./converter/plugins/convertLiteral.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
@@ -67,6 +68,7 @@ export const createPlugins = (
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
     new TypeScriptPlugin(program),
+    new NameResolverPlugin(nameResolvers),
     new InheritanceModifierPlugin(inheritanceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),
     new DeclarationMergingPlugin(program),
@@ -76,8 +78,8 @@ export const createPlugins = (
     new NullableUnionTypePlugin(),
     new AccessorsPlugin(),
 
-    createTypeLiteralPlugin(nameResolvers),
-    createStringUnionTypePlugin(nameResolvers),
+    typeLiteralPlugin,
+    stringUnionTypePlugin,
 
     convertPrimitive(hasKind(ts.SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(ts.SyntaxKind.UnknownKeyword), () => "Any?"),

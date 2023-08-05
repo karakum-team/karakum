@@ -31,6 +31,10 @@ export {
     type TypeScriptService
 } from "./converter/plugins/TypeScriptPlugin.js"
 export {
+    nameResolverServiceKey,
+    type NameResolverService
+} from "./converter/plugins/NameResolverPlugin.js"
+export {
     inheritanceModifierServiceKey,
     type InheritanceModifierService
 } from "./converter/plugins/InheritanceModifierPlugin.js"

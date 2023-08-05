@@ -3,7 +3,6 @@ import {escapeIdentifier, identifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
-import {defaultNameResolvers} from "../defaultNameResolvers.js";
 import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
@@ -86,8 +85,7 @@ ${body}
     }
 };
 
-export const createStringUnionTypePlugin = createAnonymousDeclarationPlugin(
-    defaultNameResolvers,
+export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
     (node, context) => {
         if (!isNullableStringUnionType(node, context)) return null
 

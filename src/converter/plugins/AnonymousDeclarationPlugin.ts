@@ -5,7 +5,7 @@ import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {createGeneratedFile} from "../../structure/createGeneratedFile.js";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
-import {NameResolver} from "../nameResolver.js";
+import {NameResolverService, nameResolverServiceKey} from "./NameResolverPlugin.js";
 import {createSourceFileInfoItem} from "../../structure/sourceFile/createSourceFileInfoItem.js";
 import {applyPackageNameMapper} from "../../structure/package/applyPackageNameMapper.js";
 import {packageToOutputFileName} from "../../structure/package/packageToFileName.js";
@@ -28,11 +28,9 @@ export type AnonymousDeclarationRender = (
 ) => AnonymousDeclarationRenderResult | string | null
 
 class AnonymousDeclarationPlugin<TNode extends Node = Node> implements ConverterPlugin {
-    private counter = 0
     private readonly generated: Record<string, { name: string, declaration: string }[]> = {}
 
     constructor(
-        private nameResolvers: NameResolver<TNode>[],
         private anonymousDeclarationRender: AnonymousDeclarationRender,
     ) {
     }
@@ -40,7 +38,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
     generate(context: ConverterContext): Record<string, string> {
         const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
         const configuration = configurationService?.configuration
-        if (configuration === undefined) throw new Error("TypeLiteralPlugin can't work without ConfigurationService")
+        if (configuration === undefined) throw new Error("AnonymousDeclarationPlugin can't work without ConfigurationService")
 
         const {output, granularity} = configuration
 
@@ -122,7 +120,10 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
-        const resolveName = (node: TNode) => this.resolveName(node, context)
+        const nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
+        if (nameResolverService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without NameResolverService")
+
+        const resolveName = (node: TNode) => nameResolverService.resolveName(node, context)
 
         const anonymousDeclarationContext = {
             ...context,
@@ -157,29 +158,10 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
 
     traverse(node: ts.Node, context: ConverterContext): void {
     }
-
-    private resolveName(node: TNode, context: ConverterContext): string {
-        for (const nameResolver of this.nameResolvers) {
-            const result = nameResolver(node, context)
-
-            if (result !== null) return result
-        }
-
-        return `Temp${this.counter++}`
-    }
 }
 
 export function createAnonymousDeclarationPlugin<TNode extends Node = Node>(
-    defaultNameResolvers: NameResolver<TNode>[],
     render: AnonymousDeclarationRender,
-) {
-    return (nameResolvers: NameResolver[]): ConverterPlugin => {
-        return new AnonymousDeclarationPlugin(
-            [
-                ...nameResolvers,
-                ...defaultNameResolvers,
-            ],
-            render,
-        )
-    }
+): ConverterPlugin {
+    return new AnonymousDeclarationPlugin<TNode>(render)
 }

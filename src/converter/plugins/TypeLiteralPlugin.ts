@@ -5,10 +5,8 @@ import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {extractTypeParameters} from "../../utils/extractTypeParameters.js";
-import {defaultNameResolvers} from "../defaultNameResolvers.js";
 
-export const createTypeLiteralPlugin = createAnonymousDeclarationPlugin(
-    defaultNameResolvers,
+export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
     (node, context, render) => {
         if (!ts.isTypeLiteralNode(node)) return null
 
