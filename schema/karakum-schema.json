@@ -1,5 +1,23 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Granularity": {
+            "enum": [
+                "bundle",
+                "file",
+                "top-level"
+            ],
+            "type": "string"
+        },
+        "NamespaceStrategy": {
+            "enum": [
+                "ignore",
+                "object",
+                "package"
+            ],
+            "type": "string"
+        }
+    },
     "properties": {
         "annotations": {
             "anyOf": [
@@ -25,7 +43,7 @@
             "type": "string"
         },
         "granularity": {
-            "$ref": "granularity-schema.json",
+            "$ref": "#/definitions/Granularity",
             "title": "granularity",
             "type": "string"
         },
@@ -140,7 +158,7 @@
         },
         "namespaceStrategy": {
             "additionalProperties": {
-                "$ref": "namespace-strategy-schema.json"
+                "$ref": "#/definitions/NamespaceStrategy"
             },
             "title": "namespaceStrategy",
             "type": "object"
@@ -177,4 +195,3 @@
     },
     "type": "object"
 }
-

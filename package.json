@@ -20,7 +20,7 @@
     "build": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run clean && npm run build",
     "test": "node --loader ts-node/esm test/run.ts",
-    "schema": "node --loader ts-node/esm schemas/generate.ts"
+    "schema": "node --loader ts-node/esm schema/generate.ts"
   },
   "dependencies": {
     "glob": "^10.3.3",

@@ -18,7 +18,7 @@ export interface SchemaConfiguration {
 
     /**
      * @TJS-type string
-     * @$ref granularity-schema.json
+     * @$ref #/definitions/Granularity
      * */
     granularity?: Granularity
 
@@ -50,7 +50,7 @@ export interface SchemaConfiguration {
 
     /**
      * @TJS-type object
-     * @additionalProperties { "$ref": "namespace-strategy-schema.json" }
+     * @additionalProperties { "$ref": "#/definitions/NamespaceStrategy" }
      * */
     namespaceStrategy?: Record<string, NamespaceStrategy>
 
