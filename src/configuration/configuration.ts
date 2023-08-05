@@ -4,7 +4,7 @@ export type Granularity = "bundle" | "file" | "top-level"
 
 export type NamespaceStrategy = "ignore" | "object" | "package"
 
-export interface PartialConfiguration {
+export interface SchemaConfiguration {
     inputRoots?: string | string[]
 
     input: string | string[]
@@ -16,6 +16,10 @@ export interface PartialConfiguration {
     libraryName?: string
     libraryNameOutputPrefix?: boolean
 
+    /**
+     * @TJS-type string
+     * @$ref granularity-schema.json
+     * */
     granularity?: Granularity
 
     plugins?: string | string[]
@@ -26,17 +30,42 @@ export interface PartialConfiguration {
 
     inheritanceModifiers?: string | string[]
 
+    /**
+     * @TJS-type object
+     * @additionalProperties { "type": "string" }
+     * */
     moduleNameMapper?: Record<string, string>
+
+    /**
+     * @TJS-type object
+     * @additionalProperties { "type": "string" }
+     * */
     packageNameMapper?: Record<string, string>
 
+    /**
+     * @TJS-type object
+     * @additionalProperties { "type": "array", "items": { "type": "string" } }
+     * */
     importInjector?: Record<string, string[]>
 
+    /**
+     * @TJS-type object
+     * @additionalProperties { "$ref": "namespace-strategy-schema.json" }
+     * */
     namespaceStrategy?: Record<string, NamespaceStrategy>
 
-    compilerOptions?: CompilerOptions
+    /**
+     * @TJS-type object
+     * @$ref https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions
+     * */
+    compilerOptions?: Record<string, unknown>
 
     verbose?: boolean
     cwd?: string
+}
+
+export interface PartialConfiguration extends SchemaConfiguration {
+    compilerOptions?: CompilerOptions
 }
 
 export interface Configuration extends PartialConfiguration {

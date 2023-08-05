@@ -1,0 +1,180 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "annotations": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "annotations"
+        },
+        "compilerOptions": {
+            "$ref": "https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions",
+            "title": "compilerOptions",
+            "type": "object"
+        },
+        "cwd": {
+            "title": "cwd",
+            "type": "string"
+        },
+        "granularity": {
+            "$ref": "granularity-schema.json",
+            "title": "granularity",
+            "type": "string"
+        },
+        "ignoreInput": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "ignoreInput"
+        },
+        "ignoreOutput": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "ignoreOutput"
+        },
+        "importInjector": {
+            "additionalProperties": {
+                "items": {
+                    "type": "string"
+                },
+                "type": "array"
+            },
+            "title": "importInjector",
+            "type": "object"
+        },
+        "inheritanceModifiers": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "inheritanceModifiers"
+        },
+        "input": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "input"
+        },
+        "inputRoots": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "inputRoots"
+        },
+        "libraryName": {
+            "title": "libraryName",
+            "type": "string"
+        },
+        "libraryNameOutputPrefix": {
+            "title": "libraryNameOutputPrefix",
+            "type": "boolean"
+        },
+        "moduleNameMapper": {
+            "additionalProperties": {
+                "type": "string"
+            },
+            "title": "moduleNameMapper",
+            "type": "object"
+        },
+        "nameResolvers": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "nameResolvers"
+        },
+        "namespaceStrategy": {
+            "additionalProperties": {
+                "$ref": "namespace-strategy-schema.json"
+            },
+            "title": "namespaceStrategy",
+            "type": "object"
+        },
+        "output": {
+            "title": "output",
+            "type": "string"
+        },
+        "packageNameMapper": {
+            "additionalProperties": {
+                "type": "string"
+            },
+            "title": "packageNameMapper",
+            "type": "object"
+        },
+        "plugins": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "plugins"
+        },
+        "verbose": {
+            "title": "verbose",
+            "type": "boolean"
+        }
+    },
+    "type": "object"
+}
+
