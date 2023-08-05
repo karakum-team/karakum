@@ -30,7 +30,7 @@ function normalizeOption(
         : defaultValue
 }
 
-export function defaultizeConfiguration(configuration: PartialConfiguration): Configuration {
+export async function defaultizeConfiguration(configuration: PartialConfiguration): Promise<Configuration> {
     const cwd = toPosix(configuration.cwd ?? process.cwd())
 
     const input = normalizeOption(configuration.input)
@@ -38,12 +38,12 @@ export function defaultizeConfiguration(configuration: PartialConfiguration): Co
     const ignoreInput = normalizeOption(configuration.ignoreInput)
     const ignoreOutput = normalizeOption(configuration.ignoreOutput)
 
-    const inputFileNames = input.flatMap(pattern => glob.sync(pattern, {
+    const inputFileNames = (await Promise.all(input.map(pattern => glob(pattern, {
         cwd,
         absolute: true,
         posix: true,
         ignore: ignoreInput,
-    }))
+    })))).flat()
 
     const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.posix.sep))
 

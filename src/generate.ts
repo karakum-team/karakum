@@ -3,7 +3,7 @@ import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.j
 import {glob} from "glob";
 import ts, {CompilerOptions} from "typescript";
 import path from "node:path";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import {createContext} from "./converter/context.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
 import {createPlugins} from "./defaultPlugins.js";
@@ -22,17 +22,26 @@ import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInf
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
 import {toPosix, toModuleName} from "./utils/path.js";
 
+async function isExists(fileName: string) {
+    try {
+        await fs.access(fileName);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 async function loadExtensions<T>(
     name: string,
     patterns: string[],
     cwd: string,
     loader: (extension: unknown) => T = extension => extension as T
 ): Promise<T[]> {
-    const fileNames = patterns.flatMap(pattern => glob.sync(pattern, {
+    const fileNames = (await Promise.all(patterns.map(pattern => glob(pattern, {
         cwd,
         absolute: true,
         posix: true,
-    }))
+    })))).flat()
 
     const extensions: T[] = []
 
@@ -49,7 +58,7 @@ async function loadExtensions<T>(
 }
 
 export async function generate(partialConfiguration: PartialConfiguration) {
-    const configuration = defaultizeConfiguration(partialConfiguration)
+    const configuration = await defaultizeConfiguration(partialConfiguration)
 
     const {
         inputRoots,
@@ -115,15 +124,15 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
 
     if (outputFileName) {
-        if (fs.existsSync(outputFileName)) {
-            fs.rmSync(outputFileName, {recursive: true})
+        if (await isExists(outputFileName)) {
+            await fs.rm(outputFileName, {recursive: true})
         }
     } else {
-        if (fs.existsSync(output)) {
-            fs.rmSync(output, {recursive: true})
+        if (await isExists(output)) {
+            await fs.rm(output, {recursive: true})
         }
     }
-    fs.mkdirSync(output, {recursive: true})
+    await fs.mkdir(output, {recursive: true})
 
     const sourceFiles = program.getSourceFiles()
         .filter(sourceFile => {
@@ -195,43 +204,42 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const render = createRender(context, converterPlugins)
 
-    structure
-        .forEach(item => {
-            console.log(`${item.meta.type}: ${item.meta.name}`)
+    for (const item of structure) {
+        console.log(`${item.meta.type}: ${item.meta.name}`)
 
-            const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
+        const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
 
-            const targetFileName = path.resolve(output, outputFileName)
+        const targetFileName = path.resolve(output, outputFileName)
 
-            console.log(`Target file: ${toPosix(targetFileName)}`)
+        console.log(`Target file: ${toPosix(targetFileName)}`)
 
-            const convertedBody = item.statements
-                .map(node => render(node))
-                .join("\n\n")
+        const convertedBody = item.statements
+            .map(node => render(node))
+            .join("\n\n")
 
-            const targetFile = createTargetFile(
-                item,
-                convertedBody,
-                configuration,
-            )
+        const targetFile = createTargetFile(
+            item,
+            convertedBody,
+            configuration,
+        )
 
-            if (ignoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
-                fs.mkdirSync(path.dirname(targetFileName), {recursive: true})
-                fs.writeFileSync(targetFileName, targetFile)
-            }
-        })
+        if (ignoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
+            await fs.mkdir(path.dirname(targetFileName), {recursive: true})
+            await fs.writeFile(targetFileName, targetFile)
+        }
+    }
 
     for (const plugin of converterPlugins) {
         const generated = plugin.generate(context)
 
         for (const [fileName, content] of Object.entries(generated)) {
             if (ignoreOutput.every(pattern => !minimatch(fileName, pattern))) {
-                if (fs.existsSync(fileName)) {
-                    fs.appendFileSync(fileName, content)
+                if (await isExists(fileName)) {
+                    await fs.appendFile(fileName, content)
                 } else {
                     console.log(`Generated file: ${toPosix(fileName)}`)
 
-                    fs.writeFileSync(fileName, content)
+                    await fs.writeFile(fileName, content)
                 }
             }
         }
