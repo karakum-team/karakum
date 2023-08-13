@@ -1,9 +1,11 @@
-import ts, {Declaration, ModifierLike} from "typescript";
+import ts, {ClassDeclaration, Declaration, ModifierLike} from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
+import {ConverterContext} from "../context.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 function extractModifiers(member: Declaration): ModifierLike[] {
     if (
@@ -18,6 +20,31 @@ function extractModifiers(member: Declaration): ModifierLike[] {
     }
 
     return []
+}
+
+function resolveConstructors(node: ClassDeclaration, members: Declaration[], context: ConverterContext): Declaration[] {
+    const constructors = members.filter(it => ts.isConstructorDeclaration(it))
+    if (constructors.length > 0) return constructors
+
+    if (!node.heritageClauses) return constructors
+
+    const heritageClause = node.heritageClauses.find(it => it.token === ts.SyntaxKind.ExtendsKeyword)
+    if (!heritageClause) return constructors
+
+    const parentReference = heritageClause.types[0].expression
+
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const typeChecker = typeScriptService?.program.getTypeChecker()
+    const parentSymbol = typeChecker?.getSymbolAtLocation(parentReference)
+    if (!parentSymbol) return constructors
+
+    const parentDeclaration = parentSymbol.valueDeclaration
+    if (!parentDeclaration || !ts.isClassDeclaration(parentDeclaration)) return constructors
+
+    const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    const mergedMembers = declarationMergingService?.getMembers(parentDeclaration) ?? Array.from(parentDeclaration.members)
+
+    return resolveConstructors(parentDeclaration, mergedMembers, context)
 }
 
 export const convertClassDeclaration = createSimplePlugin((node, context, render) => {
@@ -59,12 +86,15 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const publicMembers = mergedMembers
         .filter(member => extractModifiers(member).every(it => it.kind !== ts.SyntaxKind.PrivateKeyword))
 
-    const members = publicMembers
+    const constructors = resolveConstructors(node, publicMembers, context)
+    const otherMembers = publicMembers.filter(it => !ts.isConstructorDeclaration(it))
+
+    const members = [...constructors, ...otherMembers]
         .filter(member => extractModifiers(member).every(it => it.kind !== ts.SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
 
-    const staticMembers = publicMembers
+    const staticMembers = otherMembers
         .filter(member => extractModifiers(member).some(it => it.kind === ts.SyntaxKind.StaticKeyword))
         .map(member => render(member))
         .join("\n")
