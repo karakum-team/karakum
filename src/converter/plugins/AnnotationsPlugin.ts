@@ -5,8 +5,6 @@ import {Render} from "../render.js";
 import {Annotation} from "../annotation.js";
 
 export class AnnotationsPlugin implements ConverterPlugin {
-    private readonly coveredAnnotations = new Set<Node>()
-
     private readonly annotations: Annotation[]
 
     constructor(annotations: Annotation[]) {
@@ -18,9 +16,6 @@ export class AnnotationsPlugin implements ConverterPlugin {
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
-        if (this.coveredAnnotations.has(node)) return null
-        this.coveredAnnotations.add(node)
-
         const annotations = this.resolveAnnotations(node, context)
 
         if (annotations.length > 0) {

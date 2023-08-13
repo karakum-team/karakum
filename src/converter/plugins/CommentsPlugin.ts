@@ -6,8 +6,6 @@ import {Render} from "../render.js";
 export class CommentsPlugin implements ConverterPlugin {
     private nestedCommentPattern = /(?<!^)\/\*/g
 
-    private coveredComments = new Set<Node>()
-
     private coveredCommentRanges = new Map<SourceFile, CommentRange[]>()
 
     generate(): Record<string, string> {
@@ -15,9 +13,6 @@ export class CommentsPlugin implements ConverterPlugin {
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {
-        if (this.coveredComments.has(node)) return null
-        this.coveredComments.add(node)
-
         const sourceFile = node.getSourceFile()
         if (!sourceFile) return null
 

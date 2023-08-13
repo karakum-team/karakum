@@ -58,17 +58,12 @@ export function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
 }
 
 export class NullableUnionTypePlugin implements ConverterPlugin {
-    private coveredUnions = new Set<Node>()
-
     generate(context: ConverterContext): Record<string, string> {
         return {};
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
         if (isNullableStringUnionType(node, context)) return null
-
-        if (this.coveredUnions.has(node)) return null
-        this.coveredUnions.add(node)
 
         if (isNullableUnionType(node, context)) {
 

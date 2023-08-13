@@ -82,9 +82,14 @@ export function renderResolvedNullable(
 export function createRender(context: ConverterContext, plugins: ConverterPlugin[]): Render {
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    const render = (node: Node) => {
-        for (const plugin of plugins) {
-            const result = plugin.render(node, context, render)
+    const render = (node: Node, parentNode: Node | null, parentIndex: number) => {
+        for (const key in plugins) {
+            const index = Number(key)
+            const plugin = plugins[index]
+
+            if (node === parentNode && index <= parentIndex) continue
+
+            const result = plugin.render(node, context, currentNode => render(currentNode, node, index))
 
             if (result !== null) return result
         }
@@ -92,5 +97,5 @@ export function createRender(context: ConverterContext, plugins: ConverterPlugin
         return `/* ${typeScriptService?.printNode(node)} */`
     }
 
-    return render;
+    return node => render(node, null, -1);
 }
