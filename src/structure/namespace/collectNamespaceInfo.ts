@@ -3,7 +3,6 @@ import {Configuration} from "../../configuration/configuration.js";
 import {traverse} from "../../utils/traverse.js";
 import {createNamespaceInfoItem, NamespaceInfoItem} from "./createNamespaceInfoItem.js";
 import {InputStructureItem} from "../structure.js";
-import {extractModuleName} from "../module/extractModuleName.js";
 
 interface InputNamespaceInfoItem extends NamespaceInfoItem, InputStructureItem {
 }
@@ -17,13 +16,13 @@ export function collectNamespaceInfo(
     const result: NamespaceInfo = []
 
     sourceFiles.forEach(sourceFile => {
-        const defaultModuleName = extractModuleName(sourceFile.fileName, configuration)
-
         traverse(sourceFile, node => {
-            if (
-                ts.isModuleDeclaration(node)
-            ) {
-                const item = createNamespaceInfoItem(node, defaultModuleName, configuration)
+            if (ts.isModuleDeclaration(node)) {
+                const item = createNamespaceInfoItem(
+                    node,
+                    sourceFile.fileName,
+                    configuration,
+                )
 
                 let statements: Statement[] = []
 

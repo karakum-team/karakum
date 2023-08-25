@@ -3,8 +3,8 @@ import {Configuration} from "../configuration/configuration.js";
 import {InputStructureItem} from "./structure.js";
 import {applyPackageNameMapper} from "./package/applyPackageNameMapper.js";
 import {applyModuleNameMapper} from "./module/applyModuleNameMapper.js";
-import {packageToFileName} from "./package/packageToFileName.js";
 import {createBundleInfoItem} from "./bundle/createBundleInfoItem.js";
+import {normalizeStructure} from "./normalizeStructure.js";
 
 interface TopLevelMatch {
     name: string,
@@ -97,30 +97,11 @@ const topLevelMatcher: TopLevelMatcher = node => {
     return null
 }
 
-function normalizeStructure(items: InputStructureItem[]) {
-    const result: Map<string, InputStructureItem> = new Map()
-
-    for (const item of items) {
-        const fileName = packageToFileName(item.package, item.fileName)
-
-        const existingItem = result.get(fileName) ?? {
-            ...item,
-            statements: [],
-            hasRuntime: false,
-        }
-
-        if (!result.has(fileName)) {
-            result.set(fileName, existingItem)
-        }
-
-        result.set(fileName, {
-            ...existingItem,
-            statements: [...existingItem.statements, ...item.statements],
-            hasRuntime: existingItem.hasRuntime || item.hasRuntime
-        })
-    }
-
-    return Array.from(result.values())
+function normalizeInputStructure(items: InputStructureItem[]) {
+    return normalizeStructure(items, (item, other) => ({
+        ...item,
+        statements: [...item.statements, ...other.statements],
+    }))
 }
 
 function applyGranularity(
@@ -130,7 +111,7 @@ function applyGranularity(
     const {granularity} = configuration
 
     if (granularity === "file") {
-        return normalizeStructure(items)
+        return normalizeInputStructure(items)
     }
 
     if (granularity === "bundle") {
@@ -149,7 +130,7 @@ function applyGranularity(
     }
 
     if (granularity === "top-level") {
-        return normalizeStructure(
+        return normalizeInputStructure(
             items.flatMap(item => {
                 const result: InputStructureItem[] = []
 

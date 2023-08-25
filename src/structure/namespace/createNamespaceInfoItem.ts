@@ -2,6 +2,7 @@ import ts, {ModuleDeclaration} from "typescript";
 import {Configuration, NamespaceStrategy} from "../../configuration/configuration.js";
 import {StructureItem} from "../structure.js";
 import {moduleNameToPackage} from "../module/moduleNameToPackage.js";
+import {extractModuleName} from "../module/extractModuleName.js";
 
 export interface NamespaceInfoItem extends StructureItem {
     name: string
@@ -48,11 +49,12 @@ export function extractNamespaceName(
 
 export function createNamespaceInfoItem(
     namespace: ModuleDeclaration,
-    defaultModuleName: string,
+    sourceFileName: string,
     configuration: Configuration,
 ): NamespaceInfoItem {
     const {namespaceStrategy} = configuration
 
+    const defaultModuleName = extractModuleName(sourceFileName, configuration)
     const name = extractNamespaceName(namespace)
 
     const detailedName = name.map(it => it.detailedName).join(".")
