@@ -73,4 +73,7 @@ export type {StructureItem} from "./structure/structure.js"
 export {createSourceFileInfoItem, type SourceFileInfoItem} from "./structure/sourceFile/createSourceFileInfoItem.js"
 export {createNamespaceInfoItem, type NamespaceInfoItem} from "./structure/namespace/createNamespaceInfoItem.js"
 
+export type {DerivedDeclaration} from "./structure/derived/derivedDeclaration.js"
+export {generateDerivedDeclarations } from "./structure/derived/generateDerivedDeclarations.js"
+
 export {generate} from "./generate.js"
