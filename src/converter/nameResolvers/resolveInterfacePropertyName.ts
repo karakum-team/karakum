@@ -1,19 +1,24 @@
 import ts from "typescript";
 import {NameResolver} from "../nameResolver.js";
 import {capitalize} from "../../utils/strings.js";
+import {TypeScriptService, typeScriptServiceKey} from "../plugins/TypeScriptPlugin.js";
 
-export const resolveInterfacePropertyName: NameResolver = (node) => {
-    if (!node.parent) return null
-    if (!ts.isPropertySignature(node.parent)) return null
-    if (!ts.isIdentifier(node.parent.name)) return null
+export const resolveInterfacePropertyName: NameResolver = (node, context) => {
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const getParent = typeScriptService?.getParent.bind(typeScriptService) ?? ((node: ts.Node) => node.parent)
 
-    const propertyName = node.parent.name.text
+    const property = getParent(node)
+    if (!property) return null
+    if (!ts.isPropertySignature(property)) return null
+    if (!ts.isIdentifier(property.name)) return null
 
-    if (!node.parent.parent) return null
-    if (!ts.isInterfaceDeclaration(node.parent.parent)) return null
-    if (node.parent.parent.name === undefined) return null
+    const propertyName = property.name.text
 
-    const parentName = node.parent.parent.name.text
+    const interfaceNode = getParent(property)
+    if (!interfaceNode) return null
+    if (!ts.isInterfaceDeclaration(interfaceNode)) return null
+
+    const parentName = interfaceNode.name.text
 
     return `${capitalize(parentName)}${capitalize(propertyName)}`
 }

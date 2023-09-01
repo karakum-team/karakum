@@ -1,7 +1,6 @@
 import ts from "typescript";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
-import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {extractTypeParameters} from "../../utils/extractTypeParameters.js";
@@ -20,11 +19,9 @@ export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
 
         const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-
         const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
-        const typeParameters = extractTypeParameters(node, typeScriptService?.program).join(", ")
+        const typeParameters = extractTypeParameters(node, context).join(", ")
 
         const members = node.members
             .map(member => render(member))

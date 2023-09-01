@@ -4,10 +4,10 @@ import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
 import {NameResolverService, nameResolverServiceKey} from "./NameResolverPlugin.js";
-import {findClosest} from "../../utils/findClosest.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {generateDerivedDeclarations} from "../../structure/derived/generateDerivedDeclarations.js";
 import {DerivedDeclaration} from "../../structure/derived/derivedDeclaration.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
     resolveName(node: Node): string
@@ -49,6 +49,9 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         const nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
         if (nameResolverService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without NameResolverService")
 
+        const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        if (typeScriptService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without TypeScriptService")
+
         const resolveName = (node: TNode) => nameResolverService.resolveName(node, context)
 
         const anonymousDeclarationContext = {
@@ -65,7 +68,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         if (result === null || typeof result === "string") return result
 
         const sourceFileName = node.getSourceFile()?.fileName ?? "generated.d.ts"
-        const namespace = findClosest(node, ts.isModuleDeclaration)
+        const namespace = typeScriptService.findClosest(node, ts.isModuleDeclaration)
 
         const {name, declaration, reference} = result
 

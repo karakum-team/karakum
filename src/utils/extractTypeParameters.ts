@@ -1,11 +1,14 @@
-import ts, {Program, ConditionalTypeNode} from "typescript";
+import ts, {ConditionalTypeNode} from "typescript";
 import {traverse} from "./traverse.js";
-import {findClosest} from "./findClosest.js";
+import {TypeScriptService, typeScriptServiceKey} from "../converter/plugins/TypeScriptPlugin.js";
+import {ConverterContext} from "../converter/context.js";
 
-export function extractTypeParameters(node: ts.Node, program: Program | undefined): string[] {
+export function extractTypeParameters(node: ts.Node, context: ConverterContext): string[] {
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
     const result: string[] = []
 
-    const typeChecker = program?.getTypeChecker()
+    const typeChecker = typeScriptService?.program.getTypeChecker()
 
     traverse(node, node => {
         if (ts.isIdentifier(node)) {
@@ -14,11 +17,11 @@ export function extractTypeParameters(node: ts.Node, program: Program | undefine
                 .filter(declaration => ts.isTypeParameterDeclaration(declaration))
 
             for (const declaration of typeParameterDeclarations) {
-                let typeParameterContainer = declaration.parent
+                let typeParameterContainer = typeScriptService?.getParent(declaration)
 
-                if (ts.isInferTypeNode(declaration.parent)) {
-                    const conditionalType = findClosest(
-                        declaration.parent,
+                if (typeParameterContainer && ts.isInferTypeNode(typeParameterContainer)) {
+                    const conditionalType = typeScriptService?.findClosest(
+                        typeParameterContainer,
                         (node): node is ConditionalTypeNode => ts.isConditionalTypeNode(node)
                     )
 
@@ -27,7 +30,7 @@ export function extractTypeParameters(node: ts.Node, program: Program | undefine
                     }
                 }
 
-                const foundParent = findClosest(node, node => node === typeParameterContainer)
+                const foundParent = typeScriptService?.findClosest(node, node => node === typeParameterContainer)
 
                 if (foundParent !== undefined) {
                     result.push(node.text)

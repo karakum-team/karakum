@@ -1,6 +1,13 @@
 declare module "package-namespace" {
     const packageNamespaceValue: number
 
+    function testFn(param: string): string
+    function testFn(param: number): string
+
+    interface TestInterface {
+        testFn: typeof testFn
+    }
+
     namespace NestedNamespace {
         const nestedNamespaceValue: number
     }

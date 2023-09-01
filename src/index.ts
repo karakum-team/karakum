@@ -59,7 +59,6 @@ export {ifPresent, renderNullable} from "./converter/render.js"
 
 // utils
 export {traverse} from "./utils/traverse.js"
-export {findClosest} from "./utils/findClosest.js"
 export {capitalize, camelize, isValidIdentifier, escapeIdentifier, identifier, constIdentifier} from "./utils/strings.js"
 
 // structure

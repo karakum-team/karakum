@@ -1,34 +1,42 @@
 import ts from "typescript";
 import {NameResolver} from "../nameResolver.js";
 import {capitalize} from "../../utils/strings.js";
+import {TypeScriptService, typeScriptServiceKey} from "../plugins/TypeScriptPlugin.js";
 
-export const resolveInterfaceMethodCallbackParameterName: NameResolver = (node) => {
-    if (!node.parent) return null
-    if (!ts.isParameter(node.parent)) return null
-    if (!ts.isIdentifier(node.parent.name)) return null
+export const resolveInterfaceMethodCallbackParameterName: NameResolver = (node, context) => {
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const getParent = typeScriptService?.getParent.bind(typeScriptService) ?? ((node: ts.Node) => node.parent)
 
-    const callbackParameterName = node.parent.name.text
+    const callbackParameter = getParent(node)
+    if (!callbackParameter) return null
+    if (!ts.isParameter(callbackParameter)) return null
+    if (!ts.isIdentifier(callbackParameter.name)) return null
 
-    if (!node.parent.parent) return null
-    if (!ts.isFunctionTypeNode(node.parent.parent)) return null
+    const callbackParameterName = callbackParameter.name.text
 
-    if (!node.parent.parent.parent) return null
-    if (!ts.isParameter(node.parent.parent.parent)) return null
-    if (!ts.isIdentifier(node.parent.parent.parent.name)) return null
+    const functionType = getParent(callbackParameter)
+    if (!functionType) return null
+    if (!ts.isFunctionTypeNode(functionType)) return null
 
-    const parameterName = node.parent.parent.parent.name.text
+    const parameter = getParent(functionType)
+    if (!parameter) return null
+    if (!ts.isParameter(parameter)) return null
+    if (!ts.isIdentifier(parameter.name)) return null
 
-    if (!node.parent.parent.parent.parent) return null
-    if (!ts.isMethodSignature(node.parent.parent.parent.parent)) return null
-    if (!ts.isIdentifier(node.parent.parent.parent.parent.name)) return null
+    const parameterName = parameter.name.text
 
-    const methodName = node.parent.parent.parent.parent.name.text
+    const method = getParent(parameter)
+    if (!method) return null
+    if (!ts.isMethodSignature(method)) return null
+    if (!ts.isIdentifier(method.name)) return null
 
-    if (!node.parent.parent.parent.parent.parent) return null
-    if (!ts.isInterfaceDeclaration(node.parent.parent.parent.parent.parent)) return null
-    if (node.parent.parent.parent.parent.parent.name === undefined) return null
+    const methodName = method.name.text
 
-    const parentName = node.parent.parent.parent.parent.parent.name.text
+    const interfaceNode = getParent(method)
+    if (!interfaceNode) return null
+    if (!ts.isInterfaceDeclaration(interfaceNode)) return null
+
+    const parentName = interfaceNode.name.text
 
     return `${capitalize(parentName)}${capitalize(methodName)}${capitalize(parameterName)}${capitalize(callbackParameterName)}`
 }
