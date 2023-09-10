@@ -3,6 +3,7 @@ import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {DeepMap} from "../../utils/deepMap.js";
+import {GeneratedFile} from "../generated.js";
 
 export const declarationMergingServiceKey = Symbol()
 
@@ -125,7 +126,7 @@ export class DeclarationMergingPlugin implements ConverterPlugin {
         return null;
     }
 
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 }

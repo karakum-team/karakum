@@ -3,6 +3,7 @@ import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {Annotation} from "../annotation.js";
+import {GeneratedFile} from "../generated.js";
 
 export class AnnotationsPlugin implements ConverterPlugin {
     private readonly annotations: Annotation[]
@@ -11,8 +12,8 @@ export class AnnotationsPlugin implements ConverterPlugin {
         this.annotations = annotations
     }
 
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {

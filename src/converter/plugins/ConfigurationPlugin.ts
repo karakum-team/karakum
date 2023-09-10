@@ -3,6 +3,7 @@ import {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {Configuration} from "../../configuration/configuration.js";
+import {GeneratedFile} from "../generated.js";
 
 export const configurationServiceKey = Symbol()
 
@@ -18,8 +19,8 @@ export class ConfigurationPlugin implements ConverterPlugin {
         this.configurationService = new ConfigurationService(configuration);
     }
 
-    generate(): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

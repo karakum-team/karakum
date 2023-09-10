@@ -5,6 +5,8 @@ export type {Configuration} from "./configuration/configuration.js"
 export type {ConverterContext} from "./converter/context.js"
 
 // plugin
+export type {GeneratedFile, DerivedFile} from "./converter/generated.js"
+export {isDerivedFile} from "./converter/generated.js"
 export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin.js"
 export {createSimplePlugin} from "./converter/plugin.js"
 
@@ -59,7 +61,14 @@ export {ifPresent, renderNullable} from "./converter/render.js"
 
 // utils
 export {traverse} from "./utils/traverse.js"
-export {capitalize, camelize, isValidIdentifier, escapeIdentifier, identifier, constIdentifier} from "./utils/strings.js"
+export {
+    capitalize,
+    camelize,
+    isValidIdentifier,
+    escapeIdentifier,
+    identifier,
+    constIdentifier,
+} from "./utils/strings.js"
 
 // structure
 export {applyPackageNameMapper, type PackageMappingResult} from "./structure/package/applyPackageNameMapper.js"
@@ -73,6 +82,6 @@ export {createSourceFileInfoItem, type SourceFileInfoItem} from "./structure/sou
 export {createNamespaceInfoItem, type NamespaceInfoItem} from "./structure/namespace/createNamespaceInfoItem.js"
 
 export type {DerivedDeclaration} from "./structure/derived/derivedDeclaration.js"
-export {generateDerivedDeclarations } from "./structure/derived/generateDerivedDeclarations.js"
+export {generateDerivedDeclarations} from "./structure/derived/generateDerivedDeclarations.js"
 
 export {generate} from "./generate.js"

@@ -8,6 +8,7 @@ import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlug
 import {generateDerivedDeclarations} from "../../structure/derived/generateDerivedDeclarations.js";
 import {DerivedDeclaration} from "../../structure/derived/derivedDeclaration.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {DerivedFile} from "../generated.js";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
     resolveName(node: Node): string
@@ -33,7 +34,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
     ) {
     }
 
-    generate(context: ConverterContext): Record<string, string> {
+    generate(context: ConverterContext): DerivedFile[] {
         const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
         const configuration = configurationService?.configuration
         if (configuration === undefined) throw new Error("AnonymousDeclarationPlugin can't work without ConfigurationService")

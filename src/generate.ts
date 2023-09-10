@@ -21,6 +21,7 @@ import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.j
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
 import {toPosix, toModuleName} from "./utils/path.js";
+import {isDerivedFile} from "./converter/generated.js";
 
 async function isExists(fileName: string) {
     try {
@@ -122,7 +123,6 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         console.log(`Source files root: ${inputRoot}`)
     }
 
-
     if (outputFileName) {
         if (await isExists(outputFileName)) {
             await fs.rm(outputFileName, {recursive: true})
@@ -194,8 +194,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     structure
         .flatMap(it => it.statements)
-        .forEach(node => {
-            traverse(node, node => {
+        .forEach(statement => {
+            traverse(statement, node => {
                 for (const plugin of converterPlugins) {
                     plugin.traverse(node, context)
                 }
@@ -207,7 +207,11 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     for (const item of structure) {
         console.log(`${item.meta.type}: ${item.meta.name}`)
 
-        const outputFileName = packageToOutputFileName(item.package, item.fileName, configuration)
+        const outputFileName = packageToOutputFileName(
+            item.package,
+            item.fileName,
+            configuration
+        )
 
         const targetFileName = path.resolve(output, outputFileName)
 
@@ -232,14 +236,26 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     for (const plugin of converterPlugins) {
         const generated = plugin.generate(context)
 
-        for (const [fileName, content] of Object.entries(generated)) {
+        for (const generatedFile of generated) {
+            let fileName = generatedFile.fileName
+
+            if (isDerivedFile(generatedFile)) {
+                const outputFileName = packageToOutputFileName(
+                    generatedFile.package,
+                    generatedFile.fileName,
+                    configuration,
+                )
+
+                fileName = path.resolve(output, outputFileName)
+            }
+
             if (ignoreOutput.every(pattern => !minimatch(fileName, pattern))) {
                 if (await isExists(fileName)) {
-                    await fs.appendFile(fileName, content)
+                    await fs.appendFile(fileName, generatedFile.body)
                 } else {
                     console.log(`Generated file: ${toPosix(fileName)}`)
 
-                    await fs.writeFile(fileName, content)
+                    await fs.writeFile(fileName, generatedFile.body)
                 }
             }
         }

@@ -5,6 +5,7 @@ import {Render} from "../render.js";
 import {NamespaceStrategy} from "../../configuration/configuration.js";
 import {NamespaceInfo} from "../../structure/namespace/collectNamespaceInfo.js";
 import {extractNamespaceName} from "../../structure/namespace/createNamespaceInfoItem.js";
+import {GeneratedFile} from "../generated.js";
 
 export const namespaceInfoServiceKey = Symbol()
 
@@ -33,8 +34,8 @@ export class NamespaceInfoPlugin implements ConverterPlugin {
         this.namespaceInfoService = new NamespaceInfoService(namespaceInfo);
     }
 
-    generate(): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

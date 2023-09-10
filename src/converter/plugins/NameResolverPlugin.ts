@@ -4,6 +4,7 @@ import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {NameResolver} from "../nameResolver.js";
 import {defaultNameResolvers} from "../defaultNameResolvers.js";
+import {GeneratedFile} from "../generated.js";
 
 export const nameResolverServiceKey = Symbol()
 
@@ -36,8 +37,8 @@ export class NameResolverPlugin implements ConverterPlugin {
         this.nameResolverService = new NameResolverService(nameResolvers)
     }
 
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

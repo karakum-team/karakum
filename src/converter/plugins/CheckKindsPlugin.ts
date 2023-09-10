@@ -3,6 +3,7 @@ import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
+import {GeneratedFile} from "../generated.js";
 
 const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.SourceFile, // lines
@@ -82,8 +83,8 @@ const supportedKinds: ts.SyntaxKind[] = [
 ]
 
 export class CheckKindsPlugin implements ConverterPlugin {
-    generate(): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

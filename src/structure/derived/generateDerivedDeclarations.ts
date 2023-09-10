@@ -8,15 +8,15 @@ import {createNamespaceInfoItem} from "../namespace/createNamespaceInfoItem.js";
 import {createSourceFileInfoItem} from "../sourceFile/createSourceFileInfoItem.js";
 import {normalizeStructure} from "../normalizeStructure.js";
 import {applyPackageNameMapper} from "../package/applyPackageNameMapper.js";
-import {packageToOutputFileName} from "../package/packageToFileName.js";
 import {createGeneratedFile} from "../createGeneratedFile.js";
+import {DerivedFile} from "../../converter/generated.js";
 
 export function generateDerivedDeclarations(
     declarations: DerivedDeclaration[],
     configuration: Configuration,
     resolveNamespaceStrategy: (node: ModuleDeclaration) => NamespaceStrategy
-): Record<string, string> {
-    const {output, granularity} = configuration
+): DerivedFile[] {
+    const {granularity} = configuration
 
     const structureItems: DerivedDeclarationStructureItem[] = declarations.map(generatedInfo => {
         const {sourceFileName, namespace, fileName, body} = generatedInfo
@@ -57,30 +57,26 @@ export function generateDerivedDeclarations(
         body: `${item.body}\n\n${other.body}`
     }))
 
-    return Object.fromEntries(
-        normalizedStructureItems.map(item => {
-            const packageMappingResult = applyPackageNameMapper(
-                item.package,
-                item.fileName,
-                configuration,
-            )
+    return normalizedStructureItems.map(item => {
+        const packageMappingResult = applyPackageNameMapper(
+            item.package,
+            item.fileName,
+            configuration,
+        )
 
-            const outputFileName = packageToOutputFileName(
+        const generated = granularity === "top-level"
+            ? createGeneratedFile(
                 packageMappingResult.package,
                 packageMappingResult.fileName,
+                item.body,
                 configuration,
             )
+            : item.body
 
-            const generated = granularity === "top-level"
-                ? createGeneratedFile(
-                    packageMappingResult.package,
-                    packageMappingResult.fileName,
-                    item.body,
-                    configuration,
-                )
-                : item.body
-
-            return [path.resolve(output, outputFileName), generated]
-        })
-    )
+        return {
+            package: packageMappingResult.package,
+            fileName: packageMappingResult.fileName,
+            body: generated,
+        }
+    })
 }

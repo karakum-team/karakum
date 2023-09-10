@@ -2,14 +2,15 @@ import {ConverterPlugin} from "../plugin.js";
 import ts, {CommentRange, Node, SourceFile} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
+import {GeneratedFile} from "../generated.js";
 
 export class CommentsPlugin implements ConverterPlugin {
     private nestedCommentPattern = /(?<!^)\/\*/g
 
     private coveredCommentRanges = new Map<SourceFile, CommentRange[]>()
 
-    generate(): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

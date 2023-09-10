@@ -3,6 +3,7 @@ import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {setParentNodes} from "../../utils/setParentNodes.js";
+import {GeneratedFile} from "../generated.js";
 
 export const typeScriptServiceKey = Symbol()
 
@@ -62,8 +63,8 @@ export class TypeScriptPlugin implements ConverterPlugin {
         this.typeScriptService = new TypeScriptService(program);
     }
 
-    generate(): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

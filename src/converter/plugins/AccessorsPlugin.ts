@@ -4,6 +4,7 @@ import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {GeneratedFile} from "../generated.js";
 
 interface AccessorInfo {
     getter: GetAccessorDeclaration | undefined
@@ -95,7 +96,7 @@ ${modifier}${name}: ${type}
         return null
     }
 
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 }

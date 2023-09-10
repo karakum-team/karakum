@@ -3,6 +3,7 @@ import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {InheritanceModifier} from "../inheritanceModifier.js";
+import {GeneratedFile} from "../generated.js";
 
 export const inheritanceModifierServiceKey = Symbol()
 
@@ -28,8 +29,8 @@ export class InheritanceModifierPlugin implements ConverterPlugin {
         this.inheritanceModifierService = new InheritanceModifierService(inheritanceModifiers)
     }
 
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

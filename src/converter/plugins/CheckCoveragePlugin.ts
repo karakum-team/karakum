@@ -5,6 +5,7 @@ import {ConverterContext} from "../context.js";
 import {traverse} from "../../utils/traverse.js";
 import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {GeneratedFile} from "../generated.js";
 
 export const checkCoverageServiceKey = Symbol()
 
@@ -47,7 +48,7 @@ export class CheckCoverageService {
 export class CheckCoveragePlugin implements ConverterPlugin {
     private readonly checkCoverageService = new CheckCoverageService()
 
-    generate(context: ConverterContext): Record<string, string> {
+    generate(context: ConverterContext): GeneratedFile[] {
         const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
         const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
@@ -75,7 +76,7 @@ export class CheckCoveragePlugin implements ConverterPlugin {
         console.log(`Covered nodes: ${coveredNodes}`)
         console.log(`Uncovered nodes: ${uncoveredNodes}`)
 
-        return {};
+        return [];
     }
 
     render(node: Node, context: ConverterContext, next: Render): string | null {

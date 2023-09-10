@@ -1,4 +1,5 @@
 import {ConverterContext} from "./context.js";
+import {GeneratedFile} from "./generated.js";
 import {Render} from "./render.js";
 import {Node} from "typescript"
 
@@ -9,7 +10,7 @@ export interface ConverterPlugin<TNode extends Node = Node> {
 
     render(node: TNode, context: ConverterContext, next: Render): string | null
 
-    generate(context: ConverterContext): Record<string, string>
+    generate(context: ConverterContext): GeneratedFile[]
 }
 
 export type SimpleConverterPlugin<TNode extends Node = Node> =
@@ -25,6 +26,6 @@ export function createSimplePlugin<TNode extends Node = Node>(
 
         render,
 
-        generate: () => ({})
+        generate: () => []
     }
 }

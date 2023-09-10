@@ -6,6 +6,7 @@ import {Render, renderResolvedNullable} from "../render.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {resolveParenthesizedType} from "../../utils/resolveParenthesizedType.js";
 import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
+import {GeneratedFile} from "../generated.js";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
 const isUndefined = (type: Node) => type.kind === ts.SyntaxKind.UndefinedKeyword
@@ -58,8 +59,8 @@ export function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
 }
 
 export class NullableUnionTypePlugin implements ConverterPlugin {
-    generate(context: ConverterContext): Record<string, string> {
-        return {};
+    generate(): GeneratedFile[] {
+        return [];
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
