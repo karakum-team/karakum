@@ -16,6 +16,14 @@
                 "package"
             ],
             "type": "string"
+        },
+        "ConflictResolutionStrategy": {
+            "enum": [
+                "error",
+                "join",
+                "replace"
+            ],
+            "type": "string"
         }
     },
     "properties": {
@@ -36,6 +44,13 @@
         "compilerOptions": {
             "$ref": "https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions",
             "title": "compilerOptions",
+            "type": "object"
+        },
+        "conflictResolutionStrategy": {
+            "additionalProperties": {
+                "$ref": "#/definitions/ConflictResolutionStrategy"
+            },
+            "title": "conflictResolutionStrategy",
             "type": "object"
         },
         "cwd": {

@@ -12,10 +12,7 @@ export function normalizeStructure<T extends StructureItem>(items: T[], merge: (
         if (!existingItem) {
             result.set(fileName, item)
         } else {
-            const mergedItem = merge({
-                ...existingItem,
-                hasRuntime: existingItem.hasRuntime || item.hasRuntime,
-            }, item)
+            const mergedItem = merge(existingItem, item)
 
             result.set(fileName, mergedItem)
         }

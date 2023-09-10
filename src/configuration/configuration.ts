@@ -4,6 +4,8 @@ export type Granularity = "bundle" | "file" | "top-level"
 
 export type NamespaceStrategy = "ignore" | "object" | "package"
 
+export type ConflictResolutionStrategy = "join" | "replace" | "error"
+
 export interface SchemaConfiguration {
     inputRoots?: string | string[]
 
@@ -56,6 +58,12 @@ export interface SchemaConfiguration {
 
     /**
      * @TJS-type object
+     * @additionalProperties { "$ref": "#/definitions/ConflictResolutionStrategy" }
+     * */
+    conflictResolutionStrategy?: Record<string, ConflictResolutionStrategy>
+
+    /**
+     * @TJS-type object
      * @$ref https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions
      * */
     compilerOptions?: Record<string, unknown>
@@ -98,6 +106,8 @@ export interface Configuration extends PartialConfiguration {
     importInjector: Record<string, string[]>
 
     namespaceStrategy: Record<string, NamespaceStrategy>
+
+    conflictResolutionStrategy: Record<string, ConflictResolutionStrategy>
 
     compilerOptions: CompilerOptions
 

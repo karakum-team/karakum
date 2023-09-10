@@ -96,6 +96,8 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
 
         namespaceStrategy: configuration.namespaceStrategy ?? {},
 
+        conflictResolutionStrategy: configuration.conflictResolutionStrategy ?? {},
+
         compilerOptions: configuration.compilerOptions ?? {},
 
         verbose: configuration.verbose ?? false,

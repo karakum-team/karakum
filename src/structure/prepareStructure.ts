@@ -100,6 +100,7 @@ const topLevelMatcher: TopLevelMatcher = node => {
 function normalizeInputStructure(items: InputStructureItem[]) {
     return normalizeStructure(items, (item, other) => ({
         ...item,
+        hasRuntime: item.hasRuntime || other.hasRuntime,
         statements: [...item.statements, ...other.statements],
     }))
 }
