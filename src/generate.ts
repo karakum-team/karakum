@@ -11,7 +11,6 @@ import {CommentsPlugin} from "./converter/plugins/CommentsPlugin.js";
 import {prepareStructure} from "./structure/prepareStructure.js";
 import {traverse} from "./utils/traverse.js";
 import {minimatch} from "minimatch";
-import {createTargetFile} from "./structure/createTargetFile.js";
 import {createRender} from "./converter/render.js";
 import {NameResolver} from "./converter/nameResolver.js";
 import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin.js";
@@ -20,8 +19,9 @@ import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
-import {toPosix, toModuleName} from "./utils/path.js";
-import {isDerivedFile} from "./converter/generated.js";
+import {toModuleName} from "./utils/path.js";
+import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
+import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
 
 async function isExists(fileName: string) {
     try {
@@ -204,6 +204,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const render = createRender(context, converterPlugins)
 
+    const targetFiles: TargetFile[] = []
+
     for (const item of structure) {
         console.log(`${item.meta.type}: ${item.meta.name}`)
 
@@ -215,29 +217,26 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
         const targetFileName = path.resolve(output, outputFileName)
 
-        console.log(`Target file: ${toPosix(targetFileName)}`)
-
-        const convertedBody = item.statements
+        const body = item.statements
             .map(node => render(node))
             .join("\n\n")
 
-        const targetFile = createTargetFile(
-            item,
-            convertedBody,
-            configuration,
-        )
-
         if (ignoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
-            await fs.mkdir(path.dirname(targetFileName), {recursive: true})
-            await fs.writeFile(targetFileName, targetFile)
+            targetFiles.push({
+                ...item,
+                body,
+            })
         }
     }
+
+    const derivedFiles: DerivedFile[] = []
+    const generatedFiles: GeneratedFile[] = []
 
     for (const plugin of converterPlugins) {
         const generated = plugin.generate(context)
 
         for (const generatedFile of generated) {
-            let fileName = generatedFile.fileName
+            let generatedFileName = generatedFile.fileName
 
             if (isDerivedFile(generatedFile)) {
                 const outputFileName = packageToOutputFileName(
@@ -246,18 +245,28 @@ export async function generate(partialConfiguration: PartialConfiguration) {
                     configuration,
                 )
 
-                fileName = path.resolve(output, outputFileName)
+                generatedFileName = path.resolve(output, outputFileName)
             }
 
-            if (ignoreOutput.every(pattern => !minimatch(fileName, pattern))) {
-                if (await isExists(fileName)) {
-                    await fs.appendFile(fileName, generatedFile.body)
+            if (ignoreOutput.every(pattern => !minimatch(generatedFileName, pattern))) {
+                if (isDerivedFile(generatedFile)) {
+                    derivedFiles.push(generatedFile)
                 } else {
-                    console.log(`Generated file: ${toPosix(fileName)}`)
-
-                    await fs.writeFile(fileName, generatedFile.body)
+                    generatedFiles.push(generatedFile)
                 }
             }
         }
+    }
+
+    const resultFiles = resolveConflicts(
+        targetFiles,
+        derivedFiles,
+        generatedFiles,
+        configuration,
+    )
+
+    for (const resultFile of resultFiles) {
+        await fs.mkdir(path.dirname(resultFile.fileName), {recursive: true})
+        await fs.writeFile(resultFile.fileName, resultFile.body)
     }
 }

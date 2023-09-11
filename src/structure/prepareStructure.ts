@@ -4,7 +4,6 @@ import {InputStructureItem} from "./structure.js";
 import {applyPackageNameMapper} from "./package/applyPackageNameMapper.js";
 import {applyModuleNameMapper} from "./module/applyModuleNameMapper.js";
 import {createBundleInfoItem} from "./bundle/createBundleInfoItem.js";
-import {normalizeStructure} from "./normalizeStructure.js";
 
 interface TopLevelMatch {
     name: string,
@@ -97,14 +96,6 @@ const topLevelMatcher: TopLevelMatcher = node => {
     return null
 }
 
-function normalizeInputStructure(items: InputStructureItem[]) {
-    return normalizeStructure(items, (item, other) => ({
-        ...item,
-        hasRuntime: item.hasRuntime || other.hasRuntime,
-        statements: [...item.statements, ...other.statements],
-    }))
-}
-
 function applyGranularity(
     items: InputStructureItem[],
     configuration: Configuration,
@@ -112,7 +103,7 @@ function applyGranularity(
     const {granularity} = configuration
 
     if (granularity === "file") {
-        return normalizeInputStructure(items)
+        return items
     }
 
     if (granularity === "bundle") {
@@ -131,33 +122,31 @@ function applyGranularity(
     }
 
     if (granularity === "top-level") {
-        return normalizeInputStructure(
-            items.flatMap(item => {
-                const result: InputStructureItem[] = []
+        return items.flatMap(item => {
+            const result: InputStructureItem[] = []
 
-                for (const statement of item.statements) {
-                    let fileName = item.fileName
-                    let hasRuntime = item.hasRuntime
+            for (const statement of item.statements) {
+                let fileName = item.fileName
+                let hasRuntime = item.hasRuntime
 
-                    const topLevelMatch = topLevelMatcher(statement)
+                const topLevelMatch = topLevelMatcher(statement)
 
-                    if (topLevelMatch !== null) {
-                        fileName = `${topLevelMatch.name}.kt`
-                        hasRuntime = topLevelMatch.hasRuntime
-                    }
-
-                    result.push({
-                        ...item,
-
-                        fileName,
-                        hasRuntime,
-                        statements: [statement],
-                    })
+                if (topLevelMatch !== null) {
+                    fileName = `${topLevelMatch.name}.kt`
+                    hasRuntime = topLevelMatch.hasRuntime
                 }
 
-                return result
-            })
-        )
+                result.push({
+                    ...item,
+
+                    fileName,
+                    hasRuntime,
+                    statements: [statement],
+                })
+            }
+
+            return result
+        })
     }
 
     throw new Error(`Unknown granularity type: ${granularity}`)

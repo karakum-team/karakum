@@ -1,6 +1,6 @@
 import {testGeneration} from "../utils.js";
 
-testGeneration("bundle", import.meta.url, {
+testGeneration("base", import.meta.url, {
     input: "lib/**",
     output: "build",
     libraryName: "sandbox-base",
