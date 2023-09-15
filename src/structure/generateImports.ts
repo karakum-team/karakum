@@ -13,7 +13,6 @@ export function generateImports(
 
         if (regexp.test(outputFileName)) {
             importSources = importSources.concat(imports)
-            break
         }
     }
 
