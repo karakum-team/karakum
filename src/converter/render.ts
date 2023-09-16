@@ -21,6 +21,7 @@ const primitiveKinds = new Set([
     ts.SyntaxKind.VoidKeyword,
     ts.SyntaxKind.NeverKeyword,
     ts.SyntaxKind.SymbolKeyword,
+    ts.SyntaxKind.BigIntKeyword,
 ])
 
 function isPrimitiveType(node: Node) {

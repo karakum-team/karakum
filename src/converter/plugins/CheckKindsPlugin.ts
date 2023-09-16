@@ -71,6 +71,7 @@ const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.BindingElement, // ignore
     ts.SyntaxKind.UnknownKeyword, // Any?
     ts.SyntaxKind.SymbolKeyword, // js.core.Symbol
+    ts.SyntaxKind.BigIntKeyword, // js.core.BigInt
     ts.SyntaxKind.StaticKeyword, // companion object
     ts.SyntaxKind.ExportAssignment, // ignore
     ts.SyntaxKind.EndOfFileToken, // skip
