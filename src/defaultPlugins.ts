@@ -103,6 +103,7 @@ export const createPlugins = (
     convertLiteral(ts.isBigIntLiteral, () => "js.core.BigInt"),
 
     convertLiteral(ts.isThisTypeNode, () => "Unit"),
+    convertLiteral(ts.isTemplateLiteralTypeNode, () => "String"),
 
     convertModuleDeclaration,
     convertModuleBlock,

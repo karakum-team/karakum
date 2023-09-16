@@ -16,6 +16,7 @@ const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.VariableDeclaration, // (val|var) name: type(?)
     ts.SyntaxKind.StringLiteral, // text
     ts.SyntaxKind.StringKeyword, // String
+    ts.SyntaxKind.TemplateLiteralType, // String
     ts.SyntaxKind.InterfaceDeclaration, // interface <params> : parents { members }
     ts.SyntaxKind.TypeParameter, // name : constraint /* default */
     ts.SyntaxKind.IndexSignature, // TODO: get operator
