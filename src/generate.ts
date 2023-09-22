@@ -58,6 +58,30 @@ async function loadExtensions<T>(
     return extensions
 }
 
+function checkCasing(fileNames: string[]) {
+    let isConflict = false
+
+    for (let i = 0; i < fileNames.length - 1; i++) {
+        for (let j = i + 1; j < fileNames.length; j++) {
+            const fileName = fileNames[i]
+            const otherFileName = fileNames[j]
+
+            if (
+                fileName !== otherFileName
+                && fileName.toLowerCase() === otherFileName.toLowerCase()
+            ) {
+                isConflict = true
+
+                console.log(`Files have the same name but different casing:\n${fileName}\n${otherFileName}`)
+            }
+        }
+    }
+
+    if (isConflict) {
+        throw new Error("There are conflicts in file names")
+    }
+}
+
 export async function generate(partialConfiguration: PartialConfiguration) {
     const configuration = await defaultizeConfiguration(partialConfiguration)
 
@@ -264,6 +288,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         generatedFiles,
         configuration,
     )
+
+    checkCasing(resultFiles.map(it => it.fileName))
 
     for (const resultFile of resultFiles) {
         await fs.mkdir(path.dirname(resultFile.fileName), {recursive: true})
