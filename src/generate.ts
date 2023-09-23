@@ -23,15 +23,6 @@ import {toModuleName} from "./utils/path.js";
 import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
 
-async function isExists(fileName: string) {
-    try {
-        await fs.access(fileName);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
 async function loadExtensions<T>(
     name: string,
     patterns: string[],
@@ -148,13 +139,9 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     }
 
     if (outputFileName) {
-        if (await isExists(outputFileName)) {
-            await fs.rm(outputFileName, {recursive: true})
-        }
+        await fs.rm(outputFileName, {recursive: true, force: true})
     } else {
-        if (await isExists(output)) {
-            await fs.rm(output, {recursive: true})
-        }
+        await fs.rm(output, {recursive: true, force: true})
     }
     await fs.mkdir(output, {recursive: true})
 

@@ -31,7 +31,7 @@ export function testGeneration(name: string, fileUrl: string, createConfiguratio
         })
 
         if (isUpdate) {
-            await fs.rm(actualOutputDirName, {recursive: true})
+            await fs.rm(actualOutputDirName, {recursive: true, force: true})
             return
         }
 

@@ -25,6 +25,18 @@ external interface FetcherInterface<TData /* default is Any? */> {
 var state: FetcherInterfaceState<TData>
 }
     
+
+
+external interface BaseLiteralType {
+var one: String
+}
+    
+
+
+external interface LiteralTypeContainer<TData /* default is Any? */> {
+var state: LiteralTypeContainerState<TData>
+}
+    
     
 external interface FetcherStatesIdle<TData> {
 var state: String /* "idle" */
@@ -44,6 +56,12 @@ var data: TData?
 
 
 external interface FetcherInterfaceState<TData> {
+var data: TData?
+}
+        
+
+
+external interface LiteralTypeContainerState<TData>  : BaseLiteralType {
 var data: TData?
 }
         

@@ -56,6 +56,7 @@ import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPl
 import {convertTypeQuery} from "./converter/plugins/convertTypeQuery.js";
 import {stringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
 import {convertLiteral} from "./converter/plugins/convertLiteral.js";
+import {inheritedTypeLiteralPlugin} from "./converter/plugins/InheritedTypeLiteralPlugin.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -79,6 +80,7 @@ export const createPlugins = (
     new AccessorsPlugin(),
 
     typeLiteralPlugin,
+    inheritedTypeLiteralPlugin,
     stringUnionTypePlugin,
 
     convertPrimitive(hasKind(ts.SyntaxKind.AnyKeyword), () => "Any?"),

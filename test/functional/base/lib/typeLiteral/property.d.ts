@@ -20,3 +20,13 @@ declare interface FetcherInterface<TData = any> {
         data: TData | undefined;
     };
 }
+
+declare interface BaseLiteralType {
+    one: string
+}
+
+declare interface LiteralTypeContainer<TData = any> {
+    state: BaseLiteralType & {
+        data: TData | undefined;
+    };
+}
