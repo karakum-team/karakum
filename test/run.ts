@@ -4,6 +4,12 @@ import {spec as SpecReporter} from "node:test/reporters";
 import {pipeline} from "node:stream/promises";
 import {glob} from "glob";
 
+const isUpdate = process.argv.some(arg => arg === "-u" || arg === "--update")
+
+if (isUpdate) {
+    process.env['KARAKUM_TEST_UPDATE'] = JSON.stringify(true)
+}
+
 let fail = false
 
 const source = run({

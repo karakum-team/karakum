@@ -1,9 +1,9 @@
 import {testGeneration} from "../utils.js";
 
-testGeneration("bundle", import.meta.url, {
+testGeneration("bundle", import.meta.url, output => ({
     input: "lib/**",
-    output: "build/customBundle.kt",
+    output: `${output}/customBundle.kt`,
     libraryName: "sandbox-bundle",
     granularity: "bundle",
     verbose: true,
-})
+}))

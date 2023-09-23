@@ -1,8 +1,8 @@
 import {testGeneration} from "../utils.js";
 
-testGeneration("namespace", import.meta.url, {
+testGeneration("namespace", import.meta.url, output => ({
     input: "lib/**",
-    output: "build",
+    output,
     libraryName: "sandbox-namespace",
     granularity: "top-level",
     packageNameMapper: {
@@ -18,4 +18,4 @@ testGeneration("namespace", import.meta.url, {
         "will-be-mapped": "package",
     },
     verbose: true,
-})
+}))

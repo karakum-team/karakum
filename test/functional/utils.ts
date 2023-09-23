@@ -3,8 +3,11 @@ import assert from "node:assert/strict";
 import path from "node:path";
 import url from "node:url";
 import fs from "node:fs/promises";
+import process from "node:process";
 import {PartialConfiguration} from "../../src/configuration/configuration.js";
 import {generate} from "../../src/index.js";
+
+const isUpdate = Boolean(process.env['KARAKUM_TEST_UPDATE']);
 
 async function readDir(dirName: string) {
     return (await fs.readdir(dirName, {withFileTypes: true, recursive: true}))
@@ -12,17 +15,25 @@ async function readDir(dirName: string) {
         .map(it => path.resolve(it.path, it.name))
 }
 
-export function testGeneration(name: string, fileUrl: string, configuration: PartialConfiguration) {
+export function testGeneration(name: string, fileUrl: string, createConfiguration: (output: string) => PartialConfiguration) {
     test(name, async context => {
         const dirName = path.dirname(url.fileURLToPath(fileUrl))
+
+        const actualOutputDirName = path.resolve(dirName, "build")
+        const expectedOutputDirName = path.resolve(dirName, "generated")
+
+        const output = isUpdate ? expectedOutputDirName : actualOutputDirName
+        const configuration = createConfiguration(output)
 
         await generate({
             cwd: dirName,
             ...configuration,
         })
 
-        const actualOutputDirName = path.resolve(dirName, "build")
-        const expectedOutputDirName = path.resolve(dirName, "generated")
+        if (isUpdate) {
+            await fs.rm(actualOutputDirName, {recursive: true})
+            return
+        }
 
         const actualFileNames = await readDir(actualOutputDirName)
         const expectedFileNames = await readDir(expectedOutputDirName)
