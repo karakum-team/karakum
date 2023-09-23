@@ -3,7 +3,7 @@ import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
-import {extractTypeParameters} from "../../utils/extractTypeParameters.js";
+import {extractTypeParameters} from "../extractTypeParameters.js";
 
 export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
     (node, context, render) => {
@@ -21,19 +21,19 @@ export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
 
         const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
-        const typeParameters = extractTypeParameters(node, context).join(", ")
+        const typeParameters = extractTypeParameters(node, context, render)
 
         const members = node.members
             .map(member => render(member))
             .join("\n")
 
         const declaration = `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters.declaration, it => `<${it}>`)} {
 ${members}
 }
         `
 
-        const reference = `${name}${ifPresent(typeParameters, it => `<${it}>`)}`
+        const reference = `${name}${ifPresent(typeParameters.reference, it => `<${it}>`)}`
 
         return {name, declaration, reference};
     }

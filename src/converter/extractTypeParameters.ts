@@ -1,12 +1,22 @@
-import ts, {ConditionalTypeNode} from "typescript";
-import {traverse} from "./traverse.js";
-import {TypeScriptService, typeScriptServiceKey} from "../converter/plugins/TypeScriptPlugin.js";
-import {ConverterContext} from "../converter/context.js";
+import ts, {ConditionalTypeNode, Declaration} from "typescript";
+import {traverse} from "../utils/traverse.js";
+import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugin.js";
+import {ConverterContext} from "./context.js";
+import {Render} from "./render.js";
 
-export function extractTypeParameters(node: ts.Node, context: ConverterContext): string[] {
+export interface TypeParameterExtractionResult {
+    declaration: string
+    reference: string
+}
+
+export function extractTypeParameters(
+    node: ts.Node,
+    context: ConverterContext,
+    render: Render
+): TypeParameterExtractionResult {
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    const result: string[] = []
+    const result: [ts.Node, Declaration][] = []
 
     const typeChecker = typeScriptService?.program.getTypeChecker()
 
@@ -33,11 +43,22 @@ export function extractTypeParameters(node: ts.Node, context: ConverterContext):
                 const foundParent = typeScriptService?.findClosest(node, node => node === typeParameterContainer)
 
                 if (foundParent !== undefined) {
-                    result.push(node.text)
+                    result.push([node, declaration])
                 }
             }
         }
     })
 
-    return result
+    const declaration = result
+        .map(([, declaration]) => render(declaration))
+        .join(", ")
+
+    const reference = result
+        .map(([node]) => render(node))
+        .join(", ")
+
+    return {
+        declaration,
+        reference,
+    }
 }
