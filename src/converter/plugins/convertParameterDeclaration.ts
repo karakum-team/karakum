@@ -1,7 +1,12 @@
 import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
-import {flatUnionTypes, isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
+import {
+    flatUnionTypes,
+    isNullableOnlyUnionType,
+    isNullableType,
+    isNullableUnionType
+} from "./NullableUnionTypePlugin.js";
 import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
 import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
@@ -156,6 +161,7 @@ const expandUnions = (
             const signature = currentSignatures[signatureIndex]
             const {parameter, type, optional} = signature[parameterIndex]
 
+            if (type && isNullableOnlyUnionType(type, context)) continue
             if (type && isNullableStringUnionType(type, context)) continue
 
             if (type && ts.isUnionTypeNode(type)) {

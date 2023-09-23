@@ -28,6 +28,12 @@ export function isNullableUnionType(node: Node, context: ConverterContext): node
     return flatUnionTypes(node, context).some(type => isNullableType(type))
 }
 
+export function isNullableOnlyUnionType(node: Node, context: ConverterContext): node is UnionTypeNode {
+    if (!ts.isUnionTypeNode(node)) return false
+
+    return flatUnionTypes(node, context).every(type => isNullableType(type))
+}
+
 export function flatUnionTypes(node: UnionTypeNode, context: ConverterContext) {
     let result: TypeNode[] = []
 
@@ -64,17 +70,22 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
+        const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        checkCoverageService?.cover(node)
+
+        if (isNullableOnlyUnionType(node, context)) {
+            node.types.forEach(it => checkCoverageService?.deepCover(it))
+
+            return "Nothing?"
+        }
+
         if (isNullableStringUnionType(node, context)) return null
 
         if (isNullableUnionType(node, context)) {
-
-            const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-            checkCoverageService?.cover(node)
-
             const types = flatUnionTypes(node, context)
 
             const nonNullableTypes = types.filter(type => !isNullableType(type))
-            const nullableTypes = types.filter(type => isNullableType(type))
+            const nullableTypes = node.types.filter(type => isNullableType(type))
 
             nullableTypes.forEach(it => checkCoverageService?.deepCover(it))
 
