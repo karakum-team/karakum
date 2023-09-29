@@ -11,6 +11,7 @@ import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
 import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
+import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
@@ -56,6 +57,10 @@ export const convertParameterDeclarations = (
     const initialSignature = extractSignature(node)
 
     if (strategy === "function") {
+        const annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
+        const annotations = annotationService?.resolveAnnotations(node, context) ?? []
+        const delimiter = `\n\n${annotations.join("\n")}`
+
         const signatures = expandUnions(initialSignature, context)
 
         return signatures
@@ -73,7 +78,7 @@ export const convertParameterDeclarations = (
 
                 return template(parameters, signature)
             })
-            .join("\n\n")
+            .join(delimiter)
     }
 
     if (strategy === "lambda") {

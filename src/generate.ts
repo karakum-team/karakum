@@ -13,7 +13,7 @@ import {traverse} from "./utils/traverse.js";
 import {minimatch} from "minimatch";
 import {createRender} from "./converter/render.js";
 import {NameResolver} from "./converter/nameResolver.js";
-import {AnnotationsPlugin} from "./converter/plugins/AnnotationsPlugin.js";
+import {AnnotationPlugin} from "./converter/plugins/AnnotationPlugin.js";
 import {InheritanceModifier} from "./converter/inheritanceModifier.js";
 import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
@@ -191,7 +191,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const converterPlugins = [
         // it is important to handle comments and annotations at first
         new CommentsPlugin(),
-        new AnnotationsPlugin(customAnnotations),
+        new AnnotationPlugin(customAnnotations),
 
         ...customPlugins,
         ...defaultPlugins

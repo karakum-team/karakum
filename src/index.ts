@@ -21,6 +21,10 @@ export type {InheritanceModifier} from "./converter/inheritanceModifier.js"
 
 // plugin services
 export {
+    annotationServiceKey,
+    type AnnotationService
+} from "./converter/plugins/AnnotationPlugin.js"
+export {
     checkCoverageServiceKey,
     type CheckCoverageService
 } from "./converter/plugins/CheckCoveragePlugin.js"
