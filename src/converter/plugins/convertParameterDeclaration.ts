@@ -14,11 +14,13 @@ import {escapeIdentifier} from "../../utils/strings.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
+    defaultValue?: string
     template: (parameters: string, signature: Signature) => string,
 }
 
 export interface ParameterDeclarationConfiguration {
     strategy: "function" | "lambda",
+    defaultValue?: string
     type: TypeNode | undefined,
     nullable: boolean,
 }
@@ -50,7 +52,7 @@ export const convertParameterDeclarations = (
     render: Render,
     configuration: ParameterDeclarationsConfiguration,
 ) => {
-    const {strategy, template} = configuration
+    const {strategy, defaultValue, template} = configuration
     const initialSignature = extractSignature(node)
 
     if (strategy === "function") {
@@ -62,6 +64,7 @@ export const convertParameterDeclarations = (
                     .map(({ parameter, type, nullable}) => {
                         return convertParameterDeclarationWithFixedType(parameter, context, render, {
                             strategy,
+                            defaultValue,
                             type,
                             nullable,
                         })
@@ -124,6 +127,7 @@ const convertParameterDeclarationWithFixedType = (
     const isOptional = strategy === "lambda" && Boolean(node.questionToken)
 
     const isDefinedExternally = strategy === "function" && Boolean(node.questionToken)
+    const defaultValue = configuration.defaultValue ?? "definedExternally"
 
     let renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
 
@@ -136,7 +140,7 @@ const convertParameterDeclarationWithFixedType = (
     }
 
 
-    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${isOptional ? " /* use undefined for default */" : ""}${isDefinedExternally ? " = definedExternally" : ""}`
+    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${isOptional ? " /* use undefined for default */" : ""}${isDefinedExternally ? ` = ${defaultValue}` : ""}`
 }
 
 const extractSignature = (node: SignatureDeclarationBase) => {
