@@ -217,8 +217,10 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const targetFiles: TargetFile[] = []
 
+    const structureMeta = new Set<string>()
+
     for (const item of structure) {
-        console.log(`${item.meta.type}: ${item.meta.name}`)
+        structureMeta.add(`${item.meta.type}: ${item.meta.name}`)
 
         const outputFileName = packageToOutputFileName(
             item.package,
@@ -238,6 +240,10 @@ export async function generate(partialConfiguration: PartialConfiguration) {
                 body,
             })
         }
+    }
+
+    for (const meta of structureMeta) {
+        console.log(meta)
     }
 
     const derivedFiles: DerivedFile[] = []
