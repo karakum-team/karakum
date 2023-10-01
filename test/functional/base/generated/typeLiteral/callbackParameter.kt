@@ -26,25 +26,25 @@ external interface MyClassConflictHandlerConflictType {
 var third: Boolean
 var fourth: Array<String>
 }
-        
+    
 
 
 external interface MyClassMethodCbOptions {
 var third: Boolean
 var fourth: Array<String>
 }
-        
+    
 
 
 external interface MyInterfaceConflictHandlerConflictType {
 var first: Boolean
 var second: Array<String>
 }
-        
+    
 
 
 external interface MyInterfaceMethodCbOptions {
 var first: Boolean
 var second: Array<String>
 }
-        
+    

@@ -16,5 +16,5 @@ operator fun  invoke(param: String): String
 operator fun  invoke(param: Double): String
             
 }
-        
+    
     

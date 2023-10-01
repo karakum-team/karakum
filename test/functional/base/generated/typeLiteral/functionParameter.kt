@@ -41,34 +41,34 @@ var hydrationData: HydrationState?
 var initialEntries: Array<String>?
 var initialIndex: Double?
 }
-        
+    
 
 
 external interface MyClassOptions {
 var first: String
 var second: Double
 }
-        
+    
 
 
 external interface MyClassMethodOptions {
 var third: Boolean
 var fourth: Array<String>
 }
-        
+    
 
 
 external interface MyInterfaceMethodOptions {
 var first: Boolean
 var second: Array<String>
 }
-        
+    
 
 
 external interface ShouldRevalidateFunctionArgs {
 var currentUrl: URL
 }
-        
+    
 
 
 external interface BlockerFunctionArgs {
@@ -76,4 +76,4 @@ var currentLocation: Location
 var nextLocation: Location
 var historyAction: HistoryAction
 }
-        
+    

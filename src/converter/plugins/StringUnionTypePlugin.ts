@@ -28,7 +28,7 @@ export function isNullableStringUnionType(node: ts.Node, context: ConverterConte
     )
 }
 
-export const convertStringUnionType = (node: UnionTypeNode, name: string, context: ConverterContext) => {
+export function convertStringUnionType(node: UnionTypeNode, name: string, context: ConverterContext) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
@@ -83,7 +83,7 @@ ${body}
         declaration,
         nullable,
     }
-};
+}
 
 export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
     (node, context) => {

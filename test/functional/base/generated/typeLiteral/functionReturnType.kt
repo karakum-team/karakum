@@ -30,18 +30,18 @@ fun getDerivedStateFromProps(): MyInterfaceGetDerivedStateFromPropsResult
 external interface UseRevalidatorResult {
 var revalidate: () -> Unit
 }
-        
+    
 
 
 external interface MyClassGetDerivedStateFromPropsResult {
 var error: Any?
 var location: Location
 }
-        
+    
 
 
 external interface MyInterfaceGetDerivedStateFromPropsResult {
 var error: Any?
 var location: Location
 }
-        
+    

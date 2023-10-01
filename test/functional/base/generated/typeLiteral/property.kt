@@ -9,10 +9,10 @@ package sandbox.base.typeLiteral
 
 
 
-external interface FetcherStates<TData /* default is Any? */>  {
+external interface FetcherStates<TData /* default is Any? */> {
 var Idle: FetcherStatesIdle<TData>
 }
-        
+    
 
 
 external class FetcherClass<TData /* default is Any? */> {
@@ -46,22 +46,22 @@ var formEncType: Nothing?
 var formData: Nothing?
 var data: TData?
 }
-        
+    
 
 
 external interface FetcherClassState<TData /* default is Any? */> {
 var data: TData?
 }
-        
+    
 
 
 external interface FetcherInterfaceState<TData /* default is Any? */> {
 var data: TData?
 }
-        
+    
 
 
 external interface LiteralTypeContainerState<TData /* default is Any? */>  : BaseLiteralType {
 var data: TData?
 }
-        
+    

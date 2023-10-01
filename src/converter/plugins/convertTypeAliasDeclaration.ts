@@ -1,9 +1,11 @@
-import ts, {MappedTypeNode, TypeLiteralNode, TypeReferenceNode} from "typescript";
+import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin.js";
+import {convertTypeLiteral} from "./TypeLiteralPlugin.js";
+import {convertInheritedTypeLiteral, isInheritedTypeLiteral} from "./InheritedTypeLiteralPlugin.js";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -28,17 +30,15 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
         ?.join(", ")
 
     if (ts.isTypeLiteralNode(node.type)) {
-        checkCoverageService?.cover(node.type)
+        return convertTypeLiteral(node.type, name, typeParameters, context, render)
+    }
 
-        const members = node.type.members
-            .map(member => render(member))
-            .join("\n")
+    if (isStringUnionType(node.type, context)) {
+        return convertStringUnionType(node.type, name, context).declaration
+    }
 
-        return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
-${members}
-}
-        `
+    if (isInheritedTypeLiteral(node.type)) {
+        return convertInheritedTypeLiteral(node.type, name, typeParameters, context, render)
     }
 
     if (ts.isMappedTypeNode(node.type)) {
@@ -47,49 +47,6 @@ ${members}
         return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
 ${accessors}
-}
-        `
-    }
-
-    if (isStringUnionType(node.type, context)) {
-        return convertStringUnionType(node.type, name, context).declaration
-    }
-
-    if (
-        ts.isIntersectionTypeNode(node.type)
-        && node.type.types.every(it => (
-            ts.isTypeReferenceNode(it)
-            || ts.isTypeLiteralNode(it)
-            || ts.isMappedTypeNode(it)
-        ))
-    ) {
-        checkCoverageService?.cover(node.type)
-        node.type.types.forEach(it => checkCoverageService?.cover(it))
-
-        const typeReferences = node.type.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
-        const typeLiterals = node.type.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
-        const mappedType = node.type.types.find((it): it is MappedTypeNode => ts.isMappedTypeNode(it))
-
-        const heritageTypes = typeReferences
-            .map(type => render(type))
-            .join(", ")
-
-        const heritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
-
-        const members = typeLiterals
-            .flatMap(it => it.members)
-            .map(member => render(member))
-            .join("\n")
-
-        let accessors = ""
-
-        if (mappedType) {
-            accessors = render(mappedType)
-        }
-
-        return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClause} {
-${ifPresent(accessors, it => `${it}\n`)}${members}
 }
         `
     }
