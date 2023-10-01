@@ -18,7 +18,7 @@ val Task.kotlinJsCompilation: KotlinJsCompilation
     }
 
 val Task.defaultOutputConfig: File
-    get() = project.buildDir.resolve("karakum/$KARAKUM_CONFIG_FILE")
+    get() = project.layout.buildDirectory.asFile.get().resolve("karakum/$KARAKUM_CONFIG_FILE")
 
 val Task.defaultOutputExtensions: File
     get() = kotlinJsCompilation.npmProject.dir.resolve("karakum")

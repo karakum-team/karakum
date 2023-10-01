@@ -27,8 +27,8 @@ constructor(
     init {
         inputExtensions.convention(
             listOf(
-                project.rootDir.resolve("buildSrc").resolve("karakum"),
-                project.projectDir.resolve("karakum"),
+                project.rootProject.layout.projectDirectory.asFile.resolve("buildSrc/karakum"),
+                project.layout.projectDirectory.asFile.resolve("karakum"),
             )
                 .map { project.fileTree(it).asFileTree }
                 .reduce(FileTree::plus)

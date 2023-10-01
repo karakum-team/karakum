@@ -29,9 +29,6 @@ constructor(
     override val compilation: KotlinJsCompilation = kotlinJsCompilation
 
     @get:Internal
-    override val nodeModulesRequired = true
-
-    @get:Internal
     override val requiredNpmDependencies = setOf(
         karakumDependency,
         typescriptDependency,

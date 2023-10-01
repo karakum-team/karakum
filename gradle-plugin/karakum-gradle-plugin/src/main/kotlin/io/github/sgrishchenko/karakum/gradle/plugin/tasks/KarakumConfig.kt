@@ -24,13 +24,14 @@ abstract class KarakumConfig : DefaultTask() {
 
     private val mapper = ObjectMapper()
 
-    private val replacements = mapOf(
-        "<buildSrc>" to project.rootDir.resolve("buildSrc"),
-        "<nodeModules>" to project.rootProject.buildDir.resolve("js/node_modules"),
-    )
+    private val replacements
+        get() = mapOf(
+            "<buildSrc>" to project.rootProject.layout.projectDirectory.asFile.resolve("buildSrc"),
+            "<nodeModules>" to project.rootProject.layout.buildDirectory.asFile.get().resolve("js/node_modules"),
+        )
 
     init {
-        inputConfig.convention(project.projectDir.resolve(KARAKUM_CONFIG_FILE))
+        inputConfig.convention(project.layout.projectDirectory.asFile.resolve(KARAKUM_CONFIG_FILE))
         outputConfig.convention(defaultOutputConfig)
     }
 
@@ -74,7 +75,7 @@ abstract class KarakumConfig : DefaultTask() {
         configNode as ObjectNode
         val outputNode = requireNotNull(configNode.get("output"))
         val output = outputNode.textValue()
-        configNode.put("output", project.projectDir.resolve(output).absolutePath)
+        configNode.put("output", project.layout.projectDirectory.asFile.resolve(output).absolutePath)
     }
 
     @TaskAction
