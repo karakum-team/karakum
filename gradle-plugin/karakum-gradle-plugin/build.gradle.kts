@@ -21,14 +21,14 @@ kotlin {
 }
 
 gradlePlugin {
-    website.set("https://github.com/karakum-team/karakum")
-    vcsUrl.set("https://github.com/karakum-team/karakum")
+    website = "https://github.com/karakum-team/karakum"
+    vcsUrl = "https://github.com/karakum-team/karakum"
 
     val karakum by plugins.creating {
         id = "io.github.sgrishchenko.karakum"
         displayName = "Karakum Plugin"
         description = "Converter of TypeScript declaration files to Kotlin declarations"
-        tags.set(listOf("kotlin", "typescript"))
+        tags = listOf("kotlin", "typescript")
         implementationClass = "io.github.sgrishchenko.karakum.gradle.plugin.KarakumPlugin"
     }
 }
