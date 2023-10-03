@@ -6,32 +6,31 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import org.gradle.api.DefaultTask
-import org.gradle.api.provider.Property
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-import java.io.File
 
 
 abstract class KarakumConfig : DefaultTask() {
 
     @get:InputFile
-    abstract val inputConfig: Property<File>
+    abstract val inputConfig: RegularFileProperty
 
     @get:OutputFile
-    abstract val outputConfig: Property<File>
+    abstract val outputConfig: RegularFileProperty
 
     private val mapper = ObjectMapper()
 
     private val replacements
         get() = mapOf(
-            "<buildSrc>" to project.rootProject.layout.projectDirectory.asFile.resolve("buildSrc"),
-            "<nodeModules>" to project.rootProject.layout.buildDirectory.asFile.get().resolve("js/node_modules"),
-        )
+            "<buildSrc>" to project.rootProject.layout.projectDirectory.dir("buildSrc"),
+            "<nodeModules>" to project.rootProject.layout.buildDirectory.dir("js/node_modules").get(),
+        ).mapValues { it.value.asFile }
 
     init {
-        inputConfig.convention(project.layout.projectDirectory.asFile.resolve(KARAKUM_CONFIG_FILE))
+        inputConfig.convention(project.layout.projectDirectory.file(KARAKUM_CONFIG_FILE))
         outputConfig.convention(defaultOutputConfig)
     }
 
@@ -75,12 +74,12 @@ abstract class KarakumConfig : DefaultTask() {
         configNode as ObjectNode
         val outputNode = requireNotNull(configNode.get("output"))
         val output = outputNode.textValue()
-        configNode.put("output", project.layout.projectDirectory.asFile.resolve(output).absolutePath)
+        configNode.put("output", project.layout.projectDirectory.dir(output).asFile.absolutePath)
     }
 
     @TaskAction
     fun configure() {
-        val configNode = mapper.readTree(inputConfig.get())
+        val configNode = mapper.readTree(inputConfig.get().asFile)
 
         replaceCwd(configNode)
         replaceTokens(configNode)
@@ -88,6 +87,6 @@ abstract class KarakumConfig : DefaultTask() {
 
         mapper
             .writerWithDefaultPrettyPrinter()
-            .writeValue(outputConfig.get(), configNode)
+            .writeValue(outputConfig.get().asFile, configNode)
     }
 }

@@ -3,21 +3,13 @@ package io.github.sgrishchenko.karakum.gradle.plugin.tasks
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
-import org.gradle.api.internal.file.FileFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import javax.inject.Inject
-import kotlin.io.path.exists
-import kotlin.io.path.writeText
 
 
-abstract class KarakumCopy
-@Inject
-constructor(
-    fileFactory: FileFactory,
-) : DefaultTask() {
+abstract class KarakumCopy : DefaultTask() {
     @get:InputFiles
     abstract val inputExtensions: Property<FileTree>
 
@@ -27,13 +19,13 @@ constructor(
     init {
         inputExtensions.convention(
             listOf(
-                project.rootProject.layout.projectDirectory.asFile.resolve("buildSrc/karakum"),
-                project.layout.projectDirectory.asFile.resolve("karakum"),
+                project.rootProject.layout.projectDirectory.dir("buildSrc/karakum"),
+                project.layout.projectDirectory.dir("karakum"),
             )
-                .map { project.fileTree(it).asFileTree }
+                .map { it.asFileTree }
                 .reduce(FileTree::plus)
         )
-        outputExtensions.convention(fileFactory.dir(defaultOutputExtensions))
+        outputExtensions.convention(defaultOutputExtensions)
     }
 
     @TaskAction
@@ -43,7 +35,7 @@ constructor(
             into(outputExtensions)
         }
 
-        val extensionPackageJson = outputExtensions.asFile.get().toPath().resolve("package.json")
+        val extensionPackageJson = outputExtensions.file("package.json").get().asFile
 
         if (!extensionPackageJson.exists()) {
             extensionPackageJson.writeText(

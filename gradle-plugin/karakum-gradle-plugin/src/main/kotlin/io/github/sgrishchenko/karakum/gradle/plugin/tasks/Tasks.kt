@@ -2,12 +2,13 @@ package io.github.sgrishchenko.karakum.gradle.plugin.tasks
 
 import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
 import org.gradle.api.Task
+import org.gradle.api.file.Directory
+import org.gradle.api.file.RegularFile
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-import java.io.File
 
 val Task.kotlinJsCompilation: KotlinJsCompilation
     get() {
@@ -17,8 +18,12 @@ val Task.kotlinJsCompilation: KotlinJsCompilation
         return target.compilations.getByName(KotlinCompilation.MAIN_COMPILATION_NAME)
     }
 
-val Task.defaultOutputConfig: File
-    get() = project.layout.buildDirectory.asFile.get().resolve("karakum/$KARAKUM_CONFIG_FILE")
+val Task.defaultOutputConfig: RegularFile
+    get() = project.layout.buildDirectory.file("karakum/$KARAKUM_CONFIG_FILE").get()
 
-val Task.defaultOutputExtensions: File
-    get() = kotlinJsCompilation.npmProject.dir.resolve("karakum")
+val Task.defaultOutputExtensions: Directory
+    get() {
+        val npmProjectDirectory = project.provider { kotlinJsCompilation.npmProject.dir }
+
+        return project.layout.dir(npmProjectDirectory).get().dir("karakum")
+    }
