@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
-import io.github.sgrishchenko.karakum.gradle.plugin.KARAKUM_CONFIG_FILE
+import io.github.sgrishchenko.karakum.gradle.plugin.kotlinJsCompilation
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFile
@@ -16,10 +16,10 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 abstract class KarakumConfig : DefaultTask() {
 
     @get:InputFile
-    abstract val inputConfig: RegularFileProperty
+    abstract val configFile: RegularFileProperty
 
     @get:OutputFile
-    abstract val outputConfig: RegularFileProperty
+    abstract val destinationFile: RegularFileProperty
 
     private val mapper = ObjectMapper()
 
@@ -28,11 +28,6 @@ abstract class KarakumConfig : DefaultTask() {
             "<buildSrc>" to project.rootProject.layout.projectDirectory.dir("buildSrc"),
             "<nodeModules>" to project.rootProject.layout.buildDirectory.dir("js/node_modules").get(),
         ).mapValues { it.value.asFile }
-
-    init {
-        inputConfig.convention(project.layout.projectDirectory.file(KARAKUM_CONFIG_FILE))
-        outputConfig.convention(defaultOutputConfig)
-    }
 
     private fun String.replaceTokens() = replacements.entries.fold(this) { acc, (token, file) ->
         val posixPath = file.absolutePath.replace('\\', '/')
@@ -67,7 +62,7 @@ abstract class KarakumConfig : DefaultTask() {
 
     private fun replaceCwd(configNode: JsonNode) {
         configNode as ObjectNode
-        configNode.put("cwd", kotlinJsCompilation.npmProject.dir.absolutePath)
+        configNode.put("cwd", project.kotlinJsCompilation.npmProject.dir.absolutePath)
     }
 
     private fun replaceOutput(configNode: JsonNode) {
@@ -79,7 +74,7 @@ abstract class KarakumConfig : DefaultTask() {
 
     @TaskAction
     fun configure() {
-        val configNode = mapper.readTree(inputConfig.get().asFile)
+        val configNode = mapper.readTree(configFile.get().asFile)
 
         replaceCwd(configNode)
         replaceTokens(configNode)
@@ -87,6 +82,6 @@ abstract class KarakumConfig : DefaultTask() {
 
         mapper
             .writerWithDefaultPrettyPrinter()
-            .writeValue(outputConfig.get().asFile, configNode)
+            .writeValue(destinationFile.get().asFile, configNode)
     }
 }

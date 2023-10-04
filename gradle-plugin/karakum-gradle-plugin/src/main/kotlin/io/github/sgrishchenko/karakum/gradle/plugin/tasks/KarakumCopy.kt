@@ -11,31 +11,19 @@ import org.gradle.api.tasks.TaskAction
 
 abstract class KarakumCopy : DefaultTask() {
     @get:InputFiles
-    abstract val inputExtensions: Property<FileTree>
+    abstract val extensionSource: Property<FileTree>
 
     @get:OutputDirectory
-    abstract val outputExtensions: DirectoryProperty
-
-    init {
-        inputExtensions.convention(
-            listOf(
-                project.rootProject.layout.projectDirectory.dir("buildSrc/karakum"),
-                project.layout.projectDirectory.dir("karakum"),
-            )
-                .map { it.asFileTree }
-                .reduce(FileTree::plus)
-        )
-        outputExtensions.convention(defaultOutputExtensions)
-    }
+    abstract val destinationDirectory: DirectoryProperty
 
     @TaskAction
     fun copy() {
         project.copy {
-            from(inputExtensions)
-            into(outputExtensions)
+            from(extensionSource)
+            into(destinationDirectory)
         }
 
-        val extensionPackageJson = outputExtensions.file("package.json").get().asFile
+        val extensionPackageJson = destinationDirectory.file("package.json").get().asFile
 
         if (!extensionPackageJson.exists()) {
             extensionPackageJson.writeText(
