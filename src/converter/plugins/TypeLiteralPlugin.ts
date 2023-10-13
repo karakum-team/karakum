@@ -38,6 +38,9 @@ export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
     (node, context, render) => {
         if (!ts.isTypeLiteralNode(node)) return null
 
+        // handle empty type literal
+        if (node.members.length === 0) return "Any"
+
         const name = context.resolveName(node)
 
         const typeParameters = extractTypeParameters(node, context, render)
