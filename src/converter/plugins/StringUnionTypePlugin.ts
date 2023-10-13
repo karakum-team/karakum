@@ -1,9 +1,10 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {escapeIdentifier, identifier} from "../../utils/strings.js";
+import {identifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
-import {flatUnionTypes, isNullableType, isNullableOnlyUnionType} from "./NullableUnionTypePlugin.js";
+import {flatUnionTypes, isNullableOnlyUnionType, isNullableType} from "./NullableUnionTypePlugin.js";
+import {ifPresent} from "../render.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
@@ -53,16 +54,30 @@ export function convertStringUnionType(node: UnionTypeNode, name: string, contex
             return [key, value] as const
         })
 
-    const keys = entries.map(([key]) => escapeIdentifier(key))
-    const uniqueKeys = Array.from(new Set(keys))
+    const existingKeys = new Set<string>()
+    const uniqueEntries: [string, string][] = []
+    const duplicatedEntries: [string, string][] = []
 
-    const body = uniqueKeys
-        .map(key => `val ${key}: ${name}`)
+    for (const [key, value] of entries) {
+        if (!existingKeys.has(key)) {
+            uniqueEntries.push([key, value])
+            existingKeys.add(key)
+        } else {
+            duplicatedEntries.push([key, value])
+        }
+    }
+
+    const body = uniqueEntries
+        .map(([key]) => `val ${key}: ${name}`)
         .join("\n")
 
-    const jsName = entries
+    const jsName = uniqueEntries
         .map(([key, value]) => `${key}: '${value}'`)
         .join(", ")
+
+    const comment = duplicatedEntries
+        .map(([key, value]) => `${key} for "${value}"`)
+        .join("\n")
 
     const declaration = `
 @Suppress(
@@ -72,7 +87,12 @@ export function convertStringUnionType(node: UnionTypeNode, name: string, contex
 @JsName("""(/*union*/{${jsName}}/*union*/)""")
 sealed external interface ${name} {
 companion object {
-${body}
+${body}${ifPresent(comment, it => (`
+/*
+Duplicated names were generated:
+${it}
+*/
+`))}
 }
 }
     `
