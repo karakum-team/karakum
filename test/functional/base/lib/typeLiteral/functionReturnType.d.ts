@@ -15,3 +15,9 @@ export interface MyInterface {
         location: Location;
     };
 }
+
+export interface MapRoutePropertiesFunction {
+    (route: { value: string }): {
+        hasErrorBoundary: boolean;
+    }
+}

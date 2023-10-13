@@ -18,6 +18,12 @@ import {resolveClassPropertyCallbackParameterName} from "./nameResolvers/resolve
 import {
     resolveInterfacePropertyCallbackParameterName
 } from "./nameResolvers/resolveInterfacePropertyCallbackParameterName.js";
+import {
+    resolveInterfaceCallSignatureReturnTypeName
+} from "./nameResolvers/resolveInterfaceCallSignatureReturnTypeName.js";
+import {
+    resolveInterfaceCallSignatureParameterName
+} from "./nameResolvers/resolveInterfaceCallSignatureParameterName.js";
 
 export const defaultNameResolvers: NameResolver[] = [
     resolveFunctionParameterName,
@@ -32,6 +38,8 @@ export const defaultNameResolvers: NameResolver[] = [
     resolveClassPropertyCallbackParameterName,
     resolveInterfaceMethodParameterName,
     resolveInterfaceMethodReturnTypeName,
+    resolveInterfaceCallSignatureParameterName,
+    resolveInterfaceCallSignatureReturnTypeName,
     resolveInterfaceMethodCallbackParameterName,
     resolveInterfacePropertyName,
     resolveInterfacePropertyCallbackParameterName,

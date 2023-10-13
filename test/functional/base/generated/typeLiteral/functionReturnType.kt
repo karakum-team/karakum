@@ -26,6 +26,16 @@ external interface MyInterface {
 fun getDerivedStateFromProps(): MyInterfaceGetDerivedStateFromPropsResult
 }
     
+
+
+external interface MapRoutePropertiesFunction {
+
+@Suppress("DEPRECATION")
+@nativeInvoke
+operator fun  invoke(route: MapRoutePropertiesFunctionRoute): MapRoutePropertiesFunctionResult
+            
+}
+    
     
 external interface UseRevalidatorResult {
 var revalidate: () -> Unit
@@ -43,5 +53,17 @@ var location: Location
 external interface MyInterfaceGetDerivedStateFromPropsResult {
 var error: Any?
 var location: Location
+}
+    
+
+
+external interface MapRoutePropertiesFunctionResult {
+var hasErrorBoundary: Boolean
+}
+    
+
+
+external interface MapRoutePropertiesFunctionRoute {
+var value: String
 }
     
