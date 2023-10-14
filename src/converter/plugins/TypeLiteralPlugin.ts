@@ -16,9 +16,6 @@ export function convertTypeLiteral(
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    // handle empty type literal
-    if (node.members.length === 0) return "Any"
-
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
