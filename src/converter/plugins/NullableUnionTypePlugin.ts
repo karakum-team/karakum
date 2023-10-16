@@ -91,7 +91,7 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
 
             if (nonNullableTypes.length === 1) {
                 const nonNullableType = nonNullableTypes[0]
-                return renderResolvedNullable(nonNullableType, true, context, next)
+                return renderResolvedNullable(nonNullableType, true, next)
             } else {
                 return `(${next(node)})?`
             }

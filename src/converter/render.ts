@@ -33,7 +33,7 @@ function isPrimitiveType(node: Node) {
 }
 
 export function renderNullable(
-    node: TypeNode | null | undefined,
+    node: TypeNode | undefined,
     isNullable: boolean,
     context: ConverterContext,
     render: Render,
@@ -49,13 +49,12 @@ export function renderNullable(
         && !isPossiblyNullableType(resolvedType, context)
     )
 
-    return renderResolvedNullable(node, isReallyNullable, context, render)
+    return renderResolvedNullable(node, isReallyNullable, render)
 }
 
 export function renderResolvedNullable(
-    node: TypeNode | null | undefined,
+    node: TypeNode | undefined,
     isNullable: boolean,
-    context: ConverterContext,
     render: Render,
 ) {
     let type: string
