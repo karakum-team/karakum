@@ -15,12 +15,39 @@ const isAny = (type: Node) => type.kind === ts.SyntaxKind.AnyKeyword
 
 export const isNullableType = (type: Node) => isNull(type) || isUndefined(type)
 
-export const isPossiblyNullableType = (type: Node, context: ConverterContext) => (
-    isNullableType(type)
-    || isUnknown(type)
-    || isAny(type)
-    || isNullableUnionType(type, context)
-)
+function isNullableReference(type: Node, context: ConverterContext): boolean {
+    if (!ts.isTypeReferenceNode(type)) return false
+
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
+    const typeChecker = typeScriptService?.program.getTypeChecker()
+
+    const symbol = typeChecker?.getSymbolAtLocation(type.typeName)
+
+    if (!symbol) return false
+
+    return (symbol.declarations ?? []).some(declaration => (
+        ts.isTypeAliasDeclaration(declaration)
+        && isPossiblyNullableType(declaration.type, context)
+    ))
+}
+
+export function isPossiblyNullableType (node: Node, context: ConverterContext): boolean {
+    const resolvedType = ts.isTypeNode(node)
+        ? resolveParenthesizedType(node)
+        : node
+
+    return (
+        isNullableType(resolvedType)
+        || isUnknown(resolvedType)
+        || isAny(resolvedType)
+        || isNullableReference(resolvedType, context)
+        || (
+            ts.isUnionTypeNode(resolvedType)
+            && flatUnionTypes(resolvedType, context).some(type => isPossiblyNullableType(type, context))
+        )
+    )
+}
 
 export function isNullableUnionType(node: Node, context: ConverterContext): node is UnionTypeNode {
     if (!ts.isUnionTypeNode(node)) return false
@@ -92,8 +119,6 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
             if (nonNullableTypes.length === 1) {
                 const nonNullableType = nonNullableTypes[0]
                 return renderResolvedNullable(nonNullableType, true, next)
-            } else {
-                return `(${next(node)})?`
             }
         }
 
