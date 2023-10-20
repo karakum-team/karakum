@@ -1,10 +1,11 @@
 import ts, {GetAccessorDeclaration, SetAccessorDeclaration} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
-import {Render} from "../render.js";
+import {ifPresent, Render} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {GeneratedFile} from "../generated.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 
 interface AccessorInfo {
     getter: GetAccessorDeclaration | undefined
@@ -51,6 +52,9 @@ export class AccessorsPlugin implements ConverterPlugin {
         if (ts.isSetAccessor(node) || ts.isGetAccessor(node)) {
             const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
             const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+            const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+
+            const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
             const typeChecker = typeScriptService?.program.getTypeChecker()
 
@@ -89,7 +93,7 @@ export class AccessorsPlugin implements ConverterPlugin {
             }
 
             return `
-${modifier}${name}: ${type}
+${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}
             `;
         }
 

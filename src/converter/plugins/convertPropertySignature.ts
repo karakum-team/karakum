@@ -2,7 +2,8 @@ import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {escapeIdentifier, isValidIdentifier} from "../../utils/strings.js";
-import {renderNullable} from "../render.js";
+import {ifPresent, renderNullable} from "../render.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 
 export const convertPropertySignature = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertySignature(node)) return null
@@ -10,6 +11,10 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
+
+    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+
+    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
     const readonly = node.modifiers?.find(modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword)
     readonly && checkCoverageService?.cover(readonly)
@@ -39,5 +44,5 @@ export const convertPropertySignature = createSimplePlugin((node, context, rende
 
     const type = renderNullable(node.type, isOptional, context, render)
 
-    return `${modifier}${name}: ${type}`
+    return `${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}`
 })

@@ -2,6 +2,7 @@ import {createSimplePlugin} from "../plugin.js";
 import ts from "typescript";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ifPresent, renderNullable} from "../render.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 
 export const convertMappedType = createSimplePlugin((node, context, render) => {
     if (!ts.isMappedTypeNode(node)) return null
@@ -9,6 +10,10 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
+
+    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+
+    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
     const readonly = node.readonlyToken && node.readonlyToken.kind !== ts.SyntaxKind.MinusToken
 
@@ -30,7 +35,7 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
     "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
 )
 @nativeGetter
-operator fun <${typeParameter}> get(key: ${keyType}): ${type}
+${ifPresent(inheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> get(key: ${keyType}): ${type}
     `
 
     let setter = ""
@@ -42,7 +47,7 @@ operator fun <${typeParameter}> get(key: ${keyType}): ${type}
     "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
 )
 @nativeSetter
-operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
+${ifPresent(inheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
         `
     }
 
