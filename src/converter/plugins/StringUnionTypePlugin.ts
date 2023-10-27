@@ -3,7 +3,7 @@ import {identifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
-import {flatUnionTypes, isNullableOnlyUnionType, isNullableType} from "./NullableUnionTypePlugin.js";
+import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
 import {ifPresent} from "../render.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
@@ -17,15 +17,20 @@ export function isStringUnionType(node: ts.Node, context: ConverterContext): nod
 }
 
 export function isNullableStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
+    if (!ts.isUnionTypeNode(node)) return false
+
+    const types = flatUnionTypes(node, context)
+    const nonNullableTypes = types.filter(type => !isNullableType(type))
+
     return (
-        ts.isUnionTypeNode(node)
-        && flatUnionTypes(node, context).every(type => (
+        types.every(type => (
             isNullableType(type)
             || (
                 ts.isLiteralTypeNode(type)
                 && ts.isStringLiteral(type.literal)
             )
         ))
+        && nonNullableTypes.length > 1
     )
 }
 
@@ -107,7 +112,6 @@ ${it}
 
 export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
     (node, context) => {
-        if (isNullableOnlyUnionType(node, context)) return null
         if (!isNullableStringUnionType(node, context)) return null
 
         const name = context.resolveName(node)
