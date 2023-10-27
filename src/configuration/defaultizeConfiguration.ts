@@ -23,11 +23,24 @@ const defaultInheritanceModifierPatterns = [
 
 function normalizeOption(
     patterns: string | string[] | undefined,
-    defaultValue: string[] = [],
+    defaultValue: string[] | (() => string[]) = [],
 ) {
     return patterns !== undefined
         ? typeof patterns === "string" ? [patterns] : patterns
-        : defaultValue
+        : typeof defaultValue === "function"
+            ? defaultValue()
+            : defaultValue
+}
+
+function resolveDefaultInputRoot(inputFileNames: string[]) {
+    if (inputFileNames.length === 1) {
+        return path.dirname(inputFileNames[0]) + path.posix.sep
+    }
+
+    const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.posix.sep))
+
+    // TODO: handle non-default relative root (UNC prefix)
+    return commonPrefix(...inputPathChunks).join(path.posix.sep) + path.posix.sep
 }
 
 export async function defaultizeConfiguration(configuration: PartialConfiguration): Promise<Configuration> {
@@ -45,13 +58,6 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
         ignore: ignoreInput,
     })))).flat()
 
-    const inputPathChunks = inputFileNames.map(fileName => fileName.split(path.posix.sep))
-
-    // TODO: handle non-default relative root (UNC prefix)
-    const defaultInputRoot = inputFileNames.length === 1
-        ? path.dirname(inputFileNames[0]) + path.posix.sep
-        : commonPrefix(...inputPathChunks).join(path.posix.sep) + path.posix.sep
-
     const absoluteOutput = toAbsolute(configuration.output, cwd)
 
     let output = absoluteOutput
@@ -65,7 +71,9 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
     return {
         ...configuration,
 
-        inputRoots: normalizeOption(configuration.inputRoots, [defaultInputRoot]),
+        inputRoots: normalizeOption(configuration.inputRoots, () => [
+            resolveDefaultInputRoot(inputFileNames)
+        ]),
         inputFileNames,
 
         input,
