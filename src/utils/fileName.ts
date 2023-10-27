@@ -1,22 +1,22 @@
 export function commonPrefix(...sources: string[][]): string[] {
-    const [first, second, ...rest] = sources
+    let [common = []] = sources
 
-    if (first == undefined || first.length === 0) return []
-    if (second == undefined || second.length === 0) return first
+    for (let i = 1; i < sources.length; i++) {
+        const current = sources[i]
+        const nextCommon: string[] = []
 
-    const length = Math.min(first.length, second.length)
-
-    const common: string[] = []
-
-    for (let i = 0; i < length; i++) {
-        if (first[i] != second[i]) {
-            break
-        } else {
-            common.push(first[i])
+        for (let j = 0; j < common.length; j++) {
+            if (common[j] != current[j]) {
+                break
+            } else {
+                nextCommon.push(common[j])
+            }
         }
+
+        common = nextCommon
     }
 
-    return commonPrefix(common, ...rest)
+    return common
 }
 
 export function applyMapper(sourceFileName: string, mapper: Record<string, string> | undefined) {
