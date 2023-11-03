@@ -1,1 +1,1 @@
-type JsonFunction = <Data>(data: Data, init?: ResponseInit) => Response;
+type JsonFunction = <Data>(data: Data, init?: {}) => Response;

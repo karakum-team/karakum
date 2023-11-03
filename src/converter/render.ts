@@ -38,15 +38,10 @@ export function renderNullable(
     context: ConverterContext,
     render: Render,
 ) {
-    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-
-    // handle double nullability
-    const resolvedType = node && typeScriptService?.resolveType(node)
-
     const isReallyNullable = (
         isNullable
-        && !!resolvedType
-        && !isPossiblyNullableType(resolvedType, context)
+        && !!node
+        && !isPossiblyNullableType(node, context)
     )
 
     return renderResolvedNullable(node, isReallyNullable, render)

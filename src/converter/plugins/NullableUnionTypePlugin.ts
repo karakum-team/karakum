@@ -1,4 +1,4 @@
-import ts, {Node, TypeNode, UnionTypeNode} from "typescript";
+import ts, {Node, Type, TypeNode, UnionTypeNode} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
@@ -10,42 +10,38 @@ import {GeneratedFile} from "../generated.js";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
 const isUndefined = (type: Node) => type.kind === ts.SyntaxKind.UndefinedKeyword
-const isUnknown = (type: Node) => type.kind === ts.SyntaxKind.UnknownKeyword
-const isAny = (type: Node) => type.kind === ts.SyntaxKind.AnyKeyword
 
 export const isNullableType = (type: Node) => isNull(type) || isUndefined(type)
 
-function isNullableReference(type: Node, context: ConverterContext): boolean {
-    if (!ts.isTypeReferenceNode(type)) return false
+export function isPossiblyNullableType(node: TypeNode, context: ConverterContext): boolean {
+    if (node.getSourceFile() === undefined) {
+        // handle synthetic nodes
+        return false
+    }
 
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     const typeChecker = typeScriptService?.program.getTypeChecker()
 
-    const symbol = typeChecker?.getSymbolAtLocation(type.typeName)
+    const type = typeChecker?.getTypeAtLocation(node)
 
-    if (!symbol) return false
-
-    return (symbol.declarations ?? []).some(declaration => (
-        ts.isTypeAliasDeclaration(declaration)
-        && isPossiblyNullableType(declaration.type, context)
-    ))
-}
-
-export function isPossiblyNullableType (node: Node, context: ConverterContext): boolean {
-    const resolvedType = ts.isTypeNode(node)
-        ? resolveParenthesizedType(node)
-        : node
+    if (!type) return false
 
     return (
-        isNullableType(resolvedType)
-        || isUnknown(resolvedType)
-        || isAny(resolvedType)
-        || isNullableReference(resolvedType, context)
+        isNullableTsType(type)
         || (
-            ts.isUnionTypeNode(resolvedType)
-            && flatUnionTypes(resolvedType, context).some(type => isPossiblyNullableType(type, context))
+            type.isUnion()
+            && type.types.some(it => isNullableTsType(it))
         )
+    )
+}
+
+function isNullableTsType(type: Type): boolean {
+    return (
+        (type.flags & ts.TypeFlags.Null) !== 0
+        || (type.flags & ts.TypeFlags.Undefined) !== 0
+        || (type.flags & ts.TypeFlags.Any) !== 0
+        || (type.flags & ts.TypeFlags.Unknown) !== 0
     )
 }
 

@@ -1,3 +1,5 @@
+type HydrationState = string
+
 export declare function createMemoryRouter(routes: RouteObject[], opts?: {
     basename?: string;
     hydrationData?: HydrationState;
