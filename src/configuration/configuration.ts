@@ -68,6 +68,7 @@ export interface SchemaConfiguration {
      * */
     compilerOptions?: Record<string, unknown>
 
+    disclaimer?: string
     verbose?: boolean
     cwd?: string
 }
@@ -111,6 +112,7 @@ export interface Configuration extends PartialConfiguration {
 
     compilerOptions: CompilerOptions
 
+    disclaimer: string
     verbose: boolean
     cwd: string
 }

@@ -57,6 +57,10 @@
             "title": "cwd",
             "type": "string"
         },
+        "disclaimer": {
+            "title": "disclaimer",
+            "type": "string"
+        },
         "granularity": {
             "$ref": "#/definitions/Granularity",
             "title": "granularity",

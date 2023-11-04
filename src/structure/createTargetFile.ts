@@ -17,7 +17,7 @@ export function createTargetFile(
         hasRuntime,
     } = item
 
-    const {granularity} = configuration
+    const {granularity, disclaimer} = configuration
 
     const packageName = createPackageName(packageChunks)
 
@@ -42,12 +42,12 @@ export function createTargetFile(
         .join("\n")
 
     return `
-${fileAnnotations}
+${disclaimer}${fileAnnotations}
 
 package ${packageName}
 
 ${imports}
 
 ${body}
-    `
+    `.trim() + "\n"
 }

@@ -15,11 +15,13 @@ export function createGeneratedFile(
 
     const imports = generateImports(outputFileName, configuration)
 
+    const disclaimer = configuration.disclaimer
+
     return `
-package ${packageName}
+${disclaimer}package ${packageName}
 
 ${imports}
 
 ${body}
-    `
+    `.trim() + "\n"
 }
