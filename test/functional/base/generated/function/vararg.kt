@@ -13,4 +13,4 @@ external fun simpleVararg(vararg args: String): Unit
 
 external fun <T : Array<String>> genericVararg(vararg args: Any? /* T */): Unit
 
-external fun callbackVararg(fn: Function<Any?> /* (...args: string[]) => void */): Unit
+external fun callbackVararg(fn: Function<Unit> /* (...args: string[]) => void */): Unit
