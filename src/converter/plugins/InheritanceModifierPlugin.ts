@@ -2,8 +2,9 @@ import {ConverterPlugin} from "../plugin.js";
 import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
-import {InheritanceModifier} from "../inheritanceModifier.js";
+import {InheritanceModifier, InheritanceModifierContext} from "../inheritanceModifier.js";
 import {GeneratedFile} from "../generated.js";
+import {Signature} from "./convertParameterDeclaration.js";
 
 export const inheritanceModifierServiceKey = Symbol()
 
@@ -11,7 +12,35 @@ export class InheritanceModifierService {
     constructor(private readonly inheritanceModifiers: InheritanceModifier[]) {
     }
 
-    resolveInheritanceModifier(node: Node, context: ConverterContext): string | null {
+    resolveSignatureInheritanceModifier(
+        node: Node,
+        signature: Signature,
+        context: ConverterContext,
+    ): string | null {
+        const inheritanceModifierContext = {
+            ...context,
+            signature,
+        }
+
+        return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
+    }
+
+    resolveInheritanceModifier(
+        node: Node,
+        context: ConverterContext,
+    ): string | null {
+        const inheritanceModifierContext = {
+            ...context,
+            signature: undefined
+        }
+
+        return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
+    }
+
+    private internalResolveInheritanceModifier(
+        node: Node,
+        context: InheritanceModifierContext
+    ): string | null {
         for (const inheritanceModifier of this.inheritanceModifiers) {
             const result = inheritanceModifier(node, context)
 

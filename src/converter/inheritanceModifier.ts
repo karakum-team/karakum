@@ -1,5 +1,10 @@
-import {ConverterContext} from "./context.js";
 import {Node} from "typescript"
+import {ConverterContext} from "./context.js";
+import {Signature} from "./plugins/convertParameterDeclaration.js";
+
+export interface InheritanceModifierContext extends ConverterContext {
+    signature: Signature | undefined
+}
 
 export type InheritanceModifier<TNode extends Node = Node> =
-    (node: TNode, context: ConverterContext) => string | null
+    (node: TNode, context: InheritanceModifierContext) => string | null

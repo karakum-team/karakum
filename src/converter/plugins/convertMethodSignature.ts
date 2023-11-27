@@ -14,8 +14,6 @@ export const convertMethodSignature = createSimplePlugin((node, context, render)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-
     const name = escapeIdentifier(render(node.name))
 
     const typeParameters = node.typeParameters
@@ -26,7 +24,9 @@ export const convertMethodSignature = createSimplePlugin((node, context, render)
 
     return convertParameterDeclarations(node, context, render, {
         strategy: "function",
-        template: parameters => {
+        template: (parameters, signature) => {
+            const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+
             return `${ifPresent(inheritanceModifier, it => `${it} `)}fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
         }
     })

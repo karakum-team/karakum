@@ -14,8 +14,6 @@ export const convertCallSignatureDeclaration = createSimplePlugin((node, context
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
         ?.join(", ")
@@ -24,7 +22,9 @@ export const convertCallSignatureDeclaration = createSimplePlugin((node, context
 
     return convertParameterDeclarations(node, context, render, {
         strategy: "function",
-        template: parameters => {
+        template: (parameters, signature) => {
+            const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+
             return `
 @Suppress("DEPRECATION")
 @nativeInvoke
