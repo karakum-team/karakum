@@ -1,9 +1,17 @@
-import ts, {Declaration, NamedDeclaration, Program, SignatureDeclaration, SymbolTable} from "typescript";
+import ts, {
+    Declaration,
+    ModuleDeclaration,
+    NamedDeclaration,
+    Program,
+    SignatureDeclaration,
+    SymbolTable
+} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
 import {DeepMap} from "../../utils/deepMap.js";
 import {GeneratedFile} from "../generated.js";
+import {NamespaceStrategy} from "../../configuration/configuration.js";
 
 export const declarationMergingServiceKey = Symbol()
 
@@ -40,7 +48,10 @@ export class DeclarationMergingService {
         this.coveredSymbols.add(symbol)
     }
 
-    getMembers(node: NamedDeclaration): Declaration[] | undefined {
+    getMembers(
+        node: NamedDeclaration,
+        resolveNamespaceStrategy: ((node: ModuleDeclaration) => NamespaceStrategy) | undefined,
+    ): Declaration[] | undefined {
         const symbol = this.getSymbol(node)
         if (!symbol) return undefined
 
@@ -51,6 +62,10 @@ export class DeclarationMergingService {
             .filter(member => !ts.isTypeParameterDeclaration(member))
 
         return [...members, ...exports]
+            .filter(member => (
+                !ts.isModuleBlock(member.parent)
+                || resolveNamespaceStrategy?.(member.parent.parent) !== "package"
+            ))
     }
 
     private getUniqMembers(symbolTable: SymbolTable | undefined): Declaration[] {

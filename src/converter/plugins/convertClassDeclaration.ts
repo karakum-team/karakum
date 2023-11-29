@@ -6,6 +6,7 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 import {ConverterContext} from "../context.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 function extractModifiers(member: Declaration): ModifierLike[] {
     if (
@@ -42,7 +43,11 @@ function resolveConstructors(node: ClassDeclaration, members: Declaration[], con
     if (!parentDeclaration || !ts.isClassDeclaration(parentDeclaration)) return constructors
 
     const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
-    const mergedMembers = declarationMergingService?.getMembers(parentDeclaration) ?? Array.from(parentDeclaration.members)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+
+    const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
+
+    const mergedMembers = declarationMergingService?.getMembers(parentDeclaration, resolveNamespaceStrategy) ?? Array.from(parentDeclaration.members)
 
     return resolveConstructors(parentDeclaration, mergedMembers, context)
 }
@@ -56,6 +61,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
     declarationMergingService?.cover(node)
 
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
     const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
@@ -76,7 +82,9 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         ?.map(heritageClause => render(heritageClause))
         ?.join(", ")
 
-    const mergedMembers = declarationMergingService?.getMembers(node) ?? Array.from(node.members)
+    const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
+
+    const mergedMembers = declarationMergingService?.getMembers(node, resolveNamespaceStrategy) ?? Array.from(node.members)
 
     // cover private members
     mergedMembers
