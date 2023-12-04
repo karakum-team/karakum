@@ -5,6 +5,7 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {extractTypeParameters} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
 export function convertTypeLiteral(
     node: TypeLiteralNode,
@@ -17,16 +18,21 @@ export function convertTypeLiteral(
     checkCoverageService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    const injections = injectionService?.resolveInjections(node, context)
 
     const members = node.members
         .map(member => render(member))
         .join("\n")
 
+    const injectedMembers = (injections ?? [])
+        .join("\n")
+
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
-${members}
+${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
     `
 }

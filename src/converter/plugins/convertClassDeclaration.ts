@@ -7,6 +7,7 @@ import {DeclarationMergingService, declarationMergingServiceKey} from "./Declara
 import {ConverterContext} from "../context.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
 function extractModifiers(member: Declaration): ModifierLike[] {
     if (
@@ -63,6 +64,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
@@ -73,6 +75,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const name = (node.name && render(node.name)) ?? "Anonymous"
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    const injections = injectionService?.resolveInjections(node, context)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -107,6 +110,9 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         .map(member => render(member))
         .join("\n")
 
+    const injectedMembers = (injections ?? [])
+        .join("\n")
+
     let companionObject = ""
 
     if (staticMembers.length > 0) {
@@ -120,7 +126,7 @@ ${staticMembers}
 
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
-${members}${companionObject}
+${members}${ifPresent(injectedMembers, it => `\n${it}`)}${companionObject}
 }
     `
 })

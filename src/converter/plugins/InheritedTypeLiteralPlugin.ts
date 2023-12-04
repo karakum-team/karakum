@@ -5,6 +5,7 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {extractTypeParameters} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
 export function isInheritedTypeLiteral(node: ts.Node): node is IntersectionTypeNode {
     return (
@@ -28,8 +29,10 @@ export function convertInheritedTypeLiteral(
     checkCoverageService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    const injections = injectionService?.resolveInjections(node, context)
 
     const typeReferences = node.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
     const typeLiterals = node.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
@@ -46,6 +49,9 @@ export function convertInheritedTypeLiteral(
         .map(member => render(member))
         .join("\n")
 
+    const injectedMembers = (injections ?? [])
+        .join("\n")
+
     let accessors = ""
 
     if (mappedType) {
@@ -54,7 +60,7 @@ export function convertInheritedTypeLiteral(
 
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClause} {
-${ifPresent(accessors, it => `${it}\n`)}${members}
+${ifPresent(accessors, it => `${it}\n`)}${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
     `
 }

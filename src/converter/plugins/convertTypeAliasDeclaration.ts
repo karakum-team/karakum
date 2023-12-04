@@ -6,6 +6,7 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin.js";
 import {convertTypeLiteral} from "./TypeLiteralPlugin.js";
 import {convertInheritedTypeLiteral, isInheritedTypeLiteral} from "./InheritedTypeLiteralPlugin.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -14,6 +15,7 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     checkCoverageService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const exportModifier = node.modifiers?.find(it => it.kind === ts.SyntaxKind.ExportKeyword)
     exportModifier && checkCoverageService?.cover(exportModifier)
@@ -24,6 +26,7 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     const name = render(node.name)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    const injections = injectionService?.resolveInjections(node, context)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -44,9 +47,12 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     if (ts.isMappedTypeNode(node.type)) {
         const accessors = render(node.type)
 
+        const injectedMembers = (injections ?? [])
+            .join("\n")
+
         return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)} {
-${accessors}
+${accessors}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
         `
     }
