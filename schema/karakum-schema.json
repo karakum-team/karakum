@@ -118,6 +118,20 @@
             ],
             "title": "inheritanceModifiers"
         },
+        "injections": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "injections"
+        },
         "input": {
             "anyOf": [
                 {

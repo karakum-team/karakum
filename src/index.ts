@@ -21,6 +21,10 @@ export type {InheritanceModifier} from "./converter/inheritanceModifier.js"
 
 // plugin services
 export {
+    injectionServiceKey,
+    type InjectionService
+} from "./converter/plugins/InjectionPlugin.js"
+export {
     annotationServiceKey,
     type AnnotationService
 } from "./converter/plugins/AnnotationPlugin.js"

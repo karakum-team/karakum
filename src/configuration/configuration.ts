@@ -26,6 +26,8 @@ export interface SchemaConfiguration {
 
     plugins?: string | string[]
 
+    injections?: string | string[]
+
     annotations?: string | string[]
 
     nameResolvers?: string | string[]
@@ -94,6 +96,8 @@ export interface Configuration extends PartialConfiguration {
     granularity: Granularity
 
     plugins: string[]
+
+    injections: string[]
 
     annotations: string[]
 

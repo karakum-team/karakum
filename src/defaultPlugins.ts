@@ -57,11 +57,14 @@ import {convertTypeQuery} from "./converter/plugins/convertTypeQuery.js";
 import {stringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
 import {convertLiteral} from "./converter/plugins/convertLiteral.js";
 import {inheritedTypeLiteralPlugin} from "./converter/plugins/InheritedTypeLiteralPlugin.js";
+import {Injection} from "./converter/injection.js";
+import {InjectionPlugin} from "./converter/plugins/InjectionPlugin.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
 export const createPlugins = (
     configuration: Configuration,
+    injections: Injection[],
     nameResolvers: NameResolver[],
     inheritanceModifiers: InheritanceModifier[],
     program: Program,
@@ -69,6 +72,7 @@ export const createPlugins = (
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
     new TypeScriptPlugin(program),
+    new InjectionPlugin(injections),
     new NameResolverPlugin(nameResolvers),
     new InheritanceModifierPlugin(inheritanceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),

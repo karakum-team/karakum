@@ -22,6 +22,7 @@ import {packageToOutputFileName} from "./structure/package/packageToFileName.js"
 import {toModuleName} from "./utils/path.js";
 import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
+import {Injection} from "./converter/injection.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -85,6 +86,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         ignoreInput,
         ignoreOutput,
         plugins,
+        injections,
         annotations,
         nameResolvers,
         inheritanceModifiers,
@@ -103,6 +105,12 @@ export async function generate(partialConfiguration: PartialConfiguration) {
                 return plugin as ConverterPlugin
             }
         }
+    )
+
+    const customInjections = await loadExtensions<Injection>(
+        "Injection",
+        injections,
+        cwd,
     )
 
     const customAnnotations = await loadExtensions<Annotation>(
@@ -182,6 +190,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const defaultPlugins = createPlugins(
         configuration,
+        customInjections,
         customNameResolvers,
         customInheritanceModifiers,
         program,

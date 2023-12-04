@@ -9,6 +9,10 @@ const defaultPluginPatterns = [
     "karakum/plugins/*.js"
 ]
 
+const defaultInjectionPatterns = [
+    "karakum/injections/*.js"
+]
+
 const defaultAnnotationPatterns = [
     "karakum/annotations/*.js"
 ]
@@ -92,6 +96,8 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
         granularity: configuration.granularity ?? "file",
 
         plugins: normalizeOption(configuration.plugins, defaultPluginPatterns),
+
+        injections: normalizeOption(configuration.injections, defaultInjectionPatterns),
 
         annotations: normalizeOption(configuration.annotations, defaultAnnotationPatterns),
 
