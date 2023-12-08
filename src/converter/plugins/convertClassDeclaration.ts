@@ -76,6 +76,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, context, render)
+    const staticInjections = injectionService?.resolveStaticInjections(node, context, render)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -113,13 +114,16 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const injectedMembers = (injections ?? [])
         .join("\n")
 
+    const staticInjectedMembers = (staticInjections ?? [])
+        .join("\n")
+
     let companionObject = ""
 
     if (staticMembers.length > 0) {
         companionObject = `
         
 companion object {
-${staticMembers}
+${staticMembers}${ifPresent(staticInjectedMembers, it => `\n${it}`)}
 }
         `
     }

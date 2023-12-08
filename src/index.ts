@@ -13,7 +13,7 @@ export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin.js
 export {createSimplePlugin} from "./converter/plugin.js"
 
 // injection
-export type {Injection, SimpleInjection} from "./converter/injection.js"
+export type {Injection, SimpleInjection, InjectionContext} from "./converter/injection.js"
 export {createSimpleInjection} from "./converter/injection.js"
 
 // annotation
@@ -23,7 +23,7 @@ export type {Annotation} from "./converter/annotation.js"
 export type {NameResolver} from "./converter/nameResolver.js"
 
 // inheritance modifier
-export type {InheritanceModifier} from "./converter/inheritanceModifier.js"
+export type {InheritanceModifier, InheritanceModifierContext} from "./converter/inheritanceModifier.js"
 
 // plugin services
 export {
