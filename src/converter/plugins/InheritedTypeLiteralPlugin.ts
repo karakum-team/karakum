@@ -32,7 +32,7 @@ export function convertInheritedTypeLiteral(
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context)
+    const injections = injectionService?.resolveInjections(node, context, render)
 
     const typeReferences = node.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
     const typeLiterals = node.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))

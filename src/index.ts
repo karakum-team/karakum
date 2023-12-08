@@ -4,11 +4,17 @@ export type {Configuration} from "./configuration/configuration.js"
 // context
 export type {ConverterContext} from "./converter/context.js"
 
-// plugin
+// generated
 export type {GeneratedFile, DerivedFile} from "./converter/generated.js"
 export {isDerivedFile} from "./converter/generated.js"
+
+// plugin
 export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin.js"
 export {createSimplePlugin} from "./converter/plugin.js"
+
+// injection
+export type {Injection, SimpleInjection} from "./converter/injection.js"
+export {createSimpleInjection} from "./converter/injection.js"
 
 // annotation
 export type {Annotation} from "./converter/annotation.js"

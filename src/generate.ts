@@ -22,7 +22,7 @@ import {packageToOutputFileName} from "./structure/package/packageToFileName.js"
 import {toModuleName} from "./utils/path.js";
 import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
-import {Injection} from "./converter/injection.js";
+import {createSimpleInjection, Injection, SimpleInjection} from "./converter/injection.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -111,6 +111,13 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         "Injection",
         injections,
         cwd,
+        injection => {
+            if (typeof injection === "function") {
+                return createSimpleInjection(injection as SimpleInjection)
+            } else {
+                return injection as Injection
+            }
+        }
     )
 
     const customAnnotations = await loadExtensions<Annotation>(
@@ -206,18 +213,23 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         ...defaultPlugins
     ]
 
+    const lifecycleItems = [
+        ...converterPlugins,
+        ...customInjections,
+    ]
+
     const context = createContext()
 
-    for (const plugin of converterPlugins) {
-        plugin.setup(context)
+    for (const lifecycle of lifecycleItems) {
+        lifecycle.setup(context)
     }
 
     structure
         .flatMap(it => it.statements)
         .forEach(statement => {
             traverse(statement, node => {
-                for (const plugin of converterPlugins) {
-                    plugin.traverse(node, context)
+                for (const lifecycle of lifecycleItems) {
+                    lifecycle.traverse(node, context)
                 }
             })
         })
@@ -258,8 +270,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const derivedFiles: DerivedFile[] = []
     const generatedFiles: GeneratedFile[] = []
 
-    for (const plugin of converterPlugins) {
-        const generated = plugin.generate(context)
+    for (const lifecycle of lifecycleItems) {
+        const generated = lifecycle.generate(context)
 
         for (const generatedFile of generated) {
             let generatedFileName = generatedFile.fileName

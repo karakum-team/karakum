@@ -11,11 +11,11 @@ export class InjectionService {
     constructor(readonly injections: Injection[]) {
     }
 
-    resolveInjections(node: Node, context: ConverterContext): string[] {
+    resolveInjections(node: Node, context: ConverterContext, render: Render): string[] {
         const injections: string[] = []
 
         for (const injection of this.injections) {
-            const result = injection(node, context)
+            const result = injection.render(node, context, render)
 
             if (result !== null) injections.push(result)
         }

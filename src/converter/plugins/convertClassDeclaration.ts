@@ -75,7 +75,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const name = (node.name && render(node.name)) ?? "Anonymous"
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context)
+    const injections = injectionService?.resolveInjections(node, context, render)
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))

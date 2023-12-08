@@ -21,7 +21,7 @@ export function convertTypeLiteral(
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context)
+    const injections = injectionService?.resolveInjections(node, context, render)
 
     const members = node.members
         .map(member => render(member))
