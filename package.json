@@ -19,8 +19,8 @@
     "clean": "rimraf build",
     "build": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "ts-node --esm test/run.ts",
-    "schema": "ts-node --esm schema/generate.ts"
+    "test": "node --loader ts-node/esm test/run.ts",
+    "schema": "node --loader ts-node/esm schema/generate.ts"
   },
   "dependencies": {
     "glob": "^10.3.3",
@@ -33,7 +33,7 @@
     "@types/node": "^20.5.0",
     "@types/yargs": "^17.0.22",
     "rimraf": "^5.0.1",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript-json-schema": "^0.59.0"
   },
   "peerDependencies": {
