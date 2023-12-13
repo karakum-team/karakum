@@ -31,8 +31,7 @@ fun getDerivedStateFromProps(): MyInterfaceGetDerivedStateFromPropsResult
 
 external interface MapRoutePropertiesFunction {
 
-@Suppress("DEPRECATION")
-@nativeInvoke
+@seskar.js.JsNative
 operator fun  invoke(route: MapRoutePropertiesFunctionRoute): MapRoutePropertiesFunctionResult
             
 }

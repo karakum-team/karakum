@@ -30,11 +30,7 @@ export const convertMappedType = createSimplePlugin((node, context, render) => {
     }
 
     const getter = `
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> get(key: ${keyType}): ${type}
     `
 
@@ -42,11 +38,7 @@ ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun <${typeParameter}>
 
     if (!readonly) {
         setter = `
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeSetter
+@seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
         `
     }

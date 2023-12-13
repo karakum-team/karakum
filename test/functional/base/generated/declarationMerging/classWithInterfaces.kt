@@ -16,8 +16,7 @@ package sandbox.base.declarationMerging
 
 external class ExampleClass {
 
-@Suppress("DEPRECATION")
-@nativeInvoke
+@seskar.js.JsNative
 operator fun  invoke(param: String): Unit
             
 var a: Double

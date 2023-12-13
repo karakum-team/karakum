@@ -29,11 +29,7 @@ export const convertIndexedSignatureDeclaration = createSimplePlugin((node, cont
     const type = renderNullable(node.type, true, context, render)
 
     const getter = `
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType}): ${type}
     `
 
@@ -41,11 +37,7 @@ ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType
 
     if (!readonly) {
         setter = `
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeSetter
+@seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun set(key: ${keyType}, value: ${type})
         `
     }

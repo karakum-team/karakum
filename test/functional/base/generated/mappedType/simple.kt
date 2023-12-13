@@ -27,20 +27,12 @@ val two: Keys
 external interface OptionsFlags {
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
     
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeSetter
+@seskar.js.JsNative
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
         
     
@@ -51,11 +43,7 @@ operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
 external interface ReadonlyOptionsFlags {
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
     
     
@@ -66,20 +54,12 @@ operator fun <Property : Keys> get(key: Property): Promise<Property>?
 external interface OptionsFlagsWithTypeLiteral {
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
     
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeSetter
+@seskar.js.JsNative
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
         
     
@@ -97,20 +77,12 @@ var key: T
 external interface NamedOptionsFlags {
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
     
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeSetter
+@seskar.js.JsNative
 operator fun <Property : Keys> set(key: KeyWrapper<Property>, value: Promise<Property>?)
         
     
@@ -121,11 +93,7 @@ operator fun <Property : Keys> set(key: KeyWrapper<Property>, value: Promise<Pro
 external interface OptionalOptionsFlags {
 
 
-@Suppress(
-    "DEPRECATION",
-    "NATIVE_INDEXER_KEY_SHOULD_BE_STRING_OR_NUMBER",
-)
-@nativeGetter
+@seskar.js.JsNative
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
     
     

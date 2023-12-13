@@ -29,8 +29,7 @@ fun method(options: MyInterfaceMethodOptions): String
 
 external interface ShouldRevalidateFunction {
 
-@Suppress("DEPRECATION")
-@nativeInvoke
+@seskar.js.JsNative
 operator fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
             
 }

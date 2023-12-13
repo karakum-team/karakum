@@ -26,8 +26,7 @@ export const convertCallSignatureDeclaration = createSimplePlugin((node, context
             const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
             return `
-@Suppress("DEPRECATION")
-@nativeInvoke
+@seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}
             `
         }
