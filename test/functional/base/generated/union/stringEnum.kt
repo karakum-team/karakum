@@ -10,14 +10,13 @@ package sandbox.base.union
 
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{applicationXWwwFormUrlencoded: 'application/x-www-form-urlencoded', multipartFormData: 'multipart/form-data'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface FormEncType {
 companion object {
+@seskar.js.JsValue("application/x-www-form-urlencoded")
 val applicationXWwwFormUrlencoded: FormEncType
+@seskar.js.JsValue("multipart/form-data")
 val multipartFormData: FormEncType
 }
 }
@@ -25,14 +24,13 @@ val multipartFormData: FormEncType
 
 external fun switcher(): SwitcherResult
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{on: 'on', off: 'off'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface SwitcherResult {
 companion object {
+@seskar.js.JsValue("on")
 val on: SwitcherResult
+@seskar.js.JsValue("off")
 val off: SwitcherResult
 }
 }

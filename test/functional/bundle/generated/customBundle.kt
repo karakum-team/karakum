@@ -15,14 +15,13 @@ external fun myFunction2(firstParam: String, secondParam: Double): Unit
 
 external fun myFunction1(firstParam: String, secondParam: Double): Unit
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{basic: 'basic', complete: 'complete'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface MyFunction3SecondParam {
 companion object {
+@seskar.js.JsValue("basic")
 val basic: MyFunction3SecondParam
+@seskar.js.JsValue("complete")
 val complete: MyFunction3SecondParam
 }
 }

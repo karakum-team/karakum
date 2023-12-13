@@ -10,14 +10,13 @@ package sandbox.base.mappedType
 
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{one: 'one', two: 'two'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface Keys {
 companion object {
+@seskar.js.JsValue("one")
 val one: Keys
+@seskar.js.JsValue("two")
 val two: Keys
 }
 }

@@ -19,70 +19,65 @@ external fun getGPUInfo4(infoType: (((GetGPUInfo4InfoType)))): Any?
 
 external fun setVibrancy(type: SetVibrancyType?): Unit
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{basic: 'basic', complete: 'complete'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface GetGPUInfoInfoType {
 companion object {
+@seskar.js.JsValue("basic")
 val basic: GetGPUInfoInfoType
+@seskar.js.JsValue("complete")
 val complete: GetGPUInfoInfoType
 }
 }
     
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{basic: 'basic', complete: 'complete'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface GetGPUInfo2InfoType {
 companion object {
+@seskar.js.JsValue("basic")
 val basic: GetGPUInfo2InfoType
+@seskar.js.JsValue("complete")
 val complete: GetGPUInfo2InfoType
 }
 }
     
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{basic: 'basic', complete: 'complete'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface GetGPUInfo3InfoType {
 companion object {
+@seskar.js.JsValue("basic")
 val basic: GetGPUInfo3InfoType
+@seskar.js.JsValue("complete")
 val complete: GetGPUInfo3InfoType
 }
 }
     
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{basic: 'basic', complete: 'complete'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface GetGPUInfo4InfoType {
 companion object {
+@seskar.js.JsValue("basic")
 val basic: GetGPUInfo4InfoType
+@seskar.js.JsValue("complete")
 val complete: GetGPUInfo4InfoType
 }
 }
     
 
 
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{light: 'light', dark: 'dark'}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface SetVibrancyType {
 companion object {
+@seskar.js.JsValue("light")
 val light: SetVibrancyType
+@seskar.js.JsValue("dark")
 val dark: SetVibrancyType
 }
 }

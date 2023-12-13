@@ -73,7 +73,12 @@ export function convertStringUnionType(node: UnionTypeNode, name: string, contex
     }
 
     const body = uniqueEntries
-        .map(([key]) => `val ${key}: ${name}`)
+        .map(([key, value]) => (
+            `
+@seskar.js.JsValue("${value}")
+val ${key}: ${name}
+            `.trim()
+        ))
         .join("\n")
 
     const jsName = uniqueEntries
@@ -85,11 +90,8 @@ export function convertStringUnionType(node: UnionTypeNode, name: string, contex
         .join("\n")
 
     const declaration = `
-@Suppress(
-    "NAME_CONTAINS_ILLEGAL_CHARS",
-    "NESTED_CLASS_IN_EXTERNAL_INTERFACE",
-)
-@JsName("""(/*union*/{${jsName}}/*union*/)""")
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+@seskar.js.JsVirtual
 sealed external interface ${name} {
 companion object {
 ${body}${ifPresent(comment, it => (`
