@@ -81,10 +81,6 @@ val ${key}: ${name}
         ))
         .join("\n")
 
-    const jsName = uniqueEntries
-        .map(([key, value]) => `${key}: '${value}'`)
-        .join(", ")
-
     const comment = duplicatedEntries
         .map(([key, value]) => `${key} for "${value}"`)
         .join("\n")
