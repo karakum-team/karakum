@@ -20,7 +20,7 @@ Gradle plugin for Kotlin Gradle projects:
 
 ```kotlin
 plugins {
-    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.30"
+    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.31"
 }
 ```
 
