@@ -59,6 +59,7 @@ import {convertLiteral} from "./converter/plugins/convertLiteral.js";
 import {inheritedTypeLiteralPlugin} from "./converter/plugins/InheritedTypeLiteralPlugin.js";
 import {Injection} from "./converter/injection.js";
 import {InjectionPlugin} from "./converter/plugins/InjectionPlugin.js";
+import {convertConditionalType} from "./converter/plugins/convertConditionalType.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -149,4 +150,5 @@ export const createPlugins = (
     convertMappedType,
     convertIndexedSignatureDeclaration,
     convertTypeQuery,
+    convertConditionalType,
 ]
