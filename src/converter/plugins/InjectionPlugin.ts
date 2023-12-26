@@ -37,7 +37,7 @@ export class InjectionService {
         const injections: string[] = []
 
         for (const injection of this.injections) {
-            const result = injection.render(node, context, render)
+            const result = injection.inject(node, context, render)
 
             if (result !== null) injections.push(result)
         }

@@ -209,27 +209,23 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         new CommentsPlugin(),
         new AnnotationPlugin(customAnnotations),
 
+        ...customInjections,
         ...customPlugins,
         ...defaultPlugins
     ]
 
-    const lifecycleItems = [
-        ...converterPlugins,
-        ...customInjections,
-    ]
-
     const context = createContext()
 
-    for (const lifecycle of lifecycleItems) {
-        lifecycle.setup(context)
+    for (const plugin of converterPlugins) {
+        plugin.setup(context)
     }
 
     structure
         .flatMap(it => it.statements)
         .forEach(statement => {
             traverse(statement, node => {
-                for (const lifecycle of lifecycleItems) {
-                    lifecycle.traverse(node, context)
+                for (const plugin of converterPlugins) {
+                    plugin.traverse(node, context)
                 }
             })
         })
@@ -270,8 +266,8 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const derivedFiles: DerivedFile[] = []
     const generatedFiles: GeneratedFile[] = []
 
-    for (const lifecycle of lifecycleItems) {
-        const generated = lifecycle.generate(context)
+    for (const plugin of converterPlugins) {
+        const generated = plugin.generate(context)
 
         for (const generatedFile of generated) {
             let generatedFileName = generatedFile.fileName
