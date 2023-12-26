@@ -7,16 +7,19 @@ import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
 import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
+import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
     defaultValue?: string
+    inheritanceModifier?: string
     template: (parameters: string, signature: Signature) => string,
 }
 
 export interface ParameterDeclarationConfiguration {
     strategy: "function" | "lambda",
     defaultValue?: string
+    inheritanceModifier?: string
     type: TypeNode | undefined,
     nullable: boolean,
 }
@@ -56,15 +59,20 @@ export const convertParameterDeclarations = (
         const annotations = annotationService?.resolveAnnotations(node, context) ?? []
         const delimiter = `\n\n${annotations.join("\n")}`
 
+        const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
         const signatures = expandUnions(initialSignature, context)
 
         return signatures
             .map(signature => {
+                const defaultInheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+                const inheritanceModifier = configuration.inheritanceModifier ?? defaultInheritanceModifier ?? undefined
+
                 const parameters = signature
                     .map(({parameter, type, nullable}) => {
                         return convertParameterDeclarationWithFixedType(parameter, context, render, {
                             strategy,
                             defaultValue,
+                            inheritanceModifier,
                             type,
                             nullable,
                         })
@@ -99,7 +107,7 @@ const convertParameterDeclarationWithFixedType = (
     render: Render,
     configuration: ParameterDeclarationConfiguration,
 ) => {
-    const {type, strategy} = configuration
+    const {type, strategy, inheritanceModifier} = configuration
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
@@ -126,7 +134,10 @@ const convertParameterDeclarationWithFixedType = (
 
     const isOptional = strategy === "lambda" && Boolean(node.questionToken)
 
-    const isDefinedExternally = strategy === "function" && Boolean(node.questionToken)
+    const isDefinedExternally = strategy === "function"
+        && Boolean(node.questionToken)
+        && inheritanceModifier !== "override"
+
     const defaultValue = configuration.defaultValue ?? "definedExternally"
 
     let renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
