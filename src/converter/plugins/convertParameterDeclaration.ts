@@ -12,7 +12,6 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
     defaultValue?: string
-    inheritanceModifier?: string
     template: (parameters: string, signature: Signature) => string,
 }
 
@@ -64,8 +63,7 @@ export const convertParameterDeclarations = (
 
         return signatures
             .map(signature => {
-                const defaultInheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
-                const inheritanceModifier = configuration.inheritanceModifier ?? defaultInheritanceModifier ?? undefined
+                const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context) ?? undefined
 
                 const parameters = signature
                     .map(({parameter, type, nullable}) => {
@@ -134,11 +132,12 @@ const convertParameterDeclarationWithFixedType = (
 
     const isOptional = strategy === "lambda" && Boolean(node.questionToken)
 
+    const defaultValue = configuration.defaultValue ?? "definedExternally"
+
     const isDefinedExternally = strategy === "function"
         && Boolean(node.questionToken)
         && inheritanceModifier !== "override"
-
-    const defaultValue = configuration.defaultValue ?? "definedExternally"
+        && defaultValue !== ""
 
     let renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
 
