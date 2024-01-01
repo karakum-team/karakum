@@ -157,6 +157,10 @@ const convertParameterDeclarationWithFixedType = (
     if (type && node.dotDotDotToken) {
         if (renderedType.startsWith("Array")) {
             renderedType = renderedType.replace(/^Array<(.+)>$/, "$1")
+        } else if (renderedType.startsWith("ReadonlyArray")) {
+            renderedType = renderedType.replace(/^ReadonlyArray<(.+)>$/, "$1")
+        } else if (renderedType.startsWith("js.core.ReadonlyArray")) {
+            renderedType = renderedType.replace(/^js.core.ReadonlyArray<(.+)>$/, "$1")
         } else {
             renderedType = `Any? /* ${renderedType} */`
         }
