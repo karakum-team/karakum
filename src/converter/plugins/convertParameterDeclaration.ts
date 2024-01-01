@@ -8,6 +8,7 @@ import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
 import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
@@ -53,6 +54,8 @@ export const convertParameterDeclarations = (
     const {strategy, defaultValue, template} = configuration
     const initialSignature = extractSignature(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
     if (strategy === "function") {
         const annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
         const annotations = annotationService?.resolveAnnotations(node, context) ?? []
@@ -66,6 +69,7 @@ export const convertParameterDeclarations = (
                 const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context) ?? undefined
 
                 const parameters = signature
+                    .filter(({parameter}) => !isThisParameter(parameter))
                     .map(({parameter, type, nullable}) => {
                         return convertParameterDeclarationWithFixedType(parameter, context, render, {
                             strategy,
@@ -77,13 +81,18 @@ export const convertParameterDeclarations = (
                     })
                     .join(", ")
 
-                return template(parameters, signature)
+                const prefix = signature[0] && isThisParameter(signature[0].parameter)
+                    ? `/* ${typeScriptService?.printNode(signature[0].parameter)}, */ `
+                    : ""
+
+                return template(prefix + parameters, signature)
             })
             .join(delimiter)
     }
 
     if (strategy === "lambda") {
         const parameters = node.parameters
+            .filter(parameter => !isThisParameter(parameter))
             .map(parameter => {
                 return convertParameterDeclarationWithFixedType(parameter, context, render, {
                     strategy,
@@ -93,7 +102,11 @@ export const convertParameterDeclarations = (
             })
             .join(", ")
 
-        return template(parameters, initialSignature)
+        const prefix = node.parameters[0] && isThisParameter(node.parameters[0])
+            ? `/* ${typeScriptService?.printNode(node.parameters[0])}, */ `
+            : ""
+
+        return template(prefix + parameters, initialSignature)
     }
 
     throw new Error(`Unknown parameter declaration strategy: ${strategy}`)
@@ -153,6 +166,11 @@ const convertParameterDeclarationWithFixedType = (
     return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${isOptional ? " /* use undefined for default */" : ""}${isDefinedExternally ? ` = ${defaultValue}` : ""}`
 }
 
+const isThisParameter = (parameter: ParameterDeclaration) => (
+    ts.isIdentifier(parameter.name)
+    && parameter.name.text === "this"
+)
+
 const extractSignature = (node: SignatureDeclarationBase) => {
     return node.parameters.map(it => ({
         parameter: it,
@@ -174,6 +192,8 @@ const expandUnions = (
         for (let signatureIndex = 0; signatureIndex < currentSignatures.length; signatureIndex++) {
             const signature = currentSignatures[signatureIndex]
             const {parameter, type, optional} = signature[parameterIndex]
+
+            if (isThisParameter(parameter)) continue
 
             if (type && isNullableStringUnionType(type, context)) continue
 
