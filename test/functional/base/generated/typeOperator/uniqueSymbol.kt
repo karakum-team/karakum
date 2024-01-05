@@ -9,4 +9,4 @@ package sandbox.base.typeOperator
 
 
 
-external val UNSAFE_DEFERRED_SYMBOL: /* unique */ js.core.Symbol
+external val UNSAFE_DEFERRED_SYMBOL: /* unique */ js.symbol.Symbol

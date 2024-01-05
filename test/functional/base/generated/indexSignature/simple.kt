@@ -41,12 +41,12 @@ external interface SomeData {
 
 
 @seskar.js.JsNative
-operator fun get(key: js.core.Symbol): Double?
+operator fun get(key: js.symbol.Symbol): Double?
     
 
 
 @seskar.js.JsNative
-operator fun set(key: js.core.Symbol, value: Double?)
+operator fun set(key: js.symbol.Symbol, value: Double?)
         
     
 }
@@ -58,12 +58,12 @@ var x: String
 
 
 @seskar.js.JsNative
-operator fun get(key: js.core.Symbol): Double?
+operator fun get(key: js.symbol.Symbol): Double?
     
 
 
 @seskar.js.JsNative
-operator fun set(key: js.core.Symbol, value: Double?)
+operator fun set(key: js.symbol.Symbol, value: Double?)
         
     
 }
