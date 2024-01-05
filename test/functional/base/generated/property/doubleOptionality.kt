@@ -36,6 +36,7 @@ var handle9: SomeNullableType
 var handle10: SomeNullableType
 var handle11: SomeUnionNullableType
 var handle12: SomeUnionNullableType
+var handle13: Any?
 }
     
 
@@ -53,4 +54,5 @@ var handle9: SomeNullableType
 var handle10: SomeNullableType
 var handle11: SomeUnionNullableType
 var handle12: SomeUnionNullableType
+var handle13: Any?
 }

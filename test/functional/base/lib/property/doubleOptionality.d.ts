@@ -22,6 +22,7 @@ declare type AgnosticBaseRouteObject = {
     handle10?: BaseAgnosticBaseRouteObject["params3"];
     handle11?: SomeUnionNullableType;
     handle12?: BaseAgnosticBaseRouteObject["params4"];
+    handle13?: unknown | undefined;
 };
 
 declare class AgnosticBaseRouteClass {
@@ -37,4 +38,5 @@ declare class AgnosticBaseRouteClass {
     handle10?: BaseAgnosticBaseRouteObject["params3"];
     handle11?: SomeUnionNullableType;
     handle12?: BaseAgnosticBaseRouteObject["params4"];
+    handle13?: unknown | undefined;
 }
