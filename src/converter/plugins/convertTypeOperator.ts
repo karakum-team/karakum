@@ -13,7 +13,7 @@ export const convertTypeOperator = createSimplePlugin((node, context) => {
         checkCoverageService?.cover(node)
         checkCoverageService?.cover(node.type)
 
-        return "/* unique */ js.core.Symbol"
+        return "/* unique */ js.symbol.Symbol"
     }
 
     return null

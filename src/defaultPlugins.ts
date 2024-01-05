@@ -100,7 +100,7 @@ export const createPlugins = (
     convertPrimitive(hasKind(ts.SyntaxKind.TrueKeyword), () => "Boolean"),
     convertPrimitive(hasKind(ts.SyntaxKind.VoidKeyword), () => "Unit"),
     convertPrimitive(hasKind(ts.SyntaxKind.NeverKeyword), () => "Nothing"),
-    convertPrimitive(hasKind(ts.SyntaxKind.SymbolKeyword), () => "js.core.Symbol"),
+    convertPrimitive(hasKind(ts.SyntaxKind.SymbolKeyword), () => "js.symbol.Symbol"),
     convertPrimitive(hasKind(ts.SyntaxKind.BigIntKeyword), () => "js.core.BigInt"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),

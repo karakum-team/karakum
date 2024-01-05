@@ -71,7 +71,7 @@ const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.ObjectBindingPattern, // TODO: infer name
     ts.SyntaxKind.BindingElement, // ignore
     ts.SyntaxKind.UnknownKeyword, // Any?
-    ts.SyntaxKind.SymbolKeyword, // js.core.Symbol
+    ts.SyntaxKind.SymbolKeyword, // js.symbol.Symbol
     ts.SyntaxKind.BigIntKeyword, // js.core.BigInt
     ts.SyntaxKind.StaticKeyword, // companion object
     ts.SyntaxKind.ExportAssignment, // ignore
