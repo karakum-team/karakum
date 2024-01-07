@@ -7,6 +7,10 @@ declare type BaseAgnosticBaseRouteObject = {
     params2?: string
     params3: SomeNullableType
     params4: SomeUnionNullableType
+    params5: number | string | null
+    params6: {
+        subParam6?: string | undefined
+    }
 }
 
 declare type AgnosticBaseRouteObject = {
@@ -23,6 +27,8 @@ declare type AgnosticBaseRouteObject = {
     handle11?: SomeUnionNullableType;
     handle12?: BaseAgnosticBaseRouteObject["params4"];
     handle13?: unknown | undefined;
+    handle14?: BaseAgnosticBaseRouteObject["params5"];
+    handle15?: BaseAgnosticBaseRouteObject["params6"];
 };
 
 declare class AgnosticBaseRouteClass {

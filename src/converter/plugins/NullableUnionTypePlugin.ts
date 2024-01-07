@@ -10,13 +10,23 @@ import {GeneratedFile} from "../generated.js";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
 const isUndefined = (type: Node) => type.kind === ts.SyntaxKind.UndefinedKeyword
+const isAny = (type: Node) => type.kind === ts.SyntaxKind.AnyKeyword
+const isUnknown = (type: Node) => type.kind === ts.SyntaxKind.UnknownKeyword
 
 export const isNullableType = (type: Node) => isNull(type) || isUndefined(type)
 
 export function isPossiblyNullableType(node: TypeNode, context: ConverterContext): boolean {
     if (node.getSourceFile() === undefined) {
         // handle synthetic nodes
-        return false
+        const resolvedType = resolveTypeIfNeeded(node, context)
+
+        return (
+            isNullableTsNode(resolvedType)
+            || (
+                ts.isUnionTypeNode(resolvedType)
+                && flatUnionTypes(resolvedType, context).some(it => isNullableTsNode(it))
+            )
+        )
     }
 
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
@@ -33,6 +43,27 @@ export function isPossiblyNullableType(node: TypeNode, context: ConverterContext
             type.isUnion()
             && type.types.some(it => isNullableTsType(it))
         )
+    )
+}
+
+function resolveTypeIfNeeded(node: TypeNode, context: ConverterContext) {
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
+    if (ts.isIndexedAccessTypeNode(node)) {
+        const resolvedType = typeScriptService?.resolveType(node)
+
+        return resolvedType ?? node
+    }
+
+    return node
+}
+
+function isNullableTsNode(node: Node): boolean {
+    return (
+        isNull(node)
+        || isUndefined(node)
+        || isAny(node)
+        || isUnknown(node)
     )
 }
 

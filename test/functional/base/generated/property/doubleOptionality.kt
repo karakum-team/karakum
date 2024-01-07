@@ -19,6 +19,8 @@ var params: String?
 var params2: String?
 var params3: SomeNullableType
 var params4: SomeUnionNullableType
+var params5: Any? /* number | string | null */
+var params6: BaseAgnosticBaseRouteObjectParams6
 }
     
 
@@ -37,6 +39,8 @@ var handle10: SomeNullableType
 var handle11: SomeUnionNullableType
 var handle12: SomeUnionNullableType
 var handle13: Any?
+var handle14: Any? /* string | number | null */
+var handle15: (AgnosticBaseRouteObjectHandle15)?
 }
     
 
@@ -56,3 +60,8 @@ var handle11: SomeUnionNullableType
 var handle12: SomeUnionNullableType
 var handle13: Any?
 }
+
+external interface BaseAgnosticBaseRouteObjectParams6 {
+var subParam6: String?
+}
+    
