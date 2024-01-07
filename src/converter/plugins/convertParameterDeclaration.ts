@@ -159,8 +159,8 @@ const convertParameterDeclarationWithFixedType = (
             renderedType = renderedType.replace(/^Array<(.+)>$/, "$1")
         } else if (renderedType.startsWith("ReadonlyArray")) {
             renderedType = renderedType.replace(/^ReadonlyArray<(.+)>$/, "$1")
-        } else if (renderedType.startsWith("js.core.ReadonlyArray")) {
-            renderedType = renderedType.replace(/^js.core.ReadonlyArray<(.+)>$/, "$1")
+        } else if (renderedType.startsWith("js.array.ReadonlyArray")) {
+            renderedType = renderedType.replace(/^js.array.ReadonlyArray<(.+)>$/, "$1")
         } else {
             renderedType = `Any? /* ${renderedType} */`
         }
