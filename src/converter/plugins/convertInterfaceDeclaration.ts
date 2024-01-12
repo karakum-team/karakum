@@ -31,10 +31,12 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
+        ?.filter(Boolean)
         ?.join(", ")
 
     const heritageClauses = node.heritageClauses
         ?.map(heritageClause => render(heritageClause))
+        ?.filter(Boolean)
         ?.join(", ")
 
     const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)

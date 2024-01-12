@@ -30,6 +30,7 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
+        ?.filter(Boolean)
         ?.join(", ")
 
     if (ts.isTypeLiteralNode(node.type)) {
@@ -68,10 +69,12 @@ ${accessors}${ifPresent(injectedMembers, it => `\n${it}`)}
             ...node.type.typeParameters,
         ]
             .map(typeParameter => render(typeParameter))
+            .filter(Boolean)
             .join(", ")
 
         const parameters = node.type.parameters
             ?.map(parameter => render(parameter))
+            ?.filter(Boolean)
             ?.join(", ")
 
         const returnType = render(node.type.type)

@@ -51,10 +51,12 @@ export function extractTypeParameters(
 
     const declaration = result
         .map(([, declaration]) => render(declaration))
+        .filter(Boolean)
         .join(", ")
 
     const reference = result
         .map(([node]) => render(node))
+        .filter(Boolean)
         .join(", ")
 
     return {

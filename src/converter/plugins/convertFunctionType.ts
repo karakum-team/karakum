@@ -23,6 +23,7 @@ export const convertFunctionType = createSimplePlugin((node, context, render) =>
 
     const parameters = node.parameters
         ?.map(parameter => render(parameter))
+        ?.filter(Boolean)
         ?.join(", ")
 
     return `(${parameters}) -> ${returnType}`

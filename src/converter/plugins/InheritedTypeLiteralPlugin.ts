@@ -40,6 +40,7 @@ export function convertInheritedTypeLiteral(
 
     const heritageTypes = typeReferences
         .map(type => render(type))
+        .filter(Boolean)
         .join(", ")
 
     const heritageClause = ifPresent(heritageTypes, it => ` : ${it}`)

@@ -79,6 +79,7 @@ export const convertParameterDeclarations = (
                             nullable,
                         })
                     })
+                    .filter(Boolean)
                     .join(", ")
 
                 const prefix = signature[0] && isThisParameter(signature[0].parameter)
@@ -100,6 +101,7 @@ export const convertParameterDeclarations = (
                     nullable: false,
                 })
             })
+            .filter(Boolean)
             .join(", ")
 
         const prefix = node.parameters[0] && isThisParameter(node.parameters[0])

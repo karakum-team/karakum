@@ -18,6 +18,7 @@ export const convertMethodDeclaration = createSimplePlugin((node, context, rende
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
+        ?.filter(Boolean)
         ?.join(", ")
 
     const returnType = node.type && render(node.type)

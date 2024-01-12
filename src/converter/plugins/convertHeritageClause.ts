@@ -10,5 +10,6 @@ export const convertHeritageClause = createSimplePlugin((node, context, render) 
 
     return node.types
         .map(type => render(type))
+        .filter(Boolean)
         .join(", ")
 })
