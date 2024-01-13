@@ -17,9 +17,33 @@ export class InheritanceModifierService {
         signature: Signature,
         context: ConverterContext,
     ): string | null {
-        const inheritanceModifierContext = {
+        const inheritanceModifierContext: InheritanceModifierContext = {
             ...context,
             signature,
+        }
+
+        return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
+    }
+
+    resolveGetterInheritanceModifier(
+        node: Node,
+        context: ConverterContext,
+    ): string | null {
+        const inheritanceModifierContext: InheritanceModifierContext = {
+            ...context,
+            getter: true,
+        }
+
+        return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
+    }
+
+    resolveSetterInheritanceModifier(
+        node: Node,
+        context: ConverterContext,
+    ): string | null {
+        const inheritanceModifierContext: InheritanceModifierContext = {
+            ...context,
+            setter: true,
         }
 
         return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
@@ -29,12 +53,7 @@ export class InheritanceModifierService {
         node: Node,
         context: ConverterContext,
     ): string | null {
-        const inheritanceModifierContext = {
-            ...context,
-            signature: undefined
-        }
-
-        return this.internalResolveInheritanceModifier(node, inheritanceModifierContext)
+        return this.internalResolveInheritanceModifier(node, context)
     }
 
     private internalResolveInheritanceModifier(

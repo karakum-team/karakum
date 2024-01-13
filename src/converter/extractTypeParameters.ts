@@ -20,7 +20,9 @@ export function extractTypeParameters(
 
     const typeChecker = typeScriptService?.program.getTypeChecker()
 
-    traverse(node, node => {
+    const containerNode = node
+
+    traverse(containerNode, node => {
         if (ts.isIdentifier(node)) {
             const symbol = typeChecker?.getSymbolAtLocation(node)
             const typeParameterDeclarations = (symbol?.declarations ?? [])
@@ -40,9 +42,9 @@ export function extractTypeParameters(
                     }
                 }
 
-                const foundParent = typeScriptService?.findClosest(node, node => node === typeParameterContainer)
+                const foundParent = typeScriptService?.findClosest(containerNode, node => node === typeParameterContainer)
 
-                if (foundParent !== undefined) {
+                if (foundParent !== undefined && foundParent !== containerNode) {
                     result.push([node, declaration])
                 }
             }

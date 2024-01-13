@@ -23,3 +23,9 @@ type NamedOptionsFlags = {
 type OptionalOptionsFlags = {
     readonly [Property in Keys as KeyWrapper<Property>]: Promise<Property> | undefined;
 }
+
+interface MappedTypeContainer {
+    mappedType: {
+        [Property in Keys]: Promise<Property>;
+    }
+}

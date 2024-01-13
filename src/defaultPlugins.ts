@@ -47,7 +47,7 @@ import {convertPropertyAccessExpression} from "./converter/plugins/convertProper
 import {NameResolverPlugin} from "./converter/plugins/NameResolverPlugin.js";
 import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin.js";
 import {InheritanceModifier} from "./converter/inheritanceModifier.js";
-import {convertMappedType} from "./converter/plugins/convertMappedType.js";
+import {mappedTypePlugin} from "./converter/plugins/MappedTypePlugin.js";
 import {NamespaceInfoPlugin} from "./converter/plugins/NamespaceInfoPlugin.js";
 import {NamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {AccessorsPlugin} from "./converter/plugins/AccessorsPlugin.js";
@@ -85,8 +85,9 @@ export const createPlugins = (
     new AccessorsPlugin(),
 
     typeLiteralPlugin,
-    inheritedTypeLiteralPlugin,
+    mappedTypePlugin,
     stringUnionTypePlugin,
+    inheritedTypeLiteralPlugin,
 
     convertPrimitive(hasKind(ts.SyntaxKind.AnyKeyword), () => "Any?"),
     convertPrimitive(hasKind(ts.SyntaxKind.UnknownKeyword), () => "Any?"),
@@ -147,7 +148,6 @@ export const createPlugins = (
     convertTypePredicate,
     convertTypeOperator,
     convertImportType,
-    convertMappedType,
     convertIndexedSignatureDeclaration,
     convertTypeQuery,
     convertConditionalType,

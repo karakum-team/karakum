@@ -7,20 +7,11 @@ import {extractTypeParameters} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
-export function convertTypeLiteral(
-    node: TypeLiteralNode,
-    name: string,
-    typeParameters: string | undefined,
-    context: ConverterContext,
-    render: Render,
-) {
+export function convertTypeLiteralBody(node: TypeLiteralNode, context: ConverterContext, render: Render) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
-
-    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, context, render)
 
     const members = node.members
@@ -30,9 +21,22 @@ export function convertTypeLiteral(
     const injectedMembers = (injections ?? [])
         .join("\n")
 
+    return `${members}${ifPresent(injectedMembers, it => `\n${it}`)}`
+}
+
+export function convertTypeLiteral(
+    node: TypeLiteralNode,
+    name: string,
+    typeParameters: string | undefined,
+    context: ConverterContext,
+    render: Render,
+) {
+    const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
-${members}${ifPresent(injectedMembers, it => `\n${it}`)}
+${convertTypeLiteralBody(node, context, render)}
 }
     `
 }

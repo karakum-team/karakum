@@ -6,6 +6,8 @@ import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js"
 import {extractTypeParameters} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {convertMappedTypeBody} from "./MappedTypePlugin.js";
+import {convertTypeLiteralBody} from "./TypeLiteralPlugin.js";
 
 export function isInheritedTypeLiteral(node: ts.Node): node is IntersectionTypeNode {
     return (
@@ -46,18 +48,17 @@ export function convertInheritedTypeLiteral(
     const heritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
 
     const members = typeLiterals
-        .flatMap(it => it.members)
-        .map(member => render(member))
-        .join("\n")
-
-    const injectedMembers = (injections ?? [])
+        .map(it => convertTypeLiteralBody(it, context, render))
         .join("\n")
 
     let accessors = ""
 
     if (mappedType) {
-        accessors = render(mappedType)
+        accessors = convertMappedTypeBody(mappedType, context, render)
     }
+
+    const injectedMembers = (injections ?? [])
+        .join("\n")
 
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClause} {
