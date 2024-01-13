@@ -13,6 +13,7 @@ testGeneration("namespace", import.meta.url, output => ({
         "will-be-mapped#AndThis": "was-mapped#Nested"
     },
     namespaceStrategy: {
+        "package-namespace.ObjectNamespace": "object",
         "package-namespace": "package",
         "IgnoreNamespace": "ignore",
         "will-be-mapped": "package",

@@ -27,8 +27,7 @@ export function collectNamespaceInfo(
                 let statements: Statement[] = []
 
                 if (node.body && ts.isModuleBlock(node.body)) {
-                    statements = node.body.statements
-                        .filter(statement => !ts.isModuleDeclaration(statement))
+                    statements = Array.from(node.body.statements)
                 }
 
                 result.push({

@@ -11,6 +11,10 @@ declare module "package-namespace" {
     namespace NestedNamespace {
         const nestedNamespaceValue: number
     }
+
+    namespace ObjectNamespace {
+        const objectNamespaceValue: number
+    }
 }
 
 declare namespace ObjectNamespace {

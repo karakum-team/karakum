@@ -7,3 +7,10 @@ package `package`.namespace
 
 
 external val packageNamespaceValue: Double
+
+
+
+
+external object ObjectNamespace {
+external val objectNamespaceValue: Double
+}
