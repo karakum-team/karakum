@@ -24,6 +24,7 @@ import {
 import {
     resolveInterfaceCallSignatureParameterName
 } from "./nameResolvers/resolveInterfaceCallSignatureParameterName.js";
+import {resolveVariableName} from "./nameResolvers/resolveVariableName.js";
 
 export const defaultNameResolvers: NameResolver[] = [
     resolveFunctionParameterName,
@@ -44,4 +45,5 @@ export const defaultNameResolvers: NameResolver[] = [
     resolveInterfacePropertyName,
     resolveInterfacePropertyCallbackParameterName,
     resolveTypeAliasPropertyName,
+    resolveVariableName,
 ].map(resolveParenthesizedTypeName)
