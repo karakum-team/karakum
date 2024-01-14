@@ -13,7 +13,8 @@ export const convertIndexedSignatureDeclaration = createSimplePlugin((node, cont
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
 
-    const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    const getterInheritanceModifier = inheritanceModifierService?.resolveGetterInheritanceModifier(node, context)
+    const setterInheritanceModifier = inheritanceModifierService?.resolveSetterInheritanceModifier(node, context)
 
     const readonly = node.modifiers?.find(modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword)
     readonly && checkCoverageService?.cover(readonly)
@@ -30,7 +31,7 @@ export const convertIndexedSignatureDeclaration = createSimplePlugin((node, cont
 
     const getter = `
 @seskar.js.JsNative
-${ifPresent(inheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType}): ${type}
+${ifPresent(getterInheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType}): ${type}
     `
 
     let setter = ""
@@ -38,12 +39,10 @@ ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType
     if (!readonly) {
         setter = `
 @seskar.js.JsNative
-${ifPresent(inheritanceModifier, it => `${it} `)}operator fun set(key: ${keyType}, value: ${type})
+${ifPresent(setterInheritanceModifier, it => `${it} `)}operator fun set(key: ${keyType}, value: ${type})
         `
     }
 
 
-    return `
-${getter}${ifPresent(setter, it => `\n\n${it}`)}
-    `
+    return `${getter}${ifPresent(setter, it => `\n\n${it}`)}`
 })
