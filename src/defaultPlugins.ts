@@ -60,6 +60,7 @@ import {inheritedTypeLiteralPlugin} from "./converter/plugins/InheritedTypeLiter
 import {Injection} from "./converter/injection.js";
 import {InjectionPlugin} from "./converter/plugins/InjectionPlugin.js";
 import {convertConditionalType} from "./converter/plugins/convertConditionalType.js";
+import {convertNamedTupleMember} from "./converter/plugins/convertNamedTupleMember.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -151,4 +152,5 @@ export const createPlugins = (
     convertIndexedSignatureDeclaration,
     convertTypeQuery,
     convertConditionalType,
+    convertNamedTupleMember,
 ]
