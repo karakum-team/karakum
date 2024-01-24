@@ -2,6 +2,7 @@ import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
 
 export const convertFunctionType = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionTypeNode(node)) return null
@@ -21,10 +22,10 @@ export const convertFunctionType = createSimplePlugin((node, context, render) =>
         return `Function<${returnType}> /* ${typeScriptService?.printNode(node)} */`
     }
 
-    const parameters = node.parameters
-        ?.map(parameter => render(parameter))
-        ?.filter(Boolean)
-        ?.join(", ")
-
-    return `(${parameters}) -> ${returnType}`
+    return convertParameterDeclarations(node, context, render, {
+        strategy: "lambda",
+        template: parameters => {
+            return `(${parameters}) -> ${returnType}`
+        },
+    })
 })

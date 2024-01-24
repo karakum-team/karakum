@@ -6,6 +6,7 @@ import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin
 import {convertTypeLiteral} from "./TypeLiteralPlugin.js";
 import {convertInheritedTypeLiteral, isInheritedTypeLiteral} from "./InheritedTypeLiteralPlugin.js";
 import {convertMappedType} from "./MappedTypePlugin.js";
+import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -56,14 +57,14 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
             .filter(Boolean)
             .join(", ")
 
-        const parameters = node.type.parameters
-            ?.map(parameter => render(parameter))
-            ?.filter(Boolean)
-            ?.join(", ")
-
         const returnType = render(node.type.type)
 
-        const type = `(${parameters}) -> ${returnType}`
+        const type = convertParameterDeclarations(node.type, context, render, {
+            strategy: "lambda",
+            template: parameters => {
+                return `(${parameters}) -> ${returnType}`
+            },
+        })
 
         return `typealias ${name}${ifPresent(mergedTypeParameters, it => `<${it}>`)} = ${type}`
     }
