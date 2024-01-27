@@ -34,7 +34,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
         ?.filter(Boolean)
         ?.join(", ")
 
-    const heritageClauses = node.heritageClauses
+    const heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?? node.heritageClauses)
         ?.map(heritageClause => render(heritageClause))
         ?.filter(Boolean)
         ?.join(", ")

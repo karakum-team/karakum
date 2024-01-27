@@ -1,5 +1,5 @@
 import ts, {
-    Declaration,
+    Declaration, HeritageClause, InterfaceDeclaration,
     ModuleDeclaration,
     NamedDeclaration,
     Program,
@@ -46,6 +46,27 @@ export class DeclarationMergingService {
         if (!symbol) return
 
         this.coveredSymbols.add(symbol)
+    }
+
+    getHeritageClauses(node: NamedDeclaration): HeritageClause[] | undefined {
+        const symbol = this.getSymbol(node)
+        if (!symbol) return undefined
+
+        const heritageClauses = symbol.declarations
+                ?.filter((it): it is InterfaceDeclaration => ts.isInterfaceDeclaration(it))
+                ?.flatMap(it => it.heritageClauses)
+                ?.filter((it): it is HeritageClause => Boolean(it))
+
+        if (ts.isClassDeclaration(node)) {
+            const mainHeritageClauses = node.heritageClauses
+
+            return [
+                ...(mainHeritageClauses ?? []),
+                ...(heritageClauses ?? []),
+            ]
+        } else {
+            return heritageClauses
+        }
     }
 
     getMembers(

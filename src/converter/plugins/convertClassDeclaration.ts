@@ -83,14 +83,14 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         ?.filter(Boolean)
         ?.join(", ")
 
-    const heritageClauses = node.heritageClauses
+    const heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?? node.heritageClauses)
         ?.map(heritageClause => render(heritageClause))
         ?.filter(Boolean)
         ?.join(", ")
 
     const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
 
-    const mergedMembers = declarationMergingService?.getMembers(node, resolveNamespaceStrategy) ?? Array.from(node.members)
+    const mergedMembers = declarationMergingService?.getMembers(node, resolveNamespaceStrategy) ?? node.members
 
     // cover private members
     mergedMembers
