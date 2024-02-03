@@ -74,11 +74,19 @@ export function collectImportInfo(
                                 const importNameRegexp = new RegExp(importNamePattern)
 
                                 for (const [importName, importAlias] of Object.entries(importNames)) {
-                                    if (importNameRegexp.test(importName)) {
-                                        if (importName === importAlias || packageName.includes(" as ")) {
-                                            imports.push(`import ${packageName}`)
-                                        } else {
-                                            imports.push(`import ${packageName} as ${importAlias}`)
+                                    if (importNameRegexp.test(importName) && unhandledImportNames.has(importName)) {
+                                        if (packageName.endsWith(".")) {
+                                            if (importName === importAlias) {
+                                                imports.push(`import ${packageName}${importName}`)
+                                            } else {
+                                                imports.push(`import ${packageName}${importName} as ${importAlias}`)
+                                            }
+                                        } else if (packageName !== "") {
+                                            if (importName === importAlias || packageName.includes(" as ")) {
+                                                imports.push(`import ${packageName}`)
+                                            } else {
+                                                imports.push(`import ${packageName} as ${importAlias}`)
+                                            }
                                         }
 
                                         unhandledImportNames.delete(importName)

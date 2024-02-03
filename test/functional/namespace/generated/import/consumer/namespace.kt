@@ -8,4 +8,5 @@ import import.provider.someValue
 import other.import.provider.x
 import other.import.provider.y as myY
 import other.import.provider.x as myX
-// unhandled import: * as xyz from "other-import-provider"
+// unhandled import: ignored from "ignored-import" 
+// unhandled import: other as otherIgnored from "ignored-import"

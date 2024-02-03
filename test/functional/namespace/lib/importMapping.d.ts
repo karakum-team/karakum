@@ -15,4 +15,6 @@ declare module "import-consumer" {
     import {x, y as myY} from "other-import-provider"
     import myX from "other-import-provider"
     import * as xyz from "other-import-provider"
+
+    import {ignored, other as otherIgnored} from "ignored-import"
 }
