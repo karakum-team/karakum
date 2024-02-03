@@ -115,6 +115,7 @@ export interface Configuration extends PartialConfiguration {
     packageNameMapper: Record<string, string>
 
     importInjector: Record<string, string[]>
+    importMapper: Record<string, string | Record<string, string>>
 
     namespaceStrategy: Record<string, NamespaceStrategy>
 

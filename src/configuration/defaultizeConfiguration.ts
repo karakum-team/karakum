@@ -109,6 +109,7 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
         packageNameMapper: configuration.packageNameMapper ?? {},
 
         importInjector: configuration.importInjector ?? {},
+        importMapper: configuration.importMapper ?? {},
 
         namespaceStrategy: configuration.namespaceStrategy ?? {},
 
