@@ -34,7 +34,7 @@
     "@types/yargs": "^17.0.32",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
-    "typescript-json-schema": "^0.59.0"
+    "typescript-json-schema": "^0.62.0"
   },
   "peerDependencies": {
     "typescript": "^5.3.3"
