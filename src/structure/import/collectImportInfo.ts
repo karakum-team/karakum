@@ -18,8 +18,18 @@ export function collectImportInfo(
                 && ts.isStringLiteral(node.moduleSpecifier)
                 && node.importClause
             ) {
+                let declaration: Declaration
+
+                if (ts.isSourceFile(node.parent)) {
+                    declaration = node.parent
+                } else if (ts.isModuleBlock(node.parent)) {
+                    declaration = node.parent.parent
+                } else {
+                    return
+                }
+
                 const moduleName = node.moduleSpecifier.text
-                const imports: string[] = []
+                const imports = result.get(declaration) ?? []
 
                 const importNames: Record<string, /* alias */ string> = {}
 
@@ -80,23 +90,13 @@ export function collectImportInfo(
                 }
 
                 for (const importName of unhandledImportNames) {
-                    const [, importAlias] = importNames[importName]
+                    const importAlias = importNames[importName]
 
                     if (importName === importAlias) {
-                        imports.push(`// unhandled import: ${importName} from ${moduleName} `)
+                        imports.push(`// unhandled import: ${importName} from "${moduleName}" `)
                     } else {
-                        imports.push(`// unhandled import: ${importName} as ${importAlias} from ${moduleName} `)
+                        imports.push(`// unhandled import: ${importName} as ${importAlias} from "${moduleName}" `)
                     }
-                }
-
-                let declaration: Declaration
-
-                if (ts.isSourceFile(node.parent)) {
-                    declaration = node.parent
-                } else if (ts.isModuleBlock(node.parent)) {
-                    declaration = node.parent.parent
-                } else {
-                    return
                 }
 
                 result.set(declaration, imports)
