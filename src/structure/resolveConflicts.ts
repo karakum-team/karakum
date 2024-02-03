@@ -262,6 +262,7 @@ export function resolveConflicts(
             const body = createGeneratedFile(
                 item.package,
                 item.fileName,
+                item.imports,
                 item.body,
                 configuration
             )

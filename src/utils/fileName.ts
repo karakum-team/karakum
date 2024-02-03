@@ -19,10 +19,10 @@ export function commonPrefix(...sources: string[][]): string[] {
     return common
 }
 
-export function applyMapper(sourceFileName: string, mapper: Record<string, string> | undefined) {
+export function applyMapper(sourceFileName: string, mapper: Record<string, string>) {
     let currentFileName = sourceFileName
 
-    for (const [pattern, result] of Object.entries(mapper ?? {})) {
+    for (const [pattern, result] of Object.entries(mapper)) {
         const regexp = new RegExp(pattern)
 
         if (regexp.test(currentFileName)) {

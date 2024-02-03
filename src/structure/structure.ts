@@ -6,6 +6,7 @@ export interface StructureItem {
     moduleName: string
     qualifier: string | undefined
     hasRuntime: boolean
+    imports: string[]
 }
 
 export interface InputStructureItem extends StructureItem {

@@ -15,6 +15,7 @@ export function createTargetFile(
         moduleName,
         qualifier,
         hasRuntime,
+        imports,
     } = item
 
     const {granularity, disclaimer} = configuration
@@ -23,7 +24,9 @@ export function createTargetFile(
 
     const outputFileName = packageToOutputFileName(packageChunks, fileName, configuration)
 
-    const imports = generateImports(outputFileName, configuration)
+    const resultImports = imports
+        .concat(generateImports(outputFileName, configuration))
+        .join("\n")
 
     const jsModule = hasRuntime ? `@file:JsModule("${moduleName}")` : ""
     const jsQualifier = hasRuntime && qualifier ? `@file:JsQualifier("${qualifier}")` : ""
@@ -46,7 +49,7 @@ ${disclaimer}${fileAnnotations}
 
 package ${packageName}
 
-${imports}
+${resultImports}
 
 ${body}
     `.trim() + "\n"

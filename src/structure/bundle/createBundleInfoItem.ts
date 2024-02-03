@@ -12,7 +12,7 @@ export function createBundleInfoItem(
         ? path.basename(outputFileName)
         : "bundle.kt"
 
-    const syntheticItem = createSourceFileInfoItem("", configuration)
+    const syntheticItem = createSourceFileInfoItem("", [], configuration)
 
     return {
         ...syntheticItem,

@@ -32,6 +32,7 @@ function extractFileName(sourceFileName: string) {
 
 export function createSourceFileInfoItem(
     sourceFileName: string,
+    imports: string[],
     configuration: Configuration,
 ): SourceFileInfoItem {
     const {inputRoots, libraryName} = configuration
@@ -54,5 +55,6 @@ export function createSourceFileInfoItem(
         moduleName,
         qualifier: undefined,
         hasRuntime,
+        imports,
     }
 }

@@ -2,9 +2,7 @@ import ts, {Node} from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
-import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
 import {NameResolverService, nameResolverServiceKey} from "./NameResolverPlugin.js";
-import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {generateDerivedDeclarations} from "../../structure/derived/generateDerivedDeclarations.js";
 import {DerivedDeclaration} from "../../structure/derived/derivedDeclaration.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
@@ -35,15 +33,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
     }
 
     generate(context: ConverterContext): DerivedFile[] {
-        const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
-        const configuration = configurationService?.configuration
-        if (configuration === undefined) throw new Error("AnonymousDeclarationPlugin can't work without ConfigurationService")
-
-        const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-        const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
-        if (resolveNamespaceStrategy === undefined) throw new Error("AnonymousDeclarationPlugin can't work without NamespaceInfoService")
-
-        return generateDerivedDeclarations(this.generated, configuration, resolveNamespaceStrategy)
+        return generateDerivedDeclarations(this.generated, context)
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {

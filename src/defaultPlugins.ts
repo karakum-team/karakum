@@ -61,6 +61,8 @@ import {Injection} from "./converter/injection.js";
 import {InjectionPlugin} from "./converter/plugins/InjectionPlugin.js";
 import {convertConditionalType} from "./converter/plugins/convertConditionalType.js";
 import {convertNamedTupleMember} from "./converter/plugins/convertNamedTupleMember.js";
+import {ImportInfo} from "./structure/import/collectImportInfo.js";
+import {ImportInfoPlugin} from "./converter/plugins/ImportInfoPlugin.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -71,6 +73,7 @@ export const createPlugins = (
     inheritanceModifiers: InheritanceModifier[],
     program: Program,
     namespaceInfo: NamespaceInfo,
+    importInfo: ImportInfo,
 ): ConverterPlugin[] => [
     new ConfigurationPlugin(configuration),
     new TypeScriptPlugin(program),
@@ -78,6 +81,7 @@ export const createPlugins = (
     new NameResolverPlugin(nameResolvers),
     new InheritanceModifierPlugin(inheritanceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),
+    new ImportInfoPlugin(program, importInfo),
     new DeclarationMergingPlugin(program),
     new CheckKindsPlugin(),
     new CheckCoveragePlugin(),

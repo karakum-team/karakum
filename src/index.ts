@@ -55,6 +55,10 @@ export {
     type InheritanceModifierService
 } from "./converter/plugins/InheritanceModifierPlugin.js"
 export {
+    importInfoServiceKey,
+    type ImportInfoService
+} from "./converter/plugins/ImportInfoPlugin.js"
+export {
     namespaceInfoServiceKey,
     type NamespaceInfoService
 } from "./converter/plugins/NamespaceInfoPlugin.js"

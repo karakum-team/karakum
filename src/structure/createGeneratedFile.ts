@@ -6,6 +6,7 @@ import {packageToOutputFileName} from "./package/packageToFileName.js";
 export function createGeneratedFile(
     packageChunks: string[],
     fileName: string,
+    imports: string[],
     body: string,
     configuration: Configuration,
 ) {
@@ -13,14 +14,16 @@ export function createGeneratedFile(
 
     const outputFileName = packageToOutputFileName(packageChunks, fileName, configuration)
 
-    const imports = generateImports(outputFileName, configuration)
+    const resultImports = imports
+        .concat(generateImports(outputFileName, configuration))
+        .join("\n")
 
     const disclaimer = configuration.disclaimer
 
     return `
 ${disclaimer}package ${packageName}
 
-${imports}
+${resultImports}
 
 ${body}
     `.trim() + "\n"

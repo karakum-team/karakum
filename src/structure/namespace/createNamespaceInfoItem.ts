@@ -16,7 +16,7 @@ interface NamespaceNameChunk {
     isAmbient: boolean
 }
 
-const defaultNamespaceStrategy: NamespaceStrategy = "object"
+export const defaultNamespaceStrategy: NamespaceStrategy = "object"
 
 export function extractNamespaceName(
     namespace: ModuleDeclaration,
@@ -50,6 +50,7 @@ export function extractNamespaceName(
 export function createNamespaceInfoItem(
     namespace: ModuleDeclaration,
     sourceFileName: string,
+    imports: string[],
     configuration: Configuration,
 ): NamespaceInfoItem {
     const {namespaceStrategy} = configuration
@@ -89,8 +90,9 @@ export function createNamespaceInfoItem(
                 moduleName,
                 qualifier,
                 hasRuntime,
+                imports,
                 name: detailedName,
-                strategy,
+                strategy
             }
         }
     }
@@ -101,7 +103,8 @@ export function createNamespaceInfoItem(
         moduleName,
         qualifier,
         hasRuntime,
+        imports,
         name: detailedName,
-        strategy: defaultNamespaceStrategy,
+        strategy: defaultNamespaceStrategy
     }
 }

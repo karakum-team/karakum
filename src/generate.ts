@@ -23,6 +23,7 @@ import {toModuleName} from "./utils/path.js";
 import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
 import {createSimpleInjection, Injection, SimpleInjection} from "./converter/injection.js";
+import {collectImportInfo} from "./structure/import/collectImportInfo.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -184,8 +185,10 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     console.log(`Source files count: ${sourceFiles.length}`)
 
-    const namespaceInfo = collectNamespaceInfo(sourceFiles, configuration)
-    const sourceFileInfo = collectSourceFileInfo(sourceFiles, configuration)
+    const importInfo = collectImportInfo(sourceFiles, configuration)
+
+    const namespaceInfo = collectNamespaceInfo(sourceFiles, importInfo, configuration)
+    const sourceFileInfo = collectSourceFileInfo(sourceFiles, importInfo, configuration)
 
     const structure = prepareStructure(
         [
@@ -202,6 +205,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         customInheritanceModifiers,
         program,
         namespaceInfo,
+        importInfo,
     )
 
     const converterPlugins = [
