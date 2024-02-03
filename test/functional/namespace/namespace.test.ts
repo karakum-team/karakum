@@ -17,6 +17,18 @@ testGeneration("namespace", import.meta.url, output => ({
         "package-namespace": "package",
         "IgnoreNamespace": "ignore",
         "will-be-mapped": "package",
+
+        "import-provider": "package",
+        "other-import-provider": "package",
+        "import-consumer": "package",
+    },
+    importMapper: {
+        "^import-provider": "import.provider",
+        "other-import-provider": {
+            "default": "other.import.provider.x",
+            "x": "other.import.provider.x",
+            "y": "other.import.provider.y",
+        }
     },
     verbose: true,
 }))
