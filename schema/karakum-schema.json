@@ -104,6 +104,23 @@
             "title": "importInjector",
             "type": "object"
         },
+        "importMapper": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "title": "importMapper",
+            "type": "object"
+        },
         "inheritanceModifiers": {
             "anyOf": [
                 {

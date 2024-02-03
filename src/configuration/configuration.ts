@@ -54,6 +54,12 @@ export interface SchemaConfiguration {
 
     /**
      * @TJS-type object
+     * @additionalProperties { "anyOf": [ { "type": "string" }, { "type": "object", "additionalProperties": { "type": "string" } } ] }
+     * */
+    importMapper?: Record<string, string | Record<string, string>>
+
+    /**
+     * @TJS-type object
      * @additionalProperties { "$ref": "#/definitions/NamespaceStrategy" }
      * */
     namespaceStrategy?: Record<string, NamespaceStrategy>
