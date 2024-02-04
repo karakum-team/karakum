@@ -26,6 +26,7 @@ export function createTargetFile(
 
     const resultImports = imports
         .concat(generateImports(outputFileName, configuration))
+        .filter(Boolean)
         .join("\n")
 
     const jsModule = hasRuntime ? `@file:JsModule("${moduleName}")` : ""

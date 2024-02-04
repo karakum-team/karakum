@@ -16,6 +16,7 @@ export function createGeneratedFile(
 
     const resultImports = imports
         .concat(generateImports(outputFileName, configuration))
+        .filter(Boolean)
         .join("\n")
 
     const disclaimer = configuration.disclaimer
