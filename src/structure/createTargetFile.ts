@@ -3,6 +3,7 @@ import {generateImports} from "./generateImports.js";
 import {StructureItem} from "./structure.js";
 import {packageToOutputFileName} from "./package/packageToFileName.js";
 import {createPackageName} from "./package/createPackageName.js";
+import {removeUnusedImports} from "./import/removeUnusedImports.js";
 
 export function createTargetFile(
     item: StructureItem,
@@ -24,7 +25,7 @@ export function createTargetFile(
 
     const outputFileName = packageToOutputFileName(packageChunks, fileName, configuration)
 
-    const resultImports = imports
+    const resultImports = removeUnusedImports(imports, body)
         .concat(generateImports(outputFileName, configuration))
         .filter(Boolean)
         .join("\n")

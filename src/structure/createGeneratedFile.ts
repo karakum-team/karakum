@@ -2,6 +2,7 @@ import {Configuration} from "../configuration/configuration.js";
 import {generateImports} from "./generateImports.js";
 import {createPackageName} from "./package/createPackageName.js";
 import {packageToOutputFileName} from "./package/packageToFileName.js";
+import {removeUnusedImports} from "./import/removeUnusedImports.js";
 
 export function createGeneratedFile(
     packageChunks: string[],
@@ -14,7 +15,7 @@ export function createGeneratedFile(
 
     const outputFileName = packageToOutputFileName(packageChunks, fileName, configuration)
 
-    const resultImports = imports
+    const resultImports = removeUnusedImports(imports, body)
         .concat(generateImports(outputFileName, configuration))
         .filter(Boolean)
         .join("\n")
