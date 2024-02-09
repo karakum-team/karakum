@@ -25,15 +25,17 @@ export type AnonymousDeclarationRender = (
 ) => AnonymousDeclarationRenderResult | string | null
 
 class AnonymousDeclarationPlugin<TNode extends Node = Node> implements ConverterPlugin {
-    private readonly generated: DerivedDeclaration[] = []
+    private readonly generated: Map<Node, DerivedDeclaration> = new Map()
+
+    setup(context: ConverterContext): void {
+    }
+
+    traverse(node: ts.Node, context: ConverterContext): void {
+    }
 
     constructor(
         private anonymousDeclarationRender: AnonymousDeclarationRender,
     ) {
-    }
-
-    generate(context: ConverterContext): DerivedFile[] {
-        return generateDerivedDeclarations(this.generated, context)
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {
@@ -63,7 +65,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
 
         const {name, declaration, reference} = result
 
-        this.generated.push({
+        this.generated.set(node, {
             sourceFileName,
             namespace,
             fileName: `${name}.kt`,
@@ -73,10 +75,8 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         return reference;
     }
 
-    setup(context: ConverterContext): void {
-    }
-
-    traverse(node: ts.Node, context: ConverterContext): void {
+    generate(context: ConverterContext): DerivedFile[] {
+        return generateDerivedDeclarations(Array.from(this.generated.values()), context)
     }
 }
 
