@@ -66,7 +66,8 @@ function resolveTargetFileConflicts(targetFiles: TargetFile[], configuration: Co
             }
 
             if (conflictResolutionStrategy === "replace") {
-                return other
+                // target files can not be replaced
+                return null
             }
 
             if (conflictResolutionStrategy === "join") {
@@ -102,7 +103,7 @@ function resolvePrimaryFileConflicts(primaryFiles: GeneratedFile[], configuratio
     const normalizedPrimaryFiles = normalizeItems(
         primaryFiles,
         (item) => item.fileName,
-        (outputFileName, _, other) => {
+        (outputFileName) => {
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "error"
 
             if (conflictResolutionStrategy === "error") {
@@ -110,7 +111,8 @@ function resolvePrimaryFileConflicts(primaryFiles: GeneratedFile[], configuratio
             }
 
             if (conflictResolutionStrategy === "replace") {
-                return other
+                // primary files can not be replaced
+                return null
             }
 
             if (conflictResolutionStrategy === "join") {
@@ -145,6 +147,7 @@ function resolveDerivedFilesConflicts(primaryFiles: DerivedFile[], configuration
             }
 
             if (conflictResolutionStrategy === "replace") {
+                if (item.body !== other.body) return null
                 return other
             }
 
