@@ -190,13 +190,18 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const namespaceInfo = collectNamespaceInfo(sourceFiles, importInfo, configuration)
     const sourceFileInfo = collectSourceFileInfo(sourceFiles, importInfo, configuration)
 
-    const structure = prepareStructure(
-        [
-            ...namespaceInfo.filter(it => it.strategy === "package"),
-            ...sourceFileInfo,
-        ],
+    const namespaceStructure = prepareStructure(
+        namespaceInfo.filter(it => it.strategy === "package"),
         configuration,
     )
+    const sourceFileStructure = prepareStructure(
+        sourceFileInfo,
+        configuration,
+    )
+    const structure = [
+        ...namespaceStructure,
+        ...sourceFileStructure,
+    ]
 
     const defaultPlugins = createPlugins(
         configuration,
@@ -224,7 +229,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         plugin.setup(context)
     }
 
-    structure
+    sourceFiles
         .flatMap(it => it.statements)
         .forEach(statement => {
             traverse(statement, node => {
