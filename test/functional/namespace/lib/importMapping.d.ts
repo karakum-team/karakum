@@ -34,4 +34,8 @@ declare module "import-consumer" {
 
     const ignored: Ignored
     const otherIgnored: OtherIgnored
+
+    namespace Nested {
+        const x: X
+    }
 }

@@ -1,8 +1,27 @@
-import ts, {Declaration, SourceFile} from "typescript";
+import ts, {Declaration, SourceFile, Node} from "typescript";
 import {Configuration} from "../../configuration/configuration.js";
 import {traverse} from "../../utils/traverse.js";
 
 export type ImportInfo = Map<Declaration, string[]>
+
+function handleImportHierarchy(importInfo: ImportInfo): ImportInfo {
+    const result: ImportInfo = new Map()
+
+    for (const [declaration] of importInfo) {
+        let parent: Node | null = declaration
+        let collectedImports: string[] = []
+
+        while (parent != null) {
+            const parentImports = importInfo.get(parent as Declaration) ?? []
+            collectedImports = parentImports.concat(collectedImports)
+            parent = parent.parent
+        }
+
+        result.set(declaration, collectedImports)
+    }
+
+    return result
+}
 
 export function collectImportInfo(
     sourceFiles: SourceFile[],
@@ -10,9 +29,17 @@ export function collectImportInfo(
 ): ImportInfo {
     const {importMapper} = configuration
     const result: ImportInfo = new Map()
+    const declarations = new Set<Declaration>()
 
     sourceFiles.forEach(sourceFile => {
         traverse(sourceFile, node => {
+            if (
+                ts.isSourceFile(node)
+                || ts.isModuleDeclaration(node)
+            ) {
+                declarations.add(node)
+            }
+
             if (
                 ts.isImportDeclaration(node)
                 && ts.isStringLiteral(node.moduleSpecifier)
@@ -112,5 +139,11 @@ export function collectImportInfo(
         })
     })
 
-    return result
+    for (const declaration of declarations) {
+        if (!result.has(declaration)) {
+            result.set(declaration, [])
+        }
+    }
+
+    return handleImportHierarchy(result)
 }
