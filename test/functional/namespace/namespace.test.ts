@@ -25,7 +25,7 @@ testGeneration("namespace", import.meta.url, output => ({
     importMapper: {
         "^import-provider": "import.provider",
         "other-import-provider": {
-            "default": "other.import.provider.x",
+            "default": "other.import.provider.X",
             "\\*": "",
             ".+": "other.import.provider.",
         }

@@ -8,6 +8,8 @@ export function removeUnusedImports(imports: string[], body: string): string[] {
     const cleanedBody = removeComments(body)
 
     return imports.filter(importItem => {
+        if (importItem.includes("unhandled import")) return true
+
         const matcher = importItem.includes(" as ")
             ? /.+ as (.+)$/
             : /.+\.(.+)$/

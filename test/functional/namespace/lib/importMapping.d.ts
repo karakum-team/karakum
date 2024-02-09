@@ -1,20 +1,37 @@
 declare module "import-provider" {
-    export const someValue: string
+    export interface SomeValue {
+    }
 }
 
 declare module "other-import-provider" {
-    export const x: string
-    export const y: string
-    export const z: string
-    export default x
+    export interface X {
+    }
+
+    export interface Y {
+    }
+
+    export interface Z {
+    }
+
+    export default X
 }
 
 declare module "import-consumer" {
-    import {someValue} from "import-provider"
+    import {SomeValue} from "import-provider"
 
-    import {x, y as myY} from "other-import-provider"
-    import myX from "other-import-provider"
+    import {X, Y as MyY} from "other-import-provider"
+    import MyX from "other-import-provider"
     import * as xyz from "other-import-provider"
 
-    import {ignored, other as otherIgnored} from "ignored-import"
+    import {Ignored, other as OtherIgnored} from "ignored-import"
+
+    const someValue: SomeValue
+
+    const x: X
+    const myX: MyX
+    const myY: MyY
+    const myXyz: typeof xyz
+
+    const ignored: Ignored
+    const otherIgnored: OtherIgnored
 }

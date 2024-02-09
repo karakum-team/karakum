@@ -4,9 +4,33 @@
 
 package import.consumer
 
-import import.provider.someValue
-import other.import.provider.x
-import other.import.provider.y as myY
-import other.import.provider.x as myX
-// unhandled import: ignored from "ignored-import" 
-// unhandled import: other as otherIgnored from "ignored-import"
+import import.provider.SomeValue
+import other.import.provider.X
+import other.import.provider.Y as MyY
+import other.import.provider.X as MyX
+// unhandled import: Ignored from "ignored-import" 
+// unhandled import: other as OtherIgnored from "ignored-import" 
+
+
+
+
+
+
+
+
+
+
+
+external val someValue: SomeValue
+
+external val x: X
+
+external val myX: MyX
+
+external val myY: MyY
+
+external val myXyz: /* import("other-import-provider") */ Any
+
+external val ignored: Ignored
+
+external val otherIgnored: OtherIgnored
