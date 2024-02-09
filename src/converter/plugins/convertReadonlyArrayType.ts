@@ -13,7 +13,7 @@ export const convertReadonlyArrayType = createSimplePlugin((node, context, rende
         checkCoverageService?.cover(node)
         checkCoverageService?.cover(node.type)
 
-        return `Array<out ${render(node.type.elementType)}>`
+        return `js.array.ReadonlyArray<${render(node.type.elementType)}>`
     }
 
 
