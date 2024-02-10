@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const convertEnumDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumDeclaration(node)) return null
@@ -14,9 +15,18 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
     if (declarationMergingService?.isCovered(node)) return ""
     declarationMergingService?.cover(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
 
     const name = render(node.name)
+
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
 
     const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
 
@@ -26,7 +36,7 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
 
     return `
 @Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
-sealed external interface ${name} {
+sealed ${externalModifier}interface ${name} {
 companion object {
 ${members}
 }

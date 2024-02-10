@@ -6,6 +6,7 @@ import {InheritanceModifierService, inheritanceModifierServiceKey} from "./Inher
 import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const convertInterfaceDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isInterfaceDeclaration(node)) return null
@@ -17,6 +18,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
     if (declarationMergingService?.isCovered(node)) return ""
     declarationMergingService?.cover(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
@@ -28,6 +30,14 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, context, render)
+
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -49,7 +59,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
         .join("\n")
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
 ${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
     `

@@ -19,6 +19,10 @@ declare module "package-namespace" {
 
 declare namespace ObjectNamespace {
     const objectNamespaceValue: number
+
+    namespace InnerObjectNamespace {
+        const innerObjectNamespaceValue: number
+    }
 }
 
 declare namespace IgnoreNamespace {

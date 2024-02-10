@@ -33,7 +33,7 @@ constructor (param: String)
 
 external object NSWithParent {
 
-external class ParentWithConstructor {
+class ParentWithConstructor {
 constructor (param: Double)
 constructor (param: Boolean)
 }

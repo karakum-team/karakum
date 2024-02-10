@@ -12,8 +12,8 @@ package sandbox.base.namespace
 
 external object String /* "*.css" */ {
 
-external object NS {
-external val x: Double
+object NS {
+val x: Double
 }
         
 }
@@ -22,10 +22,10 @@ external val x: Double
 
 external object Some {
 
-external object Nested {
+object Nested {
 
-external object NS {
-external val x: Double
+object NS {
+val x: Double
 }
         
 }

@@ -40,7 +40,7 @@ const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.UndefinedKeyword, // null
     ts.SyntaxKind.TupleType, // TODO: support tuples
     ts.SyntaxKind.FunctionType, // (params) -> returnType // TODO: generate type aliases for generics
-    ts.SyntaxKind.ThisType, // TODO: inline this type
+    ts.SyntaxKind.ThisType, // Unit /* this */
     ts.SyntaxKind.TypeLiteral, // TODO: generate type aliases for type literal
     ts.SyntaxKind.QuestionToken, // ?
     ts.SyntaxKind.LiteralType, // skip
@@ -50,7 +50,7 @@ const supportedKinds: ts.SyntaxKind[] = [
     ts.SyntaxKind.ArrayType, // Array<type>
     ts.SyntaxKind.TypeAliasDeclaration, // typealias name<params> = type
     ts.SyntaxKind.ExportKeyword, // skip
-    ts.SyntaxKind.IntersectionType, // TODO: convert intersection to inheritance
+    ts.SyntaxKind.IntersectionType, // sealed external interface name : parent
     ts.SyntaxKind.EnumDeclaration, // sealed external interface name { companion object { members } }
     ts.SyntaxKind.EnumMember, // node.name
     ts.SyntaxKind.NumericLiteral, // node.text

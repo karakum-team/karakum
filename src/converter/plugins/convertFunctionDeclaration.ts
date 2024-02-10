@@ -3,6 +3,8 @@ import {createSimplePlugin} from "../plugin.js";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 export const convertFunctionDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isFunctionDeclaration(node)) return null
@@ -17,9 +19,20 @@ export const convertFunctionDeclaration = createSimplePlugin((node, context, ren
     declareModifier && checkCoverageService?.cover(declareModifier)
 
     // skip body
-    node.body && checkCoverageService?.cover(node.body)
+    node.body && checkCoverageService?.deepCover(node.body)
+
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
 
     const name = (node.name && render(node.name)) ?? "Anonymous"
+
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -31,7 +44,7 @@ export const convertFunctionDeclaration = createSimplePlugin((node, context, ren
     return convertParameterDeclarations(node, context, render, {
         strategy: "function",
         template: parameters => {
-            return `external fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
+            return `${externalModifier}fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
         }
     })
 })

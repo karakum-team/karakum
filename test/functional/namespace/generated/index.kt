@@ -10,7 +10,12 @@ package sandbox.namespace
 
 
 external object ObjectNamespace {
-external val objectNamespaceValue: Double
+val objectNamespaceValue: Double
+
+object InnerObjectNamespace {
+val innerObjectNamespaceValue: Double
+}
+        
 }
         
 

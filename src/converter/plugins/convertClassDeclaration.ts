@@ -62,6 +62,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
     declarationMergingService?.cover(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
@@ -77,6 +78,14 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, context, render)
     const staticInjections = injectionService?.resolveStaticInjections(node, context, render)
+
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
 
     const typeParameters = node.typeParameters
         ?.map(typeParameter => render(typeParameter))
@@ -131,7 +140,7 @@ ${staticMembers}${ifPresent(staticInjectedMembers, it => `\n${it}`)}
     }
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
 ${members}${ifPresent(injectedMembers, it => `\n${it}`)}${companionObject}
 }
     `

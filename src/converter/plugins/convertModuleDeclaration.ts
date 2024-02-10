@@ -2,14 +2,16 @@ import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const convertModuleDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isModuleDeclaration(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-
     checkCoverageService?.cover(node)
+
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
 
     const namespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy(node)
 
@@ -20,10 +22,18 @@ export const convertModuleDeclaration = createSimplePlugin((node, context, rende
     if (namespaceStrategy === "object") {
         const name = render(node.name)
 
+        const namespace = typeScriptService?.findClosest(node.parent, ts.isModuleDeclaration)
+
+        let externalModifier = "external "
+
+        if (namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+            externalModifier = ""
+        }
+
         const body = (node.body && render(node.body)) ?? ""
 
         return `
-external object ${name} {
+${externalModifier}object ${name} {
 ${body}
 }
         `

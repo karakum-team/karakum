@@ -12,5 +12,5 @@ external val packageNamespaceValue: Double
 
 
 external object ObjectNamespace {
-external val objectNamespaceValue: Double
+val objectNamespaceValue: Double
 }
