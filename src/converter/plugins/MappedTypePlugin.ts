@@ -3,7 +3,7 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {ifPresent, Render, renderNullable} from "../render.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
-import {extractTypeParameters} from "../extractTypeParameters.js";
+import {extractTypeParameters, renderDeclaration, renderReference} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 
@@ -75,11 +75,11 @@ export const mappedTypePlugin = createAnonymousDeclarationPlugin(
 
         const name = context.resolveName(node)
 
-        const typeParameters = extractTypeParameters(node, context, render)
+        const typeParameters = extractTypeParameters(node, context)
 
-        const declaration = convertMappedType(node, name, typeParameters.declaration, context, render)
+        const declaration = convertMappedType(node, name, renderDeclaration(typeParameters, render), context, render)
 
-        const reference = `${name}${ifPresent(typeParameters.reference, it => `<${it}>`)}`
+        const reference = `${name}${ifPresent(renderReference(typeParameters, render), it => `<${it}>`)}`
 
         return {name, declaration, reference};
     }

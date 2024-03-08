@@ -4,19 +4,15 @@ import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugi
 import {ConverterContext} from "./context.js";
 import {Render} from "./render.js";
 
-export interface TypeParameterExtractionResult {
-    declaration: string
-    reference: string
-}
+export type TypeParameterExtractionResult = [ts.Node, Declaration][]
 
 export function extractTypeParameters(
     node: ts.Node,
-    context: ConverterContext,
-    render: Render
+    context: ConverterContext
 ): TypeParameterExtractionResult {
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    const result: [ts.Node, Declaration][] = []
+    const result: TypeParameterExtractionResult = []
 
     const typeChecker = typeScriptService?.program.getTypeChecker()
 
@@ -51,18 +47,19 @@ export function extractTypeParameters(
         }
     })
 
-    const declaration = result
+    return result
+}
+
+export function renderDeclaration(result: TypeParameterExtractionResult, render: Render): string {
+    return result
         .map(([, declaration]) => render(declaration))
         .filter(Boolean)
         .join(", ")
+}
 
-    const reference = result
+export function renderReference(result: TypeParameterExtractionResult, render: Render): string {
+    return result
         .map(([node]) => render(node))
         .filter(Boolean)
         .join(", ")
-
-    return {
-        declaration,
-        reference,
-    }
 }

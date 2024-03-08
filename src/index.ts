@@ -73,6 +73,13 @@ export {
     convertParameterDeclarations
 } from "./converter/plugins/convertParameterDeclaration.js"
 
+export {
+    type TypeParameterExtractionResult,
+    extractTypeParameters,
+    renderDeclaration,
+    renderReference,
+} from "./converter/extractTypeParameters.js"
+
 // render
 export type {Render} from "./converter/render.js"
 export {ifPresent, renderNullable} from "./converter/render.js"
