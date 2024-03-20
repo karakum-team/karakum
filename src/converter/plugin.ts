@@ -10,7 +10,7 @@ export interface ConverterPlugin<TNode extends Node = Node> {
 
     render(node: TNode, context: ConverterContext, next: Render): string | null
 
-    generate(context: ConverterContext): GeneratedFile[]
+    generate(context: ConverterContext, render: Render): GeneratedFile[]
 }
 
 export type SimpleConverterPlugin<TNode extends Node = Node> =

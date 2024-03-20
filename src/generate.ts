@@ -276,7 +276,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const generatedFiles: GeneratedFile[] = []
 
     for (const plugin of converterPlugins) {
-        const generated = plugin.generate(context)
+        const generated = plugin.generate(context, render)
 
         for (const generatedFile of generated) {
             let generatedFileName = generatedFile.fileName
