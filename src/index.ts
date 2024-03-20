@@ -66,6 +66,10 @@ export {
     declarationMergingServiceKey,
     type DeclarationMergingService
 } from "./converter/plugins/DeclarationMergingPlugin.js"
+export {
+    commentServiceKey,
+    type CommentService
+} from "./converter/plugins/CommentPlugin.js"
 
 // plugin utils
 export {

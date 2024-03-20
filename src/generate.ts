@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 import {createContext} from "./converter/context.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
 import {createPlugins} from "./defaultPlugins.js";
-import {CommentsPlugin} from "./converter/plugins/CommentsPlugin.js";
+import {CommentPlugin} from "./converter/plugins/CommentPlugin.js";
 import {prepareStructure} from "./structure/prepareStructure.js";
 import {traverse} from "./utils/traverse.js";
 import {minimatch} from "minimatch";
@@ -215,7 +215,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const converterPlugins = [
         // it is important to handle comments and annotations at first
-        new CommentsPlugin(),
+        new CommentPlugin(),
         new AnnotationPlugin(customAnnotations),
 
         ...customInjections,
