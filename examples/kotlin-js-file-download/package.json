@@ -6,7 +6,7 @@
     "start": " karakum --config karakum.config.json"
   },
   "devDependencies": {
-    "karakum": "^1.0.0-alpha.38",
+    "karakum": "^1.0.0-alpha.39",
     "typescript": "^5.1.3"
   },
   "dependencies": {
