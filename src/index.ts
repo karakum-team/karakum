@@ -74,7 +74,8 @@ export {
 // plugin utils
 export {
     type ParameterDeclarationsConfiguration,
-    convertParameterDeclarations
+    convertParameterDeclarations,
+    convertParameterDeclarationWithFixedType,
 } from "./converter/plugins/convertParameterDeclaration.js"
 
 export {
@@ -89,6 +90,7 @@ export type {Render} from "./converter/render.js"
 export {ifPresent, renderNullable} from "./converter/render.js"
 
 // utils
+export {DeepMap} from "./utils/deepMap.js"
 export {traverse} from "./utils/traverse.js"
 export {
     capitalize,

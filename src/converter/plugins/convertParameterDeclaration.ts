@@ -114,7 +114,7 @@ export const convertParameterDeclarations = (
     throw new Error(`Unknown parameter declaration strategy: ${strategy}`)
 }
 
-const convertParameterDeclarationWithFixedType = (
+export const convertParameterDeclarationWithFixedType = (
     node: ParameterDeclaration,
     context: ConverterContext,
     render: Render,
