@@ -50,3 +50,67 @@ external fun exampleFn(firstParam: B, secondParam: C, thirdParam: A): Boolean
 external fun exampleFn(firstParam: B, secondParam: C, thirdParam: B): Boolean
 
 external fun exampleFn(firstParam: B, secondParam: C, thirdParam: C): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: B): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: B, thirdParam: A = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: B, thirdParam: B = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: B, thirdParam: C = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: C): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: C, thirdParam: A = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: C, thirdParam: B = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: A, secondParam: C, thirdParam: C = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: B): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: B, thirdParam: A = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: B, thirdParam: B = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: B, thirdParam: C = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: C): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: C, thirdParam: A = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: C, thirdParam: B = definedExternally): Boolean
+
+external fun otherExampleFn(firstParam: B, secondParam: C, thirdParam: C = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: B = definedExternally, thirdParam: A = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: B = definedExternally, thirdParam: B = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: B = definedExternally, thirdParam: C = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: C = definedExternally, thirdParam: A = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: C = definedExternally, thirdParam: B = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: A, secondParam: C = definedExternally, thirdParam: C = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: B = definedExternally, thirdParam: A = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: B = definedExternally, thirdParam: B = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: B = definedExternally, thirdParam: C = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: C = definedExternally, thirdParam: A = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: C = definedExternally, thirdParam: B = definedExternally): Boolean
+
+external fun oneMoreExampleFn(firstParam: B, secondParam: C = definedExternally, thirdParam: C = definedExternally): Boolean
+
+external fun nullableOptionalExampleFn(firstParam: A, secondParam: B? = definedExternally): Boolean
+
+external fun nullableOptionalExampleFn(firstParam: B, secondParam: B? = definedExternally): Boolean

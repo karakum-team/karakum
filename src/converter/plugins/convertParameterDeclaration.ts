@@ -9,6 +9,7 @@ import {escapeIdentifier} from "../../utils/strings.js";
 import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {CommentService, commentServiceKey} from "./CommentPlugin.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
@@ -54,12 +55,14 @@ export const convertParameterDeclarations = (
     const {strategy, defaultValue, template} = configuration
     const initialSignature = extractSignature(node)
 
+    const commentService = context.lookupService<CommentService>(commentServiceKey)
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     if (strategy === "function") {
         const annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
         const annotations = annotationService?.resolveAnnotations(node, context) ?? []
-        const delimiter = `\n\n${annotations.join("\n")}`
+        const leadingComment = commentService?.renderLeadingComments(node) ?? ""
+        const delimiter = `\n\n${leadingComment}${annotations.join("\n")}`
 
         const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
         const signatures = expandUnions(initialSignature, context)
@@ -197,7 +200,11 @@ const expandUnions = (
     for (let parameterIndex = 0; parameterIndex < signature.length; parameterIndex++) {
         for (let signatureIndex = 0; signatureIndex < currentSignatures.length; signatureIndex++) {
             const signature = currentSignatures[signatureIndex]
+
+            if (!signature[parameterIndex]) continue
+
             const {parameter, type, optional} = signature[parameterIndex]
+            const previousOptional = signature[parameterIndex - 1]?.optional ?? false
 
             if (isThisParameter(parameter)) continue
 
@@ -227,6 +234,15 @@ const expandUnions = (
                     }
                     generatedSignature.splice(parameterIndex, 1, parameterInfo)
                     generatedSignatures.push(generatedSignature)
+                }
+
+                if (
+                    generatedSignatures.length > 1
+                    && optional
+                    && !previousOptional
+                ) {
+                    const strippedSignature = signature.filter(it => !it.optional)
+                    generatedSignatures.unshift(strippedSignature)
                 }
 
                 currentSignatures.splice(signatureIndex, 1, ...generatedSignatures)
