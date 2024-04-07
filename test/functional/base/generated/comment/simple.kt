@@ -16,5 +16,8 @@ external val value1: String// trailing comment
 /* leading comment */
 external val value2: String/* trailing comment */
 
-/** leading comment */
+/**
+ * leading comment
+ * one more line
+ */
 external val value3: String
