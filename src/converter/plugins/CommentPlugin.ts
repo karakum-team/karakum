@@ -31,7 +31,9 @@ export class CommentService {
         return commentRanges
             .map(it => {
                 const text = fullText.slice(it.pos, it.end)
-                const escapedTest = text.replace(this.nestedCommentPattern, "&#47;*")
+                const escapedTest = text
+                    .replace(this.nestedCommentPattern, "&#47;*")
+                    .replaceAll("\r\n", "\n")
 
                 return it.hasTrailingNewLine ? `${escapedTest}\n` : text
             })
