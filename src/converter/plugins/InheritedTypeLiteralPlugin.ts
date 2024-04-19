@@ -8,6 +8,7 @@ import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {convertMappedTypeBody} from "./MappedTypePlugin.js";
 import {convertTypeLiteralBody} from "./TypeLiteralPlugin.js";
+import {InjectionType} from "../injection.js";
 
 export function isInheritedTypeLiteral(node: ts.Node): node is IntersectionTypeNode {
     return (
@@ -34,7 +35,7 @@ export function convertInheritedTypeLiteral(
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context, render)
+    const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
     const typeReferences = node.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
     const typeLiterals = node.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))

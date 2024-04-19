@@ -8,6 +8,7 @@ import {ConverterContext} from "../context.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {InjectionType} from "../injection.js";
 
 function extractModifiers(member: Declaration): ModifierLike[] {
     if (
@@ -76,8 +77,8 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const name = (node.name && render(node.name)) ?? "Anonymous"
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context, render)
-    const staticInjections = injectionService?.resolveStaticInjections(node, context, render)
+    const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
+    const staticInjections = injectionService?.resolveInjections(node, InjectionType.STATIC_MEMBER, context, render)
 
     const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
 

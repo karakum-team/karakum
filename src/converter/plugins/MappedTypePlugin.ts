@@ -6,6 +6,7 @@ import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js"
 import {extractTypeParameters, renderDeclaration, renderReference} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {InjectionType} from "../injection.js";
 
 export function convertMappedTypeBody(node: MappedTypeNode, context: ConverterContext, render: Render) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
@@ -16,7 +17,7 @@ export function convertMappedTypeBody(node: MappedTypeNode, context: ConverterCo
     const setterInheritanceModifier = inheritanceModifierService?.resolveSetterInheritanceModifier(node, context)
 
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
-    const injections = injectionService?.resolveInjections(node, context, render)
+    const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
     const readonly = node.readonlyToken && node.readonlyToken.kind !== ts.SyntaxKind.MinusToken
 

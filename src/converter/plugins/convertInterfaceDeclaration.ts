@@ -7,6 +7,7 @@ import {DeclarationMergingService, declarationMergingServiceKey} from "./Declara
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {InjectionType} from "../injection.js";
 
 export const convertInterfaceDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isInterfaceDeclaration(node)) return null
@@ -29,7 +30,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
     const name = render(node.name)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
-    const injections = injectionService?.resolveInjections(node, context, render)
+    const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
     const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
 

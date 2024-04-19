@@ -1,6 +1,6 @@
 import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
-import {Injection, InjectionContext} from "../injection.js";
+import {Injection, InjectionContext, InjectionType} from "../injection.js";
 import {ConverterPlugin} from "../plugin.js";
 import {GeneratedFile} from "../generated.js";
 import {Render} from "../render.js";
@@ -11,19 +11,16 @@ export class InjectionService {
     constructor(readonly injections: Injection[]) {
     }
 
-    resolveInjections(node: Node, context: ConverterContext, render: Render): string[] {
-        const injectionContext = {
+    resolveInjections(
+        node: Node,
+        type: InjectionType,
+        context: ConverterContext,
+        render: Render,
+    ): string[] {
+        const injectionContext: InjectionContext = {
             ...context,
-            static: false
-        }
-
-        return this.internalResolveInjections(node, injectionContext, render)
-    }
-
-    resolveStaticInjections(node: Node, context: ConverterContext, render: Render): string[] {
-        const injectionContext = {
-            ...context,
-            static: true
+            static: type === InjectionType.STATIC_MEMBER,
+            type,
         }
 
         return this.internalResolveInjections(node, injectionContext, render)

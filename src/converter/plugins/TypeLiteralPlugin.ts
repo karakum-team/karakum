@@ -6,13 +6,14 @@ import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js"
 import {extractTypeParameters, renderDeclaration, renderReference} from "../extractTypeParameters.js";
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {InjectionType} from "../injection.js";
 
 export function convertTypeLiteralBody(node: TypeLiteralNode, context: ConverterContext, render: Render) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
-    const injections = injectionService?.resolveInjections(node, context, render)
+    const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
     const members = node.members
         .map(member => render(member))
