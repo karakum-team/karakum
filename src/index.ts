@@ -80,6 +80,13 @@ export {
 } from "./converter/plugins/convertParameterDeclaration.js"
 
 export {
+    type AnonymousDeclarationContext,
+    type AnonymousDeclarationRender,
+    type AnonymousDeclarationRenderResult,
+    createAnonymousDeclarationPlugin,
+} from "./converter/plugins/AnonymousDeclarationPlugin.js"
+
+export {
     type TypeParameterExtractionResult,
     extractTypeParameters,
     renderDeclaration,

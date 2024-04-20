@@ -10,6 +10,7 @@ export const nameResolverServiceKey = Symbol()
 
 export class NameResolverService {
     private readonly nameResolvers: NameResolver[]
+    private readonly resolvedNodes = new Map<Node, string>()
     private counter = 0
 
     constructor(nameResolvers: NameResolver[]) {
@@ -20,13 +21,22 @@ export class NameResolverService {
     }
 
     resolveName(node: Node, context: ConverterContext): string {
+        const resolvedName = this.resolvedNodes.get(node)
+        if (resolvedName) return resolvedName
+
         for (const nameResolver of this.nameResolvers) {
             const result = nameResolver(node, context)
 
-            if (result !== null) return result
+            if (result !== null) {
+                this.resolvedNodes.set(node, result)
+                return result
+            }
         }
 
-        return `Temp${this.counter++}`
+        const result = `Temp${this.counter++}`
+
+        this.resolvedNodes.set(node, result)
+        return result
     }
 }
 
