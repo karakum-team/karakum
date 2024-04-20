@@ -13,7 +13,8 @@ export type {ConverterPlugin, SimpleConverterPlugin} from "./converter/plugin.js
 export {createSimplePlugin} from "./converter/plugin.js"
 
 // injection
-export type {Injection, SimpleInjection, InjectionContext, InjectionType} from "./converter/injection.js"
+export type {Injection, SimpleInjection, InjectionContext} from "./converter/injection.js"
+export {InjectionType} from "./converter/injection.js"
 export {createSimpleInjection} from "./converter/injection.js"
 
 // annotation

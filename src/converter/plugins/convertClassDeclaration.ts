@@ -79,6 +79,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
     const staticInjections = injectionService?.resolveInjections(node, InjectionType.STATIC_MEMBER, context, render)
+    const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
     const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
 
@@ -97,6 +98,14 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
         ?.map(heritageClause => render(heritageClause))
         ?.filter(Boolean)
         ?.join(", ")
+
+    const injectedHeritageClauses = heritageInjections
+        ?.filter(Boolean)
+        ?.join(", ")
+
+    const fullHeritageClauses = [heritageClauses, injectedHeritageClauses]
+        .filter(Boolean)
+        .join(", ")
 
     const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
 
@@ -141,7 +150,7 @@ ${staticMembers}${ifPresent(staticInjectedMembers, it => `\n${it}`)}
     }
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(heritageClauses, it => ` : ${it}`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(fullHeritageClauses, it => ` : ${it}`)} {
 ${members}${ifPresent(injectedMembers, it => `\n${it}`)}${companionObject}
 }
     `

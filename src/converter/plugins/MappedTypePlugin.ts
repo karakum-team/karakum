@@ -63,8 +63,15 @@ export const convertMappedType = (
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
+
+    const injectedHeritageClauses = heritageInjections
+        ?.filter(Boolean)
+        ?.join(", ")
+
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${(ifPresent(injectedHeritageClauses, it => ` : ${it}`))} {
 ${convertMappedTypeBody(node, context, render)}
 }
     `

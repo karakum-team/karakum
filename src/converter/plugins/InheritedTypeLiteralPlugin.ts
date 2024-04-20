@@ -36,6 +36,7 @@ export function convertInheritedTypeLiteral(
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
+    const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
     const typeReferences = node.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
     const typeLiterals = node.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
@@ -46,7 +47,13 @@ export function convertInheritedTypeLiteral(
         .filter(Boolean)
         .join(", ")
 
-    const heritageClause = ifPresent(heritageTypes, it => ` : ${it}`)
+    const injectedHeritageClauses = heritageInjections
+        ?.filter(Boolean)
+        ?.join(", ")
+
+    const fullHeritageClauses = [heritageTypes, injectedHeritageClauses]
+        .filter(Boolean)
+        .join(", ")
 
     const members = typeLiterals
         .map(it => convertTypeLiteralBody(it, context, render))
@@ -62,7 +69,7 @@ export function convertInheritedTypeLiteral(
         .join("\n")
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${heritageClause} {
+${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${(ifPresent(fullHeritageClauses, it => ` : ${it}`))} {
 ${ifPresent(accessors, it => `${it}\n`)}${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
     `
