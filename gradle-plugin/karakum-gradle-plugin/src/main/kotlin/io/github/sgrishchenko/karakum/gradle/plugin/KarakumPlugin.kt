@@ -43,7 +43,7 @@ class KarakumPlugin : Plugin<Project> {
 
                 extensionSource.convention(karakum.extensionSource)
 
-                val npmProjectDirectory = provider { kotlinJsCompilation.npmProject.dir }
+                val npmProjectDirectory = kotlinJsCompilation.npmProject.dir.map { it.asFile }
                 destinationDirectory.convention(layout.dir(npmProjectDirectory).map { it.dir("karakum") })
             }
 

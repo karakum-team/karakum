@@ -7,7 +7,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.*
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.RequiresNpmDependencies
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
@@ -20,7 +20,7 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
     abstract val extensionDirectory: DirectoryProperty
 
     @get:Internal
-    override val compilation: KotlinJsCompilation = project.kotlinJsCompilation
+    override val compilation: KotlinJsIrCompilation = project.kotlinJsCompilation
 
     @get:Internal
     override val requiredNpmDependencies = setOf(
