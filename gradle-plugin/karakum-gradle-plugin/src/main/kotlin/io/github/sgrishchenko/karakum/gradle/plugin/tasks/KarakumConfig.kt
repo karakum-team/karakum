@@ -62,7 +62,7 @@ abstract class KarakumConfig : DefaultTask() {
 
     private fun replaceCwd(configNode: JsonNode) {
         configNode as ObjectNode
-        configNode.put("cwd", project.kotlinJsCompilation.npmProject.dir.absolutePath)
+        configNode.put("cwd", project.kotlinJsCompilation.npmProject.dir.get().asFile.absolutePath)
     }
 
     private fun replaceOutput(configNode: JsonNode) {
