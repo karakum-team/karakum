@@ -14,9 +14,6 @@ export enum InjectionType {
 }
 
 export interface InjectionContext extends ConverterContext {
-    /** @deprecated */
-    static: boolean
-
     type: InjectionType
 }
 

@@ -19,7 +19,6 @@ export class InjectionService {
     ): string[] {
         const injectionContext: InjectionContext = {
             ...context,
-            static: type === InjectionType.STATIC_MEMBER,
             type,
         }
 
