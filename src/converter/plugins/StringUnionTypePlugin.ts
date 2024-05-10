@@ -4,7 +4,9 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
-import {ifPresent} from "../render.js";
+import {ifPresent, Render} from "../render.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {InjectionType} from "../injection.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
@@ -34,9 +36,16 @@ export function isNullableStringUnionType(node: ts.Node, context: ConverterConte
     )
 }
 
-export function convertStringUnionType(node: UnionTypeNode, name: string, context: ConverterContext) {
+export function convertStringUnionType(
+    node: UnionTypeNode,
+    name: string,
+    context: ConverterContext,
+    render: Render,
+) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
+
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const types = flatUnionTypes(node, context)
 
@@ -85,9 +94,15 @@ val ${key}: ${name}
         .map(([key, value]) => `${key} for "${value}"`)
         .join("\n")
 
+    const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
+
+    const injectedHeritageClauses = heritageInjections
+        ?.filter(Boolean)
+        ?.join(", ")
+
     const declaration = `
 @seskar.js.JsVirtual
-sealed external interface ${name} {
+sealed external interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
 ${body}${ifPresent(comment, it => (`
 /*
@@ -108,12 +123,12 @@ ${it}
 }
 
 export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
-    (node, context) => {
+    (node, context, render) => {
         if (!isNullableStringUnionType(node, context)) return null
 
         const name = context.resolveName(node)
 
-        const {declaration, nullable} = convertStringUnionType(node, name, context)
+        const {declaration, nullable} = convertStringUnionType(node, name, context, render)
 
         const reference = nullable ? `${name}?` : name
 

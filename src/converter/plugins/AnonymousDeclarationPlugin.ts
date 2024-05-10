@@ -27,15 +27,15 @@ export type AnonymousDeclarationRender = (
 class AnonymousDeclarationPlugin<TNode extends Node = Node> implements ConverterPlugin {
     private readonly generated: Map<Node, DerivedDeclaration> = new Map()
 
+    constructor(
+        private anonymousDeclarationRender: AnonymousDeclarationRender,
+    ) {
+    }
+
     setup(context: ConverterContext): void {
     }
 
     traverse(node: ts.Node, context: ConverterContext): void {
-    }
-
-    constructor(
-        private anonymousDeclarationRender: AnonymousDeclarationRender,
-    ) {
     }
 
     render(node: ts.Node, context: ConverterContext, next: Render): string | null {

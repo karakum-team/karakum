@@ -4,6 +4,9 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {DeclarationMergingService, declarationMergingServiceKey} from "./DeclarationMergingPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {InjectionType} from "../injection.js";
+import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
+import {ifPresent} from "../render.js";
 
 export const convertEnumDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isEnumDeclaration(node)) return null
@@ -17,8 +20,11 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
 
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+    const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const name = render(node.name)
+
+    const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
     const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
 
@@ -28,6 +34,10 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
         externalModifier = ""
     }
 
+    const injectedHeritageClauses = heritageInjections
+        ?.filter(Boolean)
+        ?.join(", ")
+
     const resolveNamespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy?.bind(namespaceInfoService)
 
     const members = (declarationMergingService?.getMembers(node, resolveNamespaceStrategy) ?? node.members)
@@ -35,7 +45,7 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
         .join("\n")
 
     return `
-sealed ${externalModifier}interface ${name} {
+sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
 ${members}
 }

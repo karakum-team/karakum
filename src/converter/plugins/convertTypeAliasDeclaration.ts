@@ -36,7 +36,7 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
     }
 
     if (isStringUnionType(node.type, context)) {
-        return convertStringUnionType(node.type, name, context).declaration
+        return convertStringUnionType(node.type, name, context, render).declaration
     }
 
     if (isInheritedTypeLiteral(node.type)) {
