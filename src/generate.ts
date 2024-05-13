@@ -40,12 +40,18 @@ async function loadExtensions<T>(
     const extensions: T[] = []
 
     for (const fileName of fileNames) {
-        console.log(`${name} file: ${fileName}`)
-
         const extensionModule: { default: unknown } = await import(toModuleName(fileName))
-        const extension = extensionModule.default
+        const extensionExport = extensionModule.default
 
-        extensions.push(loader(extension))
+        if (Array.isArray(extensionExport)) {
+            console.log(`${name} file: ${fileName} [x${extensionExport.length}]`)
+
+            extensions.push(...extensionExport.map(it => loader(it)))
+        } else {
+            console.log(`${name} file: ${fileName}`)
+
+            extensions.push(loader(extensionExport))
+        }
     }
 
     return extensions
