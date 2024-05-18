@@ -10,7 +10,6 @@ package sandbox.base.declarationMerging
 
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 sealed external interface ExampleEnum {
 companion object {
 val a: ExampleEnum

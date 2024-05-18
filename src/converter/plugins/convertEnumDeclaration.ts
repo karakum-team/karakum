@@ -35,7 +35,6 @@ export const convertEnumDeclaration = createSimplePlugin((node, context, render)
         .join("\n")
 
     return `
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 sealed ${externalModifier}interface ${name} {
 companion object {
 ${members}

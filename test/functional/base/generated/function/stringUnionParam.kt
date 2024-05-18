@@ -19,7 +19,6 @@ external fun getGPUInfo4(infoType: (((GetGPUInfo4InfoType)))): Any?
 
 external fun setVibrancy(type: SetVibrancyType?): Unit
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface GetGPUInfoInfoType {
 companion object {
@@ -32,7 +31,6 @@ val complete: GetGPUInfoInfoType
     
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface GetGPUInfo2InfoType {
 companion object {
@@ -45,7 +43,6 @@ val complete: GetGPUInfo2InfoType
     
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface GetGPUInfo3InfoType {
 companion object {
@@ -58,7 +55,6 @@ val complete: GetGPUInfo3InfoType
     
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface GetGPUInfo4InfoType {
 companion object {
@@ -71,7 +67,6 @@ val complete: GetGPUInfo4InfoType
     
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface SetVibrancyType {
 companion object {

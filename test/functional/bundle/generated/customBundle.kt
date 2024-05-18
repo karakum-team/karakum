@@ -17,7 +17,6 @@ external fun myFunction2(firstParam: String, secondParam: Double): Unit
 
 external fun myFunction1(firstParam: String, secondParam: Double): Unit
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface MyFunction3SecondParam {
 companion object {

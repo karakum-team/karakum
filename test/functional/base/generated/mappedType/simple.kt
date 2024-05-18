@@ -10,7 +10,6 @@ package sandbox.base.mappedType
 
 
 
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
 @seskar.js.JsVirtual
 sealed external interface Keys {
 companion object {
