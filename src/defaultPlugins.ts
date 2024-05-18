@@ -63,6 +63,8 @@ import {convertConditionalType} from "./converter/plugins/convertConditionalType
 import {convertNamedTupleMember} from "./converter/plugins/convertNamedTupleMember.js";
 import {ImportInfo} from "./structure/import/collectImportInfo.js";
 import {ImportInfoPlugin} from "./converter/plugins/ImportInfoPlugin.js";
+import {VarianceModifierPlugin} from "./converter/plugins/VarianceModifierPlugin.js";
+import {VarianceModifier} from "./converter/varianceModifier.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -71,6 +73,7 @@ export const createPlugins = (
     injections: Injection[],
     nameResolvers: NameResolver[],
     inheritanceModifiers: InheritanceModifier[],
+    varianceModifiers: VarianceModifier[],
     program: Program,
     namespaceInfo: NamespaceInfo,
     importInfo: ImportInfo,
@@ -80,6 +83,7 @@ export const createPlugins = (
     new InjectionPlugin(injections),
     new NameResolverPlugin(nameResolvers),
     new InheritanceModifierPlugin(inheritanceModifiers),
+    new VarianceModifierPlugin(varianceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),
     new ImportInfoPlugin(program, importInfo),
     new DeclarationMergingPlugin(program),

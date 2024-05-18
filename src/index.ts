@@ -26,6 +26,9 @@ export type {NameResolver} from "./converter/nameResolver.js"
 // inheritance modifier
 export type {InheritanceModifier, InheritanceModifierContext} from "./converter/inheritanceModifier.js"
 
+// variance modifier
+export type {VarianceModifier} from "./converter/varianceModifier.js"
+
 // plugin services
 export {
     injectionServiceKey,
@@ -55,6 +58,10 @@ export {
     inheritanceModifierServiceKey,
     type InheritanceModifierService
 } from "./converter/plugins/InheritanceModifierPlugin.js"
+export {
+    varianceModifierServiceKey,
+    type VarianceModifierService
+} from "./converter/plugins/VarianceModifierPlugin.js"
 export {
     importInfoServiceKey,
     type ImportInfoService

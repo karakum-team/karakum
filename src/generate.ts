@@ -24,6 +24,7 @@ import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.j
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
 import {createSimpleInjection, Injection, SimpleInjection} from "./converter/injection.js";
 import {collectImportInfo} from "./structure/import/collectImportInfo.js";
+import {VarianceModifier} from "./converter/varianceModifier.js";
 
 async function loadExtensions<T>(
     name: string,
@@ -97,6 +98,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         annotations,
         nameResolvers,
         inheritanceModifiers,
+        varianceModifiers,
         compilerOptions,
         cwd,
     } = configuration
@@ -142,6 +144,12 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
         inheritanceModifiers,
+        cwd,
+    )
+
+    const customVarianceModifiers = await loadExtensions<VarianceModifier>(
+        "Variance Modifier",
+        varianceModifiers,
         cwd,
     )
 
@@ -214,6 +222,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         customInjections,
         customNameResolvers,
         customInheritanceModifiers,
+        customVarianceModifiers,
         program,
         namespaceInfo,
         importInfo,

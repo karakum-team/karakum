@@ -34,6 +34,8 @@ export interface SchemaConfiguration {
 
     inheritanceModifiers?: string | string[]
 
+    varianceModifiers?: string | string[]
+
     /**
      * @TJS-type object
      * @additionalProperties { "type": "string" }
@@ -110,6 +112,8 @@ export interface Configuration extends PartialConfiguration {
     nameResolvers: string[]
 
     inheritanceModifiers: string[]
+
+    varianceModifiers: string[]
 
     moduleNameMapper: Record<string, string>
     packageNameMapper: Record<string, string>
