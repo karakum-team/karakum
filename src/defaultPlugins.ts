@@ -32,7 +32,6 @@ import {convertEnumMember} from "./converter/plugins/convertEnumMember.js";
 import {convertVariableStatement} from "./converter/plugins/convertVariableStatement.js";
 import {convertVariableDeclaration} from "./converter/plugins/convertVariableDeclaration.js";
 import {convertQualifiedName} from "./converter/plugins/convertQualifiedName.js";
-import {convertPrefixUnaryExpression} from "./converter/plugins/convertPrefixUnaryExpression.js";
 import {convertParenthesizedType} from "./converter/plugins/convertParenthesizedType.js";
 import {convertUnionType} from "./converter/plugins/convertUnionType.js";
 import {convertIntersectionType} from "./converter/plugins/convertIntersectionType.js";
@@ -147,7 +146,6 @@ export const createPlugins = (
     convertVariableDeclaration,
     convertQualifiedName,
     convertPropertyAccessExpression,
-    convertPrefixUnaryExpression,
     convertParenthesizedType,
     convertUnionType,
     convertIntersectionType,
