@@ -101,7 +101,6 @@ val ${key}: ${name}
         ?.join(", ")
 
     const declaration = `
-@seskar.js.JsVirtual
 sealed external interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
 ${body}${ifPresent(comment, it => (`

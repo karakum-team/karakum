@@ -17,7 +17,6 @@ external fun myFunction2(firstParam: String, secondParam: Double): Unit
 
 external fun myFunction1(firstParam: String, secondParam: Double): Unit
 
-@seskar.js.JsVirtual
 sealed external interface MyFunction3SecondParam {
 companion object {
 @seskar.js.JsValue("basic")

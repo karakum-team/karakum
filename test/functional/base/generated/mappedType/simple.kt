@@ -10,7 +10,6 @@ package sandbox.base.mappedType
 
 
 
-@seskar.js.JsVirtual
 sealed external interface Keys {
 companion object {
 @seskar.js.JsValue("one")

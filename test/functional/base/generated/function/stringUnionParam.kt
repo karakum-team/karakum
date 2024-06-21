@@ -19,7 +19,6 @@ external fun getGPUInfo4(infoType: (((GetGPUInfo4InfoType)))): Any?
 
 external fun setVibrancy(type: SetVibrancyType?): Unit
 
-@seskar.js.JsVirtual
 sealed external interface GetGPUInfoInfoType {
 companion object {
 @seskar.js.JsValue("basic")
@@ -31,7 +30,6 @@ val complete: GetGPUInfoInfoType
     
 
 
-@seskar.js.JsVirtual
 sealed external interface GetGPUInfo2InfoType {
 companion object {
 @seskar.js.JsValue("basic")
@@ -43,7 +41,6 @@ val complete: GetGPUInfo2InfoType
     
 
 
-@seskar.js.JsVirtual
 sealed external interface GetGPUInfo3InfoType {
 companion object {
 @seskar.js.JsValue("basic")
@@ -55,7 +52,6 @@ val complete: GetGPUInfo3InfoType
     
 
 
-@seskar.js.JsVirtual
 sealed external interface GetGPUInfo4InfoType {
 companion object {
 @seskar.js.JsValue("basic")
@@ -67,7 +63,6 @@ val complete: GetGPUInfo4InfoType
     
 
 
-@seskar.js.JsVirtual
 sealed external interface SetVibrancyType {
 companion object {
 @seskar.js.JsValue("light")
