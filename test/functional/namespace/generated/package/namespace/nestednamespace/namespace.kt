@@ -5,6 +5,4 @@
 
 package `package`.namespace.nestednamespace
 
-
-
 external val nestedNamespaceValue: Double

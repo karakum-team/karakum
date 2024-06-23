@@ -8,8 +8,6 @@
 package sandbox.base.declarationMerging
 
 
-
-
 external interface Example {
 
 @seskar.js.JsNative

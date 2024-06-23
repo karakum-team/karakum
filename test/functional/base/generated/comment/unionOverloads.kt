@@ -7,8 +7,6 @@
 
 package sandbox.base.comment
 
-
-
 /**
  * Example JSDoc
  * @param firstParam

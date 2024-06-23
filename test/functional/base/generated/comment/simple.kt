@@ -7,8 +7,6 @@
 
 package sandbox.base.comment
 
-
-
 // leading comment
 external val value1: String// trailing comment
 

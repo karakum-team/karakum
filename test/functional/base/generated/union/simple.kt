@@ -8,8 +8,6 @@
 package sandbox.base.union
 
 
-
-
 external interface A {
 var brand: String /* "one" */
 }

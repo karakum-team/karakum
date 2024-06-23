@@ -8,8 +8,6 @@
 package sandbox.base.accessor
 
 
-
-
 external class Simple {
 
 var property: String

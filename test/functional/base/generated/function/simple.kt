@@ -7,6 +7,4 @@
 
 package sandbox.base.function
 
-
-
 external fun exampleFn(firstParam: String, secondParam: Double): Boolean

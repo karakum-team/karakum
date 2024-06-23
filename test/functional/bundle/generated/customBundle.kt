@@ -9,8 +9,6 @@ package sandbox.bundle
 
 
 
-
-
 external fun myFunction3(firstParam: String, secondParam: MyFunction3SecondParam): Unit
 
 external fun myFunction2(firstParam: String, secondParam: Double): Unit

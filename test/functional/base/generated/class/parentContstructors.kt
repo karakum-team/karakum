@@ -8,8 +8,6 @@
 package sandbox.base.`class`
 
 
-
-
 external class GrandparentWithConstructor {
 constructor (param: Double)
 constructor (param: String)

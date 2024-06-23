@@ -7,8 +7,6 @@
 
 package sandbox.base.union
 
-
-
 typealias X1 = String
 
 typealias Y1 = Double

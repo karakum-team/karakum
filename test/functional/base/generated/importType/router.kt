@@ -8,8 +8,6 @@
 package sandbox.base.importType
 
 
-
-
 external interface RouterState {
 
 }

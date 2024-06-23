@@ -8,8 +8,6 @@
 package sandbox.base.function
 
 
-
-
 external interface A {
 var brand: String /* "one" */
 }

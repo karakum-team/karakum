@@ -8,8 +8,6 @@
 package sandbox.base.typeLiteral
 
 
-
-
 external class MyClassWithEmptyTypeLiteral {
 var value: Any
 }

@@ -8,8 +8,6 @@
 package sandbox.base.mappedType
 
 
-
-
 sealed external interface Keys {
 companion object {
 @seskar.js.JsValue("one")

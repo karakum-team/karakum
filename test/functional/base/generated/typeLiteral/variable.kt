@@ -7,8 +7,6 @@
 
 package sandbox.base.typeLiteral
 
-
-
 external val variableWithAnonymousType: VariableWithAnonymousType
 
 external interface VariableWithAnonymousType {

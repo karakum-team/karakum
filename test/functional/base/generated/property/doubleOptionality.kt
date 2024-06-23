@@ -7,8 +7,6 @@
 
 package sandbox.base.property
 
-
-
 typealias SomeNullableType = String?
 
 typealias SomeUnionNullableType = Any? /* number | string | null */

@@ -8,8 +8,6 @@
 package sandbox.base.typeLiteral
 
 
-
-
 external class MyClass {
 var conflictHandler: ((conflictType: MyClassConflictHandlerConflictType) -> Boolean)?
 fun method(cb: (options: MyClassMethodCbOptions) -> Unit): String

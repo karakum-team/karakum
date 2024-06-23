@@ -4,8 +4,6 @@
 
 package `package`.namespace
 
-
-
 external val packageNamespaceValue: Double
 
 

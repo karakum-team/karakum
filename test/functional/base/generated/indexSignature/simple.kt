@@ -8,8 +8,6 @@
 package sandbox.base.indexSignature
 
 
-
-
 external interface RouteData {
 
 @seskar.js.JsNative

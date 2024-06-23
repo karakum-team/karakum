@@ -8,8 +8,6 @@
 package sandbox.base.union
 
 
-
-
 sealed external interface FormEncType {
 companion object {
 @seskar.js.JsValue("application/x-www-form-urlencoded")

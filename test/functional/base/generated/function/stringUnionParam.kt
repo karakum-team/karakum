@@ -7,8 +7,6 @@
 
 package sandbox.base.function
 
-
-
 external fun getGPUInfo(infoType: GetGPUInfoInfoType): Any?
 
 external fun getGPUInfo2(infoType: (GetGPUInfo2InfoType)): Any?

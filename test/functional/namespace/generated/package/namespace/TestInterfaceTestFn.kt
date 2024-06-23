@@ -3,8 +3,6 @@
 package `package`.namespace
 
 
-
-
 external interface TestInterfaceTestFn {
 
 @seskar.js.JsNative

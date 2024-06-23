@@ -8,8 +8,6 @@
 package sandbox.base.function
 
 
-
-
 external interface Path {
 var pathname: String
 var search: String

@@ -7,8 +7,6 @@
 
 package sandbox.base.typeLiteral
 
-
-
 typealias HydrationState = String
 
 external fun createMemoryRouter(routes: Array<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter

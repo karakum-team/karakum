@@ -7,8 +7,6 @@
 
 package sandbox.base.typeQuery
 
-
-
 external val tmp: String
 
 external val nativeImage: String

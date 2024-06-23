@@ -8,8 +8,6 @@
 package sandbox.base.`interface`
 
 
-
-
 external interface ExampleInterface {
 var firstField: String
 var secondField: Double

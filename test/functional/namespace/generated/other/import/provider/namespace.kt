@@ -4,6 +4,4 @@
 
 package other.import.provider
 
-
-
 /* export default X; */

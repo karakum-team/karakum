@@ -4,6 +4,4 @@
 
 package was.mapped.main
 
-
-
 external val mappedValue: Double

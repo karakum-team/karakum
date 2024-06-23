@@ -8,8 +8,6 @@
 package sandbox.base.namespace
 
 
-
-
 external object String /* "*.css" */ {
 
 object NS {

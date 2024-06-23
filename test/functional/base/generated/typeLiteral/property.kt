@@ -8,8 +8,6 @@
 package sandbox.base.typeLiteral
 
 
-
-
 external interface FetcherStates<TData /* default is Any? */> {
 var Idle: FetcherStatesIdle<TData>
 }

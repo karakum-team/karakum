@@ -22,11 +22,14 @@ export function createGeneratedFile(
 
     const disclaimer = configuration.disclaimer
 
-    return `
-${disclaimer}package ${packageName}
+    const content = [
+        disclaimer,
+        `package ${packageName}`,
+        resultImports,
+        body,
+    ]
+        .filter(Boolean)
+        .join("\n\n")
 
-${resultImports}
-
-${body}
-    `.trim() + "\n"
+    return content.trim() + "\n"
 }

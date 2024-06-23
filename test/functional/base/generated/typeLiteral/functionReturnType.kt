@@ -7,8 +7,6 @@
 
 package sandbox.base.typeLiteral
 
-
-
 external fun useRevalidator(): UseRevalidatorResult
 
 

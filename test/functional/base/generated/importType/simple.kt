@@ -7,6 +7,4 @@
 
 package sandbox.base.importType
 
-
-
 external val DataRouterStateContext: React.Context<(/* import("./router") */ RouterState)?>

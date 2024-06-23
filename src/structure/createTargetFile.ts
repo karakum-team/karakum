@@ -46,13 +46,15 @@ export function createTargetFile(
         .filter(Boolean)
         .join("\n")
 
-    return `
-${disclaimer}${fileAnnotations}
+    const content = [
+        disclaimer,
+        fileAnnotations,
+        `package ${packageName}`,
+        resultImports,
+        body,
+    ]
+        .filter(Boolean)
+        .join("\n\n")
 
-package ${packageName}
-
-${resultImports}
-
-${body}
-    `.trim() + "\n"
+    return content.trim() + "\n"
 }

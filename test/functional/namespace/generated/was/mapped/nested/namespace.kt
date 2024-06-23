@@ -5,6 +5,4 @@
 
 package was.mapped.nested
 
-
-
 external val nestedMappedValue: Double

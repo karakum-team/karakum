@@ -12,8 +12,6 @@ package sandbox.base.declarationMerging
 
 
 
-
-
 external class ExampleClass {
 
 @seskar.js.JsNative

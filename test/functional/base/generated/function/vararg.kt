@@ -7,8 +7,6 @@
 
 package sandbox.base.function
 
-
-
 external fun simpleVararg(vararg args: String): Unit
 
 external fun <T : Array<String>> genericVararg(vararg args: Any? /* T */): Unit
