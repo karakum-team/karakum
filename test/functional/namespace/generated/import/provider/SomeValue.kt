@@ -2,7 +2,6 @@
 
 package import.provider
 
-
 external interface SomeValue {
 
 }

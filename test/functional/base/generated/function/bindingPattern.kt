@@ -7,12 +7,10 @@
 
 package sandbox.base.function
 
-
 external interface Path {
 var pathname: String
 var search: String
 var hash: String
 }
-    
 
 external fun createPath(options: Path): String

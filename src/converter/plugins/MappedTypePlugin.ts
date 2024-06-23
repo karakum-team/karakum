@@ -36,7 +36,7 @@ export function convertMappedTypeBody(node: MappedTypeNode, context: ConverterCo
     const getter = `
 @seskar.js.JsNative
 ${ifPresent(getterInheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> get(key: ${keyType}): ${type}
-    `
+    `.trim()
 
     let setter = ""
 
@@ -44,7 +44,7 @@ ${ifPresent(getterInheritanceModifier, it => `${it} `)}operator fun <${typeParam
         setter = `
 @seskar.js.JsNative
 ${ifPresent(setterInheritanceModifier, it => `${it} `)}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
-        `
+        `.trim()
     }
 
     const injectedMembers = (injections ?? [])
@@ -74,7 +74,7 @@ export const convertMappedType = (
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${(ifPresent(injectedHeritageClauses, it => ` : ${it}`))} {
 ${convertMappedTypeBody(node, context, render)}
 }
-    `
+    `.trim()
 }
 
 export const mappedTypePlugin = createAnonymousDeclarationPlugin(

@@ -16,7 +16,6 @@ external fun getGPUInfo3(infoType: ((GetGPUInfo3InfoType))): Any?
 external fun getGPUInfo4(infoType: (((GetGPUInfo4InfoType)))): Any?
 
 external fun setVibrancy(type: SetVibrancyType?): Unit
-
 sealed external interface GetGPUInfoInfoType {
 companion object {
 @seskar.js.JsValue("basic")
@@ -25,8 +24,6 @@ val basic: GetGPUInfoInfoType
 val complete: GetGPUInfoInfoType
 }
 }
-    
-
 
 sealed external interface GetGPUInfo2InfoType {
 companion object {
@@ -36,8 +33,6 @@ val basic: GetGPUInfo2InfoType
 val complete: GetGPUInfo2InfoType
 }
 }
-    
-
 
 sealed external interface GetGPUInfo3InfoType {
 companion object {
@@ -47,8 +42,6 @@ val basic: GetGPUInfo3InfoType
 val complete: GetGPUInfo3InfoType
 }
 }
-    
-
 
 sealed external interface GetGPUInfo4InfoType {
 companion object {
@@ -58,8 +51,6 @@ val basic: GetGPUInfo4InfoType
 val complete: GetGPUInfo4InfoType
 }
 }
-    
-
 
 sealed external interface SetVibrancyType {
 companion object {
@@ -69,4 +60,3 @@ val light: SetVibrancyType
 val dark: SetVibrancyType
 }
 }
-    

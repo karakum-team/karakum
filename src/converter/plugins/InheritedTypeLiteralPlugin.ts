@@ -72,7 +72,7 @@ export function convertInheritedTypeLiteral(
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${(ifPresent(fullHeritageClauses, it => ` : ${it}`))} {
 ${ifPresent(accessors, it => `${it}\n`)}${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
-    `
+    `.trim()
 }
 
 export const inheritedTypeLiteralPlugin = createAnonymousDeclarationPlugin(

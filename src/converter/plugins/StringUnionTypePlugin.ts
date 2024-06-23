@@ -103,15 +103,17 @@ val ${key}: ${name}
     const declaration = `
 sealed external interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
-${body}${ifPresent(comment, it => (`
+${body}${ifPresent(comment, it => (
+    `
 /*
 Duplicated names were generated:
 ${it}
 */
-`))}
+    `.trim()
+))}
 }
 }
-    `
+    `.trim()
 
     const nullable = nullableTypes.length > 0
 

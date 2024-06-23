@@ -50,5 +50,5 @@ companion object {
 ${members}
 }
 }
-    `
+    `.trim()
 })

@@ -29,7 +29,7 @@ export const convertCallSignatureDeclaration = createSimplePlugin((node, context
             return `
 @seskar.js.JsNative
 ${ifPresent(inheritanceModifier, it => `${it} `)}operator fun ${ifPresent(typeParameters, it => `<${it}>`)} invoke(${parameters})${ifPresent(returnType, it => `: ${it}`)}
-            `
+            `.trim()
         }
     })
 })

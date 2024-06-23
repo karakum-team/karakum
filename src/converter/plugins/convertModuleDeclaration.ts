@@ -36,7 +36,7 @@ export const convertModuleDeclaration = createSimplePlugin((node, context, rende
 ${externalModifier}object ${name} {
 ${body}
 }
-        `
+        `.trim()
     }
 
     if (namespaceStrategy === "package") {

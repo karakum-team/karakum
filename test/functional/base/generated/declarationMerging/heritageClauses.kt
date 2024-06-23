@@ -7,30 +7,21 @@
 
 package sandbox.base.declarationMerging
 
-
 external interface ExampleParentForInterface {
 
 }
-    
-
 
 external interface SecondExampleParentForInterface {
 
 }
-    
-
 
 external interface ExampleParentForClass {
 
 }
-    
-
 
 external interface ExampleInterfaceWithParent : ExampleParentForInterface, SecondExampleParentForInterface {
 
 }
-    
-
 
 
 

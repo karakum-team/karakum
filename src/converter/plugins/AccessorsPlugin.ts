@@ -94,7 +94,7 @@ export class AccessorsPlugin implements ConverterPlugin {
 
             return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}
-            `;
+            `.trim();
         }
 
         return null

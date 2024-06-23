@@ -7,7 +7,6 @@
 
 package sandbox.base.union
 
-
 sealed external interface FormEncType {
 companion object {
 @seskar.js.JsValue("application/x-www-form-urlencoded")
@@ -16,10 +15,8 @@ val applicationXWwwFormUrlencoded: FormEncType
 val multipartFormData: FormEncType
 }
 }
-    
 
 external fun switcher(): SwitcherResult
-
 sealed external interface SwitcherResult {
 companion object {
 @seskar.js.JsValue("on")
@@ -28,4 +25,3 @@ val on: SwitcherResult
 val off: SwitcherResult
 }
 }
-    

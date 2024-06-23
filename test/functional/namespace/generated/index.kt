@@ -6,15 +6,11 @@ package sandbox.namespace
 
 
 
-
 external object ObjectNamespace {
 val objectNamespaceValue: Double
-
 object InnerObjectNamespace {
 val innerObjectNamespaceValue: Double
 }
-        
 }
-        
 
 external val topLevelValue: Double

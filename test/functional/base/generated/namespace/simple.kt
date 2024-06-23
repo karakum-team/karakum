@@ -7,25 +7,16 @@
 
 package sandbox.base.namespace
 
-
 external object String /* "*.css" */ {
-
 object NS {
 val x: Double
 }
-        
 }
-        
-
 
 external object Some {
-
 object Nested {
-
 object NS {
 val x: Double
 }
-        
 }
-        
 }

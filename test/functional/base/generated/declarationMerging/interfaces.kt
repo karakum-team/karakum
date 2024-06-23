@@ -7,17 +7,12 @@
 
 package sandbox.base.declarationMerging
 
-
 external interface Example {
-
 @seskar.js.JsNative
 operator fun  invoke(param1: String): Unit
-            
 var a: Double
 var b: String
 }
-    
-
 
 
 

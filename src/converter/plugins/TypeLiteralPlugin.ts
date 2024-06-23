@@ -46,7 +46,7 @@ export function convertTypeLiteral(
 ${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${(ifPresent(injectedHeritageClauses, it => ` : ${it}`))} {
 ${convertTypeLiteralBody(node, context, render)}
 }
-    `
+    `.trim()
 }
 
 export const typeLiteralPlugin = createAnonymousDeclarationPlugin(

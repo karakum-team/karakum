@@ -146,12 +146,12 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
 companion object {
 ${staticMembers}${ifPresent(staticInjectedMembers, it => `\n${it}`)}
 }
-        `
+        `.trim()
     }
 
     return `
 ${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}class ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(fullHeritageClauses, it => ` : ${it}`)} {
 ${members}${ifPresent(injectedMembers, it => `\n${it}`)}${companionObject}
 }
-    `
+    `.trim()
 })

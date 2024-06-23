@@ -7,7 +7,6 @@
 
 package sandbox.base.intersection
 
-
 external interface AgnosticNonIndexRouteObject : AgnosticBaseRouteObject {
 var children: Array<AgnosticRouteObject>?
 var index: Boolean /* false */?

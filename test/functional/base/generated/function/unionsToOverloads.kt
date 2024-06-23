@@ -7,23 +7,17 @@
 
 package sandbox.base.function
 
-
 external interface A {
 var brand: String /* "one" */
 }
-    
-
 
 external interface B {
 var brand: String /* "two" */
 }
-    
-
 
 external interface C {
 var brand: String /* "three" */
 }
-    
 
 external fun exampleFn(firstParam: A, secondParam: B, thirdParam: A): Boolean
 

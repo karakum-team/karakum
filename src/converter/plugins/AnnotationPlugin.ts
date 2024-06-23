@@ -42,7 +42,7 @@ export class AnnotationPlugin implements ConverterPlugin {
             return `
 ${annotations.join("\n")}
 ${next(node)}
-            `;
+            `.trim();
         }
 
         return null

@@ -11,12 +11,9 @@ package sandbox.base.declarationMerging
 
 
 
-
 external class ExampleClass {
-
 @seskar.js.JsNative
 operator fun  invoke(param: String): Unit
-            
 var a: Double
 var b: String
 var c: Boolean

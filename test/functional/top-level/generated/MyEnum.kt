@@ -4,7 +4,6 @@
 
 package sandbox.top.level
 
-
 sealed external interface MyEnum {
 companion object {
 val FIRST: MyEnum

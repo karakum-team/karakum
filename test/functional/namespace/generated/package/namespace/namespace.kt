@@ -8,7 +8,6 @@ external val packageNamespaceValue: Double
 
 
 
-
 external object ObjectNamespace {
 val objectNamespaceValue: Double
 }

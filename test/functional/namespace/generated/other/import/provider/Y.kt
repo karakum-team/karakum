@@ -2,7 +2,6 @@
 
 package other.import.provider
 
-
 external interface Y {
 
 }

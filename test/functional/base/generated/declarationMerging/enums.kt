@@ -7,7 +7,6 @@
 
 package sandbox.base.declarationMerging
 
-
 sealed external interface ExampleEnum {
 companion object {
 val a: ExampleEnum

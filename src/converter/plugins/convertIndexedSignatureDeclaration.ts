@@ -32,7 +32,7 @@ export const convertIndexedSignatureDeclaration = createSimplePlugin((node, cont
     const getter = `
 @seskar.js.JsNative
 ${ifPresent(getterInheritanceModifier, it => `${it} `)}operator fun get(key: ${keyType}): ${type}
-    `
+    `.trim()
 
     let setter = ""
 
@@ -40,7 +40,7 @@ ${ifPresent(getterInheritanceModifier, it => `${it} `)}operator fun get(key: ${k
         setter = `
 @seskar.js.JsNative
 ${ifPresent(setterInheritanceModifier, it => `${it} `)}operator fun set(key: ${keyType}, value: ${type})
-        `
+        `.trim()
     }
 
 

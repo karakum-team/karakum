@@ -7,7 +7,6 @@
 
 package sandbox.base.mappedType
 
-
 sealed external interface Keys {
 companion object {
 @seskar.js.JsValue("one")
@@ -16,89 +15,53 @@ val one: Keys
 val two: Keys
 }
 }
-    
-
 
 external interface OptionsFlags {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
-    
-
 
 @seskar.js.JsNative
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
-        
 }
-    
-
 
 external interface ReadonlyOptionsFlags {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
-    
 }
-    
-
 
 external interface OptionsFlagsWithTypeLiteral {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
-    
-
 
 @seskar.js.JsNative
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
-        
 var three: String
 }
-    
-
 
 external interface KeyWrapper<T> {
 var key: T
 }
-    
-
 
 external interface NamedOptionsFlags {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
-    
-
 
 @seskar.js.JsNative
 operator fun <Property : Keys> set(key: KeyWrapper<Property>, value: Promise<Property>?)
-        
 }
-    
-
 
 external interface OptionalOptionsFlags {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
-    
 }
-    
-
 
 external interface MappedTypeContainer {
 var mappedType: MappedTypeContainerMappedType
 }
-
 external interface MappedTypeContainerMappedType {
-
 @seskar.js.JsNative
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
-    
-
 
 @seskar.js.JsNative
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
-        
 }
-    

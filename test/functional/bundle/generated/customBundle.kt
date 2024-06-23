@@ -14,7 +14,6 @@ external fun myFunction3(firstParam: String, secondParam: MyFunction3SecondParam
 external fun myFunction2(firstParam: String, secondParam: Double): Unit
 
 external fun myFunction1(firstParam: String, secondParam: Double): Unit
-
 sealed external interface MyFunction3SecondParam {
 companion object {
 @seskar.js.JsValue("basic")
@@ -23,4 +22,3 @@ val basic: MyFunction3SecondParam
 val complete: MyFunction3SecondParam
 }
 }
-    

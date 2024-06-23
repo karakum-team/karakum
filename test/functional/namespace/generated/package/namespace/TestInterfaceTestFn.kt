@@ -2,14 +2,9 @@
 
 package `package`.namespace
 
-
 external interface TestInterfaceTestFn {
-
 @seskar.js.JsNative
 operator fun  invoke(param: String): String
-            
-
 @seskar.js.JsNative
 operator fun  invoke(param: Double): String
-            
 }

@@ -72,5 +72,5 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
 ${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${ifPresent(fullHeritageClauses, it => ` : ${it}`)} {
 ${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
-    `
+    `.trim()
 })
