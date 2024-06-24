@@ -21,8 +21,8 @@ kotlin {
 }
 
 gradlePlugin {
-    website = "https://github.com/karakum-team/karakum"
-    vcsUrl = "https://github.com/karakum-team/karakum"
+    website = "https://github.com/sgrishchenko/karakum"
+    vcsUrl = "https://github.com/sgrishchenko/karakum"
 
     val karakum by plugins.creating {
         id = "io.github.sgrishchenko.karakum"
