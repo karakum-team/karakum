@@ -78,6 +78,11 @@ export {
     commentServiceKey,
     type CommentService
 } from "./converter/plugins/CommentPlugin.js"
+export {
+    unionServiceKey,
+    type UnionService,
+    UnionInjection,
+} from "./converter/plugins/configurable/UnionInjection.js"
 
 // plugin utils
 export {
