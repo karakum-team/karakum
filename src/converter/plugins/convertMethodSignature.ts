@@ -5,11 +5,14 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
 import {escapeIdentifier} from "../../utils/strings.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 
 export const convertMethodSignature = createSimplePlugin((node, context, render) => {
     if (!ts.isMethodSignature(node)) return null
 
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
     checkCoverageService?.cover(node)
 
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
@@ -22,6 +25,27 @@ export const convertMethodSignature = createSimplePlugin((node, context, render)
         ?.join(", ")
 
     const returnType = node.type && render(node.type)
+
+    if (node.questionToken) {
+        return convertParameterDeclarations(node, context, render, {
+            strategy: "lambda",
+            template: (parameters, signature) => {
+                const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+
+                let functionType: string
+
+                if (node.typeParameters) {
+                    functionType = `Function<Any?> /* ${typeScriptService?.printNode(node)} */`
+                } else if (node.parameters.some(parameter => parameter.dotDotDotToken)) {
+                    functionType = `Function<${returnType}> /* ${typeScriptService?.printNode(node)} */`
+                } else {
+                    functionType = `(${parameters}) -> ${returnType ?? "Any?"}`
+                }
+
+                return `${ifPresent(inheritanceModifier, it => `${it} `)}val ${name}: (${functionType})?`
+            }
+        })
+    }
 
     return convertParameterDeclarations(node, context, render, {
         strategy: "function",
