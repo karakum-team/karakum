@@ -141,7 +141,7 @@ export const convertClassDeclaration = createSimplePlugin((node, context, render
     let companionObject = ""
 
     if (staticMembers.length > 0) {
-        companionObject = `
+        companionObject = "\n" + `
         
 companion object {
 ${staticMembers}${ifPresent(staticInjectedMembers, it => `\n${it}`)}
