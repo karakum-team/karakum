@@ -104,7 +104,7 @@ val ${key}: ${name}
 sealed external interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
 ${body}${ifPresent(comment, it => (
-    `
+    "\n" + `
 /*
 Duplicated names were generated:
 ${it}
