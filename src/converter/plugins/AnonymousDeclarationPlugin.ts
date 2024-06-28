@@ -7,6 +7,7 @@ import {generateDerivedDeclarations} from "../../structure/derived/generateDeriv
 import {DerivedDeclaration} from "../../structure/derived/derivedDeclaration.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {DerivedFile} from "../generated.js";
+import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
 
 export interface AnonymousDeclarationContext extends ConverterContext {
     resolveName(node: Node): string
@@ -45,7 +46,11 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
         const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
         if (typeScriptService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without TypeScriptService")
 
+        const annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
+        if (annotationService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without AnnotationService")
+
         const resolveName = (node: TNode) => nameResolverService.resolveName(node, context)
+        const annotations = annotationService.resolveAnonymousAnnotations(node, context)
 
         const anonymousDeclarationContext = {
             ...context,
@@ -69,7 +74,7 @@ class AnonymousDeclarationPlugin<TNode extends Node = Node> implements Converter
             sourceFileName,
             namespace,
             fileName: `${name}.kt`,
-            body: declaration,
+            body: [...annotations, declaration].join("\n"),
         })
 
         return reference;

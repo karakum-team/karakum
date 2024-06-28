@@ -2,7 +2,7 @@ import {ConverterPlugin} from "../plugin.js";
 import ts, {Node} from "typescript";
 import {ConverterContext} from "../context.js";
 import {Render} from "../render.js";
-import {Annotation} from "../annotation.js";
+import {Annotation, AnnotationContext} from "../annotation.js";
 import {GeneratedFile} from "../generated.js";
 
 export const annotationServiceKey = Symbol()
@@ -11,11 +11,24 @@ export class AnnotationService {
     constructor(readonly annotations: Annotation[]) {
     }
 
+    resolveAnonymousAnnotations(node: Node, context: ConverterContext): string[] {
+        return this.internalResolveAnnotations(node, true, context)
+    }
+
     resolveAnnotations(node: Node, context: ConverterContext): string[] {
+        return this.internalResolveAnnotations(node, false, context)
+    }
+
+    private internalResolveAnnotations(node: Node, isAnonymousDeclaration: boolean, context: ConverterContext) {
+        const annotationContext: AnnotationContext = {
+            ...context,
+            isAnonymousDeclaration,
+        }
+
         const annotations: string[] = []
 
         for (const annotation of this.annotations) {
-            const result = annotation(node, context)
+            const result = annotation(node, annotationContext)
 
             if (result !== null) annotations.push(result)
         }

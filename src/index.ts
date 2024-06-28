@@ -18,7 +18,7 @@ export {InjectionType} from "./converter/injection.js"
 export {createSimpleInjection} from "./converter/injection.js"
 
 // annotation
-export type {Annotation} from "./converter/annotation.js"
+export type {Annotation, AnnotationContext} from "./converter/annotation.js"
 
 // name resolver
 export type {NameResolver} from "./converter/nameResolver.js"
