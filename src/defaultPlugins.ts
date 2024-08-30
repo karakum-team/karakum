@@ -7,6 +7,7 @@ import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin.js";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin.js";
 import {NullableUnionTypePlugin} from "./converter/plugins/NullableUnionTypePlugin.js";
 import {convertPrimitive} from "./converter/plugins/convertPrimitive.js";
+import {convertVoid} from "./converter/plugins/convertVoid.js";
 import {typeLiteralPlugin} from "./converter/plugins/TypeLiteralPlugin.js";
 import {convertModuleDeclaration} from "./converter/plugins/convertModuleDeclaration.js";
 import {convertModuleBlock} from "./converter/plugins/convertModuleBlock.js";
@@ -107,7 +108,6 @@ export const createPlugins = (
     convertPrimitive(hasKind(ts.SyntaxKind.BooleanKeyword), () => "Boolean"),
     convertPrimitive(hasKind(ts.SyntaxKind.FalseKeyword), () => "Boolean /* false */"),
     convertPrimitive(hasKind(ts.SyntaxKind.TrueKeyword), () => "Boolean /* true */"),
-    convertPrimitive(hasKind(ts.SyntaxKind.VoidKeyword), () => "Unit"),
     convertPrimitive(hasKind(ts.SyntaxKind.NeverKeyword), () => "Nothing"),
     convertPrimitive(hasKind(ts.SyntaxKind.SymbolKeyword), () => "js.symbol.Symbol"),
     convertPrimitive(hasKind(ts.SyntaxKind.BigIntKeyword), () => "js.core.BigInt"),
@@ -121,6 +121,7 @@ export const createPlugins = (
     convertLiteral(ts.isThisTypeNode, () => "Unit"),
     convertLiteral(ts.isTemplateLiteralTypeNode, () => "String"),
 
+    convertVoid,
     convertModuleDeclaration,
     convertModuleBlock,
     convertInterfaceDeclaration,
