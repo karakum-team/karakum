@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.TextNode
 import io.github.sgrishchenko.karakum.gradle.plugin.kotlinJsCompilation
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
@@ -52,7 +53,7 @@ abstract class KarakumConfig : DefaultTask() {
 
                 for ((index, currentNode) in node.withIndex()) {
                     when {
-                        currentNode.isTextual -> arrayNode.set(index, currentNode.textValue().replaceTokens())
+                        currentNode.isTextual -> arrayNode.set(index, TextNode(currentNode.textValue().replaceTokens()))
                         currentNode.isContainerNode -> replaceTokens(currentNode)
                     }
                 }
