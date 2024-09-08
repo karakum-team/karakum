@@ -271,7 +271,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
         const targetFileName = path.resolve(output, outputFileName)
 
-        const body = item.statements
+        const body = item.nodes
             .map(node => render(node))
             .join("\n\n")
 

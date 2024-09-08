@@ -1,4 +1,4 @@
-import {Statement} from "typescript";
+import {Node} from "typescript";
 
 export interface StructureItem {
     fileName: string
@@ -10,7 +10,7 @@ export interface StructureItem {
 }
 
 export interface InputStructureItem extends StructureItem {
-    statements: ReadonlyArray<Statement>
+    nodes: ReadonlyArray<Node>
     meta: {
         type: string
         name: string

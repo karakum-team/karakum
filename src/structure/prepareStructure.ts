@@ -1,4 +1,4 @@
-import ts, {Node} from "typescript";
+import ts, {Node, Declaration} from "typescript";
 import {Configuration} from "../configuration/configuration.js";
 import {InputStructureItem} from "./structure.js";
 import {applyPackageNameMapper} from "./package/applyPackageNameMapper.js";
@@ -7,20 +7,22 @@ import {createBundleInfoItem} from "./bundle/createBundleInfoItem.js";
 
 interface TopLevelMatch {
     name: string,
+    node: Declaration,
     hasRuntime: boolean,
 }
 
-type TopLevelMatcher = (node: Node) => TopLevelMatch | null
+type TopLevelMatcher = (node: Node) => TopLevelMatch[] | null
 
 const classMatcher: TopLevelMatcher = node => {
     if (ts.isClassDeclaration(node)) {
         const name = node.name?.text
         if (!name) return null
 
-        return {
+        return [{
             name,
+            node,
             hasRuntime: true,
-        }
+        }]
     }
 
     return null
@@ -30,10 +32,11 @@ const interfaceMatcher: TopLevelMatcher = node => {
     if (ts.isInterfaceDeclaration(node)) {
         const name = node.name.text;
 
-        return {
+        return [{
             name,
+            node,
             hasRuntime: false,
-        }
+        }]
     }
 
     return null
@@ -43,10 +46,11 @@ const typeAliasMatcher: TopLevelMatcher = node => {
     if (ts.isTypeAliasDeclaration(node)) {
         const name = node.name.text;
 
-        return {
+        return [{
             name,
+            node,
             hasRuntime: false,
-        }
+        }]
     }
 
     return null
@@ -56,10 +60,11 @@ const enumMatcher: TopLevelMatcher = node => {
     if (ts.isEnumDeclaration(node)) {
         const name = node.name.text;
 
-        return {
+        return [{
             name,
+            node,
             hasRuntime: true,
-        }
+        }]
     }
 
     return null
@@ -70,10 +75,30 @@ const functionMatcher: TopLevelMatcher = node => {
         const name = node.name?.text
         if (!name) return null
 
-        return {
+        return [{
             name,
+            node,
             hasRuntime: true,
-        }
+        }]
+    }
+
+    return null
+}
+
+const variableMatcher: TopLevelMatcher = node => {
+    if (ts.isVariableStatement(node)) {
+        return node.declarationList.declarations
+            .map(declaration => {
+                const nameNode = declaration.name
+                if (!ts.isIdentifier(nameNode)) return null
+
+                return {
+                    name: nameNode.text,
+                    node: declaration as Node,
+                    hasRuntime: true,
+                }
+            })
+            .filter((match): match is TopLevelMatch => match != null)
     }
 
     return null
@@ -85,6 +110,7 @@ const topLevelMatchers: TopLevelMatcher[] = [
     typeAliasMatcher,
     enumMatcher,
     functionMatcher,
+    variableMatcher,
 ]
 
 const topLevelMatcher: TopLevelMatcher = node => {
@@ -111,7 +137,7 @@ function applyGranularity(
 
         return [{
             ...bundleItem,
-            statements: items.flatMap(item => item.statements),
+            nodes: items.flatMap(item => item.nodes),
             meta: {
                 type: "Bundle",
                 name: items
@@ -125,24 +151,24 @@ function applyGranularity(
         return items.flatMap(item => {
             const result: InputStructureItem[] = []
 
-            for (const statement of item.statements) {
-                let fileName = item.fileName
-                let hasRuntime = item.hasRuntime
+            for (const node of item.nodes) {
+                const topLevelMatches = topLevelMatcher(node)
 
-                const topLevelMatch = topLevelMatcher(statement)
-
-                if (topLevelMatch !== null) {
-                    fileName = `${topLevelMatch.name}.kt`
-                    hasRuntime = topLevelMatch.hasRuntime
+                if (topLevelMatches !== null) {
+                    for (const topLevelMatch of topLevelMatches) {
+                        result.push({
+                            ...item,
+                            fileName: `${topLevelMatch.name}.kt`,
+                            hasRuntime: topLevelMatch.hasRuntime,
+                            nodes: [topLevelMatch.node],
+                        })
+                    }
+                } else {
+                    result.push({
+                        ...item,
+                        nodes: [node],
+                    })
                 }
-
-                result.push({
-                    ...item,
-
-                    fileName,
-                    hasRuntime,
-                    statements: [statement],
-                })
             }
 
             return result

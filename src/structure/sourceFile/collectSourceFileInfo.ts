@@ -23,11 +23,11 @@ export function collectSourceFileInfo(
             configuration,
         )
 
-        const statements = sourceFile.statements
+        const nodes = sourceFile.statements
 
         return {
             ...item,
-            statements,
+            nodes,
             meta: {
                 type: "Source File",
                 name: sourceFile.fileName

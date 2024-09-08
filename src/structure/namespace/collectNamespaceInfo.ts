@@ -1,4 +1,4 @@
-import ts, {SourceFile, Statement} from "typescript";
+import ts, {SourceFile, Node} from "typescript";
 import {Configuration} from "../../configuration/configuration.js";
 import {traverse} from "../../utils/traverse.js";
 import {createNamespaceInfoItem, NamespaceInfoItem} from "./createNamespaceInfoItem.js";
@@ -29,15 +29,15 @@ export function collectNamespaceInfo(
                     configuration,
                 )
 
-                let statements: Statement[] = []
+                let nodes: Node[] = []
 
                 if (node.body && ts.isModuleBlock(node.body)) {
-                    statements = Array.from(node.body.statements)
+                    nodes = Array.from(node.body.statements)
                 }
 
                 result.push({
                     ...item,
-                    statements,
+                    nodes,
                     meta: {
                         type: "Namespace",
                         name: item.name
