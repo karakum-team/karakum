@@ -7,6 +7,8 @@ import {extractTypeParameters, renderDeclaration, renderReference} from "../extr
 import {ConverterContext} from "../context.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {InjectionType} from "../injection.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 export function convertTypeLiteralBody(node: TypeLiteralNode, context: ConverterContext, render: Render) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
@@ -29,21 +31,32 @@ export function convertTypeLiteral(
     node: TypeLiteralNode,
     name: string,
     typeParameters: string | undefined,
+    isInlined: boolean,
     context: ConverterContext,
     render: Render,
 ) {
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
     const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (isInlined && namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
+
     const injectedHeritageClauses = heritageInjections
         ?.filter(Boolean)
         ?.join(", ")
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${(ifPresent(injectedHeritageClauses, it => ` : ${it}`))} {
+${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}interface ${name}${ifPresent(typeParameters, it => `<${it}>`)}${(ifPresent(injectedHeritageClauses, it => ` : ${it}`))} {
 ${convertTypeLiteralBody(node, context, render)}
 }
     `.trim()
@@ -60,7 +73,7 @@ export const typeLiteralPlugin = createAnonymousDeclarationPlugin(
 
         const typeParameters = extractTypeParameters(node, context)
 
-        const declaration = convertTypeLiteral(node, name, renderDeclaration(typeParameters, render), context, render)
+        const declaration = convertTypeLiteral(node, name, renderDeclaration(typeParameters, render), false, context, render)
 
         const reference = `${name}${ifPresent(renderReference(typeParameters, render), it => `<${it}>`)}`
 

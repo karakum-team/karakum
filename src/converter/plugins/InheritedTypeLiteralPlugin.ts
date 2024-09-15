@@ -9,6 +9,8 @@ import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {convertMappedTypeBody} from "./MappedTypePlugin.js";
 import {convertTypeLiteralBody} from "./TypeLiteralPlugin.js";
 import {InjectionType} from "../injection.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 export function isInheritedTypeLiteral(node: ts.Node): node is IntersectionTypeNode {
     return (
@@ -25,18 +27,29 @@ export function convertInheritedTypeLiteral(
     node: IntersectionTypeNode,
     name: string,
     typeParameters: string | undefined,
+    isInlined: boolean,
     context: ConverterContext,
     render: Render,
 ) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     const injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
     const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
+
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (isInlined && namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
 
     const typeReferences = node.types.filter((it): it is TypeReferenceNode => ts.isTypeReferenceNode(it))
     const typeLiterals = node.types.filter((it): it is TypeLiteralNode => ts.isTypeLiteralNode(it))
@@ -69,7 +82,7 @@ export function convertInheritedTypeLiteral(
         .join("\n")
 
     return `
-${ifPresent(inheritanceModifier, it => `${it} `)}external interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${(ifPresent(fullHeritageClauses, it => ` : ${it}`))} {
+${ifPresent(inheritanceModifier, it => `${it} `)}${externalModifier}interface ${name}${ifPresent(typeParameters, it => `<${it}> `)}${(ifPresent(fullHeritageClauses, it => ` : ${it}`))} {
 ${ifPresent(accessors, it => `${it}\n`)}${members}${ifPresent(injectedMembers, it => `\n${it}`)}
 }
     `.trim()
@@ -83,7 +96,7 @@ export const inheritedTypeLiteralPlugin = createAnonymousDeclarationPlugin(
 
         const typeParameters = extractTypeParameters(node, context)
 
-        const declaration = convertInheritedTypeLiteral(node, name, renderDeclaration(typeParameters, render), context, render)
+        const declaration = convertInheritedTypeLiteral(node, name, renderDeclaration(typeParameters, render), false, context, render)
 
         const reference = `${name}${ifPresent(renderReference(typeParameters, render), it => `<${it}>`)}`
 

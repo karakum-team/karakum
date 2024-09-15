@@ -7,6 +7,8 @@ import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
 import {ifPresent, Render} from "../render.js";
 import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {InjectionType} from "../injection.js";
+import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
+import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
@@ -39,12 +41,15 @@ export function isNullableStringUnionType(node: ts.Node, context: ConverterConte
 export function convertStringUnionType(
     node: UnionTypeNode,
     name: string,
+    isInlined: boolean,
     context: ConverterContext,
     render: Render,
 ) {
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
     const types = flatUnionTypes(node, context)
@@ -98,12 +103,20 @@ val ${key}: ${name}
 
     const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
+    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+
+    let externalModifier = "external "
+
+    if (isInlined && namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+        externalModifier = ""
+    }
+
     const injectedHeritageClauses = heritageInjections
         ?.filter(Boolean)
         ?.join(", ")
 
     const declaration = `
-sealed external interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
+sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
 ${body}${ifPresent(comment, it => (
     "\n" + `
@@ -131,7 +144,7 @@ export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
 
         const name = context.resolveName(node)
 
-        const {declaration, nullable} = convertStringUnionType(node, name, context, render)
+        const {declaration, nullable} = convertStringUnionType(node, name, false, context, render)
 
         const reference = nullable ? `${name}?` : name
 

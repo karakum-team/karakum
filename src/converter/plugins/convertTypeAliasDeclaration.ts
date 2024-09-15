@@ -28,19 +28,19 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
         ?.join(", ")
 
     if (ts.isTypeLiteralNode(node.type)) {
-        return convertTypeLiteral(node.type, name, typeParameters, context, render)
+        return convertTypeLiteral(node.type, name, typeParameters, true, context, render)
     }
 
     if (ts.isMappedTypeNode(node.type)) {
-        return convertMappedType(node.type, name, typeParameters, context, render)
+        return convertMappedType(node.type, name, typeParameters, true, context, render)
     }
 
     if (isStringUnionType(node.type, context)) {
-        return convertStringUnionType(node.type, name, context, render).declaration
+        return convertStringUnionType(node.type, name, true, context, render).declaration
     }
 
     if (isInheritedTypeLiteral(node.type)) {
-        return convertInheritedTypeLiteral(node.type, name, typeParameters, context, render)
+        return convertInheritedTypeLiteral(node.type, name, typeParameters, true, context, render)
     }
 
     if (

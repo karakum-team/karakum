@@ -8,6 +8,17 @@ package sandbox.namespace
 
 external object ObjectNamespace {
 val objectNamespaceValue: Double
+sealed interface objectNamespaceUnion {
+companion object {
+@seskar.js.JsValue("0")
+val `0`: objectNamespaceUnion
+@seskar.js.JsValue("1")
+val `1`: objectNamespaceUnion
+}
+}
+interface ObjectNamespaceInterface {
+var someProperty: ObjectNamespaceInterfaceSomeProperty
+}
 object InnerObjectNamespace {
 val innerObjectNamespaceValue: Double
 }

@@ -20,6 +20,12 @@ declare module "package-namespace" {
 declare namespace ObjectNamespace {
     const objectNamespaceValue: number
 
+    type objectNamespaceUnion = "0" | "1";
+
+    interface ObjectNamespaceInterface {
+        someProperty: "3" | "4"
+    }
+
     namespace InnerObjectNamespace {
         const innerObjectNamespaceValue: number
     }
