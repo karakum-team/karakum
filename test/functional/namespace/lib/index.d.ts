@@ -20,6 +20,9 @@ declare module "package-namespace" {
 declare namespace ObjectNamespace {
     const objectNamespaceValue: number
 
+    /** my favorite constant */
+    const objectNamespaceValueWithComment: number
+
     type objectNamespaceUnion = "0" | "1";
 
     interface ObjectNamespaceInterface {
@@ -33,6 +36,9 @@ declare namespace ObjectNamespace {
 
 declare namespace IgnoreNamespace {
     const topLevelValue: number
+
+    /** my favorite constant */
+    const topLevelValueWithComment: number
 }
 
 declare module "will-be-mapped" {

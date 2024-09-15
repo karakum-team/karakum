@@ -3,6 +3,8 @@ import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
+import {CommentService, commentServiceKey} from "./CommentPlugin.js";
+import {ConfigurationService, configurationServiceKey} from "./ConfigurationPlugin.js";
 
 export const convertVariableDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isVariableDeclaration(node)) return null
@@ -13,6 +15,8 @@ export const convertVariableDeclaration = createSimplePlugin((node, context, ren
     // skip initializer
     node.initializer && checkCoverageService?.cover(node.initializer)
 
+    const commentService = context.lookupService<CommentService>(commentServiceKey)
+    const configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
 
@@ -30,6 +34,18 @@ export const convertVariableDeclaration = createSimplePlugin((node, context, ren
         externalModifier = ""
     }
 
+    let leadingComment = ""
+
+    if (
+        configurationService?.configuration.granularity === "top-level"
+        && (
+            namespace === undefined
+            || namespaceInfoService?.resolveNamespaceStrategy(namespace) === "package"
+        )
+    ) {
+        leadingComment = commentService?.renderLeadingComments(node.parent) ?? ""
+    }
+
     let type: string
 
     if (node.type) {
@@ -38,5 +54,5 @@ export const convertVariableDeclaration = createSimplePlugin((node, context, ren
         type = "Any? /* should be inferred */" // TODO: infer types
     }
 
-    return `${externalModifier}${modifier}${name}: ${type}`
+    return `${leadingComment}${externalModifier}${modifier}${name}: ${type}`
 })

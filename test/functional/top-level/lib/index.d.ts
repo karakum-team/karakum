@@ -2,6 +2,9 @@ const myConst1: string
 
 const myConst2: number
 
+/** my favorite constant */
+const myConstWithComment: number
+
 function myFunction1(firstParam: string, secondParam: number): void
 
 function myFunction1(firstParam: boolean, secondParam: number): void
