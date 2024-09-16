@@ -4,6 +4,9 @@
 
 package sandbox.top.level
 
+// to provoke a case-only file name conflict with MyClass
+external fun myClass(firstParam: String, secondParam: Double): Unit
+
 external class MyClass {
 var field: Boolean
 }

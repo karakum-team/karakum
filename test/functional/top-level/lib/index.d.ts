@@ -13,6 +13,9 @@ function myFunction2(firstParam: string, secondParam: number): void
 
 function myFunction2(firstParam: boolean, secondParam: number): void
 
+// to provoke a case-only file name conflict with MyClass
+function myClass(firstParam: string, secondParam: number): void
+
 class MyClass {
     field: boolean
 }

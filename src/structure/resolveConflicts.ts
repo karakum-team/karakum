@@ -55,7 +55,7 @@ function resolveTargetFileConflicts(targetFiles: TargetFile[], configuration: Co
         targetFiles,
         (item) => packageToOutputFileName(
             item.package,
-            item.fileName,
+            item.fileName.toLowerCase(),
             configuration
         ),
         (outputFileName, item, other) => {
@@ -102,7 +102,7 @@ function resolveTargetFileConflicts(targetFiles: TargetFile[], configuration: Co
 function resolvePrimaryFileConflicts(primaryFiles: GeneratedFile[], configuration: Configuration): GeneratedFile[] {
     const normalizedPrimaryFiles = normalizeItems(
         primaryFiles,
-        (item) => item.fileName,
+        (item) => item.fileName.toLowerCase(),
         (outputFileName) => {
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "error"
 
@@ -136,7 +136,7 @@ function resolveDerivedFilesConflicts(primaryFiles: DerivedFile[], configuration
         primaryFiles,
         (item) => packageToOutputFileName(
             item.package,
-            item.fileName,
+            item.fileName.toLowerCase(),
             configuration
         ),
         (outputFileName, item, other) => {
@@ -175,7 +175,7 @@ function resolveCompoundFilesConflicts(
 ): GeneratedFile[] {
     const normalizedCompoundFiles = normalizeItems(
         compoundFiles,
-        (item) => item.fileName,
+        (item) => item.fileName.toLowerCase(),
         (outputFileName, item, other) => {
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "join"
 
