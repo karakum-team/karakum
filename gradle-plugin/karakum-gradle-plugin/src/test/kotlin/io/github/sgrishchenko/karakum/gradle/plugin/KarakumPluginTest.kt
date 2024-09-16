@@ -13,7 +13,7 @@ class KarakumPluginTest {
         project.plugins.apply("io.github.sgrishchenko.karakum")
 
         // Verify tasks
-        assertNotNull(project.tasks.findByName("copyKarakumPlugins"))
+        assertNotNull(project.tasks.findByName("syncKarakumExtensions"))
         assertNotNull(project.tasks.findByName("configureKarakum"))
         assertNotNull(project.tasks.findByName("generateKarakumExternals"))
     }
