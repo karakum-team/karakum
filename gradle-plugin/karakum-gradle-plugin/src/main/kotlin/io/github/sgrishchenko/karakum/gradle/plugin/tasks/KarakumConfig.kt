@@ -5,19 +5,41 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
-import io.github.sgrishchenko.karakum.gradle.plugin.kotlinJsCompilation
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-
+import javax.inject.Inject
 
 abstract class KarakumConfig : DefaultTask() {
+    @get:Inject
+    abstract val layout: ProjectLayout
 
     @get:InputFile
     abstract val configFile: RegularFileProperty
+
+    @get:Internal("Only the path matters, handled in cwdPath")
+    abstract val cwd: DirectoryProperty
+
+    @get:Input
+    val cwdPath = cwd.map { it.asFile.absoluteFile.invariantSeparatorsPath }
+
+    @get:Internal("Only the path matters, handled in buildSrcPath")
+    abstract val buildSrc: DirectoryProperty
+
+    @get:Input
+    val buildSrcPath = buildSrc.map { it.asFile.absoluteFile.invariantSeparatorsPath }
+
+    @get:Internal("Only the path matters, handled in nodeModulesPath")
+    abstract val nodeModules: DirectoryProperty
+
+    @get:Input
+    val nodeModulesPath = nodeModules.map { it.asFile.absoluteFile.invariantSeparatorsPath }
 
     @get:OutputFile
     abstract val destinationFile: RegularFileProperty
@@ -26,13 +48,12 @@ abstract class KarakumConfig : DefaultTask() {
 
     private val replacements
         get() = mapOf(
-            "<buildSrc>" to project.rootProject.layout.projectDirectory.dir("buildSrc"),
-            "<nodeModules>" to project.rootProject.layout.buildDirectory.dir("js/node_modules").get(),
-        ).mapValues { it.value.asFile }
+            "<buildSrc>" to buildSrcPath.get(),
+            "<nodeModules>" to nodeModulesPath.get(),
+        )
 
-    private fun String.replaceTokens() = replacements.entries.fold(this) { acc, (token, file) ->
-        val posixPath = file.absolutePath.replace('\\', '/')
-        acc.replace(token, posixPath)
+    private fun String.replaceTokens() = replacements.entries.fold(this) { acc, (token, replacement) ->
+        acc.replace(token, replacement)
     }
 
     private fun replaceTokens(node: JsonNode) {
@@ -63,14 +84,14 @@ abstract class KarakumConfig : DefaultTask() {
 
     private fun replaceCwd(configNode: JsonNode) {
         configNode as ObjectNode
-        configNode.put("cwd", project.kotlinJsCompilation.npmProject.dir.get().asFile.absolutePath)
+        configNode.put("cwd", cwdPath.get())
     }
 
     private fun replaceOutput(configNode: JsonNode) {
         configNode as ObjectNode
         val outputNode = requireNotNull(configNode.get("output"))
         val output = outputNode.textValue()
-        configNode.put("output", project.layout.projectDirectory.dir(output).asFile.absolutePath)
+        configNode.put("output", layout.projectDirectory.dir(output).asFile.absoluteFile.invariantSeparatorsPath)
     }
 
     @TaskAction

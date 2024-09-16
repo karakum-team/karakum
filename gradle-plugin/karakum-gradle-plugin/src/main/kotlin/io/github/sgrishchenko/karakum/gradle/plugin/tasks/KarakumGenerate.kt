@@ -7,11 +7,15 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.*
+import org.gradle.process.ExecOperations
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.RequiresNpmDependencies
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
+import javax.inject.Inject
 
 abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
+    @get:Inject
+    abstract val exec: ExecOperations
 
     @get:InputFile
     abstract val configFile: RegularFileProperty
@@ -30,7 +34,7 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
 
     @TaskAction
     fun generate() {
-        project.exec {
+        exec.exec {
             compilation.npmProject.useTool(
                 this,
                 "karakum/build/cli.js",

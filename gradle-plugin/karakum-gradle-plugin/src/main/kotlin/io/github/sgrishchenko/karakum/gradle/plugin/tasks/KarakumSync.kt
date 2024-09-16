@@ -2,14 +2,18 @@ package io.github.sgrishchenko.karakum.gradle.plugin.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import javax.inject.Inject
 
+abstract class KarakumSync : DefaultTask() {
+    @get:Inject
+    abstract val fs: FileSystemOperations
 
-abstract class KarakumCopy : DefaultTask() {
     @get:InputFiles
     abstract val extensionSource: Property<FileTree>
 
@@ -17,8 +21,8 @@ abstract class KarakumCopy : DefaultTask() {
     abstract val destinationDirectory: DirectoryProperty
 
     @TaskAction
-    fun copy() {
-        project.copy {
+    fun sync() {
+        fs.sync {
             from(extensionSource)
             into(destinationDirectory)
         }
