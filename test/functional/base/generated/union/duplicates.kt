@@ -11,9 +11,7 @@ sealed external interface Enc {
 companion object {
 @seskar.js.JsValue("utf8")
 val utf8: Enc
-/*
-Duplicated names were generated:
-utf8 for "utf-8"
-*/
+@seskar.js.JsValue("utf-8")
+val utf8_2: Enc
 }
 }

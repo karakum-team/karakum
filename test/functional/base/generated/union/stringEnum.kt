@@ -22,14 +22,16 @@ sealed external interface Operator {
 companion object {
 @seskar.js.JsValue("")
 val `_`: Operator
-/*
-Duplicated names were generated:
-`_` for "="
-`_` for "<"
-`_` for ">"
-`_` for "<="
-`_` for ">="
-*/
+@seskar.js.JsValue("=")
+val __2: Operator
+@seskar.js.JsValue("<")
+val __3: Operator
+@seskar.js.JsValue(">")
+val __4: Operator
+@seskar.js.JsValue("<=")
+val __5: Operator
+@seskar.js.JsValue(">=")
+val __6: Operator
 }
 }
 sealed external interface SwitcherResult {

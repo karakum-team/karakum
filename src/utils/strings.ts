@@ -32,14 +32,22 @@ export function escapeIdentifier(string: string) {
         return `\`${string}\``
     }
 
+    if (/^_+$/.test(string)) {
+        return `\`${string}\``
+    }
+
     return string
+}
+
+export function notEscapedIdentifier(string: string) {
+    return camelize(
+        string.replace(/\W/g, "-")
+    )
 }
 
 export function identifier(string: string) {
     return escapeIdentifier(
-        camelize(
-            string.replace(/\W/g, "-")
-        )
+        notEscapedIdentifier(string)
     )
 }
 
