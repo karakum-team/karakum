@@ -86,7 +86,7 @@ function resolveTargetFileConflicts(targetFiles: TargetFile[], configuration: Co
                 }
             }
 
-            throw new Error(`Unknown namespace strategy: ${conflictResolutionStrategy}`)
+            throw new Error(`Unknown conflict resolution strategy: ${conflictResolutionStrategy}`)
         }
     )
 
@@ -120,7 +120,7 @@ function resolvePrimaryFileConflicts(primaryFiles: GeneratedFile[], configuratio
                 return null
             }
 
-            throw new Error(`Unknown namespace strategy: ${conflictResolutionStrategy}`)
+            throw new Error(`Unknown conflict resolution strategy: ${conflictResolutionStrategy}`)
         }
     )
 
@@ -158,7 +158,7 @@ function resolveDerivedFilesConflicts(primaryFiles: DerivedFile[], configuration
                 }
             }
 
-            throw new Error(`Unknown namespace strategy: ${conflictResolutionStrategy}`)
+            throw new Error(`Unknown conflict resolution strategy: ${conflictResolutionStrategy}`)
         }
     )
 
@@ -198,7 +198,7 @@ function resolveCompoundFilesConflicts(
                 }
             }
 
-            throw new Error(`Unknown namespace strategy: ${conflictResolutionStrategy}`)
+            throw new Error(`Unknown conflict resolution strategy: ${conflictResolutionStrategy}`)
         }
     )
 
