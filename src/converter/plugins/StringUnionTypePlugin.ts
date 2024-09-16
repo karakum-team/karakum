@@ -69,9 +69,10 @@ export function convertStringUnionType(
             checkCoverageService?.cover(literal)
 
             const value = literal.text
-            const key = value === ""
+            const valueAsIdentifier = identifier(value)
+            const key = (value === "") || (valueAsIdentifier === "")
                 ? "`_`"
-                : identifier(value)
+                : valueAsIdentifier
             return [key, value] as const
         })
 
