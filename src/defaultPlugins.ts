@@ -56,6 +56,7 @@ import {convertIndexedSignatureDeclaration} from "./converter/plugins/convertInd
 import {DeclarationMergingPlugin} from "./converter/plugins/DeclarationMergingPlugin.js";
 import {convertTypeQuery} from "./converter/plugins/convertTypeQuery.js";
 import {stringUnionTypePlugin} from "./converter/plugins/StringUnionTypePlugin.js";
+import {numericUnionTypePlugin} from "./converter/plugins/NumericUnionTypePlugin.js";
 import {convertLiteral} from "./converter/plugins/convertLiteral.js";
 import {inheritedTypeLiteralPlugin} from "./converter/plugins/InheritedTypeLiteralPlugin.js";
 import {Injection} from "./converter/injection.js";
@@ -99,6 +100,7 @@ export const createPlugins = (
     typeLiteralPlugin,
     mappedTypePlugin,
     stringUnionTypePlugin,
+    numericUnionTypePlugin,
     inheritedTypeLiteralPlugin,
 
     convertPrimitive(hasKind(ts.SyntaxKind.AnyKeyword), () => "Any?"),
