@@ -48,6 +48,8 @@ export interface SchemaConfiguration {
      * */
     packageNameMapper?: Record<string, string>
 
+    unionNameResolvers?: string | string[]
+
     /**
      * @TJS-type object
      * @additionalProperties { "type": "array", "items": { "type": "string" } }
@@ -118,6 +120,7 @@ export interface Configuration extends PartialConfiguration {
 
     moduleNameMapper: Record<string, string>
     packageNameMapper: Record<string, string>
+    unionNameResolvers: string[]
 
     importInjector: Record<string, string[]>
     importMapper: Record<string, string | Record<string, string>>

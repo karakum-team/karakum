@@ -2,6 +2,7 @@ import ts, {Node, Program} from "typescript";
 import {Configuration} from "./configuration/configuration.js";
 import {ConverterPlugin} from "./converter/plugin.js";
 import {NameResolver} from "./converter/nameResolver.js";
+import {UnionNameResolver} from "./converter/unionNameResolver.js";
 import {ConfigurationPlugin} from "./converter/plugins/ConfigurationPlugin.js";
 import {CheckKindsPlugin} from "./converter/plugins/CheckKindsPlugin.js";
 import {CheckCoveragePlugin} from "./converter/plugins/CheckCoveragePlugin.js";
@@ -44,6 +45,7 @@ import {convertTypeOperator} from "./converter/plugins/convertTypeOperator.js";
 import {convertImportType} from "./converter/plugins/convertImportType.js";
 import {convertPropertyAccessExpression} from "./converter/plugins/convertPropertyAccessExpression.js";
 import {NameResolverPlugin} from "./converter/plugins/NameResolverPlugin.js";
+import {UnionNameResolverPlugin} from "./converter/plugins/UnionNameResolverPlugin.js";
 import {InheritanceModifierPlugin} from "./converter/plugins/InheritanceModifierPlugin.js";
 import {InheritanceModifier} from "./converter/inheritanceModifier.js";
 import {mappedTypePlugin} from "./converter/plugins/MappedTypePlugin.js";
@@ -72,6 +74,7 @@ export const createPlugins = (
     injections: Injection[],
     nameResolvers: NameResolver[],
     inheritanceModifiers: InheritanceModifier[],
+    unionNameResolvers: UnionNameResolver[],
     varianceModifiers: VarianceModifier[],
     program: Program,
     namespaceInfo: NamespaceInfo,
@@ -82,6 +85,7 @@ export const createPlugins = (
     new InjectionPlugin(injections),
     new NameResolverPlugin(nameResolvers),
     new InheritanceModifierPlugin(inheritanceModifiers),
+    new UnionNameResolverPlugin(unionNameResolvers),
     new VarianceModifierPlugin(varianceModifiers),
     new NamespaceInfoPlugin(namespaceInfo),
     new ImportInfoPlugin(program, importInfo),

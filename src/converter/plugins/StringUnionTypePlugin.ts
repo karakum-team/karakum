@@ -1,6 +1,7 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
 import {escapeIdentifier, notEscapedIdentifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {UnionNameResolverService, unionNameResolverServiceKey} from "./UnionNameResolverPlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
@@ -48,6 +49,8 @@ export function convertStringUnionType(
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const unionNameResolverService = context.lookupService<UnionNameResolverService>(unionNameResolverServiceKey)
+    if (unionNameResolverService === undefined) throw new Error("UnionNameResolverService required")
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
@@ -69,10 +72,16 @@ export function convertStringUnionType(
             checkCoverageService?.cover(literal)
 
             const value = literal.text
-            const valueAsIdentifier = notEscapedIdentifier(value)
-            const key = (value === "") || (valueAsIdentifier === "")
-                ? "_"
-                : valueAsIdentifier
+
+            let key = unionNameResolverService.resolveUnionName(literal, context)
+
+            if (!key) {
+                const valueAsIdentifier = notEscapedIdentifier(value)
+                key = (value === "") || (valueAsIdentifier === "")
+                    ? "_"
+                    : valueAsIdentifier
+            }
+
             return [key, value] as const
         })
 

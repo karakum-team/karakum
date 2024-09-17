@@ -14,6 +14,7 @@ import {minimatch} from "minimatch";
 import {createRender} from "./converter/render.js";
 import {NameResolver} from "./converter/nameResolver.js";
 import {AnnotationPlugin} from "./converter/plugins/AnnotationPlugin.js";
+import {UnionNameResolver} from "./converter/unionNameResolver.js";
 import {InheritanceModifier} from "./converter/inheritanceModifier.js";
 import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
@@ -98,6 +99,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         annotations,
         nameResolvers,
         inheritanceModifiers,
+        unionNameResolvers,
         varianceModifiers,
         compilerOptions,
         cwd,
@@ -144,6 +146,12 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
         inheritanceModifiers,
+        cwd,
+    )
+
+    const customUnionNameResolvers = await loadExtensions<UnionNameResolver>(
+        "Union Name Resolver",
+        unionNameResolvers,
         cwd,
     )
 
@@ -222,6 +230,7 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         customInjections,
         customNameResolvers,
         customInheritanceModifiers,
+        customUnionNameResolvers,
         customVarianceModifiers,
         program,
         namespaceInfo,

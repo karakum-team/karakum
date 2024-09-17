@@ -240,6 +240,20 @@
             ],
             "title": "plugins"
         },
+        "unionNameResolvers": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "unionNameResolvers"
+        },
         "varianceModifiers": {
             "anyOf": [
                 {
