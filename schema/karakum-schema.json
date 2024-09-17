@@ -26,6 +26,7 @@
             "type": "string"
         }
     },
+    "additionalProperties": false,
     "properties": {
         "annotations": {
             "anyOf": [
@@ -43,6 +44,7 @@
         },
         "compilerOptions": {
             "$ref": "https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions",
+            "additionalProperties": false,
             "title": "compilerOptions",
             "type": "object"
         },

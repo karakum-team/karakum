@@ -14,10 +14,10 @@ const conflictResolutionStrategySchemaFileName = "schema/conflict-resolution-str
 const configurationSchemaFileName = "schema/karakum-schema.json"
 
 await Promise.all([
-    exec(`typescript-json-schema --titles --include src/configuration/configuration.ts --out ${granularitySchemaFileName} tsconfig.json Granularity`),
-    exec(`typescript-json-schema --titles --include src/configuration/configuration.ts --out ${namespaceStrategySchemaFileName} tsconfig.json NamespaceStrategy`),
-    exec(`typescript-json-schema --titles --include src/configuration/configuration.ts --out ${conflictResolutionStrategySchemaFileName} tsconfig.json ConflictResolutionStrategy`),
-    exec(`typescript-json-schema --titles --include src/configuration/configuration.ts --out ${configurationSchemaFileName} tsconfig.json SchemaConfiguration`),
+    exec(`typescript-json-schema --titles --noExtraProps --include src/configuration/configuration.ts --out ${granularitySchemaFileName} tsconfig.json Granularity`),
+    exec(`typescript-json-schema --titles --noExtraProps --include src/configuration/configuration.ts --out ${namespaceStrategySchemaFileName} tsconfig.json NamespaceStrategy`),
+    exec(`typescript-json-schema --titles --noExtraProps --include src/configuration/configuration.ts --out ${conflictResolutionStrategySchemaFileName} tsconfig.json ConflictResolutionStrategy`),
+    exec(`typescript-json-schema --titles --noExtraProps --include src/configuration/configuration.ts --out ${configurationSchemaFileName} tsconfig.json SchemaConfiguration`),
 ])
 
 const granularitySchema: Schema = JSON.parse(await fs.readFile(granularitySchemaFileName, "utf8"))
