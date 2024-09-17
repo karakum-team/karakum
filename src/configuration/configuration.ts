@@ -75,6 +75,7 @@ export interface SchemaConfiguration {
     /**
      * @TJS-type object
      * @$ref https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions
+     * @additionalProperties false
      * */
     compilerOptions?: Record<string, unknown>
 
