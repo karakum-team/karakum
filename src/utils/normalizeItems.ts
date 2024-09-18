@@ -24,7 +24,7 @@ export function normalizeItems<T>(
                 let existingConflict = conflicts.get(key)
 
                 if (!existingConflict) {
-                    existingConflict = []
+                    existingConflict = [existingItem]
                     conflicts.set(key, existingConflict)
                 }
 
