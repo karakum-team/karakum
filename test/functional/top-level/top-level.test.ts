@@ -6,7 +6,7 @@ testGeneration("top-level", import.meta.url, output => ({
     libraryName: "sandbox-top-level",
     granularity: "top-level",
     moduleNameMapper: {
-        ".*": "sandbox-top-level"
+        "^(?!sandbox-top-level/myFunction1$).*": "sandbox-top-level"
     },
     verbose: true,
 }))

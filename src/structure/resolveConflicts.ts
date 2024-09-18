@@ -59,6 +59,14 @@ function resolveTargetFileConflicts(targetFiles: TargetFile[], configuration: Co
             configuration
         ),
         (outputFileName, item, other) => {
+            if (item.body === "") {
+                return other
+            }
+
+            if (other.body === "") {
+                return item
+            }
+
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "join"
 
             if (conflictResolutionStrategy === "error") {
@@ -103,7 +111,15 @@ function resolvePrimaryFileConflicts(primaryFiles: GeneratedFile[], configuratio
     const normalizedPrimaryFiles = normalizeItems(
         primaryFiles,
         (item) => item.fileName,
-        (outputFileName) => {
+        (outputFileName, item, other) => {
+            if (item.body === "") {
+                return other
+            }
+
+            if (other.body === "") {
+                return item
+            }
+
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "error"
 
             if (conflictResolutionStrategy === "error") {
@@ -140,6 +156,14 @@ function resolveDerivedFilesConflicts(primaryFiles: DerivedFile[], configuration
             configuration
         ),
         (outputFileName, item, other) => {
+            if (item.body === "") {
+                return other
+            }
+
+            if (other.body === "") {
+                return item
+            }
+
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "join"
 
             if (conflictResolutionStrategy === "error") {
@@ -177,6 +201,14 @@ function resolveCompoundFilesConflicts(
         compoundFiles,
         (item) => item.fileName,
         (outputFileName, item, other) => {
+            if (item.body === "") {
+                return other
+            }
+
+            if (other.body === "") {
+                return item
+            }
+
             const conflictResolutionStrategy = resolveConflictResolutionStrategy(outputFileName, configuration) ?? "join"
 
             if (conflictResolutionStrategy === "error") {
