@@ -4,8 +4,6 @@
 
 package `package`.namespace
 
-
-
 external object ObjectNamespace {
 val objectNamespaceValue: Double
 }
