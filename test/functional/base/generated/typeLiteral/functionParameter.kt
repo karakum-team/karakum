@@ -9,7 +9,7 @@ package sandbox.base.typeLiteral
 
 typealias HydrationState = String
 
-external fun createMemoryRouter(routes: Array<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
+external fun createMemoryRouter(routes: js.array.ReadonlyArray<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
 
 external class MyClass {
 constructor (options: MyClassOptions)
@@ -29,7 +29,7 @@ typealias BlockerFunction = (args: BlockerFunctionArgs) -> Boolean
 external interface CreateMemoryRouterOpts {
 var basename: String?
 var hydrationData: HydrationState?
-var initialEntries: Array<String>?
+var initialEntries: js.array.ReadonlyArray<String>?
 var initialIndex: Double?
 }
 
@@ -40,12 +40,12 @@ var second: Double
 
 external interface MyClassMethodOptions {
 var third: Boolean
-var fourth: Array<String>
+var fourth: js.array.ReadonlyArray<String>
 }
 
 external interface MyInterfaceMethodOptions {
 var first: Boolean
-var second: Array<String>
+var second: js.array.ReadonlyArray<String>
 }
 
 external interface ShouldRevalidateFunctionArgs {

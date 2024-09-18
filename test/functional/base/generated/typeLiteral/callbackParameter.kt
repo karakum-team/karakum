@@ -18,20 +18,20 @@ fun method(cb: (options: MyInterfaceMethodCbOptions) -> Unit): String
 }
 external interface MyClassConflictHandlerConflictType {
 var third: Boolean
-var fourth: Array<String>
+var fourth: js.array.ReadonlyArray<String>
 }
 
 external interface MyClassMethodCbOptions {
 var third: Boolean
-var fourth: Array<String>
+var fourth: js.array.ReadonlyArray<String>
 }
 
 external interface MyInterfaceConflictHandlerConflictType {
 var first: Boolean
-var second: Array<String>
+var second: js.array.ReadonlyArray<String>
 }
 
 external interface MyInterfaceMethodCbOptions {
 var first: Boolean
-var second: Array<String>
+var second: js.array.ReadonlyArray<String>
 }

@@ -7,6 +7,6 @@
 
 package sandbox.base.array
 
-typealias SimpleArray = Array<String>
+typealias SimpleArray = js.array.ReadonlyArray<String>
 
 typealias SimpleReadonlyArray = js.array.ReadonlyArray<String>
