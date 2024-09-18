@@ -26,7 +26,6 @@ import {convertConstructorDeclaration} from "./converter/plugins/convertConstruc
 import {convertFunctionType} from "./converter/plugins/convertFunctionType.js";
 import {convertLiteralType} from "./converter/plugins/convertLiteralType.js";
 import {convertArrayType} from "./converter/plugins/convertArrayType.js";
-import {convertReadonlyArrayType} from "./converter/plugins/convertReadonlyArrayType.js";
 import {convertTypeAliasDeclaration} from "./converter/plugins/convertTypeAliasDeclaration.js";
 import {convertEnumDeclaration} from "./converter/plugins/convertEnumDeclaration.js";
 import {convertEnumMember} from "./converter/plugins/convertEnumMember.js";
@@ -139,7 +138,6 @@ export const createPlugins = (
     convertFunctionType,
     convertLiteralType,
     convertArrayType,
-    convertReadonlyArrayType,
     convertTypeAliasDeclaration,
     convertEnumDeclaration,
     convertEnumMember,
