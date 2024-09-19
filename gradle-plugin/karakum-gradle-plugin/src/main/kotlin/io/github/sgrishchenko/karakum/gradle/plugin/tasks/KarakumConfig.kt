@@ -41,6 +41,12 @@ abstract class KarakumConfig : DefaultTask() {
     @get:Input
     val nodeModulesPath = nodeModules.map { it.asFile.absoluteFile.invariantSeparatorsPath }
 
+    @get:Internal("Only the path matters, handled in packageNodeModulesPath")
+    abstract val packageNodeModules: DirectoryProperty
+
+    @get:Input
+    val packageNodeModulesPath = packageNodeModules.map { it.asFile.absoluteFile.invariantSeparatorsPath }
+
     @get:OutputFile
     abstract val destinationFile: RegularFileProperty
 
@@ -50,6 +56,7 @@ abstract class KarakumConfig : DefaultTask() {
         get() = mapOf(
             "<buildSrc>" to buildSrcPath.get(),
             "<nodeModules>" to nodeModulesPath.get(),
+            "<packageNodeModules>" to packageNodeModulesPath.get(),
         )
 
     private fun String.replaceTokens() = replacements.entries.fold(this) { acc, (token, replacement) ->
