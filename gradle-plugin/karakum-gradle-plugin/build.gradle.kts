@@ -12,6 +12,10 @@ dependencies {
     compileOnly(kotlin("gradle-plugin"))
 
     implementation(libs.jackson.databind)
+    implementation(libs.ktlint.ruleEngine)
+    implementation(libs.ktlint.ruleEngine.core)
+    implementation(libs.ktlint.ruleset.standard)
+    implementation(libs.ec4j)
 
     testImplementation(kotlin("test"))
 }
