@@ -36,6 +36,7 @@ class KarakumPlugin : Plugin<Project> {
                 cwd.convention(project.kotlinJsCompilation.npmProject.dir)
                 buildSrc.convention(project.rootProject.layout.projectDirectory.dir("buildSrc"))
                 nodeModules.convention(project.rootProject.layout.buildDirectory.dir("js/node_modules"))
+                packageNodeModules.convention(project.rootProject.layout.buildDirectory.dir("js/packages").map { it.dir(project.name).dir("node_modules") })
 
                 destinationFile.convention(layout.buildDirectory.file("karakum/$KARAKUM_CONFIG_FILE"))
             }
