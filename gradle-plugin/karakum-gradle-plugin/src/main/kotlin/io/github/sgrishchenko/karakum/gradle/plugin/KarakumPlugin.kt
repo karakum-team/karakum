@@ -1,25 +1,18 @@
 package io.github.sgrishchenko.karakum.gradle.plugin
 
-import io.github.sgrishchenko.karakum.gradle.plugin.service.KtLintService
 import io.github.sgrishchenko.karakum.gradle.plugin.tasks.KarakumConfig
 import io.github.sgrishchenko.karakum.gradle.plugin.tasks.KarakumGenerate
 import io.github.sgrishchenko.karakum.gradle.plugin.tasks.KarakumSync
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
-import org.gradle.api.services.BuildServiceRegistry
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.provideDelegate
-import org.gradle.kotlin.dsl.registerIfAbsent
 import org.gradle.kotlin.dsl.registering
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
-import javax.inject.Inject
 
-abstract class KarakumPlugin : Plugin<Project> {
-    @get:Inject
-    abstract val sharedServices: BuildServiceRegistry
-
+class KarakumPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = with(project) {
         plugins.withId("org.jetbrains.kotlin.multiplatform") {
             val karakum = extensions.create<KarakumExtension>("karakum").apply {
@@ -57,8 +50,6 @@ abstract class KarakumPlugin : Plugin<Project> {
                 val npmProjectDirectory = kotlinJsCompilation.npmProject.dir.map { it.asFile }
                 destinationDirectory.convention(layout.dir(npmProjectDirectory).map { it.dir("karakum") })
             }
-
-            sharedServices.registerIfAbsent("ktlintService", KtLintService::class)
 
             val generateKarakumExternals by tasks.registering(KarakumGenerate::class) {
                 group = KARAKUM_GRADLE_PLUGIN_GROUP

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.sgrishchenko.karakum.gradle.plugin.karakumDependency
 import io.github.sgrishchenko.karakum.gradle.plugin.kotlinJsCompilation
-import io.github.sgrishchenko.karakum.gradle.plugin.service.KtLintService
 import io.github.sgrishchenko.karakum.gradle.plugin.typescriptDependency
 import io.github.sgrishchenko.karakum.gradle.plugin.worker.KtLintFormatWorker
 import org.ec4j.core.Resource.Resources
@@ -14,8 +13,6 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.provider.Property
-import org.gradle.api.services.ServiceReference
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.submit
 import org.gradle.process.ExecOperations
@@ -36,9 +33,6 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
 
     @get:Inject
     abstract val workerExecutor: WorkerExecutor
-
-    @get:ServiceReference
-    abstract val ktlintService: Property<KtLintService>
 
     @get:InputFile
     abstract val configFile: RegularFileProperty
@@ -110,10 +104,17 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
         }
 
         logger.lifecycle("Formatting generated files")
-        destinationDirectory.get().asFileTree.forEach { file ->
-            workerExecutor.noIsolation().submit(KtLintFormatWorker::class) {
-                this.file.set(file)
-            }
+        destinationDirectory.get().asFileTree.forEach { outputFile ->
+            workerExecutor
+                // work-around for https://github.com/gradle/gradle/issues/18313
+                // and https://github.com/gradle/gradle/issues/8476
+                // we have to use process isolation as classloader isolation workers are not reused
+                // which then quickly leads to out of memory error and with no isolation
+                // there is a Kotlin version compatibility problem in Ktlint
+                .processIsolation()
+                .submit(KtLintFormatWorker::class) {
+                    file.set(outputFile)
+                }
         }
     }
 }
