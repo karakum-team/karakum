@@ -1,6 +1,7 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {identifier} from "../../utils/strings.js";
+import {escapeIdentifier, notEscapedIdentifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
+import {UnionNameResolverService, unionNameResolverServiceKey} from "./UnionNameResolverPlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
 import {flatUnionTypes, isNullableType} from "./NullableUnionTypePlugin.js";
@@ -48,6 +49,8 @@ export function convertStringUnionType(
     const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
+    const unionNameResolverService = context.lookupService<UnionNameResolverService>(unionNameResolverServiceKey)
+    if (unionNameResolverService === undefined) throw new Error("UnionNameResolverService required")
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
@@ -69,36 +72,37 @@ export function convertStringUnionType(
             checkCoverageService?.cover(literal)
 
             const value = literal.text
-            const key = value === ""
-                ? "`_`"
-                : identifier(value)
+
+            let key = unionNameResolverService.resolveUnionName(literal, context)
+
+            if (!key) {
+                const valueAsIdentifier = notEscapedIdentifier(value)
+                key = (value === "") || (valueAsIdentifier === "")
+                    ? "_"
+                    : valueAsIdentifier
+            }
+
             return [key, value] as const
         })
 
-    const existingKeys = new Set<string>()
-    const uniqueEntries: [string, string][] = []
-    const duplicatedEntries: [string, string][] = []
-
-    for (const [key, value] of entries) {
-        if (!existingKeys.has(key)) {
-            uniqueEntries.push([key, value])
-            existingKeys.add(key)
+    const keyDisambiguators: Map<string, number> = new Map()
+    const disambiguatedEntries = entries.map(([key, value]) => {
+        const keyDisambiguator = (keyDisambiguators.get(key) ?? 0) + 1
+        keyDisambiguators.set(key, keyDisambiguator)
+        if (keyDisambiguator > 1) {
+            return [escapeIdentifier(`${key}_${keyDisambiguator}`), value] as const;
         } else {
-            duplicatedEntries.push([key, value])
+            return [escapeIdentifier(key), value] as const;
         }
-    }
+    });
 
-    const body = uniqueEntries
+    const body = disambiguatedEntries
         .map(([key, value]) => (
             `
 @seskar.js.JsValue("${value}")
 val ${key}: ${name}
             `.trim()
         ))
-        .join("\n")
-
-    const comment = duplicatedEntries
-        .map(([key, value]) => `${key} for "${value}"`)
         .join("\n")
 
     const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
@@ -118,14 +122,7 @@ val ${key}: ${name}
     const declaration = `
 sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
 companion object {
-${body}${ifPresent(comment, it => (
-    "\n" + `
-/*
-Duplicated names were generated:
-${it}
-*/
-    `.trim()
-))}
+${body}
 }
 }
     `.trim()

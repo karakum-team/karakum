@@ -26,6 +26,9 @@ export type {NameResolver} from "./converter/nameResolver.js"
 // inheritance modifier
 export type {InheritanceModifier, InheritanceModifierContext} from "./converter/inheritanceModifier.js"
 
+// union name resolver
+export type {UnionNameResolver} from "./converter/unionNameResolver.js"
+
 // variance modifier
 export type {VarianceModifier} from "./converter/varianceModifier.js"
 
@@ -58,6 +61,10 @@ export {
     inheritanceModifierServiceKey,
     type InheritanceModifierService
 } from "./converter/plugins/InheritanceModifierPlugin.js"
+export {
+    unionNameResolverServiceKey,
+    type UnionNameResolverService
+} from "./converter/plugins/UnionNameResolverPlugin.js"
 export {
     varianceModifierServiceKey,
     type VarianceModifierService
