@@ -17,6 +17,21 @@ val multipartFormData: FormEncType
 }
 
 external fun switcher(): SwitcherResult
+
+sealed external interface Operator {
+companion object {
+@seskar.js.JsValue("")
+val `_`: Operator
+/*
+Duplicated names were generated:
+`_` for "="
+`_` for "<"
+`_` for ">"
+`_` for "<="
+`_` for ">="
+*/
+}
+}
 sealed external interface SwitcherResult {
 companion object {
 @seskar.js.JsValue("on")
