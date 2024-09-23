@@ -6,6 +6,7 @@ import {Render, renderResolvedNullable} from "../render.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {resolveParenthesizedType} from "../../utils/resolveParenthesizedType.js";
 import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
+import {isNullableNumericUnionType} from "./NumericUnionTypePlugin.js";
 import {GeneratedFile} from "../generated.js";
 
 const isNull = (type: Node) => ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword
@@ -134,6 +135,7 @@ export class NullableUnionTypePlugin implements ConverterPlugin {
         }
 
         if (isNullableStringUnionType(node, context)) return null
+        if (isNullableNumericUnionType(node, context)) return null
 
         if (isNullableUnionType(node, context)) {
             const types = flatUnionTypes(node, context)

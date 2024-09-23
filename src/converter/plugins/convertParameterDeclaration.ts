@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {flatUnionTypes, isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
 import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
+import {isNullableNumericUnionType} from "./NumericUnionTypePlugin.js";
 import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
@@ -209,6 +210,7 @@ const expandUnions = (
             if (isThisParameter(parameter)) continue
 
             if (type && isNullableStringUnionType(type, context)) continue
+            if (type && isNullableNumericUnionType(type, context)) continue
 
             if (type && ts.isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)

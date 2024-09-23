@@ -1,5 +1,5 @@
-import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {escapeIdentifier, notEscapedIdentifier} from "../../utils/strings.js";
+import ts, {LiteralTypeNode, Node, NumericLiteral, PrefixUnaryExpression, SyntaxKind, UnionTypeNode} from "typescript";
+import {escapeIdentifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {UnionNameResolverService, unionNameResolverServiceKey} from "./UnionNameResolverPlugin.js";
 import {ConverterContext} from "../context.js";
@@ -11,17 +11,19 @@ import {InjectionType} from "../injection.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 
-export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
+export function isNumericUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
         ts.isUnionTypeNode(node)
         && flatUnionTypes(node, context).every(type => (
             ts.isLiteralTypeNode(type)
-            && ts.isStringLiteral(type.literal)
+            && (ts.isNumericLiteral(type.literal)
+                || (ts.isPrefixUnaryExpression(type.literal)
+                    && ts.isNumericLiteral(type.literal.operand)))
         ))
     )
 }
 
-export function isNullableStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
+export function isNullableNumericUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     if (!ts.isUnionTypeNode(node)) return false
 
     const types = flatUnionTypes(node, context)
@@ -32,14 +34,16 @@ export function isNullableStringUnionType(node: ts.Node, context: ConverterConte
             isNullableType(type)
             || (
                 ts.isLiteralTypeNode(type)
-                && ts.isStringLiteral(type.literal)
+                && (ts.isNumericLiteral(type.literal)
+                    || (ts.isPrefixUnaryExpression(type.literal)
+                        && ts.isNumericLiteral(type.literal.operand)))
             )
         ))
         && nonNullableTypes.length > 1
     )
 }
 
-export function convertStringUnionType(
+export function convertNumericUnionType(
     node: UnionTypeNode,
     name: string,
     isInlined: boolean,
@@ -52,6 +56,7 @@ export function convertStringUnionType(
     const unionNameResolverService = context.lookupService<UnionNameResolverService>(unionNameResolverServiceKey)
     if (unionNameResolverService === undefined) throw new Error("UnionNameResolverService required")
     const typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    if (typeScriptService === undefined) throw new Error("TypeScriptService required")
     const namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
     const injectionService = context.lookupService<InjectionService>(injectionServiceKey)
 
@@ -67,22 +72,27 @@ export function convertStringUnionType(
 
             return type.literal
         })
-        .filter((literal): literal is StringLiteral => ts.isStringLiteral(literal))
+        .filter((literal): literal is NumericLiteral | PrefixUnaryExpression =>
+            ts.isNumericLiteral(literal)
+            || (ts.isPrefixUnaryExpression(literal)
+                && ts.isNumericLiteral(literal.operand))
+        )
         .map(literal => {
             checkCoverageService?.cover(literal)
 
-            const value = literal.text
+            const value = typeScriptService.printNode(literal)
 
             let key = unionNameResolverService.resolveUnionName(literal, context)
 
-            if (!key) {
-                const valueAsIdentifier = notEscapedIdentifier(value)
-                key = (value === "") || (valueAsIdentifier === "")
-                    ? "_"
-                    : valueAsIdentifier
+            if (key) {
+                return [key, value] as const
             }
 
-            return [key, value] as const
+            if (ts.isNumericLiteral(literal)) {
+                return [`VALUE_${toIdentifierPart(typeScriptService, literal)}`, value] as const
+            } else {
+                return [`VALUE_MINUS_${toIdentifierPart(typeScriptService, literal.operand)}`, value] as const
+            }
         })
 
     const keyDisambiguators: Map<string, number> = new Map()
@@ -99,7 +109,7 @@ export function convertStringUnionType(
     const body = disambiguatedEntries
         .map(([key, value]) => (
             `
-@seskar.js.JsValue("${value}")
+@seskar.js.${value.match(/^-?\d+$/) ? `JsIntValue(${value})` : `JsValue("${value}")`}
 val ${key}: ${name}
             `.trim()
         ))
@@ -107,7 +117,7 @@ val ${key}: ${name}
 
     const heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
-    const namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+    const namespace = typeScriptService.findClosest(node, ts.isModuleDeclaration)
 
     let externalModifier = "external "
 
@@ -135,13 +145,17 @@ ${body}
     }
 }
 
-export const stringUnionTypePlugin = createAnonymousDeclarationPlugin(
+function toIdentifierPart(typeScriptService: TypeScriptService, node: Node): string {
+    return typeScriptService.printNode(node).replaceAll(".", "_")
+}
+
+export const numericUnionTypePlugin = createAnonymousDeclarationPlugin(
     (node, context, render) => {
-        if (!isNullableStringUnionType(node, context)) return null
+        if (!isNullableNumericUnionType(node, context)) return null
 
         const name = context.resolveName(node)
 
-        const {declaration, nullable} = convertStringUnionType(node, name, false, context, render)
+        const {declaration, nullable} = convertNumericUnionType(node, name, false, context, render)
 
         const reference = nullable ? `${name}?` : name
 

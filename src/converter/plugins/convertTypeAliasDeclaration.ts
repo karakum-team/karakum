@@ -3,6 +3,7 @@ import {createSimplePlugin} from "../plugin.js";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin.js";
+import {convertNumericUnionType, isNumericUnionType} from "./NumericUnionTypePlugin.js";
 import {convertTypeLiteral} from "./TypeLiteralPlugin.js";
 import {convertInheritedTypeLiteral, isInheritedTypeLiteral} from "./InheritedTypeLiteralPlugin.js";
 import {convertMappedType} from "./MappedTypePlugin.js";
@@ -37,6 +38,10 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
 
     if (isStringUnionType(node.type, context)) {
         return convertStringUnionType(node.type, name, true, context, render).declaration
+    }
+
+    if (isNumericUnionType(node.type, context)) {
+        return convertNumericUnionType(node.type, name, true, context, render).declaration
     }
 
     if (isInheritedTypeLiteral(node.type)) {

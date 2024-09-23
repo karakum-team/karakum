@@ -17,6 +17,57 @@ val multipartFormData: FormEncType
 }
 
 external fun switcher(): SwitcherResult
+
+sealed external interface Operator {
+companion object {
+@seskar.js.JsValue("")
+val `_`: Operator
+@seskar.js.JsValue("=")
+val __2: Operator
+@seskar.js.JsValue("<")
+val __3: Operator
+@seskar.js.JsValue(">")
+val __4: Operator
+@seskar.js.JsValue("<=")
+val __5: Operator
+@seskar.js.JsValue(">=")
+val GTE: Operator
+}
+}
+
+sealed external interface Operator2 {
+companion object {
+@seskar.js.JsValue("")
+val EMPTY: Operator2
+@seskar.js.JsValue("=")
+val EQUAL: Operator2
+@seskar.js.JsValue("<")
+val LT: Operator2
+@seskar.js.JsValue(">")
+val GT: Operator2
+@seskar.js.JsValue("<=")
+val LTE: Operator2
+@seskar.js.JsValue(">=")
+val GTE: Operator2
+}
+}
+
+sealed external interface Operator3 {
+companion object {
+@seskar.js.JsValue("")
+val OPERATOR: Operator3
+@seskar.js.JsValue("=")
+val OPERATOR_2: Operator3
+@seskar.js.JsValue("<")
+val OPERATOR_3: Operator3
+@seskar.js.JsValue(">")
+val OPERATOR_4: Operator3
+@seskar.js.JsValue("<=")
+val OPERATOR_5: Operator3
+@seskar.js.JsValue(">=")
+val OPERATOR_6: Operator3
+}
+}
 sealed external interface SwitcherResult {
 companion object {
 @seskar.js.JsValue("on")

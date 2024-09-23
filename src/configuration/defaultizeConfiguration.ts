@@ -21,6 +21,10 @@ const defaultNameResolverPatterns = [
     "karakum/nameResolvers/*.js"
 ]
 
+const defaultUnionNameResolverPatterns = [
+    "karakum/unionNameResolvers/*.js"
+]
+
 const defaultInheritanceModifierPatterns = [
     "karakum/inheritanceModifiers/*.js"
 ]
@@ -108,6 +112,8 @@ export async function defaultizeConfiguration(configuration: PartialConfiguratio
         nameResolvers: normalizeOption(configuration.nameResolvers, defaultNameResolverPatterns),
 
         inheritanceModifiers: normalizeOption(configuration.inheritanceModifiers, defaultInheritanceModifierPatterns),
+
+        unionNameResolvers: normalizeOption(configuration.unionNameResolvers, defaultUnionNameResolverPatterns),
 
         varianceModifiers: normalizeOption(configuration.varianceModifiers, defaultVarianceModifierPatterns),
 
