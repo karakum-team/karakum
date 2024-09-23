@@ -5,17 +5,27 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.sgrishchenko.karakum.gradle.plugin.karakumDependency
 import io.github.sgrishchenko.karakum.gradle.plugin.kotlinJsCompilation
+import io.github.sgrishchenko.karakum.gradle.plugin.service.KtLintService
 import io.github.sgrishchenko.karakum.gradle.plugin.typescriptDependency
+import io.github.sgrishchenko.karakum.gradle.plugin.worker.KtLintFormatWorker
+import org.ec4j.core.Resource.Resources
+import org.ec4j.core.ResourcePropertiesService
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.services.ServiceReference
 import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.submit
 import org.gradle.process.ExecOperations
+import org.gradle.workers.WorkerExecutor
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.RequiresNpmDependencies
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
+import java.nio.file.Path
 import javax.inject.Inject
+import kotlin.text.Charsets.UTF_8
 
 abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
     @get:Inject
@@ -23,6 +33,12 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
 
     @get:Inject
     abstract val layout: ProjectLayout
+
+    @get:Inject
+    abstract val workerExecutor: WorkerExecutor
+
+    @get:ServiceReference
+    abstract val ktlintService: Property<KtLintService>
 
     @get:InputFile
     abstract val configFile: RegularFileProperty
@@ -71,6 +87,18 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
         }
     }
 
+    @get:InputFiles
+    @get:Optional
+    val editorConfigFiles = destinationDirectory.map { destinationDirectory ->
+        ResourcePropertiesService
+            .builder()
+            .build()
+            .queryProperties(Resources.ofPath(destinationDirectory.asFile.absoluteFile.toPath(), UTF_8))
+            .editorConfigFiles
+            .map { it.getAdapter(Path::class.java) }
+            .let { layout.files(it) }
+    }
+
     @TaskAction
     fun generate() {
         exec.exec {
@@ -79,6 +107,13 @@ abstract class KarakumGenerate : DefaultTask(), RequiresNpmDependencies {
                 "karakum/build/cli.js",
                 args = listOf("--config", configFile.get().asFile.absolutePath)
             )
+        }
+
+        logger.lifecycle("Formatting generated files")
+        destinationDirectory.get().asFileTree.forEach { file ->
+            workerExecutor.noIsolation().submit(KtLintFormatWorker::class) {
+                this.file.set(file)
+            }
         }
     }
 }
