@@ -136,3 +136,4 @@ export type {DerivedDeclaration} from "./structure/derived/derivedDeclaration.js
 export {generateDerivedDeclarations} from "./structure/derived/generateDerivedDeclarations.js"
 
 export {generate} from "./generate.js"
+export {run} from "./run.js"

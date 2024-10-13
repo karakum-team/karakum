@@ -3,7 +3,7 @@
 import yargs from "yargs"
 import process from "node:process"
 import {hideBin} from "yargs/helpers"
-import {generate} from "./generate.js";
+import {run} from "./run.js";
 
 const argv = yargs(hideBin(process.argv))
     .option("input", {
@@ -23,4 +23,4 @@ const argv = yargs(hideBin(process.argv))
     })
     .parseSync()
 
-await generate(argv)
+await run(argv)

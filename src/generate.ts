@@ -1,62 +1,21 @@
-import {PartialConfiguration} from "./configuration/configuration.js";
-import {defaultizeConfiguration} from "./configuration/defaultizeConfiguration.js";
-import {glob} from "glob";
+import {Configuration} from "./configuration/configuration.js";
 import ts, {CompilerOptions} from "typescript";
 import path from "node:path";
 import fs from "node:fs/promises";
 import {createContext} from "./converter/context.js";
-import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "./converter/plugin.js";
 import {createPlugins} from "./defaultPlugins.js";
 import {CommentPlugin} from "./converter/plugins/CommentPlugin.js";
 import {prepareStructure} from "./structure/prepareStructure.js";
 import {traverse} from "./utils/traverse.js";
 import {minimatch} from "minimatch";
 import {createRender} from "./converter/render.js";
-import {NameResolver} from "./converter/nameResolver.js";
 import {AnnotationPlugin} from "./converter/plugins/AnnotationPlugin.js";
-import {InheritanceModifier} from "./converter/inheritanceModifier.js";
-import {Annotation} from "./converter/annotation.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
 import {collectSourceFileInfo} from "./structure/sourceFile/collectSourceFileInfo.js";
 import {packageToOutputFileName} from "./structure/package/packageToFileName.js";
-import {toModuleName} from "./utils/path.js";
 import {DerivedFile, GeneratedFile, isDerivedFile} from "./converter/generated.js";
 import {resolveConflicts, TargetFile} from "./structure/resolveConflicts.js";
-import {createSimpleInjection, Injection, SimpleInjection} from "./converter/injection.js";
 import {collectImportInfo} from "./structure/import/collectImportInfo.js";
-import {VarianceModifier} from "./converter/varianceModifier.js";
-
-async function loadExtensions<T>(
-    name: string,
-    patterns: string[],
-    cwd: string,
-    loader: (extension: unknown) => T = extension => extension as T
-): Promise<T[]> {
-    const fileNames = (await Promise.all(patterns.map(pattern => glob(pattern, {
-        cwd,
-        absolute: true,
-        posix: true,
-    })))).flat()
-
-    const extensions: T[] = []
-
-    for (const fileName of fileNames) {
-        const extensionModule: { default: unknown } = await import(toModuleName(fileName))
-        const extensionExport = extensionModule.default
-
-        if (Array.isArray(extensionExport)) {
-            console.log(`${name} file: ${fileName} [x${extensionExport.length}]`)
-
-            extensions.push(...extensionExport.map(it => loader(it)))
-        } else {
-            console.log(`${name} file: ${fileName}`)
-
-            extensions.push(loader(extensionExport))
-        }
-    }
-
-    return extensions
-}
 
 function checkCasing(fileNames: string[]) {
     let isConflict = false
@@ -82,9 +41,7 @@ function checkCasing(fileNames: string[]) {
     }
 }
 
-export async function generate(partialConfiguration: PartialConfiguration) {
-    const configuration = await defaultizeConfiguration(partialConfiguration)
-
+export async function generate(configuration: Configuration) {
     const {
         inputRoots,
         inputFileNames,
@@ -102,56 +59,6 @@ export async function generate(partialConfiguration: PartialConfiguration) {
         compilerOptions,
         cwd,
     } = configuration
-
-    const customPlugins = await loadExtensions<ConverterPlugin>(
-        "Plugin",
-        plugins,
-        cwd,
-        plugin => {
-            if (typeof plugin === "function") {
-                return createSimplePlugin(plugin as SimpleConverterPlugin)
-            } else {
-                return plugin as ConverterPlugin
-            }
-        }
-    )
-
-    const customInjections = await loadExtensions<Injection>(
-        "Injection",
-        injections,
-        cwd,
-        injection => {
-            if (typeof injection === "function") {
-                return createSimpleInjection(injection as SimpleInjection)
-            } else {
-                return injection as Injection
-            }
-        }
-    )
-
-    const customAnnotations = await loadExtensions<Annotation>(
-        "Annotation",
-        annotations,
-        cwd,
-    )
-
-    const customNameResolvers = await loadExtensions<NameResolver>(
-        "Name Resolver",
-        nameResolvers,
-        cwd,
-    )
-
-    const customInheritanceModifiers = await loadExtensions<InheritanceModifier>(
-        "Inheritance Modifier",
-        inheritanceModifiers,
-        cwd,
-    )
-
-    const customVarianceModifiers = await loadExtensions<VarianceModifier>(
-        "Variance Modifier",
-        varianceModifiers,
-        cwd,
-    )
 
     const preparedCompilerOptions: CompilerOptions = {
         lib: ["lib.esnext.d.ts"],
@@ -219,10 +126,10 @@ export async function generate(partialConfiguration: PartialConfiguration) {
 
     const defaultPlugins = createPlugins(
         configuration,
-        customInjections,
-        customNameResolvers,
-        customInheritanceModifiers,
-        customVarianceModifiers,
+        injections,
+        nameResolvers,
+        inheritanceModifiers,
+        varianceModifiers,
         program,
         namespaceInfo,
         importInfo,
@@ -231,10 +138,10 @@ export async function generate(partialConfiguration: PartialConfiguration) {
     const converterPlugins = [
         // it is important to handle comments and annotations at first
         new CommentPlugin(),
-        new AnnotationPlugin(customAnnotations),
+        new AnnotationPlugin(annotations),
 
-        ...customInjections,
-        ...customPlugins,
+        ...injections,
+        ...plugins,
         ...defaultPlugins
     ]
 

@@ -1,4 +1,10 @@
 import {CompilerOptions} from "typescript"
+import {ConverterPlugin} from "../converter/plugin.js";
+import {Injection} from "../converter/injection.js";
+import {Annotation} from "../converter/annotation.js";
+import {NameResolver} from "../converter/nameResolver.js";
+import {InheritanceModifier} from "../converter/inheritanceModifier.js";
+import {VarianceModifier} from "../converter/varianceModifier.js";
 
 export type Granularity = "bundle" | "file" | "top-level"
 
@@ -23,6 +29,8 @@ export interface SchemaConfiguration {
      * @$ref #/definitions/Granularity
      * */
     granularity?: Granularity
+
+    extensions?: string
 
     plugins?: string | string[]
 
@@ -88,7 +96,7 @@ export interface PartialConfiguration extends SchemaConfiguration {
     compilerOptions?: CompilerOptions
 }
 
-export interface Configuration extends PartialConfiguration {
+export interface Configuration {
     inputRoots: string[]
 
     input: string[]
@@ -104,17 +112,17 @@ export interface Configuration extends PartialConfiguration {
 
     granularity: Granularity
 
-    plugins: string[]
+    plugins: ConverterPlugin[]
 
-    injections: string[]
+    injections: Injection[]
 
-    annotations: string[]
+    annotations: Annotation[]
 
-    nameResolvers: string[]
+    nameResolvers: NameResolver[]
 
-    inheritanceModifiers: string[]
+    inheritanceModifiers: InheritanceModifier[]
 
-    varianceModifiers: string[]
+    varianceModifiers: VarianceModifier[]
 
     moduleNameMapper: Record<string, string>
     packageNameMapper: Record<string, string>

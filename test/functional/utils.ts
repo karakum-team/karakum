@@ -5,7 +5,7 @@ import url from "node:url";
 import fs from "node:fs/promises";
 import process from "node:process";
 import {PartialConfiguration} from "../../src/configuration/configuration.js";
-import {generate} from "../../src/index.js";
+import {run as karakumRun} from "../../src/index.js";
 
 const isUpdate = Boolean(process.env['KARAKUM_TEST_UPDATE']);
 
@@ -25,7 +25,7 @@ export function testGeneration(name: string, fileUrl: string, createConfiguratio
         const output = isUpdate ? expectedOutputDirName : actualOutputDirName
         const configuration = createConfiguration(output)
 
-        await generate({
+        await karakumRun({
             cwd: dirName,
             ...configuration,
         })
