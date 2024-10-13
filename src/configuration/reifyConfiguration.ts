@@ -65,7 +65,7 @@ export async function reifyConfiguration(configuration: PartialConfiguration): P
         inheritanceModifiers,
         varianceModifiers,
     } = extensions !== undefined
-        ? await loadExtensionsFromFile(extensions)
+        ? await loadExtensionsFromFile(extensions, cwd)
         : await loadExtensionsFromGlobs({
             plugins: normalizeOption(configuration.plugins, ["karakum/plugins/*.js"]),
             injections: normalizeOption(configuration.injections, ["karakum/injections/*.js"]),

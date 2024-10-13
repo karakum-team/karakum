@@ -1,5 +1,5 @@
 import {glob} from "glob";
-import {toModuleName} from "../utils/path.js";
+import {toAbsolute, toModuleName} from "../utils/path.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "../converter/plugin.js";
 import {createSimpleInjection, Injection, SimpleInjection} from "../converter/injection.js";
 import {Annotation} from "../converter/annotation.js";
@@ -131,8 +131,14 @@ export async function loadExtensionsFromGlobs(
     }
 }
 
-export async function loadExtensionsFromFile(extensions: string): Promise<Extensions> {
-    const extensionModule: { default: PartialExtensions } = await import(toModuleName(extensions))
+export async function loadExtensionsFromFile(
+    extensions: string,
+    cwd: string,
+): Promise<Extensions> {
+    const absoluteExtensions = toAbsolute(extensions, cwd)
+    const extensionModule: { default: PartialExtensions } = await import(toModuleName(absoluteExtensions))
+
+    console.log(`Extension file: ${absoluteExtensions}`)
 
     const plugins = (extensionModule.default.plugins ?? [])
         .map(plugin => {
