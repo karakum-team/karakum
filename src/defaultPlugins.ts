@@ -64,6 +64,7 @@ import {ImportInfo} from "./structure/import/collectImportInfo.js";
 import {ImportInfoPlugin} from "./converter/plugins/ImportInfoPlugin.js";
 import {VarianceModifierPlugin} from "./converter/plugins/VarianceModifierPlugin.js";
 import {VarianceModifier} from "./converter/varianceModifier.js";
+import {convertMemberName} from "./converter/plugins/convertMemberName.js";
 
 const hasKind = (kind: ts.SyntaxKind) => (node: Node) => node.kind === kind
 
@@ -112,6 +113,8 @@ export const createPlugins = (
     convertPrimitive(hasKind(ts.SyntaxKind.BigIntKeyword), () => "js.core.BigInt"),
 
     convertPrimitive(ts.isIdentifier, node => node.text),
+
+    convertMemberName, // should be applied before literals
 
     convertLiteral(ts.isStringLiteral, () => "String"),
     convertLiteral(ts.isNumericLiteral, () => "Double"),

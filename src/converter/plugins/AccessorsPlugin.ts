@@ -6,6 +6,8 @@ import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlug
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {GeneratedFile} from "../generated.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {escapeIdentifier} from "../../utils/strings.js";
+import {createKebabAnnotation} from "./convertMemberName.js";
 
 interface AccessorInfo {
     getter: GetAccessorDeclaration | undefined
@@ -80,7 +82,8 @@ export class AccessorsPlugin implements ConverterPlugin {
                 ? "var "
                 : "val "
 
-            const name = next(node.name)
+            const name = escapeIdentifier(next(node.name))
+            const annotation = createKebabAnnotation(node.name)
 
             let type: string
 
@@ -93,7 +96,7 @@ export class AccessorsPlugin implements ConverterPlugin {
             }
 
             return `
-${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}
+${ifPresent(annotation, it => `${it}\n`)}${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}
             `.trim();
         }
 

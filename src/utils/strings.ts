@@ -16,6 +16,10 @@ export function camelize(string: string) {
         .replace(/[-_]/g, "");
 }
 
+export function isKebab(string: string) {
+    return /^[\w$-]+$/.test(string)
+}
+
 export function isValidIdentifier(string: string) {
     return (
         /^[\w$]+$/.test(string)

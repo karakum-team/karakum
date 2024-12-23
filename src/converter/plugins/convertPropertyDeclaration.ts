@@ -1,9 +1,10 @@
 import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
-import {escapeIdentifier, isValidIdentifier} from "../../utils/strings.js";
+import {escapeIdentifier} from "../../utils/strings.js";
 import {ifPresent, renderNullable} from "../render.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
+import {createKebabAnnotation} from "./convertMemberName.js";
 
 export const convertPropertyDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isPropertyDeclaration(node)) return null
@@ -25,24 +26,12 @@ export const convertPropertyDeclaration = createSimplePlugin((node, context, ren
         ? "val "
         : "var "
 
-    let name: string
-
-    if (ts.isStringLiteral(node.name)) {
-        if (!isValidIdentifier(node.name.text)) {
-            // TODO: generate inline getter
-            return null
-        }
-        name = escapeIdentifier(node.name.text)
-    } else if (ts.isNumericLiteral(node.name)) {
-        // TODO: generate inline getter
-        return null
-    } else {
-        name = escapeIdentifier(render(node.name))
-    }
+    const name = escapeIdentifier(render(node.name))
+    const annotation = createKebabAnnotation(node.name)
 
     const isOptional = Boolean(node.questionToken)
 
     const type = renderNullable(node.type, isOptional, context, render)
 
-    return `${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}`
+    return `${ifPresent(annotation, it => `${it}\n`)}${ifPresent(inheritanceModifier, it => `${it} `)}${modifier}${name}: ${type}`
 })
