@@ -32,6 +32,10 @@ export function escapeIdentifier(string: string) {
         return `\`${string}\``
     }
 
+    if (/^_+$/.test(string)) {
+        return `\`${string}\``
+    }
+
     if (/^\d/.test(string)) {
         return `\`${string}\``
     }

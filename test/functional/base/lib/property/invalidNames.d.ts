@@ -1,4 +1,5 @@
 export interface InterfaceWithTrickyField {
+    "": boolean
     "_hasFetcherDoneAnything"?: boolean
     " _hasFetcherDoneAnything "?: boolean
     "123test"?: boolean
@@ -22,6 +23,9 @@ export interface InterfaceWithTrickyField {
 }
 
 export declare class ClassWithTrickyField {
+    "_": boolean
+    "__": boolean
+    "___": boolean
     "_hasFetcherDoneAnything"?: boolean
     " _hasFetcherDoneAnything "?: boolean
     "123test"?: boolean

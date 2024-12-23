@@ -10,9 +10,33 @@ package sandbox.base.union
 sealed external interface FormEncType {
 companion object {
 @seskar.js.JsValue("application/x-www-form-urlencoded")
-val applicationXWwwFormUrlencoded: FormEncType
+val `application/x-www-form-urlencoded`: FormEncType
 @seskar.js.JsValue("multipart/form-data")
-val multipartFormData: FormEncType
+val `multipart/form-data`: FormEncType
+}
+}
+
+sealed external interface HttpHeader {
+companion object {
+@seskar.js.JsValue("Content-Type")
+val ContentType: HttpHeader
+@seskar.js.JsValue("Authorization")
+val Authorization: HttpHeader
+}
+}
+
+sealed external interface ExampleTokens {
+companion object {
+@seskar.js.JsValue("")
+val `_`: ExampleTokens
+@seskar.js.JsValue("+")
+val `+`: ExampleTokens
+@seskar.js.JsValue("-")
+val `-`: ExampleTokens
+@seskar.js.JsValue("*")
+val `*`: ExampleTokens
+@seskar.js.JsValue("/")
+val `/`: ExampleTokens
 }
 }
 

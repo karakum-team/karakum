@@ -1,9 +1,13 @@
-import ts, {Node} from "typescript";
+import ts, {Node, NumericLiteral, StringLiteral} from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {camelize, isKebab, isValidIdentifier} from "../../utils/strings.js";
 
 export function createKebabAnnotation(node: Node) {
+    if (ts.isStringLiteral(node) && node.text === "") {
+        return `@JsName("")`
+    }
+
     if (
         ts.isStringLiteral(node)
         && !isValidIdentifier(node.text)
@@ -14,6 +18,21 @@ export function createKebabAnnotation(node: Node) {
     }
 
     return ""
+}
+
+export function convertMemberNameLiteral(node: NumericLiteral | StringLiteral) {
+    if (node.text === "") {
+        return "`_`"
+    } else if (isValidIdentifier(node.text)) {
+        return node.text
+    } else if (
+        isKebab(node.text)
+        && isValidIdentifier(camelize(node.text))
+    ) {
+        return camelize(node.text)
+    } else {
+        return `\`${node.text}\``
+    }
 }
 
 export const convertMemberName = createSimplePlugin((node, context, render) => {
@@ -37,16 +56,7 @@ export const convertMemberName = createSimplePlugin((node, context, render) => {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
-        if (isValidIdentifier(node.text)) {
-            return node.text
-        } else if (
-            isKebab(node.text)
-            && isValidIdentifier(camelize(node.text))
-        ) {
-            return camelize(node.text)
-        } else {
-            return `\`${node.text}\``
-        }
+        return convertMemberNameLiteral(node)
     }
 
     return null

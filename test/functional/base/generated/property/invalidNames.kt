@@ -8,6 +8,8 @@
 package sandbox.base.property
 
 external interface InterfaceWithTrickyField {
+@JsName("")
+var `_`: Boolean
 var _hasFetcherDoneAnything: Boolean?
 var ` _hasFetcherDoneAnything `: Boolean?
 var `123test`: Boolean?
@@ -32,6 +34,9 @@ val `44`: Boolean
 }
 
 external class ClassWithTrickyField {
+var `_`: Boolean
+var `__`: Boolean
+var `___`: Boolean
 var _hasFetcherDoneAnything: Boolean?
 var ` _hasFetcherDoneAnything `: Boolean?
 var `123test`: Boolean?

@@ -1,5 +1,4 @@
 import ts, {LiteralTypeNode, StringLiteral, UnionTypeNode} from "typescript";
-import {identifier} from "../../utils/strings.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {ConverterContext} from "../context.js";
 import {createAnonymousDeclarationPlugin} from "./AnonymousDeclarationPlugin.js";
@@ -9,6 +8,7 @@ import {InjectionService, injectionServiceKey} from "./InjectionPlugin.js";
 import {InjectionType} from "../injection.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
+import {convertMemberNameLiteral} from "./convertMemberName.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
@@ -69,9 +69,7 @@ export function convertStringUnionType(
             checkCoverageService?.cover(literal)
 
             const value = literal.text
-            const key = value === ""
-                ? "`_`"
-                : identifier(value)
+            const key = convertMemberNameLiteral(literal)
             return [key, value] as const
         })
 
