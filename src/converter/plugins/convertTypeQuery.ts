@@ -13,7 +13,9 @@ export const convertTypeQuery = createSimplePlugin((node, context, render) => {
 
     const resolvedType = typeScriptService?.resolveType(node)
 
-    if (!resolvedType) return `Any /* ${typeScriptService?.printNode(node)} */`;
+    if (!resolvedType || ts.isTypeQueryNode(node)) {
+        return `Any /* ${typeScriptService?.printNode(node)} */`;
+    }
 
     return render(resolvedType)
 })
