@@ -31,7 +31,7 @@ function checkCasing(fileNames: string[]) {
             ) {
                 isConflict = true
 
-                console.log(`Files have the same name but different casing:\n${fileName}\n${otherFileName}`)
+                console.error(`Files have the same name but different casing:\n${fileName}\n${otherFileName}`)
             }
         }
     }
