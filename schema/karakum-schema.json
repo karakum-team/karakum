@@ -63,6 +63,10 @@
             "title": "disclaimer",
             "type": "string"
         },
+        "extensions": {
+            "title": "extensions",
+            "type": "string"
+        },
         "granularity": {
             "$ref": "#/definitions/Granularity",
             "title": "granularity",

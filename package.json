@@ -23,20 +23,18 @@
     "schema": "node --loader ts-node/esm schema/generate.ts"
   },
   "dependencies": {
-    "glob": "^10.4.3",
-    "minimatch": "^9.0.5",
+    "glob": "^11.0.0",
+    "minimatch": "^10.0.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
-    "@types/minimatch": "^5.1.2",
-    "@types/node": "^22.5.4",
-    "@types/yargs": "^17.0.32",
-    "rimraf": "^5.0.8",
+    "@types/node": "^22.10.2",
+    "@types/yargs": "^17.0.33",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript-json-schema": "^0.64.0"
+    "typescript-json-schema": "^0.65.1"
   },
   "peerDependencies": {
-    "typescript": "^5.5.3"
+    "typescript": "^5.7.2"
   }
 }
