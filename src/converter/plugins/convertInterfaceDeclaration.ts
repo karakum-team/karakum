@@ -41,7 +41,7 @@ export const convertInterfaceDeclaration = createSimplePlugin((node, context, re
         externalModifier = ""
     }
 
-    const typeParameters = node.typeParameters
+    const typeParameters = (declarationMergingService?.getTypeParameters(node) ?? node.typeParameters)
         ?.map(typeParameter => render(typeParameter))
         ?.filter(Boolean)
         ?.join(", ")

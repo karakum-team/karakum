@@ -4,7 +4,7 @@ import ts, {
     NamedDeclaration,
     Program,
     SignatureDeclaration,
-    SymbolTable
+    SymbolTable, TypeParameterDeclaration
 } from "typescript";
 import {ConverterPlugin} from "../plugin.js";
 import {ConverterContext} from "../context.js";
@@ -46,6 +46,29 @@ export class DeclarationMergingService {
         if (!symbol) return
 
         this.coveredSymbols.add(symbol)
+    }
+
+    getTypeParameters(node: NamedDeclaration): TypeParameterDeclaration[] | undefined {
+        const symbol = this.getSymbol(node)
+        if (!symbol) return undefined
+
+        const declarationTypeParameters = symbol.declarations
+            ?.filter((it): it is InterfaceDeclaration => ts.isInterfaceDeclaration(it))
+            ?.map(it => Array.from(it.typeParameters ?? []))
+
+        const valueDeclarationTypeParameters =
+            symbol.valueDeclaration !== undefined && ts.isClassDeclaration(symbol.valueDeclaration)
+                ? Array.from(symbol.valueDeclaration.typeParameters ?? [])
+                : undefined
+
+        return [
+            ...(declarationTypeParameters ?? []),
+            valueDeclarationTypeParameters ?? [],
+        ].reduce((typeParameters, result) => (
+            typeParameters.length > result.length
+                ? typeParameters
+                : result
+        ))
     }
 
     getHeritageClauses(node: NamedDeclaration): HeritageClause[] | undefined {
