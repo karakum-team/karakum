@@ -9,6 +9,7 @@ import {InjectionType} from "../injection.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {convertMemberNameLiteral} from "./convertMemberName.js";
+import {escapeIdentifier} from "../../utils/strings.js";
 
 export function isStringUnionType(node: ts.Node, context: ConverterContext): node is UnionTypeNode {
     return (
@@ -69,7 +70,7 @@ export function convertStringUnionType(
             checkCoverageService?.cover(literal)
 
             const value = literal.text
-            const key = convertMemberNameLiteral(literal)
+            const key = escapeIdentifier(convertMemberNameLiteral(literal))
             return [key, value] as const
         })
 
