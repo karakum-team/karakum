@@ -1,5 +1,5 @@
-import {glob} from "glob";
 import {toAbsolute, toModuleName} from "../utils/path.js";
+import {glob} from "../utils/glob.js";
 import {ConverterPlugin, createSimplePlugin, SimpleConverterPlugin} from "../converter/plugin.js";
 import {createSimpleInjection, Injection, SimpleInjection} from "../converter/injection.js";
 import {Annotation} from "../converter/annotation.js";
@@ -40,11 +40,7 @@ export async function loadExtensions<T>(
     cwd: string,
     loader: (extension: unknown) => T = extension => extension as T
 ): Promise<T[]> {
-    const fileNames = (await Promise.all(patterns.map(pattern => glob(pattern, {
-        cwd,
-        absolute: true,
-        posix: true,
-    })))).flat()
+    const fileNames = await glob(patterns, {cwd})
 
     const extensions: T[] = []
 

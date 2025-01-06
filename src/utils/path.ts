@@ -3,14 +3,16 @@ import url from "node:url";
 
 export function toPosix(input: string) {
     return path.sep === path.win32.sep
-        ? path.toNamespacedPath(input).replaceAll(path.win32.sep, path.posix.sep)
+        ? input.replaceAll(path.win32.sep, path.posix.sep)
         : input
 }
 
 export function toAbsolute(input: string, cwd: string) {
-    return path.isAbsolute(input)
+    const absolutePath = path.isAbsolute(input)
         ? input
-        : toPosix(path.join(cwd, input))
+        : path.join(cwd, input)
+
+    return toPosix(absolutePath)
 }
 
 export function toModuleName(input: string) {
