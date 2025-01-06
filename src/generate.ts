@@ -1,13 +1,12 @@
 import {Configuration} from "./configuration/configuration.js";
 import ts, {CompilerOptions} from "typescript";
-import path from "node:path";
+import path, {matchesGlob} from "node:path";
 import fs from "node:fs/promises";
 import {createContext} from "./converter/context.js";
 import {createPlugins} from "./defaultPlugins.js";
 import {CommentPlugin} from "./converter/plugins/CommentPlugin.js";
 import {prepareStructure} from "./structure/prepareStructure.js";
 import {traverse} from "./utils/traverse.js";
-import {minimatch} from "minimatch";
 import {createRender} from "./converter/render.js";
 import {AnnotationPlugin} from "./converter/plugins/AnnotationPlugin.js";
 import {collectNamespaceInfo} from "./structure/namespace/collectNamespaceInfo.js";
@@ -87,9 +86,9 @@ export async function generate(configuration: Configuration) {
             const relativeFileName = path.relative(cwd, sourceFile.fileName)
             return input.some(pattern => {
                 if (path.isAbsolute(pattern)) {
-                    return minimatch(sourceFile.fileName, pattern);
+                    return matchesGlob(sourceFile.fileName, pattern);
                 } else {
-                    return minimatch(relativeFileName, pattern);
+                    return matchesGlob(relativeFileName, pattern);
                 }
             })
         })
@@ -97,9 +96,9 @@ export async function generate(configuration: Configuration) {
             const relativeFileName = path.relative(cwd, sourceFile.fileName)
             return ignoreInput.every(pattern => {
                 if (path.isAbsolute(pattern)) {
-                    return !minimatch(sourceFile.fileName, pattern);
+                    return !matchesGlob(sourceFile.fileName, pattern);
                 } else {
-                    return !minimatch(relativeFileName, pattern);
+                    return !matchesGlob(relativeFileName, pattern);
                 }
             })
         })
@@ -182,7 +181,7 @@ export async function generate(configuration: Configuration) {
             .map(node => render(node))
             .join("\n\n")
 
-        if (ignoreOutput.every(pattern => !minimatch(targetFileName, pattern))) {
+        if (ignoreOutput.every(pattern => !matchesGlob(targetFileName, pattern))) {
             targetFiles.push({
                 ...item,
                 body,
@@ -213,7 +212,7 @@ export async function generate(configuration: Configuration) {
                 generatedFileName = path.resolve(output, outputFileName)
             }
 
-            if (ignoreOutput.every(pattern => !minimatch(generatedFileName, pattern))) {
+            if (ignoreOutput.every(pattern => !matchesGlob(generatedFileName, pattern))) {
                 if (isDerivedFile(generatedFile)) {
                     derivedFiles.push(generatedFile)
                 } else {
