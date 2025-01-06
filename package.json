@@ -23,8 +23,6 @@
     "schema": "node --loader ts-node/esm schema/generate.ts"
   },
   "dependencies": {
-    "glob": "^11.0.0",
-    "minimatch": "^10.0.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
