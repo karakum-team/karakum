@@ -2,11 +2,11 @@ import ts from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {ifPresent} from "../render.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
-import {convertStringUnionType, isStringUnionType} from "./StringUnionTypePlugin.js";
 import {convertTypeLiteral} from "./TypeLiteralPlugin.js";
 import {convertInheritedTypeLiteral, isInheritedTypeLiteral} from "./InheritedTypeLiteralPlugin.js";
 import {convertMappedType} from "./MappedTypePlugin.js";
 import {convertParameterDeclarations} from "./convertParameterDeclaration.js";
+import {convertLiteralUnionType, isLiteralUnionType} from "./LiteralUnionTypePlugin.js";
 
 export const convertTypeAliasDeclaration = createSimplePlugin((node, context, render) => {
     if (!ts.isTypeAliasDeclaration(node)) return null
@@ -35,8 +35,8 @@ export const convertTypeAliasDeclaration = createSimplePlugin((node, context, re
         return convertMappedType(node.type, name, typeParameters, true, context, render)
     }
 
-    if (isStringUnionType(node.type, context)) {
-        return convertStringUnionType(node.type, name, true, context, render).declaration
+    if (isLiteralUnionType(node.type, context)) {
+        return convertLiteralUnionType(node.type, name, true, context, render).declaration
     }
 
     if (isInheritedTypeLiteral(node.type)) {

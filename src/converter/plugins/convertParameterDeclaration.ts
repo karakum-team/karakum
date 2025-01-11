@@ -2,7 +2,6 @@ import ts, {ParameterDeclaration, SignatureDeclarationBase, TypeNode} from "type
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {flatUnionTypes, isNullableType, isNullableUnionType} from "./NullableUnionTypePlugin.js";
-import {isNullableStringUnionType} from "./StringUnionTypePlugin.js";
 import {ConverterContext} from "../context.js";
 import {Render, renderNullable} from "../render.js";
 import {escapeIdentifier} from "../../utils/strings.js";
@@ -10,6 +9,7 @@ import {AnnotationService, annotationServiceKey} from "./AnnotationPlugin.js";
 import {InheritanceModifierService, inheritanceModifierServiceKey} from "./InheritanceModifierPlugin.js";
 import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {CommentService, commentServiceKey} from "./CommentPlugin.js";
+import {isNullableLiteralUnionType} from "./LiteralUnionTypePlugin.js";
 
 export interface ParameterDeclarationsConfiguration {
     strategy: "function" | "lambda",
@@ -208,7 +208,7 @@ const expandUnions = (
 
             if (isThisParameter(parameter)) continue
 
-            if (type && isNullableStringUnionType(type, context)) continue
+            if (type && isNullableLiteralUnionType(type, context)) continue
 
             if (type && ts.isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)

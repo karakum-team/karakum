@@ -1,4 +1,4 @@
-import ts, {Node, NumericLiteral, StringLiteral} from "typescript";
+import ts, {Node, StringLiteral} from "typescript";
 import {createSimplePlugin} from "../plugin.js";
 import {CheckCoverageService, checkCoverageServiceKey} from "./CheckCoveragePlugin.js";
 import {camelize, isKebab, isValidIdentifier} from "../../utils/strings.js";
@@ -20,7 +20,7 @@ export function createKebabAnnotation(node: Node) {
     return ""
 }
 
-export function convertMemberNameLiteral(node: NumericLiteral | StringLiteral) {
+export function convertMemberNameLiteral(node: StringLiteral) {
     if (node.text === "") {
         return "`_`"
     } else if (isValidIdentifier(node.text)) {
@@ -55,6 +55,8 @@ export const convertMemberName = createSimplePlugin((node, context, render) => {
     ) {
         const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
+
+        if (ts.isNumericLiteral(node)) return `\`${node.text}\``
 
         return convertMemberNameLiteral(node)
     }
