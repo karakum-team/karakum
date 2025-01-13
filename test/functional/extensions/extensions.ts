@@ -20,5 +20,23 @@ export default {
             }
             return null
         }
+    ],
+    nameResolvers: [
+        node => {
+            if (
+                ts.isLiteralTypeNode(node)
+                && ts.isStringLiteral(node.literal)
+
+                && node.parent
+                && ts.isUnionTypeNode(node.parent)
+
+                && node.parent.parent
+                && ts.isTypeAliasDeclaration(node.parent.parent)
+                && node.parent.parent.name.text === "UnionWithDuplicatesAndResolution"
+            ) {
+                return "stringTrue"
+            }
+            return null
+        }
     ]
 } satisfies PartialExtensions

@@ -20,10 +20,7 @@ export class NameResolverService {
         ]
     }
 
-    resolveName(node: Node, context: ConverterContext): string {
-        const resolvedName = this.resolvedNodes.get(node)
-        if (resolvedName) return resolvedName
-
+    tryResolveName(node: Node, context: ConverterContext): string | undefined {
         for (const nameResolver of this.nameResolvers) {
             const result = nameResolver(node, context)
 
@@ -32,8 +29,13 @@ export class NameResolverService {
                 return result
             }
         }
+    }
 
-        const result = `Temp${this.counter++}`
+    resolveName(node: Node, context: ConverterContext): string {
+        const resolvedName = this.resolvedNodes.get(node)
+        if (resolvedName) return resolvedName
+
+        const result = this.tryResolveName(node, context) ?? `Temp${this.counter++}`
 
         this.resolvedNodes.set(node, result)
         return result

@@ -10,6 +10,7 @@ import {TypeScriptService, typeScriptServiceKey} from "./TypeScriptPlugin.js";
 import {NamespaceInfoService, namespaceInfoServiceKey} from "./NamespaceInfoPlugin.js";
 import {convertMemberNameLiteral} from "./convertMemberName.js";
 import {escapeIdentifier} from "../../utils/strings.js";
+import {NameResolverService, nameResolverServiceKey} from "./NameResolverPlugin.js";
 
 type LiteralUnionMemberEntry = {
     key: string
@@ -57,6 +58,19 @@ function extractUnionMemberName(node: LiteralTypeNode): string | null {
         ?? extractStringUnionMemberName(node)
         ?? extractNumericUnionMemberName(node)
         ?? extractPrefixUnaryExpressionUnionMemberName(node)
+}
+
+function resolveUnionMemberName(node: LiteralTypeNode, context: ConverterContext): string {
+    const nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
+    if (nameResolverService === undefined) throw new Error("AnonymousDeclarationPlugin can't work without NameResolverService")
+
+    const resolvedName = nameResolverService.tryResolveName(node, context)
+    if (resolvedName) return resolvedName
+
+    const extractedName = extractUnionMemberName(node)
+    if (!extractedName) throw new Error("Unsupported literal type")
+
+    return escapeIdentifier(extractedName)
 }
 
 function isSupportedLiteralType(node: ts.Node): node is LiteralTypeNode {
@@ -130,12 +144,8 @@ export function convertLiteralUnionType(
             const literal = type.literal
             if (!ts.isStringLiteral(literal)) throw new Error("Unsupported literal type")
 
-            const memberName = extractUnionMemberName(type)
-            if (!memberName) throw new Error("Unsupported literal type")
-
-            const key = escapeIdentifier(memberName)
             return {
-                key,
+                key: resolveUnionMemberName(type, context),
                 value: literal.text,
                 isString: true,
             }
@@ -150,13 +160,9 @@ export function convertLiteralUnionType(
             const value = typeScriptService?.printNode(type)
             if (!value) throw new Error("Unsupported literal type")
 
-            const memberName = extractUnionMemberName(type)
-            if (!memberName) throw new Error("Unsupported literal type")
-
-            const key = escapeIdentifier(memberName)
             return {
-                key,
-                value: value,
+                key: resolveUnionMemberName(type, context),
+                value,
                 isString: false,
             }
         })
