@@ -4,6 +4,7 @@ pluginManagement {
     plugins {
         val kotlinVersion: String by settings
         kotlin("jvm") version kotlinVersion
+        kotlin("multiplatform") version kotlinVersion
 
         val publishVersion: String by settings
         id("com.gradle.plugin-publish") version publishVersion
@@ -25,4 +26,5 @@ dependencyResolutionManagement {
     }
 }
 
+include("karakum")
 include("karakum-gradle-plugin")
