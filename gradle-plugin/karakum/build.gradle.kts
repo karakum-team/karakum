@@ -1,5 +1,7 @@
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.js-plain-objects")
+    id("io.github.turansky.seskar")
 }
 
 repositories {
@@ -22,6 +24,9 @@ kotlin {
     
     sourceSets {
         jsMain.dependencies {
+            implementation(kotlinWrappers.js)
+            implementation(kotlinWrappers.node)
+            implementation(kotlinWrappers.typescript)
         }
     }
 }
