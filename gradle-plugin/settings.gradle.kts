@@ -5,13 +5,21 @@ pluginManagement {
         val kotlinVersion: String by settings
         kotlin("jvm") version kotlinVersion
         kotlin("multiplatform") version kotlinVersion
+        kotlin("plugin.js-plain-objects") version kotlinVersion
 
         val publishVersion: String by settings
         id("com.gradle.plugin-publish") version publishVersion
+
+        val seskarVersion: String by settings
+        id("io.github.turansky.seskar") version seskarVersion
     }
 }
 
 dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+
     versionCatalogs {
         val libs by creating {
             val jacksonVersion: String by settings
@@ -22,6 +30,11 @@ dependencyResolutionManagement {
             library("ktlint-ruleset-standard", "com.pinterest.ktlint", "ktlint-ruleset-standard").version(ktlintVersion)
             val ec4jVersion: String by settings
             library("ec4j", "org.ec4j.core", "ec4j-core").version(ec4jVersion)
+        }
+
+        create("kotlinWrappers") {
+            val wrappersVersion: String by settings
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:$wrappersVersion")
         }
     }
 }
