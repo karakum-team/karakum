@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.configuration
 
-import io.github.sgrishchenko.karakum.extension.Annotation
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.Many
 import io.github.sgrishchenko.karakum.util.Rule
 import js.array.ReadonlyArray
@@ -12,36 +12,42 @@ import typescript.CompilerOptions
 import typescript.Node
 
 sealed external interface Granularity {
-    @JsValue("bundle")
-    val bundle: Granularity
+    companion object {
+        @JsValue("bundle")
+        val bundle: Granularity
 
-    @JsValue("file")
-    val file: Granularity
+        @JsValue("file")
+        val file: Granularity
 
-    @JsValue("topLevel")
-    val topLevel: Granularity
+        @JsValue("topLevel")
+        val topLevel: Granularity
+    }
 }
 
 sealed external interface NamespaceStrategy {
-    @JsValue("ignore")
-    val ignore: NamespaceStrategy
+    companion object {
+        @JsValue("ignore")
+        val ignore: NamespaceStrategy
 
-    @JsValue("object")
-    val `object`: NamespaceStrategy
+        @JsValue("object")
+        val `object`: NamespaceStrategy
 
-    @JsValue("package")
-    val `package`: NamespaceStrategy
+        @JsValue("package")
+        val `package`: NamespaceStrategy
+    }
 }
 
 sealed external interface ConflictResolutionStrategy {
-    @JsValue("join")
-    val join: ConflictResolutionStrategy
+    companion object {
+        @JsValue("join")
+        val join: ConflictResolutionStrategy
 
-    @JsValue("replace")
-    val replace: ConflictResolutionStrategy
+        @JsValue("replace")
+        val replace: ConflictResolutionStrategy
 
-    @JsValue("error")
-    val error: ConflictResolutionStrategy
+        @JsValue("error")
+        val error: ConflictResolutionStrategy
+    }
 }
 
 external interface SchemaConfiguration {
@@ -145,17 +151,17 @@ external interface Configuration {
 
     val granularity: Granularity
 
-    val plugins: ConverterPlugin[]
+    val plugins: ReadonlyArray<ConverterPlugin<Node>>
 
-    val injections: Injection[]
+    val injections: ReadonlyArray<Injection<Node, Node>>
 
     val annotations: ReadonlyArray<Annotation<Node>>
 
-    val nameResolvers: NameResolver[]
+    val nameResolvers: ReadonlyArray<NameResolver<Node>>
 
-    val inheritanceModifiers: InheritanceModifier[]
+    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>
 
-    val varianceModifiers: VarianceModifier[]
+    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
 
     val moduleNameMapper: ReadonlyRecord<String, String>
     val packageNameMapper: ReadonlyRecord<String, String>

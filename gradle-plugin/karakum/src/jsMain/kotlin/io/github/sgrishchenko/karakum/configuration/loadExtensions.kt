@@ -1,15 +1,15 @@
 package io.github.sgrishchenko.karakum.configuration
 
-import io.github.sgrishchenko.karakum.extension.Annotation
+import io.github.sgrishchenko.karakum.extension.*
+import io.github.sgrishchenko.karakum.util.glob
+import io.github.sgrishchenko.karakum.util.toAbsolute
+import io.github.sgrishchenko.karakum.util.toModuleName
 import js.array.ReadonlyArray
 import js.import.import
 import js.objects.JsPlainObject
-import js.objects.jso
-import node.fs.GlobOptionsWithoutFileTypes
-import node.fs.glob
-import node.util.isArray
 import typescript.Node
 
+@JsPlainObject
 external interface ExtensionConfiguration {
     val plugins: ReadonlyArray<String>
     val injections: ReadonlyArray<String>
@@ -23,19 +23,19 @@ external interface PartialExtensions {
     val plugins: ReadonlyArray<Any>? /* SimpleConverterPlugin | ConverterPlugin */
     val injections: ReadonlyArray<Any>? /* SimpleInjection | Injection */
     val annotations: ReadonlyArray<Annotation<Node>>?
-    val nameResolvers: ReadonlyArray<NameResolver>?
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>?
-    val varianceModifiers: ReadonlyArray<VarianceModifier>?
+    val nameResolvers: ReadonlyArray<NameResolver<Node>>?
+    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>?
+    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>?
 }
 
 @JsPlainObject
 external interface Extensions {
-    val plugins: ReadonlyArray<ConverterPlugin>
-    val injections: ReadonlyArray<Injection>
+    val plugins: ReadonlyArray<ConverterPlugin<Node>>
+    val injections: ReadonlyArray<Injection<Node, Node>>
     val annotations: ReadonlyArray<Annotation<Node>>
-    val nameResolvers: ReadonlyArray<NameResolver>
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
-    val varianceModifiers: ReadonlyArray<VarianceModifier>
+    val nameResolvers: ReadonlyArray<NameResolver<Node>>
+    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>
+    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
 }
 
 external interface ExtensionModule {
@@ -48,7 +48,7 @@ private suspend fun <T> loadExtensions(
     cwd: String,
     loader: (extension: Any) -> T = { it.unsafeCast<T>() },
 ): ReadonlyArray<T> {
-    val fileNames = glob(patterns, jso<GlobOptionsWithoutFileTypes> { this.cwd = cwd })
+    val fileNames = glob(patterns, cwd)
 
     val extensions = mutableListOf<T>()
 
@@ -56,7 +56,7 @@ private suspend fun <T> loadExtensions(
         val extensionModule = import<ExtensionModule>(toModuleName(fileName))
         val extensionExport = requireNotNull(extensionModule.default)
 
-        if (isArray(extensionExport)) {
+        if (extensionExport is ReadonlyArray<*>) {
             console.log("$name file: $fileName [x${extensionExport.size}]")
 
             extensions += extensionExport.map { loader(requireNotNull(it)) }
@@ -70,32 +70,33 @@ private suspend fun <T> loadExtensions(
     return extensions.toTypedArray()
 }
 
+@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 suspend fun loadExtensionsFromGlobs(
     configuration: ExtensionConfiguration,
     cwd: String,
 ): Extensions {
 
-    val plugins = loadExtensions<ConverterPlugin>(
+    val plugins = loadExtensions<ConverterPlugin<Node>>(
         "Plugin",
         configuration.plugins,
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createSimplePlugin(plugin as SimpleConverterPlugin)
+            createSimplePlugin(plugin as SimpleConverterPlugin<Node>)
         } else {
-            plugin as ConverterPlugin
+            plugin as ConverterPlugin<Node>
         }
     }
 
-    val injections = loadExtensions<Injection>(
+    val injections = loadExtensions<Injection<Node, Node>>(
         "Injection",
         configuration.injections,
         cwd
     ) { injection ->
         if (jsTypeOf(injection) == "function") {
-            createSimpleInjection(injection as SimpleInjection)
+            createSimpleInjection(injection as SimpleInjection<Node>)
         } else {
-            injection as Injection
+            injection as Injection<Node, Node>
         }
     }
 
@@ -105,19 +106,19 @@ suspend fun loadExtensionsFromGlobs(
         cwd,
     )
 
-    val nameResolvers = loadExtensions<NameResolver>(
+    val nameResolvers = loadExtensions<NameResolver<Node>>(
         "Name Resolver",
         configuration.nameResolvers,
         cwd,
     )
 
-    val inheritanceModifiers = loadExtensions<InheritanceModifier>(
+    val inheritanceModifiers = loadExtensions<InheritanceModifier<Node>>(
         "Inheritance Modifier",
         configuration.inheritanceModifiers,
         cwd,
     )
 
-    val varianceModifiers = loadExtensions<VarianceModifier>(
+    val varianceModifiers = loadExtensions<VarianceModifier<Node>>(
         "Variance Modifier",
         configuration.varianceModifiers,
         cwd,
@@ -133,6 +134,7 @@ suspend fun loadExtensionsFromGlobs(
     )
 }
 
+@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 suspend fun loadExtensionsFromFile(
     extensions: String,
     cwd: String,
@@ -148,18 +150,18 @@ suspend fun loadExtensionsFromFile(
     val plugins = (partialExtensions.plugins ?: emptyArray())
         .map { plugin ->
             if (jsTypeOf(plugin) == "function") {
-                createSimplePlugin(plugin as SimpleConverterPlugin)
+                createSimplePlugin(plugin as SimpleConverterPlugin<Node>)
             } else {
-                plugin as ConverterPlugin
+                plugin as ConverterPlugin<Node>
             }
         }
 
     val injections = (partialExtensions.injections ?: emptyArray())
         .map { injection ->
             if (jsTypeOf(injection) == "function") {
-                createSimpleInjection(injection as SimpleInjection)
+                createSimpleInjection(injection as SimpleInjection<Node>)
             } else {
-                injection as Injection
+                injection as Injection<Node, Node>
             }
         }
 
@@ -170,5 +172,5 @@ suspend fun loadExtensionsFromFile(
         nameResolvers = partialExtensions.nameResolvers ?: emptyArray(),
         inheritanceModifiers = partialExtensions.inheritanceModifiers ?: emptyArray(),
         varianceModifiers = partialExtensions.varianceModifiers ?: emptyArray(),
-    }
+    )
 }
