@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.extension.plugins.Signature
 import seskar.js.JsNative
 import typescript.Node
 

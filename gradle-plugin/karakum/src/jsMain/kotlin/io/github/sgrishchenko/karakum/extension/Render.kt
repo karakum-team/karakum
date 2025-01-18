@@ -1,5 +1,7 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
+import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
 import seskar.js.JsNative
 import typescript.*
