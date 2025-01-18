@@ -20,6 +20,10 @@ external interface SimpleConverterPlugin<in TNode : Node> {
 }
 
 fun <TNode : Node> createSimplePlugin(
+    render: (node: TNode, context: ConverterContext, next: Render<Node>) -> ReadonlyArray<String>?
+) = createSimplePlugin(render.unsafeCast<SimpleConverterPlugin<TNode>>())
+
+fun <TNode : Node> createSimplePlugin(
     render: SimpleConverterPlugin<TNode>
 ): ConverterPlugin<TNode> {
     return object : ConverterPlugin<TNode> {

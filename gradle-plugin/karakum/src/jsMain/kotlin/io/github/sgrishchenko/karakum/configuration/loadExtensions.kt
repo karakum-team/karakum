@@ -166,8 +166,8 @@ suspend fun loadExtensionsFromFile(
         }
 
     return Extensions(
-        plugins = plugins,
-        injections = injections,
+        plugins = plugins.toTypedArray(),
+        injections = injections.toTypedArray(),
         annotations = partialExtensions.annotations ?: emptyArray(),
         nameResolvers = partialExtensions.nameResolvers ?: emptyArray(),
         inheritanceModifiers = partialExtensions.inheritanceModifiers ?: emptyArray(),

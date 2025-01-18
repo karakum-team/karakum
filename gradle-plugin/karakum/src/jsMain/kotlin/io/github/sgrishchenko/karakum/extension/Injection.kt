@@ -27,6 +27,10 @@ external interface SimpleInjection<in TInjectionNode : Node> {
     operator fun invoke(node: TInjectionNode, context: InjectionContext, next: Render<Node>): ReadonlyArray<String>?
 }
 
+fun <TInjectionNode : Node> createSimpleInjection(
+    inject: (node: TInjectionNode, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?,
+) = createSimpleInjection<Node, _>(inject.unsafeCast<SimpleInjection<TInjectionNode>>())
+
 fun <TNode : Node, TInjectionNode : Node> createSimpleInjection(
     inject: SimpleInjection<TInjectionNode>,
 ): Injection<TNode, TInjectionNode> {

@@ -1,6 +1,6 @@
 import ts, {ConditionalTypeNode, Declaration} from "typescript";
 import {traverse} from "../utils/traverse.js";
-import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugin.js";
+import {TypeScriptService, typeScriptServiceKey} from "./plugins/TypeScriptPlugin.kt";
 import {ConverterContext} from "./context.js";
 import {Render} from "./Render.kt";
 
