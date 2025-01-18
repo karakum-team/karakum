@@ -98,7 +98,7 @@ external interface SchemaConfiguration {
      * @TJS-type object
      * @additionalProperties { "type": "array", "items": { "type": "string" } }
      * */
-    val importInjector: ReadonlyRecord<String, Array<ReadonlyArray<String>>>?
+    val importInjector: ReadonlyRecord<String, ReadonlyArray<String>>?
 
     /**
      * @TJS-type object
