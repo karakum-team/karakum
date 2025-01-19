@@ -1,7 +1,10 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
+import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.Render
+import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.objects.JsPlainObject
 import typescript.*
@@ -13,6 +16,12 @@ external interface LiteralUnionMemberEntry {
     val key: String
     val value: String
     val isString: Boolean
+}
+
+@JsPlainObject
+external interface LiteralUnionRenderResult {
+    val declaration: String
+    val nullable: Boolean
 }
 
 private fun extractBooleanUnionMemberName(node: LiteralTypeNode): String? {
@@ -223,42 +232,47 @@ val ${entry.key}: ${name}
 
     val heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
-    val namespace = typeScriptService?.findClosest(node, ts.isModuleDeclaration)
+    val namespace = typeScriptService?.findClosest(node, ::isModuleDeclaration)
 
     var externalModifier = "external "
 
-    if (isInlined && namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) === "object") {
+    if (
+        isInlined
+        && namespace != null
+        && isModuleDeclaration(namespace)
+        && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`
+    ) {
         externalModifier = ""
     }
 
     val injectedHeritageClauses = heritageInjections
         ?.filter { it.isNotEmpty() }
-        ?.join(", ")
+        ?.joinToString(separator = ", ")
 
-    val declaration = `
-sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses, it => ` : ${it}`)} {
+    val declaration = """
+sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 companion object {
-${body}${ifPresent(comment, it => (
-    "\n" + `
+${body}${ifPresent(comment) {
+    "\n" + """
 /*
 Duplicated names were generated:
-${it}
+$it
 */
-    `.trim()
-))}
+    """.trim()
+}}
 }
 }
-    `.trim()
+    """.trim()
 
-    const nullable = nullableTypes.length > 0
+    val nullable = nullableTypes.isNotEmpty()
 
-    return {
-        declaration,
-        nullable,
-    }
+    return LiteralUnionRenderResult(
+        declaration = declaration,
+        nullable = nullable,
+    )
 }
 
-export const literalUnionTypePlugin = createAnonymousDeclarationPlugin(
+fun literalUnionTypePlugin = createAnonymousDeclarationPlugin(
     (node, context, render) => {
         if (!isNullableLiteralUnionType(node, context)) return null
 
