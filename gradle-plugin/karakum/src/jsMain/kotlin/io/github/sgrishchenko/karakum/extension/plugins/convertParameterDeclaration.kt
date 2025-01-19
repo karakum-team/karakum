@@ -44,19 +44,19 @@ external interface ParameterInfo {
 
 typealias Signature = ReadonlyArray<ParameterInfo>
 
-//val convertParameterDeclaration = createSimplePlugin { node: Node, context, render ->
-//    if (!isParameter(node)) return@createSimplePlugin null
-//
-//    return convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(
-//        strategy = if (isFunctionTypeNode(node.parent)) {
-//            ParameterDeclarationStrategy.lambda
-//        } else {
-//            ParameterDeclarationStrategy.function
-//        },
-//        type = node.type,
-//        nullable = false,
-//    ))
-//}
+val convertParameterDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+    if (!isParameter(node)) return@plugin null
+
+    return convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(
+        strategy = if (isFunctionTypeNode(node.parent)) {
+            ParameterDeclarationStrategy.lambda
+        } else {
+            ParameterDeclarationStrategy.function
+        },
+        type = node.type,
+        nullable = false,
+    ))
+}
 
 /*
 fun convertParameterDeclarations (
