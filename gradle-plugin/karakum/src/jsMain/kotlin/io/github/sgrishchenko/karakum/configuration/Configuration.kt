@@ -19,7 +19,7 @@ sealed external interface Granularity {
         @JsValue("file")
         val file: Granularity
 
-        @JsValue("topLevel")
+        @JsValue("top-level")
         val topLevel: Granularity
     }
 }
