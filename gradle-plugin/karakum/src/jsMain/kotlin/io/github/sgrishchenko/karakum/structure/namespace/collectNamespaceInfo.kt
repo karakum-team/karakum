@@ -7,6 +7,7 @@ import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.objects.JsPlainObject
+import js.objects.recordOf
 import typescript.*
 
 @JsPlainObject
@@ -41,23 +42,24 @@ fun collectNamespaceInfo(
                     nodes = body.statements.asArray()
                 }
 
-                result += InputNamespaceInfoItem(
-                    fileName = item.fileName,
-                    `package` = item.`package`,
-                    moduleName = item.moduleName,
-                    qualifier = item.qualifier,
-                    hasRuntime = item.hasRuntime,
-                    imports = item.imports,
+                // TODO: create ticket for JsPlainObject
+                result += recordOf<String, Any?>().apply {
+                    this["fileName"] = item.fileName
+                    this["package"] = item.`package`
+                    this["moduleName"] = item.moduleName
+                    this["qualifier"] = item.qualifier
+                    this["hasRuntime"] = item.hasRuntime
+                    this["imports"] = item.imports
 
-                    name = item.name,
-                    strategy = item.strategy,
+                    this["name"] = item.name
+                    this["strategy"] = item.strategy
 
-                    nodes = nodes,
-                    meta = InputStructureItemMeta(
+                    this["nodes"] = nodes
+                    this["meta"] = InputStructureItemMeta(
                         type = "Namespace",
-                        name = item.name
-                    ),
-                )
+                        name = item.name,
+                    )
+                }.unsafeCast<InputNamespaceInfoItem>()
             }
         }
     }

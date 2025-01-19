@@ -47,7 +47,7 @@ fun extractNamespaceName(
     val nameChunk = NamespaceNameChunk(
         detailedName = detailedName,
         simpleName = simpleName,
-        `package` = packageChunks,
+        `package` = packageChunks.toTypedArray(),
         isAmbient = isAmbient,
     )
 
@@ -102,7 +102,7 @@ fun createNamespaceInfoItem(
         if (regexp.containsMatchIn(detailedName) || regexp.containsMatchIn(simpleName)) {
             return NamespaceInfoItem(
                 fileName = fileName,
-                `package` = packageChunks,
+                `package` = packageChunks.toTypedArray(),
                 moduleName = moduleName,
                 qualifier = qualifier,
                 hasRuntime = hasRuntime,
@@ -115,7 +115,7 @@ fun createNamespaceInfoItem(
 
     return NamespaceInfoItem(
         fileName = fileName,
-        `package` = packageChunks,
+        `package` = packageChunks.toTypedArray(),
         moduleName = moduleName,
         qualifier = qualifier,
         hasRuntime = hasRuntime,
