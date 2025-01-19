@@ -31,7 +31,7 @@ fun applyMapper(sourceFileName: String, mapper: ReadonlyRecord<String, String>):
     for ((pattern, result) in Object.entries(mapper)) {
         val regexp = pattern.toRegex()
 
-        if (regexp.matches(currentFileName)) {
+        if (regexp.containsMatchIn(currentFileName)) {
             currentFileName = currentFileName.replace(regexp, result)
         }
     }
