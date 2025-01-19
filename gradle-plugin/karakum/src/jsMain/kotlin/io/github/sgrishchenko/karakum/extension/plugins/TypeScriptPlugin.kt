@@ -41,6 +41,11 @@ class TypeScriptService(val program: Program) {
         return findClosest(getParent(rootNode), predicate)
     }
 
+    @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+    fun findClosestNamespace(rootNode: Node?): ModuleDeclaration? {
+        return findClosest(rootNode, ::isModuleDeclaration) as ModuleDeclaration?
+    }
+
     fun resolveType(node: TypeNode): Node? {
         val typeChecker = program.getTypeChecker()
         val type = typeChecker.getTypeAtLocation(node)

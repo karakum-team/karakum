@@ -68,10 +68,9 @@ private fun resolveUnionMemberName(node: LiteralTypeNode, context: ConverterCont
     if (nameResolverService == null) error("AnonymousDeclarationPlugin can't work without NameResolverService")
 
     val resolvedName = nameResolverService.tryResolveName(node, context)
-    if (resolvedName) return resolvedName
+    if (resolvedName != null) return resolvedName
 
-    val extractedName = extractUnionMemberName(node)
-    if (extractedName == null) error("Unsupported literal type")
+    val extractedName = extractUnionMemberName(node) ?: error("Unsupported literal type")
 
     return escapeIdentifier(extractedName)
 }
@@ -232,14 +231,13 @@ val ${entry.key}: ${name}
 
     val heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
-    val namespace = typeScriptService?.findClosest(node, ::isModuleDeclaration)
+    val namespace = typeScriptService?.findClosestNamespace(node)
 
     var externalModifier = "external "
 
     if (
         isInlined
         && namespace != null
-        && isModuleDeclaration(namespace)
         && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`
     ) {
         externalModifier = ""
@@ -272,16 +270,20 @@ $it
     )
 }
 
-fun literalUnionTypePlugin = createAnonymousDeclarationPlugin(
-    (node, context, render) => {
-        if (!isNullableLiteralUnionType(node, context)) return null
+val literalUnionTypePlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
+    if (!isNullableLiteralUnionType(node, context)) return@plugin null
 
-        const name = context.resolveName(node)
+    val name = context.resolveName(node)
 
-        const {declaration, nullable} = convertLiteralUnionType(node, name, false, context, render)
+    val result = convertLiteralUnionType(node, name, false, context, render)
+    val declaration = result.declaration
+    val nullable = result.nullable
 
-        const reference = nullable ? `${name}?` : name
+    val reference = if (nullable) "${name}?" else name
 
-        return {name, declaration, reference};
-    }
-)
+    AnonymousDeclaration(
+        name = name,
+        declaration = declaration,
+        reference = reference,
+    )
+}
