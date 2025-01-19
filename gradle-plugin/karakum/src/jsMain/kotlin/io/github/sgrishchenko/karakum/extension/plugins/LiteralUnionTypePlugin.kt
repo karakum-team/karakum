@@ -146,7 +146,7 @@ fun convertLiteralUnionType(
     isInlined: Boolean,
     context: ConverterContext,
     render: Render<Node>,
-) {
+): LiteralUnionRenderResult {
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
