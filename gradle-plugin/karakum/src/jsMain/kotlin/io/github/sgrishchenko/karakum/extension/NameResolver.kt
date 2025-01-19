@@ -5,5 +5,5 @@ import typescript.Node
 
 external interface NameResolver<in TNode : Node> {
     @JsNative
-    operator fun invoke(node: TNode, context: ConverterContext): String
+    operator fun invoke(node: TNode, context: ConverterContext): String?
 }

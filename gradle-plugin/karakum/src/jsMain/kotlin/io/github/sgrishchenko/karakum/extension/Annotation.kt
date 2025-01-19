@@ -9,5 +9,5 @@ external interface AnnotationContext : ConverterContext {
 
 external interface Annotation<in TNode : Node> {
     @JsNative
-    operator fun invoke(node: TNode, context: AnnotationContext): String
+    operator fun invoke(node: TNode, context: AnnotationContext): String?
 }
