@@ -3,6 +3,10 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.ConverterContext
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.function
+import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.lambda
+import io.github.sgrishchenko.karakum.extension.renderNullable
+import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.array.ReadonlyArray
 import js.objects.JsPlainObject
 import seskar.js.JsValue
@@ -47,24 +51,19 @@ typealias Signature = ReadonlyArray<ParameterInfo>
 val convertParameterDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
     if (!isParameter(node)) return@plugin null
 
-    return convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(
-        strategy = if (isFunctionTypeNode(node.parent)) {
-            ParameterDeclarationStrategy.lambda
-        } else {
-            ParameterDeclarationStrategy.function
-        },
+    convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(
+        strategy = if (isFunctionTypeNode(node.parent)) lambda else function,
         type = node.type,
         nullable = false,
     ))
 }
 
-/*
-fun convertParameterDeclarations (
+fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
     context: ConverterContext,
     render: Render<Node>,
     configuration: ParameterDeclarationsConfiguration,
-) {
+): String {
     val strategy = configuration.strategy
     val defaultValue = configuration.defaultValue
     val template = configuration.template
@@ -73,129 +72,136 @@ fun convertParameterDeclarations (
     val commentService = context.lookupService<CommentService>(commentServiceKey)
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    if (strategy === "function") {
-        const annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
-        const annotations = annotationService?.resolveAnnotations(node, context) ?? []
-        const leadingComment = commentService?.renderLeadingComments(node) ?? ""
-        const delimiter = `\n\n${leadingComment}${annotations.join("\n")}`
+    if (strategy == function) {
+        val annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
+        val annotations = annotationService?.resolveAnnotations(node, context) ?: emptyArray()
+        val leadingComment = commentService?.renderLeadingComments(node) ?: ""
+        val delimiter = "\n\n${leadingComment}${annotations.joinToString(separator = "\n")}"
 
-        const inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
-        const signatures = expandUnions(initialSignature, context)
+        val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+        val signatures = expandUnions(initialSignature, context)
 
-        return signatures
-            .map(signature => {
-                const inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context) ?? undefined
+        return signatures.joinToString(separator = delimiter) { signature ->
+            val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-                const parameters = signature
-                    .filter(({parameter}) => !isThisParameter(parameter))
-                    .map(({parameter, type, nullable}) => {
-                        return convertParameterDeclarationWithFixedType(parameter, context, render, {
-                            strategy,
-                            defaultValue,
-                            inheritanceModifier,
-                            type,
-                            nullable,
-                        })
-                    })
-                    .filter(Boolean)
-                    .join(", ")
+            val parameters = signature
+                .filter { !isThisParameter(it.parameter) }
+                .map {
+                    convertParameterDeclarationWithFixedType(
+                        it.parameter, context, render, ParameterDeclarationConfiguration(
+                            strategy = strategy,
+                            defaultValue = defaultValue,
+                            inheritanceModifier = inheritanceModifier,
+                            type = it.type,
+                            nullable = it.nullable,
+                        )
+                    )
+                }
+                .filter { it.isNotEmpty() }
+                .joinToString(separator = ", ")
 
-                const prefix = signature[0] && isThisParameter(signature[0].parameter)
-                    ? `/* ${typeScriptService?.printNode(signature[0].parameter)}, */ `
-                    : ""
+            val firstParameter = signature.getOrNull(0)?.parameter
+            val prefix = if (firstParameter != null && isThisParameter(firstParameter)) {
+                "/* ${typeScriptService?.printNode(firstParameter)}, */ "
+            } else {
+                ""
+            }
 
-                return template(prefix + parameters, signature)
-            })
-            .join(delimiter)
+            template(prefix + parameters, signature)
+        }
     }
 
-    if (strategy === "lambda") {
-        const parameters = node.parameters
-            .filter(parameter => !isThisParameter(parameter))
-            .map(parameter => {
-                return convertParameterDeclarationWithFixedType(parameter, context, render, {
-                    strategy,
-                    type: parameter.type,
-                    nullable: false,
-                })
-            })
-            .filter(Boolean)
-            .join(", ")
+    if (strategy == lambda) {
+        val parameters = node.parameters.asArray()
+            .filter { parameter -> !isThisParameter(parameter) }
+            .map { parameter ->
+                convertParameterDeclarationWithFixedType(parameter, context, render, ParameterDeclarationConfiguration(
+                    strategy = strategy,
+                    type = parameter.type,
+                    nullable = false,
+                ))
+            }
+            .filter { it.isNotEmpty() }
+            .joinToString(separator = ", ")
 
-        const prefix = node.parameters[0] && isThisParameter(node.parameters[0])
-            ? `/* ${typeScriptService?.printNode(node.parameters[0])}, */ `
-            : ""
+        val firstParameter = node.parameters.asArray().getOrNull(0)
+        val prefix = if (firstParameter != null && isThisParameter(firstParameter)) {
+            "/* ${typeScriptService?.printNode(firstParameter)}, */ "
+        } else {
+            ""
+        }
 
         return template(prefix + parameters, initialSignature)
     }
 
-    throw new Error(`Unknown parameter declaration strategy: ${strategy}`)
-}*/
+    error("Unknown parameter declaration strategy: $strategy")
+}
 
-/*export const convertParameterDeclarationWithFixedType = (
+fun convertParameterDeclarationWithFixedType(
     node: ParameterDeclaration,
     context: ConverterContext,
-    render: Render,
+    render: Render<Node>,
     configuration: ParameterDeclarationConfiguration,
-) => {
-    const {type, strategy, inheritanceModifier} = configuration
+): String {
+    val type = configuration.type
+    val strategy = configuration.strategy
+    val inheritanceModifier = configuration.inheritanceModifier
 
-    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
-    node.dotDotDotToken && checkCoverageService?.cover(node.dotDotDotToken)
-    node.questionToken && checkCoverageService?.cover(node.questionToken)
+    node.dotDotDotToken?.let { checkCoverageService?.cover(it) }
+    node.questionToken?.let { checkCoverageService?.cover(it) }
 
-    let name: string
-
-    if (ts.isIdentifier(node.name)) {
-        name = escapeIdentifier(render(node.name))
+    val name = if (isIdentifier(node.name)) {
+        escapeIdentifier(render(node.name))
     } else {
-        const parameterIndex = node.parent.parameters.indexOf(node)
-
-        const anonymousParameters = node.parent.parameters
-            .filter(parameter => !ts.isIdentifier(parameter.name))
-
-        name = anonymousParameters.length === 1
-            ? "options"
-            : `param${parameterIndex}`
-
         checkCoverageService?.deepCover(node.name)
+
+        @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+        val signature = (node.parent as SignatureDeclarationBase)
+
+        val parameterIndex = signature.parameters.asArray().indexOf(node)
+
+        val anonymousParameters = signature.parameters.asArray()
+            .filter { parameter -> !isIdentifier(parameter.name) }
+
+        if (anonymousParameters.size == 1) "options" else "param${parameterIndex}"
     }
 
-    const isOptional = strategy === "lambda" && Boolean(node.questionToken)
+    val isOptional = strategy == lambda && node.questionToken != null
 
-    const defaultValue = configuration.defaultValue ?? "definedExternally"
+    val defaultValue = configuration.defaultValue ?: "definedExternally"
 
-    const isDefinedExternally = strategy === "function"
-        && Boolean(node.questionToken)
+    val isDefinedExternally = strategy == function
+        && node.questionToken != null
         && inheritanceModifier !== "override"
         && defaultValue !== ""
 
-    let renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
+    var renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
 
-    if (type && node.dotDotDotToken) {
-        if (renderedType.startsWith("Array")) {
-            renderedType = renderedType.replace(/^Array<(.+)>$/, "$1")
+    if (type != null && node.dotDotDotToken != null) {
+        renderedType = if (renderedType.startsWith("Array")) {
+            renderedType.replace("^Array<(.+)>$".toRegex(), "$1")
         } else if (renderedType.startsWith("ReadonlyArray")) {
-            renderedType = renderedType.replace(/^ReadonlyArray<(.+)>$/, "$1")
+            renderedType.replace("^ReadonlyArray<(.+)>$".toRegex(), "$1")
         } else if (renderedType.startsWith("js.array.ReadonlyArray")) {
-            renderedType = renderedType.replace(/^js.array.ReadonlyArray<(.+)>$/, "$1")
+            renderedType.replace("^js.array.ReadonlyArray<(.+)>$".toRegex(), "$1")
         } else {
-            renderedType = `Any? /* ${renderedType} */`
+            "Any? /* $renderedType */"
         }
     }
 
-
-    return `${node.dotDotDotToken ? "vararg " : ""}${name}: ${renderedType}${isOptional ? " /* use undefined for default */" : ""}${isDefinedExternally ? ` = ${defaultValue}` : ""}`
+    return "${if (node.dotDotDotToken != null) "vararg " else ""}${name}: ${renderedType}${if (isOptional) " /* use undefined for default */" else ""}${if (isDefinedExternally) " = $defaultValue" else ""}"
 }
 
-const isThisParameter = (parameter: ParameterDeclaration) => (
-    ts.isIdentifier(parameter.name)
-    && parameter.name.text === "this"
-)*/
+private fun isThisParameter(parameter: ParameterDeclaration): Boolean {
+    val name = parameter.name
 
-fun extractSignature(node: SignatureDeclarationBase) =
+    return isIdentifier(name) && name.text === "this"
+}
+
+private fun extractSignature(node: SignatureDeclarationBase): Signature =
     node.parameters.asArray().map {
         ParameterInfo(
             parameter = it,
@@ -203,69 +209,71 @@ fun extractSignature(node: SignatureDeclarationBase) =
             nullable = false,
             optional = it.questionToken == null
         )
-    }
+    }.toTypedArray()
 
-/*
-const expandUnions = (
-    signature: Signature,
+private fun expandUnions(
+    initialSignature: Signature,
     context: ConverterContext,
-): Signature[] => {
-    const currentSignatures = [signature]
+): ReadonlyArray<Signature> {
+    val currentSignatures = mutableListOf(initialSignature)
 
-    const checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
-    for (let parameterIndex = 0; parameterIndex < signature.length; parameterIndex++) {
-        for (let signatureIndex = 0; signatureIndex < currentSignatures.length; signatureIndex++) {
-            const signature = currentSignatures[signatureIndex]
+    for (parameterIndex in initialSignature.indices) {
+        for (signatureIndex in currentSignatures.indices) {
+            val signature = currentSignatures[signatureIndex]
+            val parameterInfo = signature.getOrNull(parameterIndex) ?: continue
 
-            if (!signature[parameterIndex]) continue
-
-            const {parameter, type, optional} = signature[parameterIndex]
-            const previousOptional = signature[parameterIndex - 1]?.optional ?? false
+            val parameter = parameterInfo.parameter
+            val type = parameterInfo.type
+            val optional = parameterInfo.optional
+            val previousOptional = signature.getOrNull(parameterIndex - 1)?.optional ?: false
 
             if (isThisParameter(parameter)) continue
 
-            if (type && isNullableLiteralUnionType(type, context)) continue
+            if (type != null && isNullableLiteralUnionType(type, context)) continue
 
-            if (type && ts.isUnionTypeNode(type)) {
+            if (type != null && isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
 
-                const generatedSignatures: Signature[] = []
+                val generatedSignatures = mutableListOf<Signature>()
 
-                const nullable = isNullableUnionType(type, context)
+                val nullable = isNullableUnionType(type, context)
 
-                const types = flatUnionTypes(type, context)
+                val types = flatUnionTypes(type, context)
 
-                for (const subtype of types) {
+                for (subtype in types) {
                     if (isNullableType(subtype)) {
                         checkCoverageService?.deepCover(type)
                         continue
                     }
 
-                    const generatedSignature: Signature = [...signature]
-                    const parameterInfo = {
-                        parameter,
-                        type: subtype,
-                        nullable,
-                        optional,
-                    }
-                    generatedSignature.splice(parameterIndex, 1, parameterInfo)
-                    generatedSignatures.push(generatedSignature)
+                    val generatedSignature = signature.toMutableList()
+                    val parameterInfo = ParameterInfo(
+                        parameter = parameter,
+                        type = subtype,
+                        nullable = nullable,
+                        optional = optional,
+                    )
+                    generatedSignature.removeAt(parameterIndex)
+                    generatedSignature.add(parameterIndex, parameterInfo)
+                    generatedSignatures += generatedSignature.toTypedArray()
                 }
 
                 if (
-                    generatedSignatures.length > 1
+                    generatedSignatures.size > 1
                     && optional
                     && !previousOptional
                 ) {
-                    const strippedSignature = signature.filter(it => !it.optional)
-                    generatedSignatures.unshift(strippedSignature)
+                    val strippedSignature = signature.filter { !it.optional }.toTypedArray()
+                    generatedSignatures.add(0, strippedSignature)
                 }
 
-                currentSignatures.splice(signatureIndex, 1, ...generatedSignatures)
+                currentSignatures.removeAt(signatureIndex)
+                currentSignatures.addAll(signatureIndex, generatedSignatures)
             }
         }
     }
 
-    return currentSignatures
-}*/
+    return currentSignatures.toTypedArray()
+}
