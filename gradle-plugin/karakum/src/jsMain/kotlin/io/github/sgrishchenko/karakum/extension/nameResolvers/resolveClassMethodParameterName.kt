@@ -33,10 +33,10 @@ val resolveClassMethodParameterName = NameResolver<Node> { node, context ->
     val classNode = getParent(method)
         ?: return@NameResolver null
     if (!isClassDeclaration(classNode)) return@NameResolver null
-    val classNodeNameNode = classNode.name
+    val classNameNode = classNode.name
         ?: return@NameResolver null
 
-    val parentName = classNodeNameNode.text
+    val parentName = classNameNode.text
 
     "${capitalize(parentName)}${capitalize(methodName)}${capitalize(parameterName)}"
 }
