@@ -142,7 +142,6 @@ suspend fun loadExtensionsFromFile(
     val absoluteExtensions = toAbsolute(extensions, cwd)
     val extensionModule = import<ExtensionModule>(toModuleName(absoluteExtensions))
 
-    @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
     val partialExtensions = requireNotNull(extensionModule.default) as PartialExtensions
 
     console.log("Extension file: $absoluteExtensions")

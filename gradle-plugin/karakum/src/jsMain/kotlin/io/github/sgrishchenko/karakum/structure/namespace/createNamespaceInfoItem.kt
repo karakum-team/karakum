@@ -78,7 +78,7 @@ fun createNamespaceInfoItem(
     val simpleName = name.joinToString(separator = ".") { it.simpleName }
 
     val fileName = "namespace.kt"
-    val packageChunks = name.flatMap { it.`package`.toList() }
+    val packageChunks = name.flatMap { it.`package`.asIterable() }
     val hasRuntime = true
 
     var moduleName = defaultModuleName
