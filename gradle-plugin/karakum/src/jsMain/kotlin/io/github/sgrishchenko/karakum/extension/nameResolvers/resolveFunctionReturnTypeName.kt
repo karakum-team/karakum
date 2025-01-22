@@ -20,7 +20,7 @@ val resolveFunctionReturnTypeName = NameResolver<Node> { node, context ->
 
     val functionNameNode = functionNode.name
         ?: return@NameResolver null
-    if (functionNode.type !== node) return@NameResolver null
+    if (functionNode.type != node) return@NameResolver null
 
     val parentName = functionNameNode.text
 
