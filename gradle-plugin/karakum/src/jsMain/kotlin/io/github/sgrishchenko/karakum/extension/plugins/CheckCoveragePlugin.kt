@@ -66,7 +66,7 @@ class CheckCoveragePlugin : ConverterPlugin<Node> {
 
         val result = this.checkCoverageService.emit{ uncoveredNode ->
             if (configurationService?.configuration?.verbose == true) {
-                val syntaxKindRecord = SyntaxKind.Companion.unsafeCast<ReadonlyRecord<SyntaxKind, String>>()
+                val syntaxKindRecord = SyntaxKind.unsafeCast<ReadonlyRecord<SyntaxKind, String>>()
                 val message = "Node with kind ${syntaxKindRecord[uncoveredNode.kind]} is uncovered"
                 val sourceFile = uncoveredNode.getSourceFileOrNull()
 

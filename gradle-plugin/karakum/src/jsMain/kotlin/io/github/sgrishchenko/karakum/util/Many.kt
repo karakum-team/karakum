@@ -12,6 +12,7 @@ inline fun <T> manyOf(value: T) = value.unsafeCast<Many<T>>()
 inline fun <T> manyOf(vararg values: T) = values.unsafeCast<Many<T>>()
 
 inline fun <T> Many<T>.toArray(): ReadonlyArray<T> {
+    @Suppress("USELESS_IS_CHECK")
     val result = if (this is ReadonlyArray<*>) {
         this
     } else {

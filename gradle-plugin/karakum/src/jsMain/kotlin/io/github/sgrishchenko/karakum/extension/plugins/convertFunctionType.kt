@@ -1,0 +1,32 @@
+package io.github.sgrishchenko.karakum.extension.plugins
+
+import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import typescript.Node
+import typescript.asArray
+import typescript.isFunctionTypeNode
+
+val convertFunctionType = createSimplePlugin plugin@{ node: Node, context, render ->
+    if (!isFunctionTypeNode(node)) return@plugin null
+
+    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
+    checkCoverageService?.cover(node)
+
+    if (node.typeParameters != null) {
+        return@plugin "Function<Any?> /* ${typeScriptService?.printNode(node)} */"
+    }
+
+    val returnType = render(node.type)
+
+    if (node.parameters.asArray().any { it.dotDotDotToken != null }) {
+        return@plugin "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
+    }
+
+    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
+        strategy = ParameterDeclarationStrategy.lambda,
+        template = { parameters, _ ->
+            "(${parameters}) -> ${returnType}"
+        },
+    ))
+}
