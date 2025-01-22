@@ -7,3 +7,6 @@ external interface NameResolver<in TNode : Node> {
     @JsNative
     operator fun invoke(node: TNode, context: ConverterContext): String?
 }
+
+fun <TNode : Node> NameResolver(resolver: (node: TNode, context: ConverterContext) -> String?) =
+    resolver.unsafeCast<NameResolver<TNode>>()
