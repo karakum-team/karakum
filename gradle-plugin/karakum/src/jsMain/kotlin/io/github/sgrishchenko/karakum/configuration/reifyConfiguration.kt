@@ -33,7 +33,7 @@ private fun resolveDefaultInputRoot(inputFileNames: ReadonlyArray<String>): Stri
         .toTypedArray()
 
     // TODO: handle non-default relative root (UNC prefix)
-    return commonPrefix(*inputPathChunks).joinToString(path.posix.sep, postfix = path.posix.sep)
+    return commonPrefix(sources = inputPathChunks).joinToString(path.posix.sep, postfix = path.posix.sep)
 }
 
 suspend fun reifyConfiguration(configuration: PartialConfiguration): Configuration {

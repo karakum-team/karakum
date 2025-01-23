@@ -10,7 +10,7 @@ sealed external interface Rule
 
 inline fun ruleOf(value: String) = value.unsafeCast<Rule>()
 
-inline fun ruleOf(vararg values: Pair<String, String>) = recordOf(*values).unsafeCast<Rule>()
+inline fun ruleOf(vararg values: Pair<String, String>) = recordOf(pairs = values).unsafeCast<Rule>()
 
 inline fun Rule.singleOrNull(): String? {
     return if (jsTypeOf(this) == "string") {
