@@ -32,7 +32,7 @@ private fun resolveConflictResolutionStrategy(
         }
     }
 
-    return undefined
+    return null
 }
 
 private fun <T> handleConflicts(

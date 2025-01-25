@@ -65,7 +65,7 @@ class DeclarationMergingService(private val program: Program) {
 
     fun getHeritageClauses(node: NamedDeclaration): ReadonlyArray<HeritageClause>? {
         val symbol = this.getSymbol(node)
-        if (symbol == null) return undefined
+        if (symbol == null) return null
 
         val heritageClauses = symbol.declarations
             ?.mapNotNull {
