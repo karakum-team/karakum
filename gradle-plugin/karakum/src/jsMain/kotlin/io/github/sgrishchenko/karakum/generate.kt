@@ -21,7 +21,6 @@ import node.path.path
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
-import kotlin.js.Promise
 
 private fun checkCasing(fileNames: ReadonlyArray<String>) {
     var isConflict = false
@@ -108,7 +107,7 @@ suspend fun generate(configuration: Configuration) {
         }
         .filter { sourceFile ->
             val relativeFileName = path.relative(cwd, sourceFile.fileName)
-            input.any { pattern ->
+            ignoreInput.all { pattern ->
                 if (path.isAbsolute(pattern)) {
                     !path.matchesGlob(sourceFile.fileName, pattern)
                 } else {
@@ -252,5 +251,3 @@ suspend fun generate(configuration: Configuration) {
         writeFile(resultFile.fileName, resultFile.body)
     }
 }
-
-fun generateAsync(configuration: Configuration): Promise<Unit> = TODO("generate(configuration)")
