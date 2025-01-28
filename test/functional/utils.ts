@@ -4,8 +4,10 @@ import path from "node:path";
 import url from "node:url";
 import fs from "node:fs/promises";
 import process from "node:process";
-import {PartialConfiguration} from "../../src/configuration/configuration.js";
-import {run as karakumRun} from "../../src/index.js";
+// import {PartialConfiguration} from "../../src/configuration/configuration.js";
+// import {run as karakumRun} from "../../src/index.js";
+// @ts-ignore
+import {run as karakumRun} from "../../gradle-plugin/build/js/packages/karakum/kotlin/karakum.mjs";
 
 const isUpdate = Boolean(process.env['KARAKUM_TEST_UPDATE']);
 
@@ -15,7 +17,7 @@ async function readDir(dirName: string) {
         .map(it => path.resolve(it.path, it.name))
 }
 
-export function testGeneration(name: string, fileUrl: string, createConfiguration: (output: string) => PartialConfiguration) {
+export function testGeneration(name: string, fileUrl: string, createConfiguration: (output: string) => any/*PartialConfiguration*/) {
     test(name, async context => {
         const dirName = path.dirname(url.fileURLToPath(fileUrl))
 

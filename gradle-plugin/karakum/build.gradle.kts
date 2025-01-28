@@ -20,10 +20,12 @@ kotlin {
         }
 
         binaries.executable()
+        generateTypeScriptDefinitions()
     }
     
     sourceSets {
         jsMain.dependencies {
+            implementation(libs.coroutines.core)
             implementation(kotlinWrappers.js)
             implementation(kotlinWrappers.node)
             implementation(kotlinWrappers.typescript)
