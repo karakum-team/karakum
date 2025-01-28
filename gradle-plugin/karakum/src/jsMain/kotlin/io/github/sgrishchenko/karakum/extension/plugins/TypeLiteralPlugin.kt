@@ -60,7 +60,7 @@ val typeLiteralPlugin = createAnonymousDeclarationPlugin plugin@{ node, context,
     if (!isTypeLiteralNode(node)) return@plugin null
 
     // handle empty type literal
-    if (node.members.asArray().isNotEmpty()) return@plugin AnonymousDeclaration("Any")
+    if (node.members.asArray().isEmpty()) return@plugin AnonymousDeclaration("Any")
 
     val name = context.resolveName(node)
 
