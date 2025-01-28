@@ -7,5 +7,6 @@ fun traverse(rootNode: Node, handler: (node: Node) -> Unit) {
 
     rootNode.forEachChild({ node ->
         traverse(node, handler)
+        undefined
     })
 }
