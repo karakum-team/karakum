@@ -40,7 +40,7 @@ ${body}
         """.trim()
     }
 
-    if (namespaceStrategy == NamespaceStrategy.`object`) {
+    if (namespaceStrategy == NamespaceStrategy.`package`) {
         // was handled by file structure
         return@plugin ""
     }
