@@ -5,7 +5,7 @@
 package import.consumer
 
 import other.import.provider.Y as MyY
-// unhandled import: Ignored from "ignored-import" 
-// unhandled import: other as OtherIgnored from "ignored-import" 
+// unhandled import: Ignored from "ignored-import"
+// unhandled import: other as OtherIgnored from "ignored-import"
 
 external val myY: MyY

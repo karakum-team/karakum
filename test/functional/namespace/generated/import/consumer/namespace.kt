@@ -4,5 +4,5 @@
 
 package import.consumer
 
-// unhandled import: Ignored from "ignored-import" 
+// unhandled import: Ignored from "ignored-import"
 // unhandled import: other as OtherIgnored from "ignored-import"

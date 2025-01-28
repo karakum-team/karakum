@@ -128,9 +128,9 @@ export function collectImportInfo(
                     const importAlias = importNames[importName]
 
                     if (importName === importAlias) {
-                        imports.push(`// unhandled import: ${importName} from "${moduleName}" `)
+                        imports.push(`// unhandled import: ${importName} from "${moduleName}"`)
                     } else {
-                        imports.push(`// unhandled import: ${importName} as ${importAlias} from "${moduleName}" `)
+                        imports.push(`// unhandled import: ${importName} as ${importAlias} from "${moduleName}"`)
                     }
                 }
 
