@@ -15,7 +15,7 @@ external interface Render<in TNode : Node> {
 fun <TNode : Node> Render(render: (node: TNode) -> String) = render.unsafeCast<Render<TNode>>()
 
 fun ifPresent(part: String?, render: (part: String) -> String): String {
-    return part?.let(render) ?: ""
+    return part?.takeIf { it.isNotEmpty() }?.let(render) ?: ""
 }
 
 private val primitiveKinds = setOf(
