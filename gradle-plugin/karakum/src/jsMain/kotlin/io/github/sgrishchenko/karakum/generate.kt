@@ -229,9 +229,9 @@ suspend fun generate(configuration: Configuration) {
 
             if (ignoreOutput.all { pattern -> !path.matchesGlob(generatedFileName, pattern) }) {
                 if (isDerivedFile(generatedFile)) {
-                    derivedFiles + generatedFile
+                    derivedFiles += generatedFile
                 } else {
-                    generatedFiles + generatedFile
+                    generatedFiles += generatedFile
                 }
             }
         }
