@@ -68,7 +68,7 @@ fun convertMappedType (
 
     var externalModifier = "external "
 
-    if (isInlined && namespace !== undefined && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
+    if (isInlined && namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
         externalModifier = ""
     }
 
