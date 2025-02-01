@@ -43,7 +43,7 @@ val convertEnumDeclaration = createSimplePlugin plugin@{ node: Node, context, re
                 ?.getMembers(node) { namespaceInfoService?.resolveNamespaceStrategy(it) }
                 ?: node.members.asArray()
             )
-        .joinToString(separator = ", ") { member -> "${render(member)}: $name" }
+        .joinToString(separator = "\n") { member -> "${render(member)}: $name" }
 
     """
 sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {

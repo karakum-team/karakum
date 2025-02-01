@@ -72,7 +72,7 @@ fun convertMappedType (
         externalModifier = ""
     }
 
-    var injectedHeritageClauses = heritageInjections
+    val injectedHeritageClauses = heritageInjections
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
 
