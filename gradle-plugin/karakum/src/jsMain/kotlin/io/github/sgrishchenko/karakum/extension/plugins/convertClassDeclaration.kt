@@ -125,7 +125,7 @@ val convertClassDeclaration = createSimplePlugin plugin@{ node: Node, context, r
         .joinToString(separator = "\n") { render(it) }
 
     val staticMembers = otherMembers
-        .filter { member -> extractModifiers(member).all { it.kind == SyntaxKind.StaticKeyword} }
+        .filter { member -> extractModifiers(member).any { it.kind == SyntaxKind.StaticKeyword} }
         .joinToString(separator = "\n") { render(it) }
 
     val injectedMembers = (injections ?: emptyArray())
