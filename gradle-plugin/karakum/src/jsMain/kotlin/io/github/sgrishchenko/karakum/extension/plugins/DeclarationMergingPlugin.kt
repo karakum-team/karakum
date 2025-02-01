@@ -6,8 +6,10 @@ import io.github.sgrishchenko.karakum.extension.ConverterPlugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.DeepMap
+import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.JsArray
 import js.array.ReadonlyArray
+import js.objects.jso
 import js.symbol.Symbol
 import typescript.*
 import kotlin.contracts.ExperimentalContracts
@@ -17,6 +19,11 @@ val declarationMergingServiceKey = Symbol()
 
 class DeclarationMergingService(private val program: Program) {
     private val coveredSymbols = mutableSetOf<typescript.Symbol>()
+    private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
+    private val printer = createPrinter(jso {
+        removeComments = true
+        newLine = NewLineKind.LineFeed
+    })
 
     fun isCovered(node: NamedDeclaration): Boolean {
         val symbol = this.getSymbol(node)
@@ -120,7 +127,8 @@ class DeclarationMergingService(private val program: Program) {
                     val parameterSymbols = declaration.parameters.asArray()
                         .map { parameter ->
                             val typeNode = parameter.type ?: return@map "any"
-                            typeChecker.getTypeFromTypeNode(typeNode).symbol
+                            typeChecker.getTypeFromTypeNode(typeNode).symbol.unsafeCast<typescript.Symbol?>()
+                                ?: printNode(typeNode)
                         }
                         .toTypedArray()
 
@@ -153,6 +161,12 @@ class DeclarationMergingService(private val program: Program) {
 
         val typeChecker = program.getTypeChecker()
         return typeChecker.getSymbolAtLocation(name)
+    }
+
+    private fun printNode(node: Node): String {
+        val sourceFile = node.getSourceFileOrNull() ?: virtualSourceFile
+
+        return printer.printNode(EmitHint.Unspecified, node, sourceFile)
     }
 }
 
