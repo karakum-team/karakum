@@ -49,6 +49,7 @@ val convertTypeAliasDeclaration = createSimplePlugin plugin@{ node: Node, contex
             checkCoverageService?.cover(typeNode)
 
             val mergedTypeParameters = (node.typeParameters?.asArray() ?: emptyArray())
+                .plus(functionTypeParameters.asArray())
                 .map { render(it) }
                 .filter { it.isNotEmpty() }
                 .joinToString(separator = ", ")
