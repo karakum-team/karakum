@@ -207,7 +207,7 @@ private fun extractSignature(node: SignatureDeclarationBase): Signature =
             parameter = it,
             type = it.type,
             nullable = false,
-            optional = it.questionToken == null
+            optional = it.questionToken != null
         )
     }.toTypedArray()
 
@@ -220,18 +220,29 @@ private fun expandUnions(
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
 
     for (parameterIndex in initialSignature.indices) {
-        for (signatureIndex in currentSignatures.indices) {
+        var signatureIndex = 0
+        while (signatureIndex < currentSignatures.size) {
             val signature = currentSignatures[signatureIndex]
-            val parameterInfo = signature.getOrNull(parameterIndex) ?: continue
+            val parameterInfo = signature.getOrNull(parameterIndex)
+            if (parameterInfo == null) {
+                signatureIndex++
+                continue
+            }
 
             val parameter = parameterInfo.parameter
             val type = parameterInfo.type
             val optional = parameterInfo.optional
             val previousOptional = signature.getOrNull(parameterIndex - 1)?.optional ?: false
 
-            if (isThisParameter(parameter)) continue
+            if (isThisParameter(parameter)) {
+                signatureIndex++
+                continue
+            }
 
-            if (type != null && isNullableLiteralUnionType(type, context)) continue
+            if (type != null && isNullableLiteralUnionType(type, context)) {
+                signatureIndex++
+                continue
+            }
 
             if (type != null && isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
@@ -272,6 +283,7 @@ private fun expandUnions(
                 currentSignatures.removeAt(signatureIndex)
                 currentSignatures.addAll(signatureIndex, generatedSignatures)
             }
+            signatureIndex++
         }
     }
 
