@@ -22,6 +22,9 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         val libs by creating {
+            val kotlinVersion: String by settings
+            library("test", "org.jetbrains.kotlin", "kotlin-test").version(kotlinVersion)
+
             val kotlinCoroutinesVersion: String by settings
             library("coroutines-core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version(kotlinCoroutinesVersion)
 
