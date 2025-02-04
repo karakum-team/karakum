@@ -10,13 +10,13 @@ class ExtensionTest {
     @Test
     fun test() = runTest {
         generateTests("extension") { output ->
-            recordOf<String, Any?>().apply {
-                this["input"] = "**/*.d.ts"
-                this["output"] = output
-                this["libraryName"] = "extension"
-                this["verbose"] = true
-                this["extensions"] = "./extensions.js"
-            }.unsafeCast<PartialConfiguration>()
+            recordOf(
+                "input" to "**/*.d.ts",
+                "output" to output,
+                "libraryName" to "extension",
+                "verbose" to true,
+                "extensions" to "./extensions.js",
+            ).unsafeCast<PartialConfiguration>()
         }
     }
 }

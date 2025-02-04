@@ -10,12 +10,12 @@ class BaseTest {
     @Test
     fun test() = runTest {
         generateTests("base") { output ->
-            recordOf<String, Any?>().apply {
-                this["input"] = "**/*.d.ts"
-                this["output"] = output
-                this["libraryName"] = "sandbox-base"
-                this["verbose"] = true
-            }.unsafeCast<PartialConfiguration>()
+            recordOf(
+                "input" to "**/*.d.ts",
+                "output" to output,
+                "libraryName" to "sandbox-base",
+                "verbose" to true,
+            ).unsafeCast<PartialConfiguration>()
         }
     }
 }

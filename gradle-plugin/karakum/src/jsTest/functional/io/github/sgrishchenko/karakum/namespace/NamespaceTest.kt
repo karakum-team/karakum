@@ -12,19 +12,19 @@ class NamespaceTest {
     @Test
     fun test() = runTest {
         generateTests("namespace") { output ->
-            recordOf<String, Any?>().apply {
-                this["input"] = "**/*.d.ts"
-                this["output"] = output
-                this["libraryName"] = "sandbox-namespace"
-                this["granularity"] = "top-level"
-                this["packageNameMapper"] = recordOf(
+            recordOf(
+                "input" to "**/*.d.ts",
+                "output" to output,
+                "libraryName" to "sandbox-namespace",
+                "granularity" to "top-level",
+                "packageNameMapper" to recordOf(
                     "will/be/mapped/andthis" to "was/mapped/nested",
                     "will/be/mapped" to "was/mapped/main"
-                )
-                this["moduleNameMapper"] = recordOf(
+                ),
+                "moduleNameMapper" to recordOf(
                     "will-be-mapped#AndThis" to "was-mapped#Nested"
-                )
-                this["namespaceStrategy"] = recordOf(
+                ),
+                "namespaceStrategy" to recordOf(
                     "package-namespace.ObjectNamespace" to NamespaceStrategy.`object`,
                     "package-namespace" to NamespaceStrategy.`package`,
                     "IgnoreNamespace" to NamespaceStrategy.ignore,
@@ -33,17 +33,17 @@ class NamespaceTest {
                     "import-provider" to NamespaceStrategy.`package`,
                     "other-import-provider" to NamespaceStrategy.`package`,
                     "import-consumer" to NamespaceStrategy.`package`,
-                )
-                this["importMapper"] = recordOf(
+                ),
+                "importMapper" to recordOf(
                     "^import-provider" to ruleOf("import.provider"),
                     "other-import-provider" to ruleOf(
                         "default" to "other.import.provider.X",
                         "\\*" to "",
                         ".+" to "other.import.provider.",
                     )
-                )
-                this["verbose"] = true
-            }.unsafeCast<PartialConfiguration>()
+                ),
+                "verbose" to true,
+            ).unsafeCast<PartialConfiguration>()
         }
     }
 }
