@@ -3,7 +3,7 @@
 @file:JsModule("import-consumer")
 @file:JsQualifier("Nested")
 
-package namespace.import.consumer.nested
+package import.consumer.nested
 
 import other.import.provider.X
 // unhandled import: Ignored from "ignored-import"

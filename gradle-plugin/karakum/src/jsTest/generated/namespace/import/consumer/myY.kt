@@ -2,7 +2,7 @@
 
 @file:JsModule("import-consumer")
 
-package namespace.import.consumer
+package import.consumer
 
 import other.import.provider.Y as MyY
 // unhandled import: Ignored from "ignored-import"

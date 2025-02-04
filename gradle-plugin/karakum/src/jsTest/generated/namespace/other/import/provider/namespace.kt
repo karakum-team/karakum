@@ -2,6 +2,6 @@
 
 @file:JsModule("other-import-provider")
 
-package namespace.provider
+package other.import.provider
 
 /* export default X; */

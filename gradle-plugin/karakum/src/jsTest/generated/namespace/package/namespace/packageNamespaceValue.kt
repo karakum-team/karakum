@@ -2,6 +2,6 @@
 
 @file:JsModule("package-namespace")
 
-package namespace.namespace
+package `package`.namespace
 
 external val packageNamespaceValue: Double

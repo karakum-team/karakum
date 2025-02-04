@@ -3,6 +3,6 @@
 @file:JsModule("package-namespace")
 @file:JsQualifier("NestedNamespace")
 
-package namespace.namespace.nestednamespace
+package `package`.namespace.nestednamespace
 
 external val nestedNamespaceValue: Double
