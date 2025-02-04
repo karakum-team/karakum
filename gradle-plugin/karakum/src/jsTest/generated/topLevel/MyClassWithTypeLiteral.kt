@@ -2,7 +2,7 @@
 
 @file:JsModule("sandbox-top-level")
 
-package topLevel
+package sandbox.top.level
 
 external class MyClassWithTypeLiteral {
 constructor (options: MyClassWithTypeLiteralOptions)

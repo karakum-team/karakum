@@ -2,7 +2,7 @@
 
 @file:JsModule("sandbox-top-level")
 
-package topLevel
+package sandbox.top.level
 
 external fun myFunction2(firstParam: String, secondParam: Double): Unit
 
