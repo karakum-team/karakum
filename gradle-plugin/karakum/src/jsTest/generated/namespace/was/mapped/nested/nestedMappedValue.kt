@@ -3,6 +3,6 @@
 @file:JsModule("was-mapped")
 @file:JsQualifier("Nested")
 
-package namespace.mapped.nested
+package was.mapped.nested
 
 external val nestedMappedValue: Double

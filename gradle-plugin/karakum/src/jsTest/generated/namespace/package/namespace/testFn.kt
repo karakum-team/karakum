@@ -2,7 +2,7 @@
 
 @file:JsModule("package-namespace")
 
-package namespace.namespace
+package `package`.namespace
 
 external fun testFn(param: String): String
 

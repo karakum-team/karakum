@@ -2,4 +2,6 @@
 
 @file:JsModule("will-be-mapped")
 
-package namespace.mapped.main
+package was.mapped.main
+
+external val mappedValue: Double

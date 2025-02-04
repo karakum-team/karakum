@@ -2,7 +2,7 @@
 
 @file:JsModule("package-namespace")
 
-package namespace.namespace
+package `package`.namespace
 
 external object ObjectNamespace {
 val objectNamespaceValue: Double

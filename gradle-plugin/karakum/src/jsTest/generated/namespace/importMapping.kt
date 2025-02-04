@@ -2,4 +2,4 @@
 
 @file:JsModule("sandbox-namespace/importMapping")
 
-package namespace
+package sandbox.namespace
