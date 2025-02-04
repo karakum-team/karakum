@@ -270,7 +270,7 @@ $it
     )
 }
 
-val literalUnionTypePlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
+fun createLiteralUnionTypePlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isNullableLiteralUnionType(node, context)) return@plugin null
 
     val name = context.resolveName(node)

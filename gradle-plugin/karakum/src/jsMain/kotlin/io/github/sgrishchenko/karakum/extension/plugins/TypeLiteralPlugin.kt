@@ -56,7 +56,7 @@ ${convertTypeLiteralBody(node, context, render)}
     """.trim()
 }
 
-val typeLiteralPlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
+fun createTypeLiteralPlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isTypeLiteralNode(node)) return@plugin null
 
     // handle empty type literal

@@ -35,10 +35,10 @@ fun createPlugins(
     NullableUnionTypePlugin(),
     AccessorsPlugin(),
 
-    typeLiteralPlugin,
-    mappedTypePlugin,
-    literalUnionTypePlugin,
-    inheritedTypeLiteralPlugin,
+    createTypeLiteralPlugin(),
+    createMappedTypePlugin(),
+    createLiteralUnionTypePlugin(),
+    createInheritedTypeLiteralPlugin(),
 
     convertPrimitive(hasKind(SyntaxKind.AnyKeyword)) { "Any?" },
     convertPrimitive(hasKind(SyntaxKind.UnknownKeyword)) { "Any?" },

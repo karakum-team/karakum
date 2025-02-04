@@ -87,7 +87,7 @@ ${ifPresent(accessors) { "${it}\n" }}${members}${ifPresent(injectedMembers) { "\
     """.trim()
 }
 
-val inheritedTypeLiteralPlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
+fun createInheritedTypeLiteralPlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isInheritedTypeLiteral(node)) return@plugin null
 
     val name = context.resolveName(node)
