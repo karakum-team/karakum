@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.property
+package sandbox.base.property
 
 external interface InterfaceWithTrickyField {
 @JsName("")

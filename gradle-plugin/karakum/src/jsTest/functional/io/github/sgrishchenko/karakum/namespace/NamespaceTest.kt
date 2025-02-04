@@ -1,9 +1,9 @@
-package bundle
+package io.github.sgrishchenko.karakum.namespace
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class BundleTest {
+class NamespaceTest {
     @Test
     fun test() {
         assertEquals(expected = true, actual = true)

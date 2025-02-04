@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.typeQuery
+package sandbox.base.typeQuery
 
 external val tmp: String
 

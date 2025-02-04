@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.typeAlias
+package sandbox.base.typeAlias
 
 external interface MemoryHistoryOptions {
 var initialIndex: Double?

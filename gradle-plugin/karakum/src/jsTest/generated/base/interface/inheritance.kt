@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.`interface`
+package sandbox.base.`interface`
 
 external interface FirstParentInterface {
 var firstField: String

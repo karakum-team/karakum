@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.intersection
+package sandbox.base.intersection
 
 external interface AgnosticNonIndexRouteObject : AgnosticBaseRouteObject {
 var children: js.array.ReadonlyArray<AgnosticRouteObject>?

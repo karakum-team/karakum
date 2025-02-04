@@ -5,6 +5,6 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.importType
+package sandbox.base.importType
 
 external val DataRouterStateContext: React.Context<(/* import("./router") */ RouterState)?>

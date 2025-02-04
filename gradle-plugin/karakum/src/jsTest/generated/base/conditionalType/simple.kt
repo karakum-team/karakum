@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.conditionalType
+package sandbox.base.conditionalType
 
 typealias TestConditional<S> = Any /* S extends () => infer P ? Promise<P> : Promise<void> */
 

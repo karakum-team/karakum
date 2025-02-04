@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.function
+package sandbox.base.function
 
 external fun simpleVararg(vararg args: String): Unit
 

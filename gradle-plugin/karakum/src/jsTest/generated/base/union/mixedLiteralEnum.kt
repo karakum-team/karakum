@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.union
+package sandbox.base.union
 
 sealed external interface MixedLiteralEnum {
 companion object {
