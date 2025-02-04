@@ -83,7 +83,7 @@ ${convertMappedTypeBody(node, context, render)}
     """.trim()
 }
 
-val mappedTypePlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
+fun createMappedTypePlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isMappedTypeNode(node)) return@plugin null
 
     val name = context.resolveName(node)

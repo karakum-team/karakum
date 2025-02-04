@@ -78,8 +78,10 @@ suspend fun generateTests(
         report.joinToString("\n\n") { (fileName, expected, actual) ->
             """
 file: $fileName
+
 expected: 
 $expected
+
 actual:
 $actual
             """.trimEnd()
