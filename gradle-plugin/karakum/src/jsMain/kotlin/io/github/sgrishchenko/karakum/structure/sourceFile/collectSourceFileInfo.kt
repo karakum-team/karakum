@@ -31,19 +31,19 @@ fun collectSourceFileInfo(
         val nodes = sourceFile.statements
 
         // TODO: create ticket for JsPlainObject
-        recordOf<String, Any?>().apply {
-            this["fileName"] = item.fileName
-            this["package"] = item.`package`
-            this["moduleName"] = item.moduleName
-            this["qualifier"] = item.qualifier
-            this["hasRuntime"] = item.hasRuntime
-            this["imports"] = item.imports
+        recordOf(
+            "fileName" to item.fileName,
+            "package" to item.`package`,
+            "moduleName" to item.moduleName,
+            "qualifier" to item.qualifier,
+            "hasRuntime" to item.hasRuntime,
+            "imports" to item.imports,
 
-            this["nodes"] = nodes
-            this["meta"] = InputStructureItemMeta(
+            "nodes" to nodes,
+            "meta" to InputStructureItemMeta(
                 type = "Source File",
                 name = sourceFile.fileName
-            )
-        }.unsafeCast<InputSourceFileInfoItem>()
+            ),
+        ).unsafeCast<InputSourceFileInfoItem>()
     }.toTypedArray()
 }

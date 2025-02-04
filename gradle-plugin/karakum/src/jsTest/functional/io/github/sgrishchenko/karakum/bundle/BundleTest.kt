@@ -10,13 +10,13 @@ class BundleTest {
     @Test
     fun test() = runTest {
         generateTests("bundle") { output ->
-            recordOf<String, Any?>().apply {
-                this["input"] = "**/*.d.ts"
-                this["output"] = "${output}/customBundle.kt"
-                this["libraryName"] = "sandbox-bundle"
-                this["granularity"] = "bundle"
-                this["verbose"] = true
-            }.unsafeCast<PartialConfiguration>()
+            recordOf(
+                "input" to "**/*.d.ts",
+                "output" to "${output}/customBundle.kt",
+                "libraryName" to "sandbox-bundle",
+                "granularity" to "bundle",
+                "verbose" to true,
+            ).unsafeCast<PartialConfiguration>()
         }
     }
 }
