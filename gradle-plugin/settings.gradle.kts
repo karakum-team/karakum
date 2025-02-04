@@ -27,6 +27,7 @@ dependencyResolutionManagement {
 
             val kotlinCoroutinesVersion: String by settings
             library("coroutines-core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version(kotlinCoroutinesVersion)
+            library("coroutines-test", "org.jetbrains.kotlinx", "kotlinx-coroutines-test").version(kotlinCoroutinesVersion)
 
             val jacksonVersion: String by settings
             library("jackson-databind", "com.fasterxml.jackson.core", "jackson-databind").version(jacksonVersion)

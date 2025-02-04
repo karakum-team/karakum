@@ -24,10 +24,6 @@ kotlin {
     }
     
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.test)
-        }
-
         jsMain.dependencies {
             implementation(libs.coroutines.core)
             implementation(kotlinWrappers.js)
@@ -36,9 +32,22 @@ kotlin {
         }
 
         jsTest {
-//            TODO: fix errors in test
-//            kotlin.srcDir(projectDir.resolve("src/jsTest/generated"))
-            kotlin.srcDir(projectDir.resolve("src/jsTest/functional"))
+//            TODO: fix errors in test and move to sources
+            resources.srcDir(layout.projectDirectory.dir("src/jsTest/generated"))
+            kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/functional"))
+
+            dependencies {
+                implementation(libs.test)
+                implementation(libs.coroutines.test)
+            }
         }
     }
+}
+
+tasks.named<ProcessResources>("jsTestProcessResources") {
+    expand(
+        "functionalTestLib" to layout.projectDirectory.dir("src/jsTest/resources").asFile.path,
+        "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.path,
+        "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.path,
+    )
 }

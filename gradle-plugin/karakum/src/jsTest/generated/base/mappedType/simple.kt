@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.mappedType
+package sandbox.base.mappedType
 
 sealed external interface Keys {
 companion object {

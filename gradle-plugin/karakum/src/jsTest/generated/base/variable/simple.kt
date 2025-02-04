@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.variable
+package sandbox.base.variable
 
 /** my favorite constant */
 external val myConstWithComment: Double

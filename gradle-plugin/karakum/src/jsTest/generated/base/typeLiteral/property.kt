@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.typeLiteral
+package sandbox.base.typeLiteral
 
 external interface FetcherStates<TData /* default is Any? */> {
 var Idle: FetcherStatesIdle<TData>

@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.accessor
+package sandbox.base.accessor
 
 external class Simple {
 var property: String

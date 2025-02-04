@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.comment
+package sandbox.base.comment
 
 // leading comment
 external val value1: String// trailing comment

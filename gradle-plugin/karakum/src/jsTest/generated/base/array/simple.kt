@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.array
+package sandbox.base.array
 
 typealias SimpleArray = js.array.ReadonlyArray<String>
 

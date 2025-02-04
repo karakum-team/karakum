@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.function
+package sandbox.base.function
 
 external fun writev(/* this: Array<string>, */ callback: (error: Any? /* use undefined for default */) -> Unit): Unit
 

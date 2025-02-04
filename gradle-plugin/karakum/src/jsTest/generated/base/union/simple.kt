@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.union
+package sandbox.base.union
 
 external interface A {
 var brand: String /* "one" */

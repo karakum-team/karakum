@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.indexSignature
+package sandbox.base.indexSignature
 
 external interface RouteData {
 @seskar.js.JsNative

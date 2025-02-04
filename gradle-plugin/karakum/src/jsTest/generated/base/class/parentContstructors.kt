@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.`class`
+package sandbox.base.`class`
 
 external class GrandparentWithConstructor {
 constructor (param: Double)

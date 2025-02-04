@@ -52,6 +52,7 @@ sealed external interface ConflictResolutionStrategy {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
+// TODO: @JsPlainObject
 external interface SchemaConfiguration {
     val inputRoots: Many<String>?
 
@@ -134,6 +135,7 @@ external interface SchemaConfiguration {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
+// TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
     @JsExport.Ignore
     override val compilerOptions: CompilerOptions?

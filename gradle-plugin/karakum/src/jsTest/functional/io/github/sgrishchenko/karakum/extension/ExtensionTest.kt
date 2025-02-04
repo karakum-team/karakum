@@ -1,9 +1,9 @@
-package topLevel
+package io.github.sgrishchenko.karakum.extension
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TopLevelTest {
+class ExtensionTest {
     @Test
     fun test() {
         assertEquals(expected = true, actual = true)

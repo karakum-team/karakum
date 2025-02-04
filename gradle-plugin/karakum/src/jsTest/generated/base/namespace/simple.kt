@@ -5,7 +5,7 @@
     "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
 )
 
-package base.namespace
+package sandbox.base.namespace
 
 external object String /* "*.css" */ {
 object NS {
