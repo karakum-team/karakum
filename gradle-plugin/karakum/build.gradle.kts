@@ -14,7 +14,6 @@ kotlin {
         moduleName = "karakum"
 
         nodejs()
-        useEsModules()
 
         compilerOptions {
             target = "es2015"
