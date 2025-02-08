@@ -141,6 +141,53 @@ external interface PartialConfiguration : SchemaConfiguration {
     override val compilerOptions: CompilerOptions?
 }
 
+external interface MutableConfiguration : PartialConfiguration {
+    override var inputRoots: Many<String>?
+
+    override var input: Many<String>
+    override var output: String
+
+    override var ignoreInput: Many<String>?
+    override var ignoreOutput: Many<String>?
+
+    override var libraryName: String?
+    override var libraryNameOutputPrefix: Boolean?
+
+    override var granularity: Granularity?
+
+    override var extensions: String?
+
+    override var plugins: Many<String>?
+
+    override var injections: Many<String>?
+
+    override var annotations: Many<String>?
+
+    override var nameResolvers: Many<String>?
+
+    override var inheritanceModifiers: Many<String>?
+
+    override var varianceModifiers: Many<String>?
+
+    override var moduleNameMapper: ReadonlyRecord<String, String>?
+
+    override var packageNameMapper: ReadonlyRecord<String, String>?
+
+    override var importInjector: ReadonlyRecord<String, ReadonlyArray<String>>?
+
+    override var importMapper: Record<String, Rule>?
+
+    override var namespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>?
+
+    override var conflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>?
+
+    override var compilerOptions: CompilerOptions?
+
+    override var disclaimer: String?
+    override var verbose: Boolean?
+    override var cwd: String?
+}
+
 @JsPlainObject
 external interface Configuration {
     val inputRoots: ReadonlyArray<String>

@@ -1,10 +1,9 @@
 package io.github.sgrishchenko.karakum
 
-import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
+import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import js.array.ReadonlyArray
 import js.objects.Object
 import js.objects.jso
-import js.objects.recordOf
 import node.buffer.BufferEncoding
 import node.fs.*
 import node.path.path
@@ -22,7 +21,7 @@ private suspend fun readDir(dirName: String): ReadonlyArray<String> {
 
 suspend fun generateTests(
     dirName: String,
-    createConfiguration: (output: String) -> PartialConfiguration,
+    createConfiguration: MutableConfiguration.(output: String) -> Unit,
 ) {
     val testConfig = loadTestConfig()
 
@@ -31,16 +30,13 @@ suspend fun generateTests(
     val actualOutputDirName = path.resolve(testConfig.output, dirName)
 
     val output = if (isUpdate) expectedOutputDirName else actualOutputDirName
-    val configuration = createConfiguration(output)
 
-    generate(
-        // TODO: create ticket for JsPlainObject
-        Object.assign(configuration, recordOf<String, Any?>().apply {
-            this["cwd"] = cwd
-            // TODO: enable
-            this["verbose"] = false
-        }.unsafeCast<PartialConfiguration>()),
-    )
+    generate {
+        this.cwd = cwd
+        Object.assign(this, createConfiguration(output))
+        // TODO: enable
+        verbose = true
+    }
 
     if (isUpdate) {
         rm(actualOutputDirName, jso<RmOptions> {

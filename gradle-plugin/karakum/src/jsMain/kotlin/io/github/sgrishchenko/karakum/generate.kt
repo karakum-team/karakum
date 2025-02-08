@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum
 
+import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
 import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
@@ -19,6 +20,7 @@ import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.objects.Object
 import js.objects.jso
+import js.objects.recordOf
 import js.promise.Promise
 import node.fs.*
 import node.path.path
@@ -187,13 +189,13 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     for (item in structure) {
         structureMeta.add("${item.meta.type}: ${item.meta.name}")
 
-        val outputFileName = packageToOutputFileName(
+        val currentOutputFileName = packageToOutputFileName(
             item.`package`,
             item.fileName,
             configuration
         )
 
-        val targetFileName = path.resolve(output, outputFileName)
+        val targetFileName = path.resolve(output, currentOutputFileName)
 
         val body = item.nodes.joinToString(separator = "\n\n") { render(it) }
 
@@ -256,6 +258,11 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         mkdir(path.dirname(resultFile.fileName), MkdirOptions(recursive = true))
         writeFile(resultFile.fileName, resultFile.body)
     }
+}
+
+suspend fun generate(block: MutableConfiguration.() -> Unit) {
+    val configuration = recordOf<String, Any?>().unsafeCast<MutableConfiguration>().apply(block)
+    generate(configuration)
 }
 
 @OptIn(ExperimentalJsExport::class)
