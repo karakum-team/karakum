@@ -26,9 +26,9 @@ kotlin {
     sourceSets {
         jsMain.dependencies {
             implementation(libs.coroutines.core)
-            implementation(wrappers.js)
-            implementation(wrappers.node)
-            implementation(wrappers.typescript)
+            api(wrappers.js)
+            api(wrappers.node)
+            api(wrappers.typescript)
         }
 
         jsTest {
