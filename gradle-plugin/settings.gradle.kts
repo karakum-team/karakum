@@ -41,7 +41,7 @@ dependencyResolutionManagement {
             library("ec4j", "org.ec4j.core", "ec4j-core").version(ec4jVersion)
         }
 
-        create("kotlinWrappers") {
+        val wrappers by creating {
             val wrappersVersion: String by settings
             from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:$wrappersVersion")
         }

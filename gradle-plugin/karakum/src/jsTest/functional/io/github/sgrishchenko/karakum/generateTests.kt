@@ -10,7 +10,6 @@ import node.fs.*
 import node.path.path
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import io.github.sgrishchenko.karakum.run as karakumRun
 
 private val isUpdate = false // TODO: Boolean(process.env['KARAKUM_TEST_UPDATE']);
 
@@ -34,10 +33,11 @@ suspend fun generateTests(
     val output = if (isUpdate) expectedOutputDirName else actualOutputDirName
     val configuration = createConfiguration(output)
 
-    karakumRun(
+    generate(
         // TODO: create ticket for JsPlainObject
         Object.assign(configuration, recordOf<String, Any?>().apply {
             this["cwd"] = cwd
+            // TODO: enable
             this["verbose"] = false
         }.unsafeCast<PartialConfiguration>()),
     )

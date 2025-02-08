@@ -1,7 +1,8 @@
 package io.github.sgrishchenko.karakum
 
-import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
+import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
@@ -14,8 +15,11 @@ import io.github.sgrishchenko.karakum.structure.resolveConflicts
 import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
+import js.coroutines.internal.IsolatedCoroutineScope
+import js.coroutines.promise
 import js.objects.Object
 import js.objects.jso
+import js.promise.Promise
 import node.fs.*
 import node.path.path
 import typescript.asArray
@@ -46,7 +50,9 @@ private fun checkCasing(fileNames: ReadonlyArray<String>) {
     }
 }
 
-suspend fun generate(configuration: Configuration) {
+suspend fun generate(partialConfiguration: PartialConfiguration) {
+    val configuration = reifyConfiguration(partialConfiguration)
+
     val inputRoots = configuration.inputRoots
     val inputFileNames = configuration.inputFileNames
     val input = configuration.input
@@ -251,3 +257,11 @@ suspend fun generate(configuration: Configuration) {
         writeFile(resultFile.fileName, resultFile.body)
     }
 }
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+@JsName("generate")
+@Suppress("NON_EXPORTABLE_TYPE")
+fun generateAsync(partialConfiguration: PartialConfiguration): Promise<Unit> =
+    IsolatedCoroutineScope()
+        .promise { generate(partialConfiguration) }

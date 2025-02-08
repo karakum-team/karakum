@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
     id("io.github.turansky.seskar")
+    `maven-publish`
 }
 
 repositories {
@@ -26,9 +27,9 @@ kotlin {
     sourceSets {
         jsMain.dependencies {
             implementation(libs.coroutines.core)
-            implementation(kotlinWrappers.js)
-            implementation(kotlinWrappers.node)
-            implementation(kotlinWrappers.typescript)
+            implementation(wrappers.js)
+            implementation(wrappers.node)
+            implementation(wrappers.typescript)
         }
 
         jsTest {
