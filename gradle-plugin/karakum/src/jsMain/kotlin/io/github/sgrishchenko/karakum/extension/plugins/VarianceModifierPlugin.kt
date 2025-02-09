@@ -9,7 +9,9 @@ import typescript.Node
 @JsExport
 val varianceModifierServiceKey = Symbol()
 
-class VarianceModifierService(
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class VarianceModifierService @JsExport.Ignore constructor(
     private val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
 ) {
     fun resolveVarianceModifier(

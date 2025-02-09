@@ -30,6 +30,8 @@ external interface InjectionContext : ConverterContext {
     val type: InjectionType
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 external interface Injection<in TNode : Node, in TInjectionNode : Node> : ConverterPlugin<TNode> {
     fun inject(node: TInjectionNode, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?
 }

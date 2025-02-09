@@ -19,7 +19,9 @@ import kotlin.contracts.contract
 @JsExport
 val declarationMergingServiceKey = Symbol()
 
-class DeclarationMergingService(private val program: Program) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class DeclarationMergingService @JsExport.Ignore constructor(private val program: Program) {
     private val coveredSymbols = mutableSetOf<typescript.Symbol>()
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
     private val printer = createPrinter(jso {

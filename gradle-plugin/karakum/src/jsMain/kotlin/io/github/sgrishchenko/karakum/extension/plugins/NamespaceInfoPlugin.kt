@@ -15,7 +15,9 @@ import typescript.Node
 @JsExport
 val namespaceInfoServiceKey = Symbol()
 
-class NamespaceInfoService(namespaceInfo: NamespaceInfo) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: NamespaceInfo) {
     private val namespaceInfo = namespaceInfo.associate { it.name to it.strategy }
 
     fun resolveNamespaceStrategy(node: ModuleDeclaration): NamespaceStrategy? {

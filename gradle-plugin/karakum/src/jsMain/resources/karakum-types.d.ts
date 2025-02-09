@@ -28,4 +28,13 @@ declare module "karakum" {
         | "TYPE_PARAMETER"
 
         | "HERITAGE_CLAUSE"
+
+    // TODO: should be removed after JSO fix
+    type Configuration = unknown
+    type GeneratedFile = unknown
+    type DerivedFile = unknown
+    type CheckCoverageResult = unknown
+    type ParameterDeclarationsConfiguration = unknown
+    type ParameterInfo = unknown
+    type DerivedDeclaration = unknown
 }

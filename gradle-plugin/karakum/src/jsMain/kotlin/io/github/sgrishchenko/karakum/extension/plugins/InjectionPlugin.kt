@@ -9,7 +9,9 @@ import typescript.Node
 @JsExport
 val injectionServiceKey = Symbol()
 
-class InjectionService(private val injections: ReadonlyArray<Injection<Node, Node>>) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection<Node, Node>>) {
     fun resolveInjections(
         node: Node,
         type: InjectionType,

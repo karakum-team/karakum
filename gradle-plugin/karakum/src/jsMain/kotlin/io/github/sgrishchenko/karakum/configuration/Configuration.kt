@@ -188,6 +188,9 @@ external interface MutableConfiguration : PartialConfiguration {
     override var cwd: String?
 }
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface Configuration {
     val inputRoots: ReadonlyArray<String>

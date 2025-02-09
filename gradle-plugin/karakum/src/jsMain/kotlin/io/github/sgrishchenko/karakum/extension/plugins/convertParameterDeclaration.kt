@@ -41,6 +41,9 @@ external interface ParameterDeclarationConfiguration {
     val nullable: Boolean
 }
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface ParameterInfo {
     val parameter: ParameterDeclaration

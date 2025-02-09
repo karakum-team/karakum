@@ -17,13 +17,18 @@ import typescript.SyntaxKind
 @JsExport
 val checkCoverageServiceKey = Symbol()
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface CheckCoverageResult {
     val coveredNodes: Int
     val uncoveredNodes: Int
 }
 
-class CheckCoverageService {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class CheckCoverageService @JsExport.Ignore constructor() {
     private val coveredNodes = mutableSetOf<Node>()
 
     private val allNodes = mutableSetOf<Node>()

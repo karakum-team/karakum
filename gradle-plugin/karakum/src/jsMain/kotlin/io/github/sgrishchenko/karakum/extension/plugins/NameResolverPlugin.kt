@@ -9,7 +9,9 @@ import typescript.Node
 @JsExport
 val nameResolverServiceKey = Symbol()
 
-class NameResolverService(nameResolvers: ReadonlyArray<NameResolver<Node>>) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyArray<NameResolver<Node>>) {
     private val nameResolvers = nameResolvers + defaultNameResolvers
     private val resolvedNodes = mutableMapOf<Node, String>()
     private var counter = 0

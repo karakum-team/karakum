@@ -16,7 +16,9 @@ import typescript.isImportDeclaration
 @JsExport
 val importInfoServiceKey = Symbol()
 
-class ImportInfoService(
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class ImportInfoService @JsExport.Ignore constructor(
     private val program: Program,
     private val importInfo: ImportInfo,
 ) {

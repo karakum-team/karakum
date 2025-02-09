@@ -9,7 +9,9 @@ import typescript.Node
 @JsExport
 val annotationServiceKey = Symbol()
 
-class AnnotationService(private val annotations: ReadonlyArray<Annotation<Node>>) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation<Node>>) {
     fun resolveAnonymousAnnotations(node: Node, context: ConverterContext): ReadonlyArray<String> {
         return internalResolveAnnotations(node, true, context)
     }

@@ -13,7 +13,9 @@ import typescript.*
 @JsExport
 val commentServiceKey = Symbol()
 
-class CommentService {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class CommentService @JsExport.Ignore constructor() {
     private val nestedCommentPattern = "(?<!^)/\\*".toRegex()
 
     fun renderLeadingComments(node: Node): String? {

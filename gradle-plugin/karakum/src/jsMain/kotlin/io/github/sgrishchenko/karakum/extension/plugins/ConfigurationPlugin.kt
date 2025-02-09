@@ -12,7 +12,9 @@ import typescript.Node
 @JsExport
 val configurationServiceKey = Symbol()
 
-class ConfigurationService(val configuration: Configuration)
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class ConfigurationService @JsExport.Ignore constructor(val configuration: Configuration)
 
 class ConfigurationPlugin(configuration: Configuration) : ConverterPlugin<Node> {
     private val configurationService = ConfigurationService(configuration)

@@ -15,7 +15,9 @@ import typescript.*
 @JsExport
 val typeScriptServiceKey = Symbol()
 
-class TypeScriptService(val program: Program) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
     private val printer = createPrinter(jso {
         removeComments = true

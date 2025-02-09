@@ -11,7 +11,9 @@ import typescript.*
 @JsExport
 val unionServiceKey = Symbol()
 
-class UnionService(private val context: ConverterContext) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class UnionService @JsExport.Ignore constructor(private val context: ConverterContext) {
     private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()
     private val coveredUnionParents = mutableSetOf<typescript.Symbol>()
 

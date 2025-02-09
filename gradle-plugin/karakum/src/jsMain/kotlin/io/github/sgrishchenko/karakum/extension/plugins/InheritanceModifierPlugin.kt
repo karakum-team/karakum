@@ -9,7 +9,9 @@ import typescript.Node
 @JsExport
 val inheritanceModifierServiceKey = Symbol()
 
-class InheritanceModifierService(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) {
     fun resolveSignatureInheritanceModifier(
         node: Node,
         signature: Signature,
