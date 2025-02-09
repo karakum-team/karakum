@@ -19,4 +19,13 @@ declare module "karakum" {
         declaration: string,
         reference: string,
     }
+
+    export type InjectionType =
+        | "MEMBER"
+        | "STATIC_MEMBER"
+
+        | "PARAMETER"
+        | "TYPE_PARAMETER"
+
+        | "HERITAGE_CLAUSE"
 }

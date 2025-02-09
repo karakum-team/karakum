@@ -2,18 +2,26 @@ package io.github.sgrishchenko.karakum.extension
 
 import js.array.ReadonlyArray
 import seskar.js.JsNative
+import seskar.js.JsValue
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-enum class InjectionType {
-    MEMBER,
-    STATIC_MEMBER,
+sealed external interface InjectionType {
+    companion object {
+        @JsValue("MEMBER")
+        val MEMBER: InjectionType
 
-    PARAMETER,
-    TYPE_PARAMETER,
+        @JsValue("STATIC_MEMBER")
+        val STATIC_MEMBER: InjectionType
 
-    HERITAGE_CLAUSE,
+        @JsValue("PARAMETER")
+        val PARAMETER: InjectionType
+
+        @JsValue("TYPE_PARAMETER")
+        val TYPE_PARAMETER: InjectionType
+
+        @JsValue("HERITAGE_CLAUSE")
+        val HERITAGE_CLAUSE: InjectionType
+    }
 }
 
 @OptIn(ExperimentalJsExport::class)
