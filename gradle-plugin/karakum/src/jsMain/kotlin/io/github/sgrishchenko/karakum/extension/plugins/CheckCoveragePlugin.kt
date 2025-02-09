@@ -13,6 +13,8 @@ import js.symbol.Symbol
 import typescript.Node
 import typescript.SyntaxKind
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val checkCoverageServiceKey = Symbol()
 
 @JsPlainObject

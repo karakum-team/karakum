@@ -11,6 +11,8 @@ import js.objects.jso
 import js.symbol.Symbol
 import typescript.*
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val typeScriptServiceKey = Symbol()
 
 class TypeScriptService(val program: Program) {

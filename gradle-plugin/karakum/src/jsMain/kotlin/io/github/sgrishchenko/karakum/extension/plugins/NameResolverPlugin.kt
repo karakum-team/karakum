@@ -5,6 +5,8 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val nameResolverServiceKey = Symbol()
 
 class NameResolverService(nameResolvers: ReadonlyArray<NameResolver<Node>>) {

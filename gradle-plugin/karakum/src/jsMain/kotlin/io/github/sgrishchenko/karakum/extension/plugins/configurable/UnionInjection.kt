@@ -7,6 +7,8 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.*
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val unionServiceKey = Symbol()
 
 class UnionService(private val context: ConverterContext) {

@@ -15,6 +15,8 @@ import typescript.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val declarationMergingServiceKey = Symbol()
 
 class DeclarationMergingService(private val program: Program) {

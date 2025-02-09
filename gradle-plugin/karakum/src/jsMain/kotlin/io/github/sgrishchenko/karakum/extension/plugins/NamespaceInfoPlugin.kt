@@ -11,6 +11,8 @@ import js.symbol.Symbol
 import typescript.ModuleDeclaration
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val namespaceInfoServiceKey = Symbol()
 
 class NamespaceInfoService(namespaceInfo: NamespaceInfo) {

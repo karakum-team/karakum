@@ -9,6 +9,8 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.*
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val commentServiceKey = Symbol()
 
 class CommentService {

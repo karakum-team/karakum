@@ -5,6 +5,8 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val inheritanceModifierServiceKey = Symbol()
 
 class InheritanceModifierService(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) {

@@ -12,6 +12,8 @@ import typescript.Node
 import typescript.Program
 import typescript.isImportDeclaration
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 val importInfoServiceKey = Symbol()
 
 class ImportInfoService(
