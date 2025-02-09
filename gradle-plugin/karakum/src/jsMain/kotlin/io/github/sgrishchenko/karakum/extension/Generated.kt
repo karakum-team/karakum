@@ -6,12 +6,18 @@ import js.objects.ReadonlyRecord
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface GeneratedFile {
     val fileName: String
     val body: String
 }
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface DerivedFile : GeneratedFile {
     val `package`: ReadonlyArray<String>

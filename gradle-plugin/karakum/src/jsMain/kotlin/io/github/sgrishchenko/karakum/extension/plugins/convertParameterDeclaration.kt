@@ -22,6 +22,9 @@ sealed external interface ParameterDeclarationStrategy {
     }
 }
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface ParameterDeclarationsConfiguration {
     val strategy: ParameterDeclarationStrategy
@@ -58,6 +61,8 @@ val convertParameterDeclaration = createSimplePlugin plugin@{ node: Node, contex
     ))
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
     context: ConverterContext,

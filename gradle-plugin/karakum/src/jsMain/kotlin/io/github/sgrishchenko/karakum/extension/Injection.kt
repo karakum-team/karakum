@@ -4,6 +4,8 @@ import js.array.ReadonlyArray
 import seskar.js.JsNative
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class InjectionType {
     MEMBER,
     STATIC_MEMBER,
@@ -14,6 +16,8 @@ enum class InjectionType {
     HERITAGE_CLAUSE,
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 external interface InjectionContext : ConverterContext {
     val type: InjectionType
 }

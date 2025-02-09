@@ -4,6 +4,9 @@ import io.github.sgrishchenko.karakum.structure.StructureItem
 import js.objects.JsPlainObject
 import typescript.ModuleDeclaration
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface DerivedDeclaration {
     val sourceFileName: String

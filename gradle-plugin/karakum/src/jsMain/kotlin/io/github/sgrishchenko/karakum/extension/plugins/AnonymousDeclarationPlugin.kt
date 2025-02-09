@@ -11,6 +11,8 @@ import js.array.ReadonlyArray
 import js.objects.JsPlainObject
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 external interface AnonymousDeclarationContext : ConverterContext {
     fun resolveName(node: Node): String
 }
@@ -104,6 +106,8 @@ class AnonymousDeclarationPlugin(
     }
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun createAnonymousDeclarationPlugin(
     render: AnonymousDeclarationRender,
 ): ConverterPlugin<Node> {

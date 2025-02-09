@@ -1,20 +1,22 @@
 package io.github.sgrishchenko.karakum.util
 
+import js.array.JsPair
 import js.array.ReadonlyArray
+import js.array.tupleOf
 
 private class DeepMapEntry<K, V> {
     var value: V? = null
     var isInitialized = false
     val children = mutableMapOf<K, DeepMapEntry<K, V>>()
 
-    fun entries(prefix: ReadonlyArray<K>): ReadonlyArray<Pair<ReadonlyArray<K>, V>> {
+    fun entries(prefix: ReadonlyArray<K>): ReadonlyArray<JsPair<ReadonlyArray<K>, V>> {
         val children = children.flatMap { (key, value) ->
             value.entries(prefix + key).asIterable()
         }.toTypedArray()
 
         if (isInitialized) {
             @Suppress("UNCHECKED_CAST")
-            val current = prefix to (value as V)
+            val current = tupleOf(prefix, value as V)
             return arrayOf(current) + children
         } else {
             return children
@@ -30,6 +32,8 @@ private class DeepMapEntry<K, V> {
     }
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 class DeepMap<K, V> {
     private var root = DeepMapEntry<K, V>()
 
@@ -49,6 +53,7 @@ class DeepMap<K, V> {
         current.isInitialized = false
     }
 
+    @JsExport.Ignore
     operator fun minusAssign(key: ReadonlyArray<K>) = delete(key)
 
     operator fun get(key: ReadonlyArray<K>): V? {
@@ -73,6 +78,7 @@ class DeepMap<K, V> {
         return current.isInitialized
     }
 
+    @JsExport.Ignore
     operator fun contains(key: ReadonlyArray<K>): Boolean = has(key)
 
     operator fun set(key: ReadonlyArray<K>, value: V) {
@@ -91,6 +97,7 @@ class DeepMap<K, V> {
         current.isInitialized = true
     }
 
+    @JsExport.Ignore
     operator fun plusAssign(pair: Pair<ReadonlyArray<K>, V>) = set(pair.first, pair.second)
 
     fun entries() = root.entries(emptyArray())

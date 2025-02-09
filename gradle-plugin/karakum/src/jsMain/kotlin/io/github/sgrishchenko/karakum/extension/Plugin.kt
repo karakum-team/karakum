@@ -4,6 +4,8 @@ import js.array.ReadonlyArray
 import seskar.js.JsNative
 import typescript.Node
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 external interface ConverterPlugin<in TNode : Node> {
     fun setup(context: ConverterContext)
 

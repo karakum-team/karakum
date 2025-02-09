@@ -7,6 +7,8 @@ import js.array.ReadonlyArray
 import seskar.js.JsNative
 import typescript.*
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 external interface Render<in TNode : Node> {
     @JsNative
     operator fun invoke(node: TNode): String
@@ -14,6 +16,8 @@ external interface Render<in TNode : Node> {
 
 fun <TNode : Node> Render(render: (node: TNode) -> String) = render.unsafeCast<Render<TNode>>()
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun ifPresent(part: String?, render: (part: String) -> String): String {
     return part?.takeIf { it.isNotEmpty() }?.let(render) ?: ""
 }
@@ -38,6 +42,8 @@ private fun isPrimitiveType(node: Node): Boolean {
             || isThisTypeNode(node)
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun renderNullable(
     node: TypeNode?,
     isNullable: Boolean,

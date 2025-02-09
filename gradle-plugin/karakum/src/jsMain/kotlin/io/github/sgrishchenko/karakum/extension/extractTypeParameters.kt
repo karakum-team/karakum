@@ -3,18 +3,22 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.traverse
+import js.array.JsPair
 import js.array.ReadonlyArray
+import js.array.tupleOf
 import typescript.*
 
-typealias TypeParameterExtractionResult = ReadonlyArray<Pair<Node, Declaration>>
+typealias TypeParameterExtractionResult = ReadonlyArray<JsPair<Node, Declaration>>
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun extractTypeParameters(
     node: Node,
     context: ConverterContext
 ): TypeParameterExtractionResult {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    val result = mutableListOf<Pair<Node, Declaration>>()
+    val result = mutableListOf<JsPair<Node, Declaration>>()
 
     val typeChecker = typeScriptService?.program?.getTypeChecker()
 
@@ -40,7 +44,7 @@ fun extractTypeParameters(
                 val foundParent = typeScriptService?.findClosest(node) { it == typeParameterContainer }
 
                 if (foundParent != null && foundParent != node) {
-                    result += currentNode to declaration
+                    result += tupleOf(currentNode, declaration)
                 }
             }
         }
@@ -49,6 +53,8 @@ fun extractTypeParameters(
     return result.toTypedArray()
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result
         .map { (_, declaration) -> render(declaration) }
@@ -56,6 +62,8 @@ fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node
         .joinToString(separator = ", ")
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun renderReference(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result
         .map { (node) -> render(node) }
