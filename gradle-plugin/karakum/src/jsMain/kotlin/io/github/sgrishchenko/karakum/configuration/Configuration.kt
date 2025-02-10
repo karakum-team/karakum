@@ -137,7 +137,6 @@ external interface SchemaConfiguration {
 @JsExport
 // TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
-    @JsExport.Ignore
     override val compilerOptions: CompilerOptions?
 }
 
