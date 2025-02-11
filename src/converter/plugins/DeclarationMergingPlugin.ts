@@ -106,10 +106,25 @@ export class DeclarationMergingService {
             .filter(member => !ts.isTypeParameterDeclaration(member))
 
         return [...members, ...exports]
-            .filter(member => (
-                !ts.isModuleBlock(member.parent)
-                || resolveNamespaceStrategy?.(member.parent.parent) !== "package"
-            ))
+            .filter(member => {
+                if (
+                    ts.isModuleBlock(member.parent)
+                    && resolveNamespaceStrategy?.(member.parent.parent) === "package"
+                ) {
+                    return false
+                }
+
+                if (
+                    ts.isVariableDeclarationList(member.parent)
+                    && ts.isVariableStatement(member.parent.parent)
+                    && ts.isModuleBlock(member.parent.parent.parent)
+                    && resolveNamespaceStrategy?.(member.parent.parent.parent.parent) === "package"
+                ) {
+                    return false
+                }
+
+                return true
+            })
     }
 
     private getUniqMembers(symbolTable: SymbolTable | undefined): Declaration[] {
