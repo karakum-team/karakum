@@ -40,7 +40,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         // it is one of the additional declarations, and it will be covered in value declaration
         return valueDeclaration != null
             && isClassDeclaration(valueDeclaration)
-            && node !== valueDeclaration;
+            && node !== valueDeclaration
     }
 
     fun cover(node: NamedDeclaration) {
@@ -110,9 +110,26 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
 
         return (members + exports).filter { member ->
             val parent = member.parent
-            if (!isModuleBlock(parent)) return@filter true
 
-            resolveNamespaceStrategy.invoke(parent.parent) != NamespaceStrategy.`package`
+            if (
+                isModuleBlock(parent)
+                && resolveNamespaceStrategy(parent.parent) == NamespaceStrategy.`package`
+            ) {
+                return@filter false
+            }
+
+            if (isVariableDeclarationList(parent)) {
+                val grandparent = parent.parent.parent
+
+                if (
+                    isModuleBlock(grandparent)
+                    && resolveNamespaceStrategy(grandparent.parent) == NamespaceStrategy.`package`
+                ) {
+                    return@filter false
+                }
+            }
+
+            return@filter true
         }.toTypedArray()
     }
 
