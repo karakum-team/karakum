@@ -101,7 +101,7 @@ suspend fun loadExtensionsFromGlobs(
     }
 
     val annotations = loadExtensions<Annotation<Node>>(
-        "io.github.sgrishchenko.karakum.extension.Annotation",
+        "Annotation",
         configuration.annotations,
         cwd,
     )
