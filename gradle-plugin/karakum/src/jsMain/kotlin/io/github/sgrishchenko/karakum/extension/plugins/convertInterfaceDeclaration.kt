@@ -67,7 +67,7 @@ val convertInterfaceDeclaration = createSimplePlugin plugin@{ node: Node, contex
         .joinToString(separator = "\n") { render(it) }
 
     val injectedMembers = (injections ?: emptyArray())
-        .joinToString(separator = ", ")
+        .joinToString(separator = "\n")
 
     """
 ${ifPresent(inheritanceModifier) { "$it " }}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : ${it}"}} {
