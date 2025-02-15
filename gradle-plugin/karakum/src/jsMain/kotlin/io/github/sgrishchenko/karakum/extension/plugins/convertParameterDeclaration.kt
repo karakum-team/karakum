@@ -32,6 +32,9 @@ external interface ParameterDeclarationsConfiguration {
     val template: (parameters: String, signature: Signature) -> String
 }
 
+// TODO: ticket for JsPlainObject
+//@OptIn(ExperimentalJsExport::class)
+//@JsExport
 @JsPlainObject
 external interface ParameterDeclarationConfiguration {
     val strategy: ParameterDeclarationStrategy
@@ -145,6 +148,8 @@ fun convertParameterDeclarations(
     error("Unknown parameter declaration strategy: $strategy")
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun convertParameterDeclarationWithFixedType(
     node: ParameterDeclaration,
     context: ConverterContext,

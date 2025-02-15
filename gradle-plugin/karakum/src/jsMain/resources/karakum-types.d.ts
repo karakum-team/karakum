@@ -28,6 +28,7 @@ declare module "karakum" {
     type GeneratedFile = unknown
     type DerivedFile = unknown
     type CheckCoverageResult = unknown
+    type ParameterDeclarationConfiguration = unknown
     type ParameterDeclarationsConfiguration = unknown
     type ParameterInfo = unknown
     type DerivedDeclaration = unknown
