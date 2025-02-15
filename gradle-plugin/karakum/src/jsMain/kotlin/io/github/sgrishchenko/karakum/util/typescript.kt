@@ -12,9 +12,10 @@ private external interface MutableNode {
 }
 
 fun <TNode : Node> setParentNodes(rootNode: TNode): TNode {
-    rootNode.forEachChild( { node ->
+    rootNode.forEachChild({ node ->
         node.unsafeCast<MutableNode>().parent = rootNode
         setParentNodes(node)
+        undefined
     })
 
     return rootNode
