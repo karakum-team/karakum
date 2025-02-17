@@ -107,7 +107,7 @@ external interface SchemaConfiguration {
      * @TJS-type object
      * @additionalProperties { "anyOf": [ { "type": "string" }, { "type": "object", "additionalProperties": { "type": "string" } } ] }
      * */
-    val importMapper: Record<String, Rule>?
+    val importMapper: Any?
 
     /**
      * @TJS-type object
@@ -137,6 +137,7 @@ external interface SchemaConfiguration {
 @JsExport
 // TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
+    override val importMapper: Record<String, Rule>?
     override val compilerOptions: CompilerOptions?
 }
 

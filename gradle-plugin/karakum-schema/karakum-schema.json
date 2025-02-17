@@ -1,0 +1,267 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Granularity": {
+            "enum": [
+                "bundle",
+                "file",
+                "top-level"
+            ],
+            "type": "string"
+        },
+        "NamespaceStrategy": {
+            "enum": [
+                "ignore",
+                "object",
+                "package"
+            ],
+            "type": "string"
+        },
+        "ConflictResolutionStrategy": {
+            "enum": [
+                "error",
+                "join",
+                "replace"
+            ],
+            "type": "string"
+        }
+    },
+    "additionalProperties": false,
+    "properties": {
+        "annotations": {
+            "title": "annotations",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "compilerOptions": {
+            "title": "compilerOptions",
+            "type": "object",
+            "$ref": "https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions",
+            "additionalProperties": false
+        },
+        "conflictResolutionStrategy": {
+            "title": "conflictResolutionStrategy",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/ConflictResolutionStrategy"
+            }
+        },
+        "cwd": {
+            "title": "cwd",
+            "type": "string"
+        },
+        "disclaimer": {
+            "title": "disclaimer",
+            "type": "string"
+        },
+        "extensions": {
+            "title": "extensions",
+            "type": "string"
+        },
+        "granularity": {
+            "title": "granularity",
+            "type": "string",
+            "$ref": "#/definitions/Granularity"
+        },
+        "ignoreInput": {
+            "title": "ignoreInput",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "ignoreOutput": {
+            "title": "ignoreOutput",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "importInjector": {
+            "title": "importInjector",
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "importMapper": {
+            "title": "importMapper",
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "inheritanceModifiers": {
+            "title": "inheritanceModifiers",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "injections": {
+            "title": "injections",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "input": {
+            "title": "input",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "inputRoots": {
+            "title": "inputRoots",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "libraryName": {
+            "title": "libraryName",
+            "type": "string"
+        },
+        "libraryNameOutputPrefix": {
+            "title": "libraryNameOutputPrefix",
+            "type": "boolean"
+        },
+        "moduleNameMapper": {
+            "title": "moduleNameMapper",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "nameResolvers": {
+            "title": "nameResolvers",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "namespaceStrategy": {
+            "title": "namespaceStrategy",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/NamespaceStrategy"
+            }
+        },
+        "output": {
+            "title": "output",
+            "type": "string"
+        },
+        "packageNameMapper": {
+            "title": "packageNameMapper",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "plugins": {
+            "title": "plugins",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "varianceModifiers": {
+            "title": "varianceModifiers",
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "verbose": {
+            "title": "verbose",
+            "type": "boolean"
+        }
+    },
+    "type": "object"
+}

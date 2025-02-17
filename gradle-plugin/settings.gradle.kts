@@ -39,6 +39,9 @@ dependencyResolutionManagement {
 
             val ec4jVersion: String by settings
             library("ec4j", "org.ec4j.core", "ec4j-core").version(ec4jVersion)
+
+            val typescriptJsonSchemaVersion: String by settings
+            library("typescript-jsonSchema", "npm", "typescript-json-schema").version(typescriptJsonSchemaVersion)
         }
 
         val wrappers by creating {
@@ -49,4 +52,5 @@ dependencyResolutionManagement {
 }
 
 include("karakum")
+include("karakum-schema")
 include("karakum-gradle-plugin")
