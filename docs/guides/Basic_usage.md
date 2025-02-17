@@ -73,12 +73,12 @@ an overkill, so we can just use `js-file-download` as the name for our JS module
   "output": "generated",
   "libraryName": "js-file-download",
 +  "moduleNameMapper": {
-+    ".*": "js-file-download"
++    ".+": "js-file-download"
 +  }
 }
 ```
 
-This instructs Karakum to replace all symbols in JS module names (regex `.*`) with `js-file-download`.
+This instructs Karakum to replace all symbols in JS module names (regex `.+`) with `js-file-download`.
 
 Another problem is more interesting. We can see some strange construct in the generated code:
 
@@ -129,7 +129,7 @@ we can just skip this namespace declaration. Karakum has the special configurati
   "output": "generated",
   "libraryName": "js-file-download",
   "moduleNameMapper": {
-    ".*": "js-file-download"
+    ".+": "js-file-download"
   },
 +  "namespaceStrategy": {
 +    "js-file-download": "ignore"

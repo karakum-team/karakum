@@ -52,5 +52,6 @@ dependencyResolutionManagement {
 }
 
 include("karakum")
+include("karakum-cli")
 include("karakum-schema")
 include("karakum-gradle-plugin")

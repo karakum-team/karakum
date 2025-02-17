@@ -3,7 +3,7 @@
   "output": "generated",
   "libraryName": "js-file-download",
   "moduleNameMapper": {
-    ".*": "js-file-download"
+    ".+": "js-file-download"
   },
   "namespaceStrategy": {
     "js-file-download": "ignore"
