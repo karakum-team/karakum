@@ -40,6 +40,10 @@ dependencyResolutionManagement {
             val ec4jVersion: String by settings
             library("ec4j", "org.ec4j.core", "ec4j-core").version(ec4jVersion)
 
+            val version: String by settings
+            val karakumVersion = "^$version"
+            library("karakum", "npm", "karakum").version(karakumVersion)
+
             val typescriptJsonSchemaVersion: String by settings
             library("typescript-jsonSchema", "npm", "typescript-json-schema").version(typescriptJsonSchemaVersion)
         }

@@ -32,6 +32,10 @@ kotlin {
             implementation(wrappers.node)
 
             implementation(project(":karakum"))
+
+            implementation(libs.karakum.get().let {
+                peerNpm(it.name, requireNotNull(it.version))
+            })
         }
     }
 }
