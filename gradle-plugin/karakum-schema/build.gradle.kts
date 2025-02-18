@@ -29,7 +29,7 @@ kotlin {
 
             implementation(project(":karakum"))
 
-            implementation(libs.typescript.jsonSchema.get().let {
+            implementation(libs.typescriptJsonSchema.get().let {
                 npm(it.name, requireNotNull(it.version))
             })
         }

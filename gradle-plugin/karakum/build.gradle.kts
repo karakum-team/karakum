@@ -21,14 +21,26 @@ kotlin {
 
         binaries.executable()
         generateTypeScriptDefinitions()
+
+        compilations.named("main") {
+            packageJson {
+                customField("exports", "./kotlin/karakum.mjs")
+                customField("bin", "./kotlin/karakum-bin.mjs")
+            }
+        }
     }
     
     sourceSets {
         jsMain.dependencies {
             implementation(libs.coroutines.core)
+
             api(wrappers.js)
             api(wrappers.node)
             api(wrappers.typescript)
+
+            api(libs.typescript.get().let {
+                peerNpm(it.name, requireNotNull(it.version))
+            })
         }
 
         jsTest {
