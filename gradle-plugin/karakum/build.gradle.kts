@@ -26,9 +26,12 @@ kotlin {
 
         compilations.named("main") {
             packageJson {
+                customField("description", "Converter of TypeScript declaration files to Kotlin declarations")
+                customField("keywords", listOf("kotlin", "typescript"))
+                customField("license", "Apache-2.0")
                 customField("exports", "./kotlin/karakum.mjs")
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
-                customField("scripts", mapOf("publish" to "npm publish --dry-run"))
+                customField("scripts", mapOf("publish" to "npm publish"))
             }
         }
     }
@@ -76,9 +79,14 @@ tasks.named<ProcessResources>("jsTestProcessResources") {
     }
 }
 
-NodeJsExec.create(
+val npmPublish = NodeJsExec.create(
     compilation = kotlin.js().compilations.getByName("main"),
     name = "npmPublish",
 ) {
+    group = "publishing"
     args("--run", "publish")
+}
+
+tasks.publish.configure {
+    dependsOn(npmPublish)
 }
