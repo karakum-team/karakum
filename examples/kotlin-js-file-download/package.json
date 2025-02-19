@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": " karakum --config karakum.config.json"
+    "start": "karakum --config karakum.config.json"
   },
   "devDependencies": {
     "karakum": "^1.0.0-alpha.51",
