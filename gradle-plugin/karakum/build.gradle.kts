@@ -85,8 +85,9 @@ val npmPublish = NodeJsExec.create(
 ) {
     group = "publishing"
     args("--run", "publish")
+    dependsOn(tasks.build)
 }
 
-tasks.publish.configure {
+tasks.publish {
     dependsOn(npmPublish)
 }
