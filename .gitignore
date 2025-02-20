@@ -1,9 +1,12 @@
-# Dependency directories
-node_modules/
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Kotlin project-specific cache directory
+.kotlin
+
+# Ignore Gradle build output directory
+build
 
 # IDE config
 .idea/
 *.iml
-
-# Output directories
-build/
