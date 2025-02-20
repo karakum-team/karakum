@@ -1,4 +1,7 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
+import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
     kotlin("multiplatform")
@@ -24,7 +27,7 @@ kotlin {
         binaries.executable()
         generateTypeScriptDefinitions()
 
-        compilations.named("main") {
+        compilations.named(MAIN_COMPILATION_NAME) {
             packageJson {
                 customField("description", "Converter of TypeScript declaration files to Kotlin declarations")
                 customField("keywords", listOf("kotlin", "typescript"))
@@ -72,7 +75,7 @@ tasks.named<ProcessResources>("jsProcessResources") {
 tasks.named<ProcessResources>("jsTestProcessResources") {
     filesMatching("test.config.json") {
         expand(
-            "functionalTestLib" to layout.projectDirectory.dir("src/jsTest/resources").asFile.path,
+            "functionalTestLib" to kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.path,
             "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.path,
             "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.path,
         )
@@ -80,7 +83,7 @@ tasks.named<ProcessResources>("jsTestProcessResources") {
 }
 
 val npmPublish = NodeJsExec.create(
-    compilation = kotlin.js().compilations.getByName("main"),
+    compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
 ) {
     group = "publishing"

@@ -25,7 +25,7 @@ suspend fun generateTests(
 ) {
     val testConfig = loadTestConfig()
 
-    val cwd = path.resolve(testConfig.lib, dirName)
+    val cwd = path.resolve(testConfig.lib, "kotlin", dirName)
     val expectedOutputDirName = path.resolve(testConfig.generated, dirName)
     val actualOutputDirName = path.resolve(testConfig.output, dirName)
 
