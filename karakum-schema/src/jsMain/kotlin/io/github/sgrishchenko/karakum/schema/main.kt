@@ -30,10 +30,10 @@ private suspend fun generateSchema(outputFileName: String, typings: String, enti
 }
 
 suspend fun main() {
-    val typings = import.meta.resolve("karakum/kotlin/karakum.d.ts")
+    val typings = import.meta.resolve("karakum/karakum.d.ts")
         .let { fileURLToPath(it) }
 
-    val additionalTypings = import.meta.resolve("karakum/kotlin/karakum-types.d.ts")
+    val additionalTypings = import.meta.resolve("karakum/karakum-types.d.ts")
         .let { fileURLToPath(it) }
 
     val outputPath = process.argv[2]
