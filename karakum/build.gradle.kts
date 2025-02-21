@@ -75,9 +75,9 @@ tasks.named<ProcessResources>("jsProcessResources") {
 tasks.named<ProcessResources>("jsTestProcessResources") {
     filesMatching("test.config.json") {
         expand(
-            "functionalTestLib" to kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.path,
-            "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.path,
-            "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.path,
+            "functionalTestLib" to kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.posixPath,
+            "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.posixPath,
+            "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.posixPath,
         )
     }
 }
@@ -94,3 +94,6 @@ val npmPublish = NodeJsExec.create(
 tasks.publish {
     dependsOn(npmPublish)
 }
+
+val File.posixPath
+    get() = path.replace('\\', '/')
