@@ -38,7 +38,7 @@ kotlin {
                     "./karakum-types.d.ts" to "./kotlin/karakum-types.d.ts",
                 ))
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
-                customField("scripts", mapOf("publish" to "npm publish"))
+                customField("scripts", mapOf("distribute" to "npm publish"))
             }
         }
     }
@@ -94,7 +94,7 @@ val npmPublish = NodeJsExec.create(
     name = "npmPublish",
 ) {
     group = "publishing"
-    args("--run", "publish")
+    args("--run", "distribute")
     dependsOn(
         copyNpmResources,
         tasks.build,
