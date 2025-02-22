@@ -93,7 +93,7 @@ val npmPublish = NodeJsExec.create(
     val npmAuthToken = project.findProperty("npmAuthToken") ?: ""
 
     group = "publishing"
-    args("--run", "publish", "--", "--//registry.npmjs.org/:_authToken", npmAuthToken)
+    args("--run", "publish", "--", "--_auth", npmAuthToken)
     dependsOn(tasks.build)
 }
 
