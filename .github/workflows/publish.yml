@@ -2,10 +2,8 @@ name: Publish
 
 on:
   push:
-    branches:
-      - master
-#    tags:
-#      - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   publish:
@@ -22,10 +20,6 @@ jobs:
           cache: 'gradle'
 
       - uses: gradle/actions/wrapper-validation@v3
-
-#      - run: echo //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN >> .npmrc
-#        env:
-#          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - run: ./gradlew publish -PnpmAuthToken=$NPM_AUTH_TOKEN --no-daemon
         env:
