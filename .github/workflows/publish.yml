@@ -21,9 +21,9 @@ jobs:
 
       - uses: gradle/actions/wrapper-validation@v3
 
-      - run: ./gradlew publish --no-daemon
+      - run: ./gradlew -PnpmAuthToken=$NPM_AUTH_TOKEN publish --no-daemon
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
 #      - run: ./gradlew -Dgradle.publish.key=$GRADLE_PUBLISH_KEY -Dgradle.publish.secret=$GRADLE_PUBLISH_SECRET publishPlugins --no-daemon
 #        env:
