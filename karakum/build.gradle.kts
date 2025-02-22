@@ -32,7 +32,6 @@ kotlin {
                 customField("description", "Converter of TypeScript declaration files to Kotlin declarations")
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
-                customField("readme", "kotlin/README.md")
                 customField("exports", mapOf(
                     "." to "./kotlin/karakum.mjs",
                     "./karakum.d.ts" to "./kotlin/karakum.d.ts",
