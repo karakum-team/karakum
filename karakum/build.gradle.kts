@@ -69,13 +69,6 @@ kotlin {
     }
 }
 
-tasks.named<ProcessResources>("jsProcessResources") {
-    from(
-        rootProject.layout.projectDirectory.file("LICENSE"),
-        rootProject.layout.projectDirectory.file("README.md"),
-    )
-}
-
 tasks.named<ProcessResources>("jsTestProcessResources") {
     filesMatching("test.config.json") {
         expand(
@@ -86,13 +79,26 @@ tasks.named<ProcessResources>("jsTestProcessResources") {
     }
 }
 
+val copyNpmResources by tasks.registering(Copy::class) {
+    group = "publishing"
+    from(
+        rootProject.layout.projectDirectory.file("LICENSE"),
+        rootProject.layout.projectDirectory.file("README.md"),
+    )
+    into(kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir)
+    dependsOn(tasks.named("jsProductionExecutableCompileSync"))
+}
+
 val npmPublish = NodeJsExec.create(
     compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
 ) {
     group = "publishing"
     args("--run", "publish")
-    dependsOn(tasks.build)
+    dependsOn(
+        copyNpmResources,
+        tasks.build,
+    )
 }
 
 tasks.publish {

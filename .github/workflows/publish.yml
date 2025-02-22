@@ -28,7 +28,7 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - run: ./gradlew :karakum-schema:npmPublish --no-daemon
+      - run: ./gradlew :karakum:npmPublish --no-daemon
 
 #      - run: ./gradlew -Dgradle.publish.key=$GRADLE_PUBLISH_KEY -Dgradle.publish.secret=$GRADLE_PUBLISH_SECRET publishPlugins --no-daemon
 #        env:
