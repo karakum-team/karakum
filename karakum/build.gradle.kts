@@ -32,6 +32,8 @@ kotlin {
                 customField("description", "Converter of TypeScript declaration files to Kotlin declarations")
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
+                customField("license", listOf("kotlin/LICENSE"))
+                customField("readme", "kotlin/README.md")
                 customField("exports", mapOf(
                     "." to "./kotlin/karakum.mjs",
                     "./karakum.d.ts" to "./kotlin/karakum.d.ts",
@@ -90,10 +92,8 @@ val npmPublish = NodeJsExec.create(
     compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
 ) {
-    val npmAuthToken = project.findProperty("npmAuthToken") ?: ""
-
     group = "publishing"
-    args("--run", "publish", "--", "--_auth", npmAuthToken)
+    args("--run", "publish")
     dependsOn(tasks.build)
 }
 
