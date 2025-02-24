@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
@@ -7,7 +8,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
     id("io.github.turansky.seskar")
-    `maven-publish`
+    id("com.vanniktech.maven.publish")
 }
 
 repositories {
@@ -29,7 +30,7 @@ kotlin {
 
         compilations.named(MAIN_COMPILATION_NAME) {
             packageJson {
-                customField("description", "Converter of TypeScript declaration files to Kotlin declarations")
+                customField("description", description)
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
                 customField("exports", mapOf(
@@ -69,6 +70,39 @@ kotlin {
     }
 }
 
+mavenPublishing {
+    pom {
+        name = project.name
+        description = project.description
+        url = "https://github.com/sgrishchenko/karakum"
+
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+
+        developers {
+            developer {
+                id = "sgrishchenko"
+                name = "Sergei Grishchenko"
+                email = "s.i.grishchenko@gmail.com"
+            }
+        }
+
+        scm {
+            connection = "scm:git:git://github.com/sgrishchenko/karakum.git"
+            developerConnection = "scm:git:git@github.com:sgrishchenko/karakum.git"
+            url = "https://github.com/sgrishchenko/karakum"
+        }
+    }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+}
+
 tasks.named<ProcessResources>("jsTestProcessResources") {
     filesMatching("test.config.json") {
         expand(
@@ -101,10 +135,6 @@ val npmPublish = NodeJsExec.create(
         copyNpmResources,
         tasks.build,
     )
-}
-
-tasks.publish {
-    dependsOn(npmPublish)
 }
 
 val File.posixPath

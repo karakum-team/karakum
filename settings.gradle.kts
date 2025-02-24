@@ -7,8 +7,11 @@ pluginManagement {
         kotlin("multiplatform") version kotlinVersion
         kotlin("plugin.js-plain-objects") version kotlinVersion
 
-        val publishVersion: String by settings
-        id("com.gradle.plugin-publish") version publishVersion
+        val mavenPublishVersion: String by settings
+        id("com.vanniktech.maven.publish") version mavenPublishVersion
+
+        val gradlePublishVersion: String by settings
+        id("com.gradle.plugin-publish") version gradlePublishVersion
 
         val seskarVersion: String by settings
         id("io.github.turansky.seskar") version seskarVersion
