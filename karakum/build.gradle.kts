@@ -127,7 +127,7 @@ val npmPublish = NodeJsExec.create(
     compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
 ) {
-    val npmAuthToken = findProperty("npmAuthToken") as String? ?: ""
+    val npmAuthToken: String? by project
 
     group = "publishing"
     args("--run", "distribute", "--", "--//registry.npmjs.org/:_authToken=$npmAuthToken")
