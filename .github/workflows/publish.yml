@@ -25,7 +25,7 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_npmAuthToken: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - run: ./gradlew publishToMavenCentral --no-configuration-cache --no-daemon
+      - run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache --no-daemon
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
