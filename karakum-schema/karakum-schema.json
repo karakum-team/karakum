@@ -63,10 +63,6 @@
             "title": "disclaimer",
             "type": "string"
         },
-        "extensions": {
-            "title": "extensions",
-            "type": "string"
-        },
         "granularity": {
             "title": "granularity",
             "type": "string",

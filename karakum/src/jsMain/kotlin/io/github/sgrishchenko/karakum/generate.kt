@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum
 import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
-import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
+import io.github.sgrishchenko.karakum.configuration.defaultizeConfiguration
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
@@ -53,7 +53,7 @@ private fun checkCasing(fileNames: ReadonlyArray<String>) {
 }
 
 suspend fun generate(partialConfiguration: PartialConfiguration) {
-    val configuration = reifyConfiguration(partialConfiguration)
+    val configuration = defaultizeConfiguration(partialConfiguration)
 
     val inputRoots = configuration.inputRoots
     val inputFileNames = configuration.inputFileNames
@@ -80,7 +80,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         compilerOptions
     )
 
-    val compilerHost = createCompilerHost(preparedCompilerOptions, /* setParentNodes */ true)
+    val compilerHost = createCompilerHost(preparedCompilerOptions, setParentNodes = true)
 
     val program = createProgram(inputFileNames, preparedCompilerOptions, compilerHost)
 

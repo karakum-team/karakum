@@ -71,19 +71,17 @@ external interface SchemaConfiguration {
      * */
     val granularity: Granularity?
 
-    val extensions: String?
+    val plugins: Many<Any>?
 
-    val plugins: Many<String>?
+    val injections: Many<Any>?
 
-    val injections: Many<String>?
+    val annotations: Many<Any>?
 
-    val annotations: Many<String>?
+    val nameResolvers: Many<Any>?
 
-    val nameResolvers: Many<String>?
+    val inheritanceModifiers: Many<Any>?
 
-    val inheritanceModifiers: Many<String>?
-
-    val varianceModifiers: Many<String>?
+    val varianceModifiers: Many<Any>?
 
     /**
      * @TJS-type object
@@ -137,6 +135,18 @@ external interface SchemaConfiguration {
 @JsExport
 // TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
+    override val plugins: Many<ConverterPlugin<Node>>?
+
+    override val injections: Many<Injection<Node, Node>>?
+
+    override val annotations: Many<Annotation<Node>>?
+
+    override val nameResolvers: Many<NameResolver<Node>>?
+
+    override val inheritanceModifiers: Many<InheritanceModifier<Node>>?
+
+    override val varianceModifiers: Many<VarianceModifier<Node>>?
+
     override val importMapper: Record<String, Rule>?
     override val compilerOptions: CompilerOptions?
 }
@@ -155,19 +165,17 @@ external interface MutableConfiguration : PartialConfiguration {
 
     override var granularity: Granularity?
 
-    override var extensions: String?
+    override var plugins: Many<ConverterPlugin<Node>>?
 
-    override var plugins: Many<String>?
+    override var injections: Many<Injection<Node, Node>>?
 
-    override var injections: Many<String>?
+    override var annotations: Many<Annotation<Node>>?
 
-    override var annotations: Many<String>?
+    override var nameResolvers: Many<NameResolver<Node>>?
 
-    override var nameResolvers: Many<String>?
+    override var inheritanceModifiers: Many<InheritanceModifier<Node>>?
 
-    override var inheritanceModifiers: Many<String>?
-
-    override var varianceModifiers: Many<String>?
+    override var varianceModifiers: Many<VarianceModifier<Node>>?
 
     override var moduleNameMapper: ReadonlyRecord<String, String>?
 

@@ -1,5 +1,7 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.extension.nameResolvers.convertErrorTypeReferenceNode
+import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import kotlinx.coroutines.test.runTest
@@ -13,7 +15,12 @@ class ExtensionTest {
             output = testOutput
             libraryName = "extension"
             verbose = true
-            extensions = "./extensions.js"
+            plugins = manyOf(
+                convertErrorTypeReferenceNode
+            )
+            nameResolvers = manyOf(
+                resolveUnionMemberDuplicateName
+            )
         }
     }
 }

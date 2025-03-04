@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.configuration
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.glob
-import io.github.sgrishchenko.karakum.util.toAbsolute
 import io.github.sgrishchenko.karakum.util.toModuleName
 import js.array.ReadonlyArray
 import js.import.import
@@ -17,15 +16,6 @@ external interface ExtensionConfiguration {
     val nameResolvers: ReadonlyArray<String>
     val inheritanceModifiers: ReadonlyArray<String>
     val varianceModifiers: ReadonlyArray<String>
-}
-
-external interface PartialExtensions {
-    val plugins: ReadonlyArray<Any>? /* SimpleConverterPlugin | ConverterPlugin */
-    val injections: ReadonlyArray<Any>? /* SimpleInjection | Injection */
-    val annotations: ReadonlyArray<Annotation<Node>>?
-    val nameResolvers: ReadonlyArray<NameResolver<Node>>?
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>?
-    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>?
 }
 
 @JsPlainObject
@@ -71,7 +61,7 @@ private suspend fun <T> loadExtensions(
 }
 
 @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-suspend fun loadExtensionsFromGlobs(
+suspend fun loadExtensions(
     configuration: ExtensionConfiguration,
     cwd: String,
 ): Extensions {
@@ -131,45 +121,5 @@ suspend fun loadExtensionsFromGlobs(
         nameResolvers = nameResolvers,
         inheritanceModifiers = inheritanceModifiers,
         varianceModifiers = varianceModifiers,
-    )
-}
-
-@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-suspend fun loadExtensionsFromFile(
-    extensions: String,
-    cwd: String,
-): Extensions {
-    val absoluteExtensions = toAbsolute(extensions, cwd)
-    val extensionModule = import<ExtensionModule>(toModuleName(absoluteExtensions))
-
-    val partialExtensions = requireNotNull(extensionModule.default) as PartialExtensions
-
-    console.log("Extension file: $absoluteExtensions")
-
-    val plugins = (partialExtensions.plugins ?: emptyArray())
-        .map { plugin ->
-            if (jsTypeOf(plugin) == "function") {
-                createSimplePlugin(plugin as SimpleConverterPlugin<Node>)
-            } else {
-                plugin as ConverterPlugin<Node>
-            }
-        }
-
-    val injections = (partialExtensions.injections ?: emptyArray())
-        .map { injection ->
-            if (jsTypeOf(injection) == "function") {
-                createSimpleInjection(injection as SimpleInjection<Node>)
-            } else {
-                injection as Injection<Node, Node>
-            }
-        }
-
-    return Extensions(
-        plugins = plugins.toTypedArray(),
-        injections = injections.toTypedArray(),
-        annotations = partialExtensions.annotations ?: emptyArray(),
-        nameResolvers = partialExtensions.nameResolvers ?: emptyArray(),
-        inheritanceModifiers = partialExtensions.inheritanceModifiers ?: emptyArray(),
-        varianceModifiers = partialExtensions.varianceModifiers ?: emptyArray(),
     )
 }

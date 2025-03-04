@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum
 
-import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
+import io.github.sgrishchenko.karakum.configuration.SchemaConfiguration
+import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.objects.jso
@@ -27,10 +28,12 @@ internal suspend fun cli() {
     val configuration = results.values["config"]
         ?.toString()
         ?.let { readFile(it, utf8) }
-        ?.let { JSON.parse<PartialConfiguration>(it) }
+        ?.let { JSON.parse<SchemaConfiguration>(it) }
         ?: error("Configuration file not found")
 
-    generate(configuration)
+    val partialConfiguration = reifyConfiguration(configuration)
+
+    generate(partialConfiguration)
 }
 
 @OptIn(ExperimentalJsExport::class)
