@@ -37,7 +37,7 @@ fun <T> normalizeItems(
                     conflicts[key] = existingConflict
                 }
 
-                existingConflict + item
+                existingConflict += item
             } else {
                 result[key] = mergedItem
             }
