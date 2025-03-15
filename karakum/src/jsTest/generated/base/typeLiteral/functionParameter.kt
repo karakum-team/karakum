@@ -21,7 +21,7 @@ fun method(options: MyInterfaceMethodOptions): String
 }
 
 external interface ShouldRevalidateFunction {
-@seskar.js.JsNative
+@seskar.js.JsNativeInvoke
 operator fun  invoke(args: ShouldRevalidateFunctionArgs): Boolean
 }
 

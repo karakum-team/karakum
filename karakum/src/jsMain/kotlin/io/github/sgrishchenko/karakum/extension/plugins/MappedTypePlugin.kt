@@ -30,7 +30,7 @@ fun convertMappedTypeBody(node: MappedTypeNode, context: ConverterContext, rende
         ?: node.typeParameter.name.text
 
     val getter = """
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 ${ifPresent(getterInheritanceModifier) { "$it "}}operator fun <${typeParameter}> get(key: ${keyType}): $type
     """.trim()
 
@@ -38,7 +38,7 @@ ${ifPresent(getterInheritanceModifier) { "$it "}}operator fun <${typeParameter}>
 
     if (!readonly) {
         setter = """
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 ${ifPresent(setterInheritanceModifier) { "${it} "}}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
         """.trim()
     }

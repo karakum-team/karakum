@@ -8,31 +8,31 @@
 package sandbox.base.indexSignature
 
 external interface RouteData {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun get(key: String): Any?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun set(key: String, value: Any?)
 }
 
 external interface ReadonlyRouteData {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun get(key: String): Any?
 }
 
 external interface SomeData {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun get(key: js.symbol.Symbol): Double?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun set(key: js.symbol.Symbol, value: Double?)
 }
 
 external interface IntersectionSomeData {
 var x: String
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun get(key: js.symbol.Symbol): Double?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun set(key: js.symbol.Symbol, value: Double?)
 }

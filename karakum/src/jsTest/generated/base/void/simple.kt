@@ -8,17 +8,17 @@
 package sandbox.base.void
 
 external interface InterfaceWithVoidSignatures {
-@seskar.js.JsNative
+@seskar.js.JsNativeInvoke
 operator fun  invoke(): Unit
 /* new (): void; */
 fun someMethod(): Unit
 }
 
 external interface TypeWithVoidSignatures {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun get(key: String): js.core.Void?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun set(key: String, value: js.core.Void?)
 }
 

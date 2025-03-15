@@ -34,7 +34,7 @@ val convertIndexedSignatureDeclaration = createSimplePlugin plugin@{ node: Node,
     val type = renderNullable(node.type, true, context, render)
 
     val getter = """
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 ${ifPresent(getterInheritanceModifier) { "$it "}}operator fun get(key: ${keyType}): $type
     """.trim()
 
@@ -42,7 +42,7 @@ ${ifPresent(getterInheritanceModifier) { "$it "}}operator fun get(key: ${keyType
 
     if (readonly == null) {
         setter = """
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 ${ifPresent(setterInheritanceModifier) { "$it "}}operator fun set(key: ${keyType}, value: ${type})
         """.trim()
     }

@@ -3,8 +3,8 @@
 package `package`.namespace
 
 external interface TestInterfaceTestFn {
-@seskar.js.JsNative
+@seskar.js.JsNativeInvoke
 operator fun  invoke(param: String): String
-@seskar.js.JsNative
+@seskar.js.JsNativeInvoke
 operator fun  invoke(param: Double): String
 }

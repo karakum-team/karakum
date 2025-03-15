@@ -17,23 +17,23 @@ val two: Keys
 }
 
 external interface OptionsFlags {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
 }
 
 external interface ReadonlyOptionsFlags {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
 }
 
 external interface OptionsFlagsWithTypeLiteral {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
 var three: String
 }
@@ -43,15 +43,15 @@ var key: T
 }
 
 external interface NamedOptionsFlags {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun <Property : Keys> set(key: KeyWrapper<Property>, value: Promise<Property>?)
 }
 
 external interface OptionalOptionsFlags {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: KeyWrapper<Property>): Promise<Property>?
 }
 
@@ -59,9 +59,9 @@ external interface MappedTypeContainer {
 var mappedType: MappedTypeContainerMappedType
 }
 external interface MappedTypeContainerMappedType {
-@seskar.js.JsNative
+@seskar.js.JsNativeGetter
 operator fun <Property : Keys> get(key: Property): Promise<Property>?
 
-@seskar.js.JsNative
+@seskar.js.JsNativeSetter
 operator fun <Property : Keys> set(key: Property, value: Promise<Property>?)
 }
