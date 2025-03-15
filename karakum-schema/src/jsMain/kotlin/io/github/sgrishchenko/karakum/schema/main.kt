@@ -1,6 +1,8 @@
 package io.github.sgrishchenko.karakum.schema
 
 import js.import.import
+import js.json.parse
+import js.json.stringify
 import js.objects.JsPlainObject
 import js.objects.Object
 import js.objects.ReadonlyRecord
@@ -53,10 +55,10 @@ suspend fun main() {
     generateSchema(conflictResolutionStrategySchemaFileName, additionalTypings, "ConflictResolutionStrategy")
     generateSchema(configurationSchemaFileName, typings, "SchemaConfiguration")
 
-    val granularitySchema: Schema = JSON.parse(readFile(granularitySchemaFileName, utf8))
-    val namespaceStrategySchema: Schema = JSON.parse(readFile(namespaceStrategySchemaFileName, utf8))
-    val conflictResolutionStrategySchema: Schema = JSON.parse(readFile(conflictResolutionStrategySchemaFileName, utf8))
-    val configurationSchema: Schema = JSON.parse(readFile(configurationSchemaFileName, utf8))
+    val granularitySchema: Schema = parse(readFile(granularitySchemaFileName, utf8))
+    val namespaceStrategySchema: Schema = parse(readFile(namespaceStrategySchemaFileName, utf8))
+    val conflictResolutionStrategySchema: Schema = parse(readFile(conflictResolutionStrategySchemaFileName, utf8))
+    val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, utf8))
 
     val definitions = recordOf(
         "Granularity" to granularitySchema.copy(`$schema` = undefined),
@@ -160,5 +162,5 @@ suspend fun main() {
     rm(granularitySchemaFileName)
     rm(namespaceStrategySchemaFileName)
     rm(conflictResolutionStrategySchemaFileName)
-    writeFile(configurationSchemaFileName, JSON.stringify(resultConfigurationSchema, null, 4))
+    writeFile(configurationSchemaFileName, stringify(resultConfigurationSchema, { _, value -> value }, 4))
 }

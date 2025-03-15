@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.SchemaConfiguration
 import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
+import js.json.parse
 import js.objects.jso
 import js.promise.Promise
 import node.buffer.BufferEncoding.Companion.utf8
@@ -28,7 +29,7 @@ internal suspend fun cli() {
     val configuration = results.values["config"]
         ?.toString()
         ?.let { readFile(it, utf8) }
-        ?.let { JSON.parse<SchemaConfiguration>(it) }
+        ?.let { parse<SchemaConfiguration>(it) }
         ?: error("Configuration file not found")
 
     val partialConfiguration = reifyConfiguration(configuration)

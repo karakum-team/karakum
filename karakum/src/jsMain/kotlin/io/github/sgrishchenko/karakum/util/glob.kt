@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
-import js.array.JsArray
+import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.objects.jso
 import node.fs.GlobOptionsWithFileTypes
@@ -11,7 +11,7 @@ suspend fun glob(
     cwd: String,
     ignore: ReadonlyArray<String> = emptyArray()
 ): ReadonlyArray<String> {
-    val fileNames = JsArray.fromAsync(
+    val fileNames = JsArrays.fromAsync(
         node.fs.glob(patterns, jso<GlobOptionsWithFileTypes> {
             this.cwd = cwd
             withFileTypes = true

@@ -3,12 +3,12 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.traverse
-import js.array.JsPair
+import js.array.JsTuple2
 import js.array.ReadonlyArray
 import js.array.tupleOf
 import typescript.*
 
-typealias TypeParameterExtractionResult = ReadonlyArray<JsPair<Node, Declaration>>
+typealias TypeParameterExtractionResult = ReadonlyArray<JsTuple2<Node, Declaration>>
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -18,7 +18,7 @@ fun extractTypeParameters(
 ): TypeParameterExtractionResult {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-    val result = mutableListOf<JsPair<Node, Declaration>>()
+    val result = mutableListOf<JsTuple2<Node, Declaration>>()
 
     val typeChecker = typeScriptService?.program?.getTypeChecker()
 

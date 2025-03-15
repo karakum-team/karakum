@@ -7,7 +7,7 @@ import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
-import js.array.JsArray
+import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.objects.jso
 import js.symbol.Symbol
@@ -136,7 +136,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
     private fun getUniqMembers(symbolTable: SymbolTable?): ReadonlyArray<Declaration> {
         val typeChecker = this.program.getTypeChecker()
 
-        return (symbolTable?.let { JsArray.from(it.values()) } ?: emptyArray())
+        return (symbolTable?.let { JsArrays.from(it.values()) } ?: emptyArray())
             .flatMap { symbol ->
                 val declarations = symbol.declarations ?: emptyArray()
                 val firstDeclaration = declarations.getOrNull(0) ?: return@flatMap emptyList()
