@@ -32,7 +32,11 @@ external interface ExtensionModule {
     val default: Any?
 }
 
-private suspend fun <T> loadExtensions(
+/**
+ * Loads extension modules based on specified patterns.
+ * Exported as a utility function for programmatic API.
+ */
+suspend fun <T> loadExtensions(
     name: String,
     patterns: ReadonlyArray<String>,
     cwd: String,
