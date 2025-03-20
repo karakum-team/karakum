@@ -26,5 +26,5 @@ fun resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
         return parenthesizedResolver(parent, context)
     }
 
-    return NameResolver { node, context -> parenthesizedResolver(node, context) }
+    return { node, context -> parenthesizedResolver(node, context) }
 }

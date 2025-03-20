@@ -10,25 +10,25 @@ import typescript.isIdentifier
 import typescript.isInterfaceDeclaration
 import typescript.isMethodSignature
 
-val resolveInterfaceMethodReturnTypeName = NameResolver { node, context ->
+val resolveInterfaceMethodReturnTypeName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val method = getParent(node)
-        ?: return@NameResolver null
-    if (!isMethodSignature(method)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isMethodSignature(method)) return@nameResolver null
 
     val methodNameNode = method.name
-    if (!isIdentifier(methodNameNode)) return@NameResolver null
-    if (method.type != node) return@NameResolver null
+    if (!isIdentifier(methodNameNode)) return@nameResolver null
+    if (method.type != node) return@nameResolver null
 
     val methodName = methodNameNode.text
 
     val interfaceNode = getParent(method)
-        ?: return@NameResolver null
-    if (!isInterfaceDeclaration(interfaceNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isInterfaceDeclaration(interfaceNode)) return@nameResolver null
 
     val parentName = interfaceNode.name.text
 

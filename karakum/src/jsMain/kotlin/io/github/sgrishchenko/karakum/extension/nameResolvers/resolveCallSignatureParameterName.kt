@@ -7,28 +7,28 @@ import io.github.sgrishchenko.karakum.util.capitalize
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.*
 
-val resolveCallSignatureParameterName = NameResolver { node, context ->
+val resolveCallSignatureParameterName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val parameter = getParent(node)
-        ?: return@NameResolver null
-    if (!isParameter(parameter)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isParameter(parameter)) return@nameResolver null
 
     val parameterName = parameter.name
-    if (!isIdentifier(parameterName)) return@NameResolver null
+    if (!isIdentifier(parameterName)) return@nameResolver null
 
     val parameterText = parameterName.text
 
     val callSignature = getParent(parameter)
-        ?: return@NameResolver null
-    if (!isCallSignatureDeclaration(callSignature)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isCallSignatureDeclaration(callSignature)) return@nameResolver null
 
     val interfaceNode = getParent(callSignature)
-        ?: return@NameResolver null
-    if (!isInterfaceDeclaration(interfaceNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isInterfaceDeclaration(interfaceNode)) return@nameResolver null
 
     val parentName = interfaceNode.name.text
 

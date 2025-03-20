@@ -10,26 +10,26 @@ import typescript.isClassDeclaration
 import typescript.isIdentifier
 import typescript.isMethodDeclaration
 
-val resolveClassMethodReturnTypeName = NameResolver { node, context ->
-    val typeScriprvice = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+val resolveClassMethodReturnTypeName: NameResolver = nameResolver@{ node, context ->
+    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
-        typeScriprvice?.getParent(it) ?: it.getParentOrNull()
+        typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val method = getParent(node)
-        ?: return@NameResolver null
-    if (!isMethodDeclaration(method)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isMethodDeclaration(method)) return@nameResolver null
     val methodNameNode = method.name
-    if (!isIdentifier(methodNameNode)) return@NameResolver null
-    if (method.type !== node) return@NameResolver null
+    if (!isIdentifier(methodNameNode)) return@nameResolver null
+    if (method.type !== node) return@nameResolver null
 
     val methodName = methodNameNode.text
 
     val classNode = getParent(method)
-        ?: return@NameResolver null
-    if (!isClassDeclaration(classNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isClassDeclaration(classNode)) return@nameResolver null
     val classNameNode = classNode.name
-        ?: return@NameResolver null
+        ?: return@nameResolver null
 
     val parentName = classNameNode.text
 

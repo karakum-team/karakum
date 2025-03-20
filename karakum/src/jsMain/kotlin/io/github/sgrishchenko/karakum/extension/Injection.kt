@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
 import js.array.ReadonlyArray
-import seskar.js.JsNative
 import seskar.js.JsValue
 import typescript.Node
 
@@ -36,14 +35,7 @@ external interface Injection : Plugin {
     fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?
 }
 
-external interface SimpleInjection {
-    @JsNative
-    operator fun invoke(node: Node, context: InjectionContext, next: Render<Node>): ReadonlyArray<String>?
-}
-
-fun createSimpleInjection(
-    inject: (node: Node, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?,
-) = createSimpleInjection(inject.unsafeCast<SimpleInjection>())
+typealias SimpleInjection = (node: Node, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?
 
 fun createSimpleInjection(
     inject: SimpleInjection,

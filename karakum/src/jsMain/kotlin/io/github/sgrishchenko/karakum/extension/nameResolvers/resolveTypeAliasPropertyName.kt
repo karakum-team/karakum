@@ -7,28 +7,28 @@ import io.github.sgrishchenko.karakum.util.capitalize
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.*
 
-val resolveTypeAliasPropertyName = NameResolver { node, context ->
+val resolveTypeAliasPropertyName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val property = getParent(node)
-        ?: return@NameResolver null
-    if (!isPropertySignature(property)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isPropertySignature(property)) return@nameResolver null
 
     val propertyNameNode = property.name
-    if (!isIdentifier(propertyNameNode)) return@NameResolver null
+    if (!isIdentifier(propertyNameNode)) return@nameResolver null
 
     val propertyName = propertyNameNode.text
 
     val typeLiteral = getParent(property)
-        ?: return@NameResolver null
-    if (!isTypeLiteralNode(typeLiteral)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isTypeLiteralNode(typeLiteral)) return@nameResolver null
 
     val typeAlias = getParent(typeLiteral)
-        ?: return@NameResolver null
-    if (!isTypeAliasDeclaration(typeAlias)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isTypeAliasDeclaration(typeAlias)) return@nameResolver null
 
     val parentName = typeAlias.name.text
 

@@ -9,18 +9,18 @@ import typescript.Node
 import typescript.isIdentifier
 import typescript.isVariableDeclaration
 
-val resolveVariableName = NameResolver { node, context ->
+val resolveVariableName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val variable = getParent(node)
-        ?: return@NameResolver null
-    if (!isVariableDeclaration(variable)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isVariableDeclaration(variable)) return@nameResolver null
 
     val variableNameNode = variable.name
-    if (!isIdentifier(variableNameNode)) return@NameResolver null
+    if (!isIdentifier(variableNameNode)) return@nameResolver null
 
     val variableName = variableNameNode.text
 

@@ -7,34 +7,34 @@ import io.github.sgrishchenko.karakum.util.capitalize
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.*
 
-val resolveClassMethodParameterName = NameResolver { node, context ->
+val resolveClassMethodParameterName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val parameter = getParent(node)
-        ?: return@NameResolver null
-    if (!isParameter(parameter)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isParameter(parameter)) return@nameResolver null
     val parameterNameNode = parameter.name
-    if (!isIdentifier(parameterNameNode)) return@NameResolver null
+    if (!isIdentifier(parameterNameNode)) return@nameResolver null
 
     val parameterName = parameterNameNode.text
 
     val method = getParent(parameter)
-        ?: return@NameResolver null
-    if (!isMethodDeclaration(method)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isMethodDeclaration(method)) return@nameResolver null
 
     val methodNameNode = method.name
-    if (!isIdentifier(methodNameNode)) return@NameResolver null
+    if (!isIdentifier(methodNameNode)) return@nameResolver null
 
     val methodName = methodNameNode.text
 
     val classNode = getParent(method)
-        ?: return@NameResolver null
-    if (!isClassDeclaration(classNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isClassDeclaration(classNode)) return@nameResolver null
     val classNameNode = classNode.name
-        ?: return@NameResolver null
+        ?: return@nameResolver null
 
     val parentName = classNameNode.text
 

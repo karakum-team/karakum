@@ -10,27 +10,27 @@ import typescript.isClassDeclaration
 import typescript.isIdentifier
 import typescript.isPropertyDeclaration
 
-val resolveClassPropertyName = NameResolver { node, context ->
+val resolveClassPropertyName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val property = getParent(node)
-        ?: return@NameResolver null
-    if (!isPropertyDeclaration(property)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isPropertyDeclaration(property)) return@nameResolver null
 
     val propertyNameNode = property.name
-    if (!isIdentifier(propertyNameNode)) return@NameResolver null
+    if (!isIdentifier(propertyNameNode)) return@nameResolver null
 
     val propertyName = propertyNameNode.text
 
     val classNode = getParent(property)
-        ?: return@NameResolver null
-    if (!isClassDeclaration(classNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isClassDeclaration(classNode)) return@nameResolver null
 
     val classNameNode = classNode.name
-        ?: return@NameResolver null
+        ?: return@nameResolver null
 
     val parentName = classNameNode.text
 

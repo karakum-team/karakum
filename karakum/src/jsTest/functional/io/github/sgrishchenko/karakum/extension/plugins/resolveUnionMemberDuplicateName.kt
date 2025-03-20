@@ -8,24 +8,24 @@ import typescript.isStringLiteral
 import typescript.isTypeAliasDeclaration
 import typescript.isUnionTypeNode
 
-val resolveUnionMemberDuplicateName = NameResolver { node, context ->
+val resolveUnionMemberDuplicateName: NameResolver =  nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
-    if (!isLiteralTypeNode(node)) return@NameResolver null
-    if (!isStringLiteral(node.literal)) return@NameResolver null
+    if (!isLiteralTypeNode(node)) return@nameResolver null
+    if (!isStringLiteral(node.literal)) return@nameResolver null
 
     val unionType = getParent(node)
-        ?: return@NameResolver null
-    if (!isUnionTypeNode(unionType)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isUnionTypeNode(unionType)) return@nameResolver null
 
     val typeAlias = getParent(unionType)
-        ?: return@NameResolver null
-    if (!isTypeAliasDeclaration(typeAlias)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isTypeAliasDeclaration(typeAlias)) return@nameResolver null
 
-    if (typeAlias.name.text !== "UnionWithDuplicates") return@NameResolver "stringTrue"
+    if (typeAlias.name.text !== "UnionWithDuplicates") return@nameResolver "stringTrue"
 
     null
 }

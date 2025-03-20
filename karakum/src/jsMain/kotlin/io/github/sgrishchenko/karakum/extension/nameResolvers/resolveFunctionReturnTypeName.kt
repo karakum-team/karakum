@@ -8,19 +8,19 @@ import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.Node
 import typescript.isFunctionDeclaration
 
-val resolveFunctionReturnTypeName = NameResolver { node, context ->
+val resolveFunctionReturnTypeName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val functionNode = getParent(node)
-        ?: return@NameResolver null
-    if (!isFunctionDeclaration(functionNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isFunctionDeclaration(functionNode)) return@nameResolver null
 
     val functionNameNode = functionNode.name
-        ?: return@NameResolver null
-    if (functionNode.type != node) return@NameResolver null
+        ?: return@nameResolver null
+    if (functionNode.type != node) return@nameResolver null
 
     val parentName = functionNameNode.text
 

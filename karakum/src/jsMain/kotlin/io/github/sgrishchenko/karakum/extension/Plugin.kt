@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
 import js.array.ReadonlyArray
-import seskar.js.JsNative
 import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
@@ -16,14 +15,7 @@ external interface Plugin {
     fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile>
 }
 
-external interface SimplePlugin {
-    @JsNative
-    operator fun invoke(node: Node, context: Context, next: Render<Node>): String?
-}
-
-fun createSimplePlugin(
-    render: (node: Node, context: Context, next: Render<Node>) -> String?
-) = createSimplePlugin(render.unsafeCast<SimplePlugin>())
+typealias SimplePlugin = (node: Node, context: Context, next: Render<Node>) -> String?
 
 fun createSimplePlugin(
     render: SimplePlugin

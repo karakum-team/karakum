@@ -10,27 +10,27 @@ import typescript.isFunctionDeclaration
 import typescript.isIdentifier
 import typescript.isParameter
 
-val resolveFunctionParameterName = NameResolver { node, context ->
+val resolveFunctionParameterName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }
 
     val parameter = getParent(node)
-        ?: return@NameResolver null
-    if (!isParameter(parameter)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isParameter(parameter)) return@nameResolver null
 
     val parameterNameNode = parameter.name
-    if (!isIdentifier(parameterNameNode)) return@NameResolver null
+    if (!isIdentifier(parameterNameNode)) return@nameResolver null
 
     val parameterName = parameterNameNode.text
 
     val functionNode = getParent(parameter)
-        ?: return@NameResolver null
-    if (!isFunctionDeclaration(functionNode)) return@NameResolver null
+        ?: return@nameResolver null
+    if (!isFunctionDeclaration(functionNode)) return@nameResolver null
 
     val functionNameNode = functionNode.name
-        ?: return@NameResolver null
+        ?: return@nameResolver null
 
     val parentName = functionNameNode.text
 
