@@ -13,7 +13,7 @@ val unionServiceKey = Symbol()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class UnionService @JsExport.Ignore constructor(private val context: ConverterContext) {
+class UnionService @JsExport.Ignore constructor(private val context: Context) {
     private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()
     private val coveredUnionParents = mutableSetOf<typescript.Symbol>()
 
@@ -120,12 +120,12 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
         null
     }
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         unionService = UnionService(context)
         context.registerService(unionServiceKey, requireNotNull(unionService))
     }
 
-    override fun traverse(node: Node, context: ConverterContext) {
+    override fun traverse(node: Node, context: Context) {
         if (
             isUnionTypeNode(node)
             && node.types.asArray().all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
@@ -141,7 +141,7 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
         }
     }
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         val anonymousUnionDeclaration = anonymousUnionDeclarationPlugin.render(node, context, next)
         if (anonymousUnionDeclaration != null) return anonymousUnionDeclaration
 
@@ -268,7 +268,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
         return null
     }
 
-    override fun generate(context: ConverterContext, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
         for ((symbol, parentNames) in unionService?.uncoveredUnionParents ?: emptyMap()) {

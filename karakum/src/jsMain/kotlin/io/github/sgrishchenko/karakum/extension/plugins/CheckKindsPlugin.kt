@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.ConverterPlugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
@@ -88,11 +88,11 @@ private val supportedKinds = setOf(
 )
 
 class CheckKindsPlugin : ConverterPlugin<Node> {
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun traverse(node: Node, context: ConverterContext){
+    override fun traverse(node: Node, context: Context){
         val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
 
         if (
@@ -104,5 +104,5 @@ class CheckKindsPlugin : ConverterPlugin<Node> {
         }
     }
 
-    override fun setup(context: ConverterContext) = Unit
+    override fun setup(context: Context) = Unit
 }

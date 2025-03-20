@@ -47,7 +47,7 @@ private fun isPrimitiveType(node: Node): Boolean {
 fun renderNullable(
     node: TypeNode?,
     isNullable: Boolean,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
 ): String {
     val isReallyNullable = (
@@ -86,7 +86,7 @@ fun renderResolvedNullable(
     return "$type${if (isNullable) "?" else ""}"
 }
 
-fun createRender(context: ConverterContext, plugins: ReadonlyArray<ConverterPlugin<Node>>): Render<Node> {
+fun createRender(context: Context, plugins: ReadonlyArray<ConverterPlugin<Node>>): Render<Node> {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     fun render(node: Node, parentNode: Node?, parentIndex: Int): String {

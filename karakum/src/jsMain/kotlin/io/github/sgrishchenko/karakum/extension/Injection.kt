@@ -26,7 +26,7 @@ sealed external interface InjectionType {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface InjectionContext : ConverterContext {
+external interface InjectionContext : Context {
     val type: InjectionType
 }
 
@@ -49,14 +49,14 @@ fun <TNode : Node, TInjectionNode : Node> createSimpleInjection(
     inject: SimpleInjection<TInjectionNode>,
 ): Injection<TNode, TInjectionNode> {
     return object : Injection<TNode, TInjectionNode> {
-        override fun setup(context: ConverterContext) = Unit
+        override fun setup(context: Context) = Unit
 
-        override fun traverse(node: Node, context: ConverterContext) = Unit
+        override fun traverse(node: Node, context: Context) = Unit
 
-        override fun render(node: TNode, context: ConverterContext, next: Render<Node>) = null
+        override fun render(node: TNode, context: Context, next: Render<Node>) = null
 
         override fun inject(node: TInjectionNode, context: InjectionContext, render: Render<Node>) = inject(node, context, render)
 
-        override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+        override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
     }
 }

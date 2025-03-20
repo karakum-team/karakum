@@ -16,7 +16,7 @@ class VarianceModifierService @JsExport.Ignore constructor(
 ) {
     fun resolveVarianceModifier(
         node: Node,
-        context: ConverterContext,
+        context: Context,
     ): String? {
         for (varianceModifier in varianceModifiers) {
             val result = varianceModifier(node, context)
@@ -31,13 +31,13 @@ class VarianceModifierService @JsExport.Ignore constructor(
 class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier<Node>>) : ConverterPlugin<Node> {
     private val varianceModifierService = VarianceModifierService(varianceModifiers);
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(varianceModifierServiceKey, varianceModifierService)
     }
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

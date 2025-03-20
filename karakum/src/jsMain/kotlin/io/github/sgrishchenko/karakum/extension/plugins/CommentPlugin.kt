@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.ConverterPlugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
@@ -50,13 +50,13 @@ class CommentPlugin : ConverterPlugin<Node> {
     private val coveredCommentRanges = mutableMapOf<SourceFile, MutableList<CommentRange>>()
     private val commentsService = CommentService()
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(commentServiceKey, this.commentsService)
     }
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         val sourceFile = node.getSourceFileOrNull() ?: return null
 
         val leadingComments = (getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?: emptyArray())
@@ -93,5 +93,5 @@ class CommentPlugin : ConverterPlugin<Node> {
         commentRanges?.add(commentRange)
     }
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

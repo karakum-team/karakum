@@ -6,7 +6,7 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface InheritanceModifierContext : ConverterContext {
+external interface InheritanceModifierContext : Context {
     val signature: Signature?
     val getter: Boolean?
     val setter: Boolean?

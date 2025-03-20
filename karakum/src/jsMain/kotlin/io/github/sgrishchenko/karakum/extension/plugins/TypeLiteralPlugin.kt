@@ -7,7 +7,7 @@ import typescript.TypeLiteralNode
 import typescript.asArray
 import typescript.isTypeLiteralNode
 
-fun convertTypeLiteralBody(node: TypeLiteralNode, context: ConverterContext, render: Render<Node>): String {
+fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
@@ -26,7 +26,7 @@ fun convertTypeLiteral(
     name: String,
     typeParameters: String?,
     isInlined: Boolean,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
 ): String {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)

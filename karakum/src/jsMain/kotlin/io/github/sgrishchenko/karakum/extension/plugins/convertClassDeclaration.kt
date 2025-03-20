@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
@@ -22,7 +22,7 @@ private fun extractModifiers(member: Declaration): ReadonlyArray<ModifierLike> {
 private fun resolveConstructors(
     node: ClassDeclaration,
     members: ReadonlyArray<Declaration>,
-    context: ConverterContext,
+    context: Context,
 ): ReadonlyArray<Declaration> {
     val constructors = members.filter { isConstructorDeclaration(it) }
     if (constructors.isNotEmpty()) return constructors.toTypedArray()

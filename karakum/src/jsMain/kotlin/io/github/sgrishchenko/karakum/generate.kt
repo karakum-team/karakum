@@ -164,7 +164,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         .plus(plugins)
         .plus(defaultPlugins)
 
-    val context = ConverterContext()
+    val context = Context()
 
     for (plugin in converterPlugins) {
         plugin.setup(context)

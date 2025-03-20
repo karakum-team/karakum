@@ -16,7 +16,7 @@ private fun isUnknown(type: Node) = type.kind === SyntaxKind.UnknownKeyword
 fun isNullableType(type: Node) = isNull(type) || isUndefined(type)
 
 @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-fun isPossiblyNullableType(node: TypeNode, context: ConverterContext): Boolean {
+fun isPossiblyNullableType(node: TypeNode, context: Context): Boolean {
     if (node.getSourceFileOrNull() == null) {
         // handle synthetic nodes
         val resolvedType = resolveTypeIfNeeded(node, context)
@@ -45,7 +45,7 @@ fun isPossiblyNullableType(node: TypeNode, context: ConverterContext): Boolean {
     )
 }
 
-private fun resolveTypeIfNeeded(node: TypeNode, context: ConverterContext): Node {
+private fun resolveTypeIfNeeded(node: TypeNode, context: Context): Node {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     if (isIndexedAccessTypeNode(node)) {
@@ -78,7 +78,7 @@ private fun isNullableTsType(type: Type): Boolean {
 
 @OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
-fun isNullableUnionType(node: Node, context: ConverterContext): Boolean {
+fun isNullableUnionType(node: Node, context: Context): Boolean {
     contract {
         returns(true) implies (node is UnionTypeNode)
     }
@@ -90,7 +90,7 @@ fun isNullableUnionType(node: Node, context: ConverterContext): Boolean {
 
 @OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
-fun isNullableOnlyUnionType(node: Node, context: ConverterContext): Boolean {
+fun isNullableOnlyUnionType(node: Node, context: Context): Boolean {
     contract {
         returns(true) implies (node is UnionTypeNode)
     }
@@ -100,7 +100,7 @@ fun isNullableOnlyUnionType(node: Node, context: ConverterContext): Boolean {
     return flatUnionTypes(node, context).all { isNullableType(it) }
 }
 
-fun flatUnionTypes(node: UnionTypeNode, context: ConverterContext): ReadonlyArray<TypeNode> {
+fun flatUnionTypes(node: UnionTypeNode, context: Context): ReadonlyArray<TypeNode> {
     val result = mutableListOf<TypeNode>()
 
     for (type in node.types) {
@@ -131,9 +131,9 @@ fun flatUnionTypes(node: UnionTypeNode, context: ConverterContext): ReadonlyArra
 }
 
 class NullableUnionTypePlugin : ConverterPlugin<Node> {
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
@@ -168,7 +168,7 @@ class NullableUnionTypePlugin : ConverterPlugin<Node> {
         return null;
     }
 
-    override fun setup(context: ConverterContext) = Unit
+    override fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 }

@@ -6,15 +6,15 @@ import js.symbol.Symbol
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface ConverterContext {
+external interface Context {
     fun <T: Any> registerService(key: Symbol, service: T)
     fun <T: Any> lookupService(key: Symbol): T?
 }
 
-fun ConverterContext(): ConverterContext {
+fun Context(): Context {
     val services: Record<Symbol, Any> = recordOf()
 
-    return object : ConverterContext {
+    return object : Context {
         override fun <T: Any> registerService(key: Symbol, service: T) {
             services[key] = service
         }

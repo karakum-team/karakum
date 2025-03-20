@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.ifPresent
@@ -63,7 +63,7 @@ private fun extractUnionMemberName(node: LiteralTypeNode): String? {
         ?: extractPrefixUnaryExpressionUnionMemberName(node)
 }
 
-private fun resolveUnionMemberName(node: LiteralTypeNode, context: ConverterContext): String {
+private fun resolveUnionMemberName(node: LiteralTypeNode, context: Context): String {
     val nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
     if (nameResolverService == null) error("AnonymousDeclarationPlugin can't work without NameResolverService")
 
@@ -107,7 +107,7 @@ private fun isSupportedLiteralType(node: Node): Boolean {
 
 @OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
-fun isLiteralUnionType(node: Node, context: ConverterContext): Boolean {
+fun isLiteralUnionType(node: Node, context: Context): Boolean {
     contract {
         returns(true) implies (node is UnionTypeNode)
     }
@@ -120,7 +120,7 @@ fun isLiteralUnionType(node: Node, context: ConverterContext): Boolean {
 
 @OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
-fun isNullableLiteralUnionType(node: Node, context: ConverterContext): Boolean {
+fun isNullableLiteralUnionType(node: Node, context: Context): Boolean {
     contract {
         returns(true) implies (node is UnionTypeNode)
     }
@@ -143,7 +143,7 @@ fun convertLiteralUnionType(
     node: UnionTypeNode,
     name: String,
     isInlined: Boolean,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
 ): LiteralUnionRenderResult {
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

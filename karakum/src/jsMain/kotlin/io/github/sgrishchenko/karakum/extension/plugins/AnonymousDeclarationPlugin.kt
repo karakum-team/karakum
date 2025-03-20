@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.ConverterPlugin
 import io.github.sgrishchenko.karakum.extension.DerivedFile
 import io.github.sgrishchenko.karakum.extension.Render
@@ -13,7 +13,7 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface AnonymousDeclarationContext : ConverterContext {
+external interface AnonymousDeclarationContext : Context {
     fun resolveName(node: Node): String
 }
 
@@ -54,11 +54,11 @@ class AnonymousDeclarationPlugin(
 ) : ConverterPlugin<Node> {
     private val generated = mutableMapOf<Node, DerivedDeclaration>()
 
-    override fun setup(context: ConverterContext) = Unit
+    override fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         val nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
         if (nameResolverService == null) error("AnonymousDeclarationPlugin can't work without NameResolverService")
 
@@ -70,7 +70,7 @@ class AnonymousDeclarationPlugin(
 
         val annotations = annotationService.resolveAnonymousAnnotations(node, context)
 
-        val anonymousDeclarationContext = object : AnonymousDeclarationContext, ConverterContext by context {
+        val anonymousDeclarationContext = object : AnonymousDeclarationContext, Context by context {
             override fun resolveName(node: Node) = nameResolverService.resolveName(node, context)
         }
 
@@ -101,7 +101,7 @@ class AnonymousDeclarationPlugin(
         return reference;
     }
 
-    override fun generate(context: ConverterContext, render: Render<Node>): ReadonlyArray<DerivedFile> {
+    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<DerivedFile> {
         return generateDerivedDeclarations(generated.values.toTypedArray(), context)
     }
 }

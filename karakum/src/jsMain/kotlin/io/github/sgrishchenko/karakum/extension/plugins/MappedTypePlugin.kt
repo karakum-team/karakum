@@ -7,7 +7,7 @@ import typescript.Node
 import typescript.SyntaxKind
 import typescript.isMappedTypeNode
 
-fun convertMappedTypeBody(node: MappedTypeNode, context: ConverterContext, render: Render<Node>): String {
+fun convertMappedTypeBody(node: MappedTypeNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
@@ -53,7 +53,7 @@ fun convertMappedType (
     name: String,
     typeParameters: String?,
     isInlined: Boolean,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
 ): String {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)

@@ -25,7 +25,7 @@ fun convertInheritedTypeLiteral(
     name: String,
     typeParameters: String?,
     isInlined: Boolean,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
 ): String {
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

@@ -15,9 +15,9 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
     fun resolveSignatureInheritanceModifier(
         node: Node,
         signature: Signature,
-        context: ConverterContext,
+        context: Context,
     ): String? {
-        val inheritanceModifierContext = object : InheritanceModifierContext, ConverterContext by context {
+        val inheritanceModifierContext = object : InheritanceModifierContext, Context by context {
             override val signature = signature
             override val getter = false
             override val setter = false
@@ -28,9 +28,9 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
 
     fun resolveGetterInheritanceModifier(
         node: Node,
-        context: ConverterContext,
+        context: Context,
     ): String? {
-        val inheritanceModifierContext = object : InheritanceModifierContext, ConverterContext by context {
+        val inheritanceModifierContext = object : InheritanceModifierContext, Context by context {
             override val signature = null
             override val getter = true
             override val setter = false
@@ -41,9 +41,9 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
 
     fun resolveSetterInheritanceModifier(
         node: Node,
-        context: ConverterContext,
+        context: Context,
     ): String? {
-        val inheritanceModifierContext = object : InheritanceModifierContext, ConverterContext by context {
+        val inheritanceModifierContext = object : InheritanceModifierContext, Context by context {
             override val signature = null
             override val getter = false
             override val setter = true
@@ -54,9 +54,9 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
 
     fun resolveInheritanceModifier(
         node: Node,
-        context: ConverterContext,
+        context: Context,
     ): String? {
-        val inheritanceModifierContext = object : InheritanceModifierContext, ConverterContext by context {
+        val inheritanceModifierContext = object : InheritanceModifierContext, Context by context {
             override val signature = null
             override val getter = false
             override val setter = false
@@ -82,13 +82,13 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
 class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) : ConverterPlugin<Node> {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(inheritanceModifierServiceKey, this.inheritanceModifierService)
     }
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.ConverterPlugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
@@ -67,7 +67,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
 class CheckCoveragePlugin : ConverterPlugin<Node> {
     private val checkCoverageService = CheckCoverageService()
 
-    override fun generate(context: ConverterContext, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
         val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
@@ -101,13 +101,13 @@ class CheckCoveragePlugin : ConverterPlugin<Node> {
         return emptyArray()
     }
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun traverse(node: Node, context: ConverterContext) {
+    override fun traverse(node: Node, context: Context) {
         this.checkCoverageService.register(node)
     }
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(checkCoverageServiceKey, this.checkCoverageService)
     }
 }

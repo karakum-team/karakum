@@ -16,7 +16,7 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
     private val resolvedNodes = mutableMapOf<Node, String>()
     private var counter = 0
 
-    fun tryResolveName(node: Node, context: ConverterContext): String? {
+    fun tryResolveName(node: Node, context: Context): String? {
         for (nameResolver in nameResolvers) {
             val result = nameResolver(node, context)
 
@@ -26,7 +26,7 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
         return null
     }
 
-    fun resolveName(node: Node, context: ConverterContext): String {
+    fun resolveName(node: Node, context: Context): String {
         val resolvedName = resolvedNodes[node]
         if (resolvedName != null) return resolvedName
 
@@ -40,13 +40,13 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
 class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver<Node>>) : ConverterPlugin<Node> {
     private val nameResolverService = NameResolverService(nameResolvers)
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(nameResolverServiceKey, nameResolverService)
     }
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

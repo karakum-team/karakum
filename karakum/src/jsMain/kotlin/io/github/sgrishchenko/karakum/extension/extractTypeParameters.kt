@@ -14,7 +14,7 @@ typealias TypeParameterExtractionResult = ReadonlyArray<JsTuple2<Node, Declarati
 @JsExport
 fun extractTypeParameters(
     node: Node,
-    context: ConverterContext
+    context: Context
 ): TypeParameterExtractionResult {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 

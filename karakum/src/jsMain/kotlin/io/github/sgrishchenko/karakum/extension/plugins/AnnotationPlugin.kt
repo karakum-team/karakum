@@ -12,20 +12,20 @@ val annotationServiceKey = Symbol()
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation<Node>>) {
-    fun resolveAnonymousAnnotations(node: Node, context: ConverterContext): ReadonlyArray<String> {
+    fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, true, context)
     }
 
-    fun resolveAnnotations(node: Node, context: ConverterContext): ReadonlyArray<String> {
+    fun resolveAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, false, context)
     }
 
     private fun internalResolveAnnotations(
         node: Node,
         isAnonymousDeclaration: Boolean,
-        context: ConverterContext,
+        context: Context,
     ): ReadonlyArray<String> {
-        val annotationContext = object : AnnotationContext, ConverterContext by context {
+        val annotationContext = object : AnnotationContext, Context by context {
             override val isAnonymousDeclaration = isAnonymousDeclaration
         }
 
@@ -44,15 +44,15 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Re
 class AnnotationPlugin(annotations: ReadonlyArray<Annotation<Node>>) : ConverterPlugin<Node> {
     private val annotationService = AnnotationService(annotations)
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(annotationServiceKey, annotationService)
     }
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         val annotations = annotationService.resolveAnnotations(node, context)
 
         if (annotations.isNotEmpty()) {

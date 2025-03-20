@@ -20,9 +20,9 @@ class AccessorsPlugin : ConverterPlugin<Node> {
     private val accessors = mutableMapOf<Symbol, AccessorInfo>()
     private val coveredAccessors = mutableSetOf<Symbol>()
 
-    override fun setup(context: ConverterContext) = Unit
+    override fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: ConverterContext) {
+    override fun traverse(node: Node, context: Context) {
         if (isGetAccessor(node) || isSetAccessor(node)) {
             val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
             val typeChecker = typeScriptService?.program?.getTypeChecker()
@@ -50,7 +50,7 @@ class AccessorsPlugin : ConverterPlugin<Node> {
         }
     }
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>): String? {
+    override fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (isSetAccessor(node) || isGetAccessor(node)) {
             val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
             val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
@@ -108,5 +108,5 @@ ${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}
         return null
     }
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

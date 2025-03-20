@@ -15,10 +15,10 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
     fun resolveInjections(
         node: Node,
         type: InjectionType,
-        context: ConverterContext,
+        context: Context,
         render: Render<Node>,
     ): ReadonlyArray<String> {
-        val injectionContext = object : InjectionContext, ConverterContext by context {
+        val injectionContext = object : InjectionContext, Context by context {
             override val type = type
         }
 
@@ -45,13 +45,13 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
 class InjectionPlugin(injections: ReadonlyArray<Injection<Node, Node>>) : ConverterPlugin<Node> {
     private val injectionService = InjectionService(injections)
 
-    override fun traverse(node: Node, context: ConverterContext) = Unit
+    override fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: ConverterContext, next: Render<Node>) = null
+    override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: ConverterContext, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun setup(context: ConverterContext) {
+    override fun setup(context: Context) {
         context.registerService(injectionServiceKey, this.injectionService)
     }
 }

@@ -5,7 +5,7 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface AnnotationContext : ConverterContext {
+external interface AnnotationContext : Context {
     val isAnonymousDeclaration: Boolean
 }
 

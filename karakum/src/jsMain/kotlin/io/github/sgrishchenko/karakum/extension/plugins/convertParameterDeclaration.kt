@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.function
@@ -71,7 +71,7 @@ val convertParameterDeclaration = createSimplePlugin plugin@{ node: Node, contex
 @JsExport
 fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
     configuration: ParameterDeclarationsConfiguration,
 ): String {
@@ -152,7 +152,7 @@ fun convertParameterDeclarations(
 @JsExport
 fun convertParameterDeclarationWithFixedType(
     node: ParameterDeclaration,
-    context: ConverterContext,
+    context: Context,
     render: Render<Node>,
     configuration: ParameterDeclarationConfiguration,
 ): String {
@@ -226,7 +226,7 @@ private fun extractSignature(node: SignatureDeclarationBase): Signature =
 
 private fun expandUnions(
     initialSignature: Signature,
-    context: ConverterContext,
+    context: Context,
 ): ReadonlyArray<Signature> {
     val currentSignatures = mutableListOf(initialSignature)
 

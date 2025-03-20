@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.structure.derived
 
 import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.extension.ConverterContext
+import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.DerivedFile
 import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.StructureItem
@@ -16,7 +16,7 @@ import js.array.ReadonlyArray
 @JsExport
 fun generateDerivedDeclarations(
     declarations: ReadonlyArray<DerivedDeclaration>,
-    context: ConverterContext,
+    context: Context,
 ): ReadonlyArray<DerivedFile> {
     val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
     if (configurationService == null) error("ConfigurationService required")
