@@ -6,7 +6,7 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface ConverterPlugin<in TNode : Node> {
+external interface Plugin<in TNode : Node> {
     fun setup(context: Context)
 
     fun traverse(node: Node, context: Context)
@@ -16,19 +16,19 @@ external interface ConverterPlugin<in TNode : Node> {
     fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile>
 }
 
-external interface SimpleConverterPlugin<in TNode : Node> {
+external interface SimplePlugin<in TNode : Node> {
     @JsNative
     operator fun invoke(node: TNode, context: Context, next: Render<Node>): String?
 }
 
 fun <TNode : Node> createSimplePlugin(
     render: (node: TNode, context: Context, next: Render<Node>) -> String?
-) = createSimplePlugin(render.unsafeCast<SimpleConverterPlugin<TNode>>())
+) = createSimplePlugin(render.unsafeCast<SimplePlugin<TNode>>())
 
 fun <TNode : Node> createSimplePlugin(
-    render: SimpleConverterPlugin<TNode>
-): ConverterPlugin<TNode> {
-    return object : ConverterPlugin<TNode> {
+    render: SimplePlugin<TNode>
+): Plugin<TNode> {
+    return object : Plugin<TNode> {
         override fun setup(context: Context) = Unit
 
         override fun traverse(node: Node, context: Context) = Unit

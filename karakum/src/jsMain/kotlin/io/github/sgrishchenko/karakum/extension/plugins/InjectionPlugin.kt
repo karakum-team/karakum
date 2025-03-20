@@ -42,7 +42,7 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
     }
 }
 
-class InjectionPlugin(injections: ReadonlyArray<Injection<Node, Node>>) : ConverterPlugin<Node> {
+class InjectionPlugin(injections: ReadonlyArray<Injection<Node, Node>>) : Plugin<Node> {
     private val injectionService = InjectionService(injections)
 
     override fun traverse(node: Node, context: Context) = Unit

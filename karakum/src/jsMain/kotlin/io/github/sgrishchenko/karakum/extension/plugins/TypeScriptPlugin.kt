@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.ConverterPlugin
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getParentOrNull
@@ -64,7 +64,7 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     }
 }
 
-class TypeScriptPlugin(program: Program) : ConverterPlugin<Node> {
+class TypeScriptPlugin(program: Program) : Plugin<Node> {
     private val typeScriptService = TypeScriptService(program)
 
     override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()

@@ -32,7 +32,7 @@ external interface InjectionContext : Context {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface Injection<in TNode : Node, in TInjectionNode : Node> : ConverterPlugin<TNode> {
+external interface Injection<in TNode : Node, in TInjectionNode : Node> : Plugin<TNode> {
     fun inject(node: TInjectionNode, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?
 }
 

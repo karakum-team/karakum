@@ -16,7 +16,7 @@ private fun emptyAccessorInfo() = AccessorInfo(
     setter = null,
 )
 
-class AccessorsPlugin : ConverterPlugin<Node> {
+class AccessorsPlugin : Plugin<Node> {
     private val accessors = mutableMapOf<Symbol, AccessorInfo>()
     private val coveredAccessors = mutableSetOf<Symbol>()
 

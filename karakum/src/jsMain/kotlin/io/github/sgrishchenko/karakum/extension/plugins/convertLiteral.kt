@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.ConverterPlugin
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import typescript.Node
 import typescript.isPrefixUnaryExpression
@@ -8,7 +8,7 @@ import typescript.isPrefixUnaryExpression
 fun convertLiteral(
     predicate: (node: Node) -> Boolean,
     render: (node: Node) -> String?
-): ConverterPlugin<Node> {
+): Plugin<Node> {
     val primitivePlugin = convertPrimitive(predicate, render)
 
     return createSimplePlugin plugin@{ node: Node, context, pluginRender ->

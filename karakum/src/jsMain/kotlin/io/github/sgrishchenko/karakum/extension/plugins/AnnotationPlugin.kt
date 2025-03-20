@@ -41,7 +41,7 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Re
     }
 }
 
-class AnnotationPlugin(annotations: ReadonlyArray<Annotation<Node>>) : ConverterPlugin<Node> {
+class AnnotationPlugin(annotations: ReadonlyArray<Annotation<Node>>) : Plugin<Node> {
     private val annotationService = AnnotationService(annotations)
 
     override fun setup(context: Context) {

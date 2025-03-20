@@ -20,7 +20,7 @@ external interface ExtensionConfiguration {
 
 @JsPlainObject
 external interface Extensions {
-    val plugins: ReadonlyArray<ConverterPlugin<Node>>
+    val plugins: ReadonlyArray<Plugin<Node>>
     val injections: ReadonlyArray<Injection<Node, Node>>
     val annotations: ReadonlyArray<Annotation<Node>>
     val nameResolvers: ReadonlyArray<NameResolver<Node>>
@@ -70,15 +70,15 @@ suspend fun loadExtensions(
     cwd: String,
 ): Extensions {
 
-    val plugins = loadExtensions<ConverterPlugin<Node>>(
+    val plugins = loadExtensions<Plugin<Node>>(
         "Plugin",
         configuration.plugins,
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createSimplePlugin(plugin as SimpleConverterPlugin<Node>)
+            createSimplePlugin(plugin as SimplePlugin<Node>)
         } else {
-            plugin as ConverterPlugin<Node>
+            plugin as Plugin<Node>
         }
     }
 

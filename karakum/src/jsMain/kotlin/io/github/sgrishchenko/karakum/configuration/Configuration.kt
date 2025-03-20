@@ -135,7 +135,7 @@ external interface SchemaConfiguration {
 @JsExport
 // TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
-    override val plugins: Many<ConverterPlugin<Node>>?
+    override val plugins: Many<Plugin<Node>>?
 
     override val injections: Many<Injection<Node, Node>>?
 
@@ -165,7 +165,7 @@ external interface MutableConfiguration : PartialConfiguration {
 
     override var granularity: Granularity?
 
-    override var plugins: Many<ConverterPlugin<Node>>?
+    override var plugins: Many<Plugin<Node>>?
 
     override var injections: Many<Injection<Node, Node>>?
 
@@ -216,7 +216,7 @@ external interface Configuration {
 
     val granularity: Granularity
 
-    val plugins: ReadonlyArray<ConverterPlugin<Node>>
+    val plugins: ReadonlyArray<Plugin<Node>>
 
     val injections: ReadonlyArray<Injection<Node, Node>>
 

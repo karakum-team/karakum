@@ -19,7 +19,7 @@ fun createPlugins(
     program: Program,
     namespaceInfo: NamespaceInfo,
     importInfo: ImportInfo,
-): ReadonlyArray<ConverterPlugin<Node>> = arrayOf(
+): ReadonlyArray<Plugin<Node>> = arrayOf(
     ConfigurationPlugin(configuration),
     TypeScriptPlugin(program),
     InjectionPlugin(injections),

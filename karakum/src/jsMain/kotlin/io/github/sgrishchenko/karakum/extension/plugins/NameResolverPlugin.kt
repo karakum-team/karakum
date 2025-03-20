@@ -37,7 +37,7 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
     }
 }
 
-class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver<Node>>) : ConverterPlugin<Node> {
+class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver<Node>>) : Plugin<Node> {
     private val nameResolverService = NameResolverService(nameResolvers)
 
     override fun setup(context: Context) {

@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.ConverterPlugin
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
@@ -64,7 +64,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
     }
 }
 
-class CheckCoveragePlugin : ConverterPlugin<Node> {
+class CheckCoveragePlugin : Plugin<Node> {
     private val checkCoverageService = CheckCoverageService()
 
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {

@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.ConverterPlugin
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
@@ -28,7 +28,7 @@ class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: Namespace
     }
 }
 
-class NamespaceInfoPlugin(namespaceInfo: NamespaceInfo) : ConverterPlugin<Node> {
+class NamespaceInfoPlugin(namespaceInfo: NamespaceInfo) : Plugin<Node> {
     private val namespaceInfoService = NamespaceInfoService(namespaceInfo)
 
     override fun traverse(node: Node, context: Context) = Unit

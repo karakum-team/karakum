@@ -28,7 +28,7 @@ class VarianceModifierService @JsExport.Ignore constructor(
     }
 }
 
-class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier<Node>>) : ConverterPlugin<Node> {
+class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier<Node>>) : Plugin<Node> {
     private val varianceModifierService = VarianceModifierService(varianceModifiers);
 
     override fun setup(context: Context) {

@@ -79,7 +79,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
     }
 }
 
-class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) : ConverterPlugin<Node> {
+class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) : Plugin<Node> {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
 
     override fun setup(context: Context) {
