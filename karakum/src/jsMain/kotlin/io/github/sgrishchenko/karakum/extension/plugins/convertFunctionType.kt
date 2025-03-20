@@ -1,11 +1,10 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
-import typescript.Node
 import typescript.asArray
 import typescript.isFunctionTypeNode
 
-val convertFunctionType = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertFunctionType = createSimplePlugin plugin@{ node, context, render ->
     if (!isFunctionTypeNode(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

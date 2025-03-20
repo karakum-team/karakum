@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
@@ -64,7 +64,7 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     }
 }
 
-class TypeScriptPlugin(program: Program) : Plugin<Node> {
+class TypeScriptPlugin(program: Program) : Plugin {
     private val typeScriptService = TypeScriptService(program)
 
     override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()

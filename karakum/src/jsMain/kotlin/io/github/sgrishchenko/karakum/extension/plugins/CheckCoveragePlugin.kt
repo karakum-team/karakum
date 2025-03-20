@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.traverse
@@ -48,7 +48,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
     fun emit(callback: (uncoveredNode: Node) -> Unit): CheckCoverageResult {
         for (node in allNodes){
             if (node !in coveredNodes) {
-                callback(node);
+                callback(node)
             }
         }
 
@@ -64,7 +64,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
     }
 }
 
-class CheckCoveragePlugin : Plugin<Node> {
+class CheckCoveragePlugin : Plugin {
     private val checkCoverageService = CheckCoverageService()
 
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
@@ -87,11 +87,11 @@ class CheckCoveragePlugin : Plugin<Node> {
                     console.error(message)
                 }
 
-                console.error("--- Node Start ---");
-                console.error(typeScriptService?.printNode(uncoveredNode));
-                console.error("--- Node End ---");
+                console.error("--- Node Start ---")
+                console.error(typeScriptService?.printNode(uncoveredNode))
+                console.error("--- Node End ---")
 
-                console.error();
+                console.error()
             }
         }
 

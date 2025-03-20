@@ -9,7 +9,6 @@ import js.objects.ReadonlyRecord
 import js.objects.Record
 import seskar.js.JsValue
 import typescript.CompilerOptions
-import typescript.Node
 
 sealed external interface Granularity {
     companion object {
@@ -135,17 +134,17 @@ external interface SchemaConfiguration {
 @JsExport
 // TODO: @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
-    override val plugins: Many<Plugin<Node>>?
+    override val plugins: Many<Plugin>?
 
-    override val injections: Many<Injection<Node, Node>>?
+    override val injections: Many<Injection>?
 
-    override val annotations: Many<Annotation<Node>>?
+    override val annotations: Many<Annotation>?
 
-    override val nameResolvers: Many<NameResolver<Node>>?
+    override val nameResolvers: Many<NameResolver>?
 
-    override val inheritanceModifiers: Many<InheritanceModifier<Node>>?
+    override val inheritanceModifiers: Many<InheritanceModifier>?
 
-    override val varianceModifiers: Many<VarianceModifier<Node>>?
+    override val varianceModifiers: Many<VarianceModifier>?
 
     override val importMapper: Record<String, Rule>?
     override val compilerOptions: CompilerOptions?
@@ -165,17 +164,17 @@ external interface MutableConfiguration : PartialConfiguration {
 
     override var granularity: Granularity?
 
-    override var plugins: Many<Plugin<Node>>?
+    override var plugins: Many<Plugin>?
 
-    override var injections: Many<Injection<Node, Node>>?
+    override var injections: Many<Injection>?
 
-    override var annotations: Many<Annotation<Node>>?
+    override var annotations: Many<Annotation>?
 
-    override var nameResolvers: Many<NameResolver<Node>>?
+    override var nameResolvers: Many<NameResolver>?
 
-    override var inheritanceModifiers: Many<InheritanceModifier<Node>>?
+    override var inheritanceModifiers: Many<InheritanceModifier>?
 
-    override var varianceModifiers: Many<VarianceModifier<Node>>?
+    override var varianceModifiers: Many<VarianceModifier>?
 
     override var moduleNameMapper: ReadonlyRecord<String, String>?
 
@@ -216,17 +215,17 @@ external interface Configuration {
 
     val granularity: Granularity
 
-    val plugins: ReadonlyArray<Plugin<Node>>
+    val plugins: ReadonlyArray<Plugin>
 
-    val injections: ReadonlyArray<Injection<Node, Node>>
+    val injections: ReadonlyArray<Injection>
 
-    val annotations: ReadonlyArray<Annotation<Node>>
+    val annotations: ReadonlyArray<Annotation>
 
-    val nameResolvers: ReadonlyArray<NameResolver<Node>>
+    val nameResolvers: ReadonlyArray<NameResolver>
 
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>
+    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
 
-    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
+    val varianceModifiers: ReadonlyArray<VarianceModifier>
 
     val moduleNameMapper: ReadonlyRecord<String, String>
     val packageNameMapper: ReadonlyRecord<String, String>

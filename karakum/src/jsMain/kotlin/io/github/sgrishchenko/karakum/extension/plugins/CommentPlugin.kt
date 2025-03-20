@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
@@ -46,7 +46,7 @@ class CommentService @JsExport.Ignore constructor() {
     }
 }
 
-class CommentPlugin : Plugin<Node> {
+class CommentPlugin : Plugin {
     private val coveredCommentRanges = mutableMapOf<SourceFile, MutableList<CommentRange>>()
     private val commentsService = CommentService()
 

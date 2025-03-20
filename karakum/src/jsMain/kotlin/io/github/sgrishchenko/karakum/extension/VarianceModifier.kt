@@ -5,7 +5,7 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface VarianceModifier<in TNode : Node> {
+external interface VarianceModifier {
     @JsNative
-    operator fun invoke(node: TNode, context: Context): String?
+    operator fun invoke(node: Node, context: Context): String?
 }

@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.DerivedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
@@ -51,7 +51,7 @@ typealias AnonymousDeclarationRender = (
 
 class AnonymousDeclarationPlugin(
     private val anonymousDeclarationRender: AnonymousDeclarationRender
-) : Plugin<Node> {
+) : Plugin {
     private val generated = mutableMapOf<Node, DerivedDeclaration>()
 
     override fun setup(context: Context) = Unit
@@ -98,7 +98,7 @@ class AnonymousDeclarationPlugin(
             body = (annotations + declaration).joinToString(separator = "\n"),
         )
 
-        return reference;
+        return reference
     }
 
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<DerivedFile> {
@@ -110,6 +110,6 @@ class AnonymousDeclarationPlugin(
 @JsExport
 fun createAnonymousDeclarationPlugin(
     render: AnonymousDeclarationRender,
-): Plugin<Node> {
+): Plugin {
     return AnonymousDeclarationPlugin(render)
 }

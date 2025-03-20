@@ -16,7 +16,7 @@ private fun emptyAccessorInfo() = AccessorInfo(
     setter = null,
 )
 
-class AccessorsPlugin : Plugin<Node> {
+class AccessorsPlugin : Plugin {
     private val accessors = mutableMapOf<Symbol, AccessorInfo>()
     private val coveredAccessors = mutableSetOf<Symbol>()
 
@@ -102,7 +102,7 @@ class AccessorsPlugin : Plugin<Node> {
 
             return """
 ${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}${modifier}${name}: $type
-            """.trim();
+            """.trim()
         }
 
         return null

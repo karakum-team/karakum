@@ -52,7 +52,7 @@ private fun resolveConstructors(
     return resolveConstructors(parentDeclaration, mergedMembers, context)
 }
 
-val convertClassDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertClassDeclaration = createSimplePlugin plugin@{ node, context, render ->
     if (!isClassDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

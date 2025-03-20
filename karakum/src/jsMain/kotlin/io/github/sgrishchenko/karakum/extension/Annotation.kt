@@ -11,7 +11,7 @@ external interface AnnotationContext : Context {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface Annotation<in TNode : Node> {
+external interface Annotation {
     @JsNative
-    operator fun invoke(node: TNode, context: AnnotationContext): String?
+    operator fun invoke(node: Node, context: AnnotationContext): String?
 }

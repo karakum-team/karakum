@@ -9,7 +9,7 @@ import typescript.Node
 import typescript.isIdentifier
 import typescript.isVariableDeclaration
 
-val resolveVariableName = NameResolver<Node> { node, context ->
+val resolveVariableName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

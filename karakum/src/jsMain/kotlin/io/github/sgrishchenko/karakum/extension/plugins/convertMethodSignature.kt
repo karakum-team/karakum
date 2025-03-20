@@ -3,11 +3,10 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
-import typescript.Node
 import typescript.asArray
 import typescript.isMethodSignature
 
-val convertMethodSignature = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertMethodSignature = createSimplePlugin plugin@{ node, context, render ->
     if (!isMethodSignature(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

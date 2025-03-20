@@ -6,7 +6,6 @@ import io.github.sgrishchenko.karakum.util.toModuleName
 import js.array.ReadonlyArray
 import js.import.import
 import js.objects.JsPlainObject
-import typescript.Node
 
 @JsPlainObject
 external interface ExtensionConfiguration {
@@ -20,12 +19,12 @@ external interface ExtensionConfiguration {
 
 @JsPlainObject
 external interface Extensions {
-    val plugins: ReadonlyArray<Plugin<Node>>
-    val injections: ReadonlyArray<Injection<Node, Node>>
-    val annotations: ReadonlyArray<Annotation<Node>>
-    val nameResolvers: ReadonlyArray<NameResolver<Node>>
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>
-    val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
+    val plugins: ReadonlyArray<Plugin>
+    val injections: ReadonlyArray<Injection>
+    val annotations: ReadonlyArray<Annotation>
+    val nameResolvers: ReadonlyArray<NameResolver>
+    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
+    val varianceModifiers: ReadonlyArray<VarianceModifier>
 }
 
 external interface ExtensionModule {
@@ -70,49 +69,49 @@ suspend fun loadExtensions(
     cwd: String,
 ): Extensions {
 
-    val plugins = loadExtensions<Plugin<Node>>(
+    val plugins = loadExtensions(
         "Plugin",
         configuration.plugins,
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createSimplePlugin(plugin as SimplePlugin<Node>)
+            createSimplePlugin(plugin as SimplePlugin)
         } else {
-            plugin as Plugin<Node>
+            plugin as Plugin
         }
     }
 
-    val injections = loadExtensions<Injection<Node, Node>>(
+    val injections = loadExtensions(
         "Injection",
         configuration.injections,
         cwd
     ) { injection ->
         if (jsTypeOf(injection) == "function") {
-            createSimpleInjection(injection as SimpleInjection<Node>)
+            createSimpleInjection(injection as SimpleInjection)
         } else {
-            injection as Injection<Node, Node>
+            injection as Injection
         }
     }
 
-    val annotations = loadExtensions<Annotation<Node>>(
+    val annotations = loadExtensions<Annotation>(
         "Annotation",
         configuration.annotations,
         cwd,
     )
 
-    val nameResolvers = loadExtensions<NameResolver<Node>>(
+    val nameResolvers = loadExtensions<NameResolver>(
         "Name Resolver",
         configuration.nameResolvers,
         cwd,
     )
 
-    val inheritanceModifiers = loadExtensions<InheritanceModifier<Node>>(
+    val inheritanceModifiers = loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
         configuration.inheritanceModifiers,
         cwd,
     )
 
-    val varianceModifiers = loadExtensions<VarianceModifier<Node>>(
+    val varianceModifiers = loadExtensions<VarianceModifier>(
         "Variance Modifier",
         configuration.varianceModifiers,
         cwd,

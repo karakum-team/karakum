@@ -11,7 +11,7 @@ val inheritanceModifierServiceKey = Symbol()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) {
+class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier>) {
     fun resolveSignatureInheritanceModifier(
         node: Node,
         signature: Signature,
@@ -79,7 +79,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
     }
 }
 
-class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>) : Plugin<Node> {
+class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier>) : Plugin {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
 
     override fun setup(context: Context) {

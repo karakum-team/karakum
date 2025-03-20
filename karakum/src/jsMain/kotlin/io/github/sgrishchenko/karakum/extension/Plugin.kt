@@ -6,34 +6,34 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface Plugin<in TNode : Node> {
+external interface Plugin {
     fun setup(context: Context)
 
     fun traverse(node: Node, context: Context)
 
-    fun render(node: TNode, context: Context, next: Render<Node>): String?
+    fun render(node: Node, context: Context, next: Render<Node>): String?
 
     fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile>
 }
 
-external interface SimplePlugin<in TNode : Node> {
+external interface SimplePlugin {
     @JsNative
-    operator fun invoke(node: TNode, context: Context, next: Render<Node>): String?
+    operator fun invoke(node: Node, context: Context, next: Render<Node>): String?
 }
 
-fun <TNode : Node> createSimplePlugin(
-    render: (node: TNode, context: Context, next: Render<Node>) -> String?
-) = createSimplePlugin(render.unsafeCast<SimplePlugin<TNode>>())
+fun createSimplePlugin(
+    render: (node: Node, context: Context, next: Render<Node>) -> String?
+) = createSimplePlugin(render.unsafeCast<SimplePlugin>())
 
-fun <TNode : Node> createSimplePlugin(
-    render: SimplePlugin<TNode>
-): Plugin<TNode> {
-    return object : Plugin<TNode> {
+fun createSimplePlugin(
+    render: SimplePlugin
+): Plugin {
+    return object : Plugin {
         override fun setup(context: Context) = Unit
 
         override fun traverse(node: Node, context: Context) = Unit
 
-        override fun render(node: TNode, context: Context, next: Render<Node>) = render(node, context, next)
+        override fun render(node: Node, context: Context, next: Render<Node>) = render(node, context, next)
 
         override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
     }

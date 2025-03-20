@@ -11,7 +11,7 @@ val injectionServiceKey = Symbol()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection<Node, Node>>) {
+class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection>) {
     fun resolveInjections(
         node: Node,
         type: InjectionType,
@@ -42,7 +42,7 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
     }
 }
 
-class InjectionPlugin(injections: ReadonlyArray<Injection<Node, Node>>) : Plugin<Node> {
+class InjectionPlugin(injections: ReadonlyArray<Injection>) : Plugin {
     private val injectionService = InjectionService(injections)
 
     override fun traverse(node: Node, context: Context) = Unit

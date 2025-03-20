@@ -18,7 +18,7 @@ fun camelize(string: String): String {
                 .replace("_", "")
         }
         // remove leading and trailing delimiters
-        .replace("[-_]".toRegex(), "");
+        .replace("[-_]".toRegex(), "")
 }
 
 fun isKebab(string: String): Boolean {

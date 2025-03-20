@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.util
 
 import js.array.ReadonlyArray
 import js.objects.JsPlainObject
-import js.objects.Object
 import js.objects.ReadonlyRecord
 import js.objects.recordOf
 

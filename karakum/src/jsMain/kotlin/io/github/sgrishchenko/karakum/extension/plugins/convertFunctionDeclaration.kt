@@ -3,12 +3,11 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
-import typescript.Node
 import typescript.SyntaxKind
 import typescript.asArray
 import typescript.isFunctionDeclaration
 
-val convertFunctionDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertFunctionDeclaration = createSimplePlugin plugin@{ node, context, render ->
     if (!isFunctionDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

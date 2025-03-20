@@ -7,8 +7,8 @@ import typescript.Node
 fun convertPrimitive(
     predicate: (node: Node) -> Boolean,
     render: (render: Node) -> String?,
-): Plugin<Node> {
-    return createSimplePlugin plugin@{ node: Node, context, _ ->
+): Plugin {
+    return createSimplePlugin plugin@{ node, context, _ ->
         if (!predicate(node)) return@plugin null
 
         val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

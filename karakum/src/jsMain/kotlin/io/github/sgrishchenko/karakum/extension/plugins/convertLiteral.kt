@@ -8,10 +8,10 @@ import typescript.isPrefixUnaryExpression
 fun convertLiteral(
     predicate: (node: Node) -> Boolean,
     render: (node: Node) -> String?
-): Plugin<Node> {
+): Plugin {
     val primitivePlugin = convertPrimitive(predicate, render)
 
-    return createSimplePlugin plugin@{ node: Node, context, pluginRender ->
+    return createSimplePlugin plugin@{ node, context, pluginRender ->
         val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
         if (isPrefixUnaryExpression(node) && predicate(node.operand)) {

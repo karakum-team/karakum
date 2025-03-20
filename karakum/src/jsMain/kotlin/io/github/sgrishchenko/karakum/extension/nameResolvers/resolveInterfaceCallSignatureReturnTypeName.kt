@@ -9,7 +9,7 @@ import typescript.Node
 import typescript.isCallSignatureDeclaration
 import typescript.isInterfaceDeclaration
 
-val resolveInterfaceCallSignatureReturnTypeName = NameResolver<Node> { node, context ->
+val resolveInterfaceCallSignatureReturnTypeName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

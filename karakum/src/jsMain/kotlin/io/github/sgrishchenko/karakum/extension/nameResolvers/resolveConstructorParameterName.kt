@@ -7,7 +7,7 @@ import io.github.sgrishchenko.karakum.util.capitalize
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.*
 
-val resolveConstructorParameterName = NameResolver<Node> { node, context ->
+val resolveConstructorParameterName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

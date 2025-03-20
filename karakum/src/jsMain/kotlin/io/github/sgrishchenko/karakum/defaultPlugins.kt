@@ -12,14 +12,14 @@ private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == ki
 
 fun createPlugins(
     configuration: Configuration,
-    injections: ReadonlyArray<Injection<Node, Node>>,
-    nameResolvers: ReadonlyArray<NameResolver<Node>>,
-    inheritanceModifiers: ReadonlyArray<InheritanceModifier<Node>>,
-    varianceModifiers: ReadonlyArray<VarianceModifier<Node>>,
+    injections: ReadonlyArray<Injection>,
+    nameResolvers: ReadonlyArray<NameResolver>,
+    inheritanceModifiers: ReadonlyArray<InheritanceModifier>,
+    varianceModifiers: ReadonlyArray<VarianceModifier>,
     program: Program,
     namespaceInfo: NamespaceInfo,
     importInfo: ImportInfo,
-): ReadonlyArray<Plugin<Node>> = arrayOf(
+): ReadonlyArray<Plugin> = arrayOf(
     ConfigurationPlugin(configuration),
     TypeScriptPlugin(program),
     InjectionPlugin(injections),
@@ -54,7 +54,7 @@ fun createPlugins(
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword)) { "js.symbol.Symbol" },
     convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.core.BigInt" },
 
-    createSimplePlugin { node: Node, _, _ -> if (isIdentifier(node)) node.text else null },
+    createSimplePlugin { node, _, _ -> if (isIdentifier(node)) node.text else null },
 
     convertMemberName, // should be applied before literals
 

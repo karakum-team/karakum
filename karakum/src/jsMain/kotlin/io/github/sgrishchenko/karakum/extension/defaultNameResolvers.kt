@@ -2,9 +2,8 @@ package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.nameResolvers.*
 import js.array.ReadonlyArray
-import typescript.Node
 
-val defaultNameResolvers: ReadonlyArray<NameResolver<Node>> = arrayOf(
+val defaultNameResolvers: ReadonlyArray<NameResolver> = arrayOf(
      resolveFunctionParameterName,
      resolveFunctionReturnTypeName,
      resolveFunctionTypeAliasParameterName,

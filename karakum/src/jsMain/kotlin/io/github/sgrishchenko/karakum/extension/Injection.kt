@@ -32,30 +32,30 @@ external interface InjectionContext : Context {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface Injection<in TNode : Node, in TInjectionNode : Node> : Plugin<TNode> {
-    fun inject(node: TInjectionNode, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?
+external interface Injection : Plugin {
+    fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?
 }
 
-external interface SimpleInjection<in TInjectionNode : Node> {
+external interface SimpleInjection {
     @JsNative
-    operator fun invoke(node: TInjectionNode, context: InjectionContext, next: Render<Node>): ReadonlyArray<String>?
+    operator fun invoke(node: Node, context: InjectionContext, next: Render<Node>): ReadonlyArray<String>?
 }
 
-fun <TInjectionNode : Node> createSimpleInjection(
-    inject: (node: TInjectionNode, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?,
-) = createSimpleInjection<Node, _>(inject.unsafeCast<SimpleInjection<TInjectionNode>>())
+fun createSimpleInjection(
+    inject: (node: Node, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?,
+) = createSimpleInjection(inject.unsafeCast<SimpleInjection>())
 
-fun <TNode : Node, TInjectionNode : Node> createSimpleInjection(
-    inject: SimpleInjection<TInjectionNode>,
-): Injection<TNode, TInjectionNode> {
-    return object : Injection<TNode, TInjectionNode> {
+fun createSimpleInjection(
+    inject: SimpleInjection,
+): Injection {
+    return object : Injection {
         override fun setup(context: Context) = Unit
 
         override fun traverse(node: Node, context: Context) = Unit
 
-        override fun render(node: TNode, context: Context, next: Render<Node>) = null
+        override fun render(node: Node, context: Context, next: Render<Node>) = null
 
-        override fun inject(node: TInjectionNode, context: InjectionContext, render: Render<Node>) = inject(node, context, render)
+        override fun inject(node: Node, context: InjectionContext, render: Render<Node>) = inject(node, context, render)
 
         override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
     }

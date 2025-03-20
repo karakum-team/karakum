@@ -10,7 +10,7 @@ import typescript.isClassDeclaration
 import typescript.isIdentifier
 import typescript.isMethodDeclaration
 
-val resolveClassMethodReturnTypeName = NameResolver<Node> { node, context ->
+val resolveClassMethodReturnTypeName = NameResolver { node, context ->
     val typeScriprvice = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriprvice?.getParent(it) ?: it.getParentOrNull()

@@ -1,10 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
-import typescript.Node
 import typescript.isParenthesizedTypeNode
 
-val convertParenthesizedType = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertParenthesizedType = createSimplePlugin plugin@{ node, context, render ->
     if (!isParenthesizedTypeNode(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

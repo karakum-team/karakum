@@ -8,7 +8,7 @@ import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.Node
 import typescript.isParenthesizedTypeNode
 
-fun resolveParenthesizedTypeName(resolver: NameResolver<Node>): NameResolver<Node> {
+fun resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
     fun parenthesizedResolver(node: Node, context: Context): String? {
         val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
         val getParent = { it: Node ->

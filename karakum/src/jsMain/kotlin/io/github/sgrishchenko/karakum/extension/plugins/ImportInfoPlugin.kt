@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
@@ -33,7 +33,7 @@ class ImportInfoService @JsExport.Ignore constructor(
     }
 }
 
-class ImportInfoPlugin(program: Program, importInfo: ImportInfo) : Plugin<Node> {
+class ImportInfoPlugin(program: Program, importInfo: ImportInfo) : Plugin {
     private val importInfoService = ImportInfoService(program, importInfo)
 
     override fun setup(context: Context) {

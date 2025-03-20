@@ -42,10 +42,10 @@ private fun <T> handleConflicts(
 ) {
     if (Object.keys(conflicts).isNotEmpty()) {
         for ((outputFileName, items) in Object.entries(conflicts)) {
-            console.error("Conflicting $type File: ${toPosix(outputFileName)}");
+            console.error("Conflicting $type File: ${toPosix(outputFileName)}")
 
             for ((index, item) in items.withIndex()) {
-                console.error("--- Item #${index + 1} ---");
+                console.error("--- Item #${index + 1} ---")
                 console.error(printItemInfo(item))
             }
         }

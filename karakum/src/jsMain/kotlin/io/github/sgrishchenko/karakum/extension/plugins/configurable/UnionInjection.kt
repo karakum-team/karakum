@@ -79,7 +79,7 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     }
 }
 
-class UnionInjection : Injection<Node, Node> {
+class UnionInjection : Injection {
     private var unionService: UnionService? = null
 
     private val anonymousUnionDeclarationPlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->

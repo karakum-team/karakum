@@ -10,7 +10,7 @@ import typescript.isClassDeclaration
 import typescript.isIdentifier
 import typescript.isPropertyDeclaration
 
-val resolveClassPropertyName = NameResolver<Node> { node, context ->
+val resolveClassPropertyName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

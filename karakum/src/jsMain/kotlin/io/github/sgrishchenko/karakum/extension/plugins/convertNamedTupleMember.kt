@@ -1,10 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
-import typescript.Node
 import typescript.isNamedTupleMember
 
-val convertNamedTupleMember = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertNamedTupleMember = createSimplePlugin plugin@{ node, context, render ->
     if (!isNamedTupleMember(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

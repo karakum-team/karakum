@@ -14,7 +14,7 @@ external interface InheritanceModifierContext : Context {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface InheritanceModifier<in TNode : Node> {
+external interface InheritanceModifier {
     @JsNative
-    operator fun invoke(node: TNode, context: InheritanceModifierContext): String?
+    operator fun invoke(node: Node, context: InheritanceModifierContext): String?
 }

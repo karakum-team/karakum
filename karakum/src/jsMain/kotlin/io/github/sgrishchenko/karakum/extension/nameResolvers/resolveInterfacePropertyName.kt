@@ -10,7 +10,7 @@ import typescript.isIdentifier
 import typescript.isInterfaceDeclaration
 import typescript.isPropertySignature
 
-val resolveInterfacePropertyName = NameResolver<Node> { node, context ->
+val resolveInterfacePropertyName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

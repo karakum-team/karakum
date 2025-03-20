@@ -1,12 +1,11 @@
 package io.github.sgrishchenko.karakum.extension.nameResolvers
 
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
-import typescript.Node
 import typescript.isExpressionWithTypeArguments
 import typescript.isIdentifier
 import typescript.isTypeReferenceNode
 
-val convertErrorTypeReferenceNode = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertErrorTypeReferenceNode = createSimplePlugin plugin@{ node, _, _ ->
     if (isTypeReferenceNode(node)) {
         val typeName = node.typeName
 

@@ -20,7 +20,7 @@ private fun extractReturnType(node: Node): Node? {
     return null
 }
 
-val convertVoid = createSimplePlugin() plugin@{ node: Node, _, _ ->
+val convertVoid = createSimplePlugin plugin@{ node, _, _ ->
     if (node.kind !== SyntaxKind.VoidKeyword) return@plugin null
 
     val returnType = extractReturnType(node.parent)

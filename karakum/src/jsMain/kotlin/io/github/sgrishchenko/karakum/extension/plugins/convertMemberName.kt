@@ -39,7 +39,7 @@ fun convertMemberNameLiteral(node: StringLiteral): String {
     }
 }
 
-val convertMemberName = createSimplePlugin plugin@{ node: Node, context, _ ->
+val convertMemberName = createSimplePlugin plugin@{ node, context, _ ->
     if (isStringLiteral(node) || isNumericLiteral(node)) {
         val parent = node.getParentOrNull() ?: return@plugin null
 

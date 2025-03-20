@@ -12,7 +12,7 @@ val varianceModifierServiceKey = Symbol()
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class VarianceModifierService @JsExport.Ignore constructor(
-    private val varianceModifiers: ReadonlyArray<VarianceModifier<Node>>
+    private val varianceModifiers: ReadonlyArray<VarianceModifier>
 ) {
     fun resolveVarianceModifier(
         node: Node,
@@ -28,8 +28,8 @@ class VarianceModifierService @JsExport.Ignore constructor(
     }
 }
 
-class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier<Node>>) : Plugin<Node> {
-    private val varianceModifierService = VarianceModifierService(varianceModifiers);
+class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier>) : Plugin {
+    private val varianceModifierService = VarianceModifierService(varianceModifiers)
 
     override fun setup(context: Context) {
         context.registerService(varianceModifierServiceKey, varianceModifierService)

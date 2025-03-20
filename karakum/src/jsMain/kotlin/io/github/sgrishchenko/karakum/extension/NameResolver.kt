@@ -5,10 +5,10 @@ import typescript.Node
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-external interface NameResolver<in TNode : Node> {
+external interface NameResolver {
     @JsNative
-    operator fun invoke(node: TNode, context: Context): String?
+    operator fun invoke(node: Node, context: Context): String?
 }
 
-fun <TNode : Node> NameResolver(resolver: (node: TNode, context: Context) -> String?) =
-    resolver.unsafeCast<NameResolver<TNode>>()
+fun NameResolver(resolver: (node: Node, context: Context) -> String?) =
+    resolver.unsafeCast<NameResolver>()

@@ -57,7 +57,7 @@ external interface ParameterInfo {
 
 typealias Signature = ReadonlyArray<ParameterInfo>
 
-val convertParameterDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertParameterDeclaration = createSimplePlugin plugin@{ node, context, render ->
     if (!isParameter(node)) return@plugin null
 
     convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(

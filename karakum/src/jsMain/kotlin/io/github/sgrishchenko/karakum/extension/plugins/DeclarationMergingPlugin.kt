@@ -2,8 +2,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
@@ -191,7 +191,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
     }
 }
 
-class DeclarationMergingPlugin(program: Program) : Plugin<Node> {
+class DeclarationMergingPlugin(program: Program) : Plugin {
     private val declarationMergingService = DeclarationMergingService(program)
 
     override fun setup(context: Context) {

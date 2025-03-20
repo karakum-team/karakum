@@ -10,7 +10,7 @@ import typescript.isFunctionDeclaration
 import typescript.isIdentifier
 import typescript.isParameter
 
-val resolveFunctionParameterName = NameResolver<Node> { node, context ->
+val resolveFunctionParameterName = NameResolver { node, context ->
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

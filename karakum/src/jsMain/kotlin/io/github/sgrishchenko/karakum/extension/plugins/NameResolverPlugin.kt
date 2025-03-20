@@ -11,7 +11,7 @@ val nameResolverServiceKey = Symbol()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyArray<NameResolver<Node>>) {
+class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyArray<NameResolver>) {
     private val nameResolvers = nameResolvers + defaultNameResolvers
     private val resolvedNodes = mutableMapOf<Node, String>()
     private var counter = 0
@@ -37,7 +37,7 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
     }
 }
 
-class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver<Node>>) : Plugin<Node> {
+class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver>) : Plugin {
     private val nameResolverService = NameResolverService(nameResolvers)
 
     override fun setup(context: Context) {

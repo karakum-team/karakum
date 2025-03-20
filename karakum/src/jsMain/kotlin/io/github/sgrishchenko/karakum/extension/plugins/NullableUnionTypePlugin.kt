@@ -130,7 +130,7 @@ fun flatUnionTypes(node: UnionTypeNode, context: Context): ReadonlyArray<TypeNod
     return result.toTypedArray()
 }
 
-class NullableUnionTypePlugin : Plugin<Node> {
+class NullableUnionTypePlugin : Plugin {
     override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
     override fun render(node: Node, context: Context, next: Render<Node>): String? {
@@ -165,7 +165,7 @@ class NullableUnionTypePlugin : Plugin<Node> {
             }
         }
 
-        return null;
+        return null
     }
 
     override fun setup(context: Context) = Unit

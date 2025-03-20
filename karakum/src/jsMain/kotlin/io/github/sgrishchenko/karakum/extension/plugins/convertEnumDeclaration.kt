@@ -4,11 +4,10 @@ import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
-import typescript.Node
 import typescript.asArray
 import typescript.isEnumDeclaration
 
-val convertEnumDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertEnumDeclaration = createSimplePlugin plugin@{ node, context, render ->
     if (!isEnumDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

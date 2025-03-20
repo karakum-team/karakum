@@ -2,10 +2,9 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createSimplePlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
-import typescript.Node
 import typescript.isTypeParameterDeclaration
 
-val convertTypeParameterDeclaration = createSimplePlugin plugin@{ node: Node, context, render ->
+val convertTypeParameterDeclaration = createSimplePlugin plugin@{ node, context, render ->
     if (!isTypeParameterDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

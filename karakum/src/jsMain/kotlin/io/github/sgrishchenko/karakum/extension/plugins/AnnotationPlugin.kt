@@ -11,7 +11,7 @@ val annotationServiceKey = Symbol()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation<Node>>) {
+class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation>) {
     fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, true, context)
     }
@@ -41,7 +41,7 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Re
     }
 }
 
-class AnnotationPlugin(annotations: ReadonlyArray<Annotation<Node>>) : Plugin<Node> {
+class AnnotationPlugin(annotations: ReadonlyArray<Annotation>) : Plugin {
     private val annotationService = AnnotationService(annotations)
 
     override fun setup(context: Context) {
@@ -59,7 +59,7 @@ class AnnotationPlugin(annotations: ReadonlyArray<Annotation<Node>>) : Plugin<No
             return """
 ${annotations.joinToString(separator = "\n")}
 ${next(node)}
-            """.trim();
+            """.trim()
         }
 
         return null

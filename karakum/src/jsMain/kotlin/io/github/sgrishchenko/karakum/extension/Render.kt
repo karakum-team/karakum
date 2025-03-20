@@ -86,7 +86,7 @@ fun renderResolvedNullable(
     return "$type${if (isNullable) "?" else ""}"
 }
 
-fun createRender(context: Context, plugins: ReadonlyArray<Plugin<Node>>): Render<Node> {
+fun createRender(context: Context, plugins: ReadonlyArray<Plugin>): Render<Node> {
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
     fun render(node: Node, parentNode: Node?, parentIndex: Int): String {
