@@ -63,7 +63,6 @@ suspend fun <T> loadExtensions(
     return extensions.toTypedArray()
 }
 
-@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 suspend fun loadExtensions(
     configuration: ExtensionConfiguration,
     cwd: String,
@@ -75,9 +74,9 @@ suspend fun loadExtensions(
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createSimplePlugin(plugin as SimplePlugin)
+            createSimplePlugin(plugin.unsafeCast<SimplePlugin>())
         } else {
-            plugin as Plugin
+            plugin.unsafeCast<Plugin>()
         }
     }
 
@@ -87,9 +86,9 @@ suspend fun loadExtensions(
         cwd
     ) { injection ->
         if (jsTypeOf(injection) == "function") {
-            createSimpleInjection(injection as SimpleInjection)
+            createSimpleInjection(injection.unsafeCast<SimpleInjection>())
         } else {
-            injection as Injection
+            injection.unsafeCast<Injection>()
         }
     }
 
