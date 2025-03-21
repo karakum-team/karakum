@@ -8,6 +8,8 @@ declare module "karakum" {
     export type NamespaceStrategy = "ignore" | "object" | "package"
     export type ConflictResolutionStrategy = "join" | "replace" | "error"
 
+    export type ParameterDeclarationStrategy = "function" | "lambda"
+
     export type AnonymousDeclaration = string | {
         name: string,
         declaration: string,
@@ -23,13 +25,23 @@ declare module "karakum" {
 
         | "HERITAGE_CLAUSE"
 
-    // TODO: should be removed after JSO fix
-    type Configuration = unknown
-    type GeneratedFile = unknown
-    type DerivedFile = unknown
-    type CheckCoverageResult = unknown
-    type ParameterDeclarationConfiguration = unknown
-    type ParameterDeclarationsConfiguration = unknown
-    type ParameterInfo = unknown
-    type DerivedDeclaration = unknown
+    /*export {
+        CompilerOptions,
+        Program,
+        SourceFile,
+        CommentRange,
+
+        Declaration,
+        NamedDeclaration,
+        ModuleDeclaration,
+        ParameterDeclaration,
+        TypeParameterDeclaration,
+        SignatureDeclarationBase,
+
+        TypeNode,
+        UnionTypeNode,
+        TypeReferenceNode,
+
+        HeritageClause
+    } from "typescript"*/
 }

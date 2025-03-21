@@ -1,10 +1,10 @@
 package io.github.sgrishchenko.karakum.configuration
 
 import io.github.sgrishchenko.karakum.util.Many
+import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.toArray
 import io.github.sgrishchenko.karakum.util.toPosix
 import js.array.ReadonlyArray
-import js.objects.recordOf
 import node.process.process
 
 private fun normalizeOption(
@@ -29,31 +29,31 @@ suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfi
         varianceModifiers = normalizeOption(configuration.varianceModifiers, arrayOf("karakum/varianceModifiers/*.js")),
     ), cwd)
 
-    return recordOf(
-        "inputRoots" to configuration.inputRoots,
-        "input" to configuration.input,
-        "output" to configuration.output,
-        "ignoreInput" to configuration.ignoreInput,
-        "ignoreOutput" to configuration.ignoreOutput,
-        "libraryName" to configuration.libraryName,
-        "libraryNameOutputPrefix" to configuration.libraryNameOutputPrefix,
-        "granularity" to configuration.granularity,
-        "moduleNameMapper" to configuration.moduleNameMapper,
-        "packageNameMapper" to configuration.packageNameMapper,
-        "importInjector" to configuration.importInjector,
-        "importMapper" to configuration.importMapper,
-        "namespaceStrategy" to configuration.namespaceStrategy,
-        "conflictResolutionStrategy" to configuration.conflictResolutionStrategy,
-        "compilerOptions" to configuration.compilerOptions,
-        "disclaimer" to configuration.disclaimer,
-        "verbose" to configuration.verbose,
-        "cwd" to configuration.cwd,
+    return PartialConfiguration(
+        inputRoots = configuration.inputRoots,
+        input = configuration.input,
+        output = configuration.output,
+        ignoreInput = configuration.ignoreInput,
+        ignoreOutput = configuration.ignoreOutput,
+        libraryName = configuration.libraryName,
+        libraryNameOutputPrefix = configuration.libraryNameOutputPrefix,
+        granularity = configuration.granularity,
+        moduleNameMapper = configuration.moduleNameMapper,
+        packageNameMapper = configuration.packageNameMapper,
+        importInjector = configuration.importInjector,
+        importMapper = configuration.importMapper,
+        namespaceStrategy = configuration.namespaceStrategy,
+        conflictResolutionStrategy = configuration.conflictResolutionStrategy,
+        compilerOptions = configuration.compilerOptions,
+        disclaimer = configuration.disclaimer,
+        verbose = configuration.verbose,
+        cwd = configuration.cwd,
 
-        "plugins" to extensions.plugins,
-        "injections" to extensions.injections,
-        "annotations" to extensions.annotations,
-        "nameResolvers" to extensions.nameResolvers,
-        "inheritanceModifiers" to extensions.inheritanceModifiers,
-        "varianceModifiers" to extensions.varianceModifiers,
-    ).unsafeCast<PartialConfiguration>()
+        plugins = manyOf(values = extensions.plugins),
+        injections = manyOf(values = extensions.injections),
+        annotations = manyOf(values = extensions.annotations),
+        nameResolvers = manyOf(values = extensions.nameResolvers),
+        inheritanceModifiers = manyOf(values = extensions.inheritanceModifiers),
+        varianceModifiers = manyOf(values = extensions.varianceModifiers),
+    )
 }

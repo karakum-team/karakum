@@ -51,7 +51,7 @@ sealed external interface ConflictResolutionStrategy {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-// TODO: @JsPlainObject
+@JsPlainObject
 external interface SchemaConfiguration {
     val inputRoots: Many<String>?
 
@@ -132,7 +132,7 @@ external interface SchemaConfiguration {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-// TODO: @JsPlainObject
+@JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
     override val plugins: Many<Plugin>?
 
@@ -150,6 +150,7 @@ external interface PartialConfiguration : SchemaConfiguration {
     override val compilerOptions: CompilerOptions?
 }
 
+@JsPlainObject
 external interface MutableConfiguration : PartialConfiguration {
     override var inputRoots: Many<String>?
 
@@ -195,9 +196,8 @@ external interface MutableConfiguration : PartialConfiguration {
     override var cwd: String?
 }
 
-// TODO: ticket for JsPlainObject
-//@OptIn(ExperimentalJsExport::class)
-//@JsExport
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @JsPlainObject
 external interface Configuration {
     val inputRoots: ReadonlyArray<String>

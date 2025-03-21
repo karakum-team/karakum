@@ -4,13 +4,13 @@ import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.isPossiblyNullableType
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
-import seskar.js.JsNative
+import seskar.js.JsNativeInvoke
 import typescript.*
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface Render<in TNode : Node> {
-    @JsNative
+    @JsNativeInvoke
     operator fun invoke(node: TNode): String
 }
 

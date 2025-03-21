@@ -17,9 +17,8 @@ import typescript.SyntaxKind
 @JsExport
 val checkCoverageServiceKey = Symbol()
 
-// TODO: ticket for JsPlainObject
-//@OptIn(ExperimentalJsExport::class)
-//@JsExport
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @JsPlainObject
 external interface CheckCoverageResult {
     val coveredNodes: Int

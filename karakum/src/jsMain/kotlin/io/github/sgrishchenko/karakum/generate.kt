@@ -14,16 +14,17 @@ import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileNam
 import io.github.sgrishchenko.karakum.structure.prepareStructure
 import io.github.sgrishchenko.karakum.structure.resolveConflicts
 import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
+import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.objects.Object
 import js.objects.jso
-import js.objects.recordOf
 import js.promise.Promise
 import node.fs.*
 import node.path.path
+import node.process.process
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
@@ -261,7 +262,10 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
 }
 
 suspend fun generate(block: MutableConfiguration.() -> Unit) {
-    val configuration = recordOf<String, Any?>().unsafeCast<MutableConfiguration>().apply(block)
+    val configuration = MutableConfiguration(
+        input = manyOf(),
+        output = process.cwd(),
+    ).apply(block)
     generate(configuration)
 }
 

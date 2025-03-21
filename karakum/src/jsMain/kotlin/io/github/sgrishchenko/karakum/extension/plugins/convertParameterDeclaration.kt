@@ -22,9 +22,8 @@ sealed external interface ParameterDeclarationStrategy {
     }
 }
 
-// TODO: ticket for JsPlainObject
-//@OptIn(ExperimentalJsExport::class)
-//@JsExport
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @JsPlainObject
 external interface ParameterDeclarationsConfiguration {
     val strategy: ParameterDeclarationStrategy
@@ -32,9 +31,8 @@ external interface ParameterDeclarationsConfiguration {
     val template: (parameters: String, signature: Signature) -> String
 }
 
-// TODO: ticket for JsPlainObject
-//@OptIn(ExperimentalJsExport::class)
-//@JsExport
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @JsPlainObject
 external interface ParameterDeclarationConfiguration {
     val strategy: ParameterDeclarationStrategy
@@ -44,9 +42,8 @@ external interface ParameterDeclarationConfiguration {
     val nullable: Boolean
 }
 
-// TODO: ticket for JsPlainObject
-//@OptIn(ExperimentalJsExport::class)
-//@JsExport
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @JsPlainObject
 external interface ParameterInfo {
     val parameter: ParameterDeclaration
