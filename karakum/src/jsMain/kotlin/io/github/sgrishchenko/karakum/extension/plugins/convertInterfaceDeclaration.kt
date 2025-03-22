@@ -69,7 +69,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
         .joinToString(separator = "\n")
 
     """
-${ifPresent(inheritanceModifier) { "$it " }}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : ${it}"}} {
+${ifPresent(inheritanceModifier) { "$it " }}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it"}} {
 ${members}${ifPresent(injectedMembers) { "\n${it}"}}
 }
     """.trim()

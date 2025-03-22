@@ -33,8 +33,8 @@ val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
         val body = node.body?.let { render(it) } ?: ""
 
         return@plugin """
-${externalModifier}object ${name} {
-${body}
+${externalModifier}object $name {
+$body
 }
         """.trim()
     }

@@ -211,12 +211,12 @@ fun convertLiteralUnionType(
         if (entry.isString) {
             """
 @seskar.js.JsValue("${entry.value}")
-val ${entry.key}: ${name}
+val ${entry.key}: $name
             """.trim()
         } else {
             """
 @seskar.js.JsRawValue("${entry.value}")
-val ${entry.key}: ${name}
+val ${entry.key}: $name
             """.trim()
         }
     }

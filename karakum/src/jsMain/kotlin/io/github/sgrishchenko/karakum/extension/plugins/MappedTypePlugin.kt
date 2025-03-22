@@ -39,7 +39,7 @@ ${ifPresent(getterInheritanceModifier) { "$it "}}operator fun <${typeParameter}>
     if (!readonly) {
         setter = """
 @seskar.js.JsNativeSetter
-${ifPresent(setterInheritanceModifier) { "${it} "}}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
+${ifPresent(setterInheritanceModifier) { "$it "}}operator fun <${typeParameter}> set(key: ${keyType}, value: ${type})
         """.trim()
     }
 

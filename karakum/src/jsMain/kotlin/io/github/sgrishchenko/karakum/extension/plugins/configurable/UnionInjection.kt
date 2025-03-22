@@ -211,7 +211,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
                 // TODO: support template literals
                 // TODO: support nullable unions
                 return """
-sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : ${it}" }} {
+sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it" }} {
 }
                 """.trim()
 

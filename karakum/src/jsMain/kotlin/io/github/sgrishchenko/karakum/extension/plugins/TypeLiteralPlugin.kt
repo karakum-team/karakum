@@ -50,7 +50,7 @@ fun convertTypeLiteral(
         ?.joinToString(separator = ", ")
 
     return """
-${ifPresent(inheritanceModifier) { "${it} "}}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>"}}${(ifPresent(injectedHeritageClauses) { ": $it"})} {
+${ifPresent(inheritanceModifier) { "$it "}}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>"}}${(ifPresent(injectedHeritageClauses) { ": $it"})} {
 ${convertTypeLiteralBody(node, context, render)}
 }
     """.trim()

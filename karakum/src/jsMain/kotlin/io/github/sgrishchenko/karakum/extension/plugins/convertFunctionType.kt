@@ -25,7 +25,7 @@ val convertFunctionType = createPlugin plugin@{ node, context, render ->
     convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
         strategy = ParameterDeclarationStrategy.lambda,
         template = { parameters, _ ->
-            "(${parameters}) -> ${returnType}"
+            "(${parameters}) -> $returnType"
         },
     ))
 }
