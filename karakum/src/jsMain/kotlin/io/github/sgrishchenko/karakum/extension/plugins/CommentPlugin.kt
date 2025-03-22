@@ -9,11 +9,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.*
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val commentServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class CommentService @JsExport.Ignore constructor() {
     private val nestedCommentPattern = "(?<!^)/\\*".toRegex()

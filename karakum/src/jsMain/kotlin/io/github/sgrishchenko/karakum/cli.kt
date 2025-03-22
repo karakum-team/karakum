@@ -37,7 +37,6 @@ internal suspend fun cli() {
     generate(partialConfiguration)
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsName("cli")
 @Suppress("NON_EXPORTABLE_TYPE")

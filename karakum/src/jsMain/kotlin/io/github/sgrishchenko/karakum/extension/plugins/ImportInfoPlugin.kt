@@ -12,11 +12,9 @@ import typescript.Node
 import typescript.Program
 import typescript.isImportDeclaration
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val importInfoServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class ImportInfoService @JsExport.Ignore constructor(
     private val program: Program,

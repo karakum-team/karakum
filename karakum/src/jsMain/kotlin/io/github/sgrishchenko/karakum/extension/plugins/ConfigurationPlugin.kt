@@ -8,11 +8,9 @@ import io.github.sgrishchenko.karakum.extension.Render
 import js.symbol.Symbol
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val configurationServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class ConfigurationService @JsExport.Ignore constructor(val configuration: Configuration)
 

@@ -6,7 +6,6 @@ import typescript.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isInheritedTypeLiteral(node: Node): Boolean {
     contract {

@@ -85,7 +85,6 @@ private fun isNegativeNumericLikeLiteralType(node: LiteralTypeNode): Boolean {
             )
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 private fun isSupportedLiteralType(node: Node): Boolean {
     contract {
@@ -105,7 +104,6 @@ private fun isSupportedLiteralType(node: Node): Boolean {
     )
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isLiteralUnionType(node: Node, context: Context): Boolean {
     contract {
@@ -118,7 +116,6 @@ fun isLiteralUnionType(node: Node, context: Context): Boolean {
     )
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isNullableLiteralUnionType(node: Node, context: Context): Boolean {
     contract {

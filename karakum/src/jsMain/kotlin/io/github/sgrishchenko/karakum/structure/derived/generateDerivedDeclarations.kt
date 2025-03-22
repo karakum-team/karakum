@@ -12,7 +12,6 @@ import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper
 import io.github.sgrishchenko.karakum.structure.sourceFile.createSourceFileInfoItem
 import js.array.ReadonlyArray
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun generateDerivedDeclarations(
     declarations: ReadonlyArray<DerivedDeclaration>,

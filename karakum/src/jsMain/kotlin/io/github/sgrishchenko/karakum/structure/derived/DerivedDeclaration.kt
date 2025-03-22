@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.structure.StructureItem
 import js.objects.JsPlainObject
 import typescript.ModuleDeclaration
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface DerivedDeclaration {

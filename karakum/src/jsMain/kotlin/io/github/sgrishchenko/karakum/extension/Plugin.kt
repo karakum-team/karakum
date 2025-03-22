@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension
 import js.array.ReadonlyArray
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface Plugin {
     fun setup(context: Context)

@@ -5,11 +5,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val inheritanceModifierServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier>) {
     fun resolveSignatureInheritanceModifier(

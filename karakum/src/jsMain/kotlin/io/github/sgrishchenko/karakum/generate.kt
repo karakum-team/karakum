@@ -269,7 +269,6 @@ suspend fun generate(block: MutableConfiguration.() -> Unit) {
     generate(configuration)
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsName("generate")
 @Suppress("NON_EXPORTABLE_TYPE")

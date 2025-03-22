@@ -22,7 +22,6 @@ sealed external interface ParameterDeclarationStrategy {
     }
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface ParameterDeclarationsConfiguration {
@@ -31,7 +30,6 @@ external interface ParameterDeclarationsConfiguration {
     val template: (parameters: String, signature: Signature) -> String
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface ParameterDeclarationConfiguration {
@@ -42,7 +40,6 @@ external interface ParameterDeclarationConfiguration {
     val nullable: Boolean
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface ParameterInfo {
@@ -64,7 +61,6 @@ val convertParameterDeclaration = createPlugin plugin@{ node, context, render ->
     ))
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
@@ -145,7 +141,6 @@ fun convertParameterDeclarations(
     error("Unknown parameter declaration strategy: $strategy")
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun convertParameterDeclarationWithFixedType(
     node: ParameterDeclaration,

@@ -10,7 +10,6 @@ import typescript.*
 
 typealias TypeParameterExtractionResult = ReadonlyArray<JsTuple2<Node, Declaration>>
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun extractTypeParameters(
     node: Node,
@@ -53,7 +52,6 @@ fun extractTypeParameters(
     return result.toTypedArray()
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result
@@ -62,7 +60,6 @@ fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node
         .joinToString(separator = ", ")
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun renderReference(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result

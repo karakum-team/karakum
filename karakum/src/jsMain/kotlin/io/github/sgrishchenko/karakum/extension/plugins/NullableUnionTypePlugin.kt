@@ -76,7 +76,6 @@ private fun isNullableTsType(type: Type): Boolean {
     )
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isNullableUnionType(node: Node, context: Context): Boolean {
     contract {
@@ -88,7 +87,6 @@ fun isNullableUnionType(node: Node, context: Context): Boolean {
     return flatUnionTypes(node, context).any { isNullableType(it) }
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isNullableOnlyUnionType(node: Node, context: Context): Boolean {
     contract {

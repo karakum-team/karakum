@@ -11,7 +11,6 @@ import js.array.ReadonlyArray
 import js.objects.JsPlainObject
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface AnonymousDeclarationContext : Context {
     fun resolveName(node: Node): String
@@ -19,7 +18,6 @@ external interface AnonymousDeclarationContext : Context {
 
 external interface AnonymousDeclaration
 
-@PublishedApi
 @JsPlainObject
 internal external interface AnonymousDeclarationRenderResult {
     val name: String
@@ -106,7 +104,6 @@ class AnonymousDeclarationPlugin(
     }
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun createAnonymousDeclarationPlugin(
     render: AnonymousDeclarationRender,

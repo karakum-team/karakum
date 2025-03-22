@@ -23,13 +23,11 @@ sealed external interface InjectionType {
     }
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface InjectionContext : Context {
     val type: InjectionType
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface Injection : Plugin {
     fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>?

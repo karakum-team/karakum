@@ -23,6 +23,11 @@ kotlin {
 
         compilerOptions {
             target = "es2015"
+
+            optIn.addAll(
+                "kotlin.contracts.ExperimentalContracts",
+                "kotlin.js.ExperimentalJsExport",
+            )
         }
 
         binaries.executable()

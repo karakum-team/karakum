@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.Signature
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface InheritanceModifierContext : Context {
     val signature: Signature?

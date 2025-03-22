@@ -15,11 +15,9 @@ import typescript.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val declarationMergingServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class DeclarationMergingService @JsExport.Ignore constructor(private val program: Program) {
     private val coveredSymbols = mutableSetOf<typescript.Symbol>()
@@ -163,7 +161,6 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
             .toTypedArray()
     }
 
-    @OptIn(ExperimentalContracts::class)
     @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
     private fun isSignatureDeclaration(declaration: Declaration): Boolean {
         contract {

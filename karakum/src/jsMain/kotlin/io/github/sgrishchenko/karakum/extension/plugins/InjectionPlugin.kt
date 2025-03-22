@@ -5,11 +5,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val injectionServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection>) {
     fun resolveInjections(

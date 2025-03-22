@@ -1,13 +1,11 @@
 package io.github.sgrishchenko.karakum.util
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun capitalize(string: String): String {
     if (string.isEmpty()) return string
     return string[0].uppercaseChar() + string.slice(1..string.lastIndex)
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun camelize(string: String): String {
     return string
@@ -25,14 +23,12 @@ fun isKebab(string: String): Boolean {
     return "[\\w$-]+".toRegex().matches(string)
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun isValidIdentifier(string: String): Boolean {
     return "[\\w$]+".toRegex().matches(string)
             && !"^\\d".toRegex().containsMatchIn(string)
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun escapeIdentifier(string: String): String {
     if (string in KOTLIN_KEYWORDS) {
@@ -50,7 +46,6 @@ fun escapeIdentifier(string: String): String {
     return string
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @Deprecated("Prefer escapeIdentifier")
 fun identifier(string: String): String {
@@ -61,7 +56,6 @@ fun identifier(string: String): String {
     )
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @Deprecated("Prefer escapeIdentifier")
 fun constIdentifier(string: String): String {

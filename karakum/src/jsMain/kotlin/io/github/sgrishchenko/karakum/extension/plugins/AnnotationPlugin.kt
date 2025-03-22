@@ -5,11 +5,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val annotationServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation>) {
     fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {

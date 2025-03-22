@@ -49,7 +49,6 @@ sealed external interface ConflictResolutionStrategy {
     }
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface SchemaConfiguration {
@@ -130,7 +129,6 @@ external interface SchemaConfiguration {
     val cwd: String?
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface PartialConfiguration : SchemaConfiguration {
@@ -196,7 +194,6 @@ external interface MutableConfiguration : PartialConfiguration {
     override var cwd: String?
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface Configuration {

@@ -11,11 +11,9 @@ import js.objects.jso
 import js.symbol.Symbol
 import typescript.*
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val typeScriptServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)

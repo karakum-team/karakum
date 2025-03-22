@@ -32,7 +32,6 @@ private class DeepMapEntry<K, V> {
     }
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class DeepMap<K, V> {
     private var root = DeepMapEntry<K, V>()

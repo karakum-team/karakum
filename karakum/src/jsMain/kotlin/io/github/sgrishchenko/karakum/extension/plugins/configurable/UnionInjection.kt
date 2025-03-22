@@ -7,11 +7,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.*
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val unionServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class UnionService @JsExport.Ignore constructor(private val context: Context) {
     private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()

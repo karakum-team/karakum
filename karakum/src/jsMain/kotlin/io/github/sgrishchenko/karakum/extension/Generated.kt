@@ -6,7 +6,6 @@ import js.objects.ReadonlyRecord
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface GeneratedFile {
@@ -14,7 +13,6 @@ external interface GeneratedFile {
     val body: String
 }
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 @JsPlainObject
 external interface DerivedFile : GeneratedFile {
@@ -22,7 +20,6 @@ external interface DerivedFile : GeneratedFile {
     val imports: ReadonlyArray<String>
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")
 fun isDerivedFile(generatedFile: GeneratedFile): Boolean {
     contract {

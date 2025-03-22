@@ -11,11 +11,9 @@ import js.symbol.Symbol
 import typescript.ModuleDeclaration
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val namespaceInfoServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: NamespaceInfo) {
     private val namespaceInfo = namespaceInfo.associate { it.name to it.strategy }

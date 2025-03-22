@@ -4,7 +4,6 @@ import js.objects.Record
 import js.objects.recordOf
 import js.symbol.Symbol
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 external interface Context {
     fun <T: Any> registerService(key: Symbol, service: T)

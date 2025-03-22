@@ -5,11 +5,9 @@ import js.array.ReadonlyArray
 import js.symbol.Symbol
 import typescript.Node
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 val varianceModifierServiceKey = Symbol()
 
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 class VarianceModifierService @JsExport.Ignore constructor(
     private val varianceModifiers: ReadonlyArray<VarianceModifier>
