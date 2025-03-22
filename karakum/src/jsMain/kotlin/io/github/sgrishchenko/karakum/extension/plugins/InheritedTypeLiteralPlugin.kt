@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.*
 import typescript.*
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")

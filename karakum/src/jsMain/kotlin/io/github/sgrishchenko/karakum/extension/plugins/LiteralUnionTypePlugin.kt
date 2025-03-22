@@ -8,7 +8,6 @@ import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.objects.JsPlainObject
 import typescript.*
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 @JsPlainObject

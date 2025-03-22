@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.resolveParenthesizedType
 import js.array.ReadonlyArray
 import typescript.*
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 private fun isNull(type: Node) = isLiteralTypeNode(type) && type.literal.kind === SyntaxKind.NullKeyword

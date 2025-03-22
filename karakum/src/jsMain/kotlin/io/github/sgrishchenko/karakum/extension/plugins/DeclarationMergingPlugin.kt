@@ -12,7 +12,6 @@ import js.array.ReadonlyArray
 import js.objects.jso
 import js.symbol.Symbol
 import typescript.*
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 @JsExport
