@@ -22,11 +22,11 @@ val resolveConstructorParameterName: NameResolver = nameResolver@{ node, context
 
     val parameterName = parameterNameNode.text
 
-    val valructor = getParent(parameter)
+    val constructor = getParent(parameter)
         ?: return@nameResolver null
-    if (!isConstructorDeclaration(valructor)) return@nameResolver null
+    if (!isConstructorDeclaration(constructor)) return@nameResolver null
 
-    val classNode = getParent(valructor)
+    val classNode = getParent(constructor)
         ?: return@nameResolver null
     if (!isClassDeclaration(classNode)) return@nameResolver null
 
