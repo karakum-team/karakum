@@ -11,7 +11,7 @@ repositories {
 
 kotlin {
     js {
-        moduleName = "karakum-schema"
+        outputModuleName = "karakum-schema"
 
         nodejs()
 

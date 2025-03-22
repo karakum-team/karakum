@@ -17,7 +17,7 @@ repositories {
 
 kotlin {
     js {
-        moduleName = "karakum"
+        outputModuleName = "karakum"
 
         nodejs()
 
@@ -119,7 +119,7 @@ val copyNpmResources by tasks.registering(Copy::class) {
     dependsOn(tasks.named("jsProductionExecutableCompileSync"))
 }
 
-val npmPublish = NodeJsExec.create(
+val npmPublish = NodeJsExec.register(
     compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
 ) {
