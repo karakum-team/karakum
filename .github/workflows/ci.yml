@@ -27,4 +27,4 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v3
 
       - run: ./gradlew build --no-daemon
-      - run: ./gradlew :karakum-schema:jsNodeRun --no-daemon
+      - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
