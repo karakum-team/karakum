@@ -1,10 +1,10 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.SyntaxKind
 import typescript.isTypeOperatorNode
 
-val convertTypeOperator = createSimplePlugin plugin@{ node, context, _ ->
+val convertTypeOperator = createPlugin plugin@{ node, context, _ ->
     if (!isTypeOperatorNode(node)) return@plugin null
 
     if (

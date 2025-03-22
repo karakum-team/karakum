@@ -54,7 +54,7 @@ fun createPlugins(
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword)) { "js.symbol.Symbol" },
     convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.core.BigInt" },
 
-    createSimplePlugin { node, _, _ -> if (isIdentifier(node)) node.text else null },
+    createPlugin { node, _, _ -> if (isIdentifier(node)) node.text else null },
 
     convertMemberName, // should be applied before literals
 

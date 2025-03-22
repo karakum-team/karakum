@@ -74,7 +74,7 @@ suspend fun loadExtensions(
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createSimplePlugin(plugin.unsafeCast<SimplePlugin>())
+            createPlugin(plugin.unsafeCast<SimplePlugin>())
         } else {
             plugin.unsafeCast<Plugin>()
         }
@@ -86,7 +86,7 @@ suspend fun loadExtensions(
         cwd
     ) { injection ->
         if (jsTypeOf(injection) == "function") {
-            createSimpleInjection(injection.unsafeCast<SimpleInjection>())
+            createInjection(injection.unsafeCast<SimpleInjection>())
         } else {
             injection.unsafeCast<Injection>()
         }

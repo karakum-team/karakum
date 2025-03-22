@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.InjectionType
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.array.ReadonlyArray
 import typescript.*
@@ -52,7 +52,7 @@ private fun resolveConstructors(
     return resolveConstructors(parentDeclaration, mergedMembers, context)
 }
 
-val convertClassDeclaration = createSimplePlugin plugin@{ node, context, render ->
+val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isClassDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

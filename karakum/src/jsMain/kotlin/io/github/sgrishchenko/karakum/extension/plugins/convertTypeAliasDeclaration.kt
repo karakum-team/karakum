@@ -1,10 +1,10 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.*
 
-val convertTypeAliasDeclaration = createSimplePlugin plugin@{ node, context, render ->
+val convertTypeAliasDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isTypeAliasDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

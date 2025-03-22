@@ -1,11 +1,11 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.SyntaxKind
 import typescript.isArrayTypeNode
 import typescript.isTypeOperatorNode
 
-val convertArrayType = createSimplePlugin plugin@{ node, context, render ->
+val convertArrayType = createPlugin plugin@{ node, context, render ->
     if (
         isTypeOperatorNode(node) &&
         node.operator === SyntaxKind.ReadonlyKeyword

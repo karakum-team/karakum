@@ -1,10 +1,10 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isModuleDeclaration
 
-val convertModuleDeclaration = createSimplePlugin plugin@{ node, context, render ->
+val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isModuleDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

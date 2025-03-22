@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isUnionTypeNode
 
-val convertUnionType = createSimplePlugin plugin@{ node, context, _ ->
+val convertUnionType = createPlugin plugin@{ node, context, _ ->
     if (!isUnionTypeNode(node)) return@plugin null
 
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)

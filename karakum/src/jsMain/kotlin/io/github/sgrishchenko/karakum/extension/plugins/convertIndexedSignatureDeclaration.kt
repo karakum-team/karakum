@@ -1,13 +1,13 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import typescript.SyntaxKind
 import typescript.asArray
 import typescript.isIndexSignatureDeclaration
 
-val convertIndexedSignatureDeclaration = createSimplePlugin plugin@{ node, context, render ->
+val convertIndexedSignatureDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isIndexSignatureDeclaration(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

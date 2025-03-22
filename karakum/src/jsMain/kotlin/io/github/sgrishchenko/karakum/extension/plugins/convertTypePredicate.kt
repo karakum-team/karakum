@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isTypePredicateNode
 
-val convertTypePredicate = createSimplePlugin plugin@{ node, context, _ ->
+val convertTypePredicate = createPlugin plugin@{ node, context, _ ->
     if (!isTypePredicateNode(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

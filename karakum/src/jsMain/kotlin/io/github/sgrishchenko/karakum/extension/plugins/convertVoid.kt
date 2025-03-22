@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.*
 
 private fun extractReturnType(node: Node): Node? {
@@ -20,7 +20,7 @@ private fun extractReturnType(node: Node): Node? {
     return null
 }
 
-val convertVoid = createSimplePlugin plugin@{ node, _, _ ->
+val convertVoid = createPlugin plugin@{ node, _, _ ->
     if (node.kind !== SyntaxKind.VoidKeyword) return@plugin null
 
     val returnType = extractReturnType(node.parent)

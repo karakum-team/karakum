@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isIndexedAccessTypeNode
 
-val convertIndexedAccessType = createSimplePlugin plugin@{ node, context, render ->
+val convertIndexedAccessType = createPlugin plugin@{ node, context, render ->
     if (!isIndexedAccessTypeNode(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

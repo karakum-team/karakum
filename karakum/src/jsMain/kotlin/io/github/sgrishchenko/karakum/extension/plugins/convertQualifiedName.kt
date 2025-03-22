@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isQualifiedName
 
-val convertQualifiedName = createSimplePlugin plugin@{ node, context, render ->
+val convertQualifiedName = createPlugin plugin@{ node, context, render ->
     if (!isQualifiedName(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

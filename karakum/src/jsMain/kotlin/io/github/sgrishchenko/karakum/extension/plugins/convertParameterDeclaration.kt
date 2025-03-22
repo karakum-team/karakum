@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.Render
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.function
 import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.lambda
 import io.github.sgrishchenko.karakum.extension.renderNullable
@@ -54,7 +54,7 @@ external interface ParameterInfo {
 
 typealias Signature = ReadonlyArray<ParameterInfo>
 
-val convertParameterDeclaration = createSimplePlugin plugin@{ node, context, render ->
+val convertParameterDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isParameter(node)) return@plugin null
 
     convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(

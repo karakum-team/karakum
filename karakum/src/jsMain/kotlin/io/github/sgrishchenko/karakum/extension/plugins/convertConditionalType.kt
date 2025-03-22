@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isConditionalTypeNode
 
-val convertConditionalType = createSimplePlugin plugin@{ node, context, _ ->
+val convertConditionalType = createPlugin plugin@{ node, context, _ ->
     if (!isConditionalTypeNode(node)) return@plugin null
 
     val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)

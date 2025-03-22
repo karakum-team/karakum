@@ -37,7 +37,7 @@ external interface Injection : Plugin {
 
 typealias SimpleInjection = (node: Node, context: InjectionContext, next: Render<Node>) -> ReadonlyArray<String>?
 
-fun createSimpleInjection(
+fun createInjection(
     inject: SimpleInjection,
 ): Injection {
     return object : Injection {

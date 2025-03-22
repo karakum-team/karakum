@@ -1,11 +1,11 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.createSimplePlugin
+import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.SyntaxKind
 import typescript.asArray
 import typescript.isVariableStatement
 
-val convertVariableStatement = createSimplePlugin plugin@{ node, context, render ->
+val convertVariableStatement = createPlugin plugin@{ node, context, render ->
     if (!isVariableStatement(node)) return@plugin null
 
     val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)

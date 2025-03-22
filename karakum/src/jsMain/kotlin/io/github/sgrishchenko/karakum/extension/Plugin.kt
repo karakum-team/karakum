@@ -17,7 +17,7 @@ external interface Plugin {
 
 typealias SimplePlugin = (node: Node, context: Context, next: Render<Node>) -> String?
 
-fun createSimplePlugin(
+fun createPlugin(
     render: SimplePlugin
 ): Plugin {
     return object : Plugin {
