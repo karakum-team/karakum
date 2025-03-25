@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
+    `node-conventions`
 }
 
 repositories {
