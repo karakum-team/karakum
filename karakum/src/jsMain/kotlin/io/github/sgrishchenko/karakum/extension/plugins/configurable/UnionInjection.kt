@@ -77,6 +77,7 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     }
 }
 
+@JsExport
 class UnionInjection : Injection {
     private var unionService: UnionService? = null
 
@@ -108,7 +109,7 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
 
             val reference = "${name}${ifPresent(renderReference(typeParameters, render)) { "<${it}>" }}"
 
-            AnonymousDeclaration(
+            return@plugin AnonymousDeclaration(
                 name = name,
                 declaration = declaration,
                 reference = reference
@@ -204,7 +205,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
                     .filter { it.isNotEmpty() }
                     .joinToString(separator = ", ")
 
-                if (injectedHeritageClauses === "") return null
+                if (injectedHeritageClauses == "") return null
 
                 // TODO: support template literals
                 // TODO: support nullable unions
@@ -220,7 +221,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
     }
 
     override fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>? {
-        if (context.type === InjectionType.HERITAGE_CLAUSE) {
+        if (context.type == InjectionType.HERITAGE_CLAUSE) {
             if (isClassDeclaration(node)) {
                 val parentNames = unionService?.getParents(node) ?: emptyArray()
                 unionService?.cover(node)
@@ -254,7 +255,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
             if (
                 parent != null
                 && isTypeAliasDeclaration(parent)
-                && parent.type === node
+                && parent.type == node
             ) {
                 val parentNames = unionService?.getParents(parent) ?: emptyArray()
                 unionService?.cover(parent)
