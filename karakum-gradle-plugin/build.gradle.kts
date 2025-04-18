@@ -11,6 +11,9 @@ repositories {
 dependencies {
     compileOnly(kotlin("gradle-plugin"))
 
+    api(libs.multiplatform)
+    api(libs.plugin.jsPlainObjects)
+
     implementation(libs.jackson.databind)
     implementation(libs.ktlint.ruleEngine)
     implementation(libs.ktlint.ruleEngine.core)

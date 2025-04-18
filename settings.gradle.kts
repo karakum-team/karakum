@@ -26,6 +26,9 @@ dependencyResolutionManagement {
     versionCatalogs {
         val libs by creating {
             val kotlinVersion: String by settings
+            library("multiplatform", "org.jetbrains.kotlin.multiplatform", "org.jetbrains.kotlin.multiplatform.gradle.plugin").version(kotlinVersion)
+            library("plugin-jsPlainObjects", "org.jetbrains.kotlin.plugin.js-plain-objects", "org.jetbrains.kotlin.plugin.js-plain-objects.gradle.plugin").version(kotlinVersion)
+
             library("test", "org.jetbrains.kotlin", "kotlin-test").version(kotlinVersion)
 
             val kotlinCoroutinesVersion: String by settings
