@@ -28,3 +28,6 @@ jobs:
 
       - run: ./gradlew build --no-daemon
       - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
+
+      - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
+        working-directory: ./examples/gradle/kotlin-js-file-download build --no-daemon
