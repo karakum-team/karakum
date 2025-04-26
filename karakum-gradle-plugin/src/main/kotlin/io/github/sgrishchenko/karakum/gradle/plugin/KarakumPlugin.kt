@@ -59,9 +59,16 @@ class KarakumPlugin : Plugin<Project> {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
             description = "Check Kotlin code style and format"
             classpath = ktlint
-            mainClass.set("com.pinterest.ktlint.Main")
+            mainClass = "com.pinterest.ktlint.Main"
             jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
-            args("-F", "${karakum.output.asFile.get().absolutePath}/**/*.kt")
+            val reporterOutput = layout.buildDirectory.file("reports/ktlint/ktlint-format.txt")
+            args(
+                "--format",
+                "--reporter=plain,output=${reporterOutput.get().asFile.absolutePath}",
+                "${karakum.output.asFile.get().absolutePath}/**/*.kt",
+            )
+            // do not report violations that cannot be auto-corrected
+            isIgnoreExitValue = true
 
             dependsOn(jsNodeProductionRun)
         }
