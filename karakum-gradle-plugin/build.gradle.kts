@@ -14,12 +14,6 @@ dependencies {
     api(libs.multiplatform)
     api(libs.plugin.jsPlainObjects)
 
-    implementation(libs.jackson.databind)
-    implementation(libs.ktlint.ruleEngine)
-    implementation(libs.ktlint.ruleEngine.core)
-    implementation(libs.ktlint.ruleset.standard)
-    implementation(libs.ec4j)
-
     testImplementation(kotlin("test"))
 }
 

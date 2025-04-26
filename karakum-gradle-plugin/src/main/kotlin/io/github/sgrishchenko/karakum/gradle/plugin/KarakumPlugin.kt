@@ -1,8 +1,9 @@
 package io.github.sgrishchenko.karakum.gradle.plugin
 
-import io.github.sgrishchenko.karakum.gradle.plugin.tasks.KarakumGenerate
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.attributes.Bundling
+import org.gradle.api.tasks.JavaExec
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
@@ -36,6 +37,16 @@ class KarakumPlugin : Plugin<Project> {
             }
         }
 
+        val ktlint by configurations.creating
+
+        dependencies {
+            ktlint("com.pinterest.ktlint:ktlint-cli:$ktlintVersion") {
+                attributes {
+                    attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+                }
+            }
+        }
+
         val karakum = extensions.create<KarakumExtension>("karakum").apply {
             output.convention(layout.projectDirectory.dir("../src/jsMain/kotlin"))
         }
@@ -44,12 +55,22 @@ class KarakumPlugin : Plugin<Project> {
             args(karakum.output.asFile.get().absolutePath)
         }
 
-        val generateKarakumExternals by tasks.registering(KarakumGenerate::class) {
+        val ktlintFormat by tasks.registering(JavaExec::class) {
             group = KARAKUM_GRADLE_PLUGIN_GROUP
-            description = "Generates the Kotlin external declarations using Karakum."
+            description = "Check Kotlin code style and format"
+            classpath = ktlint
+            mainClass.set("com.pinterest.ktlint.Main")
+            jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
+            args("-F", "${karakum.output.asFile.get().absolutePath}/**/*.kt")
 
             dependsOn(jsNodeProductionRun)
-            output.convention(karakum.output)
+        }
+
+        val generateKarakumExternals by tasks.registering {
+            group = KARAKUM_GRADLE_PLUGIN_GROUP
+            description = "Generate the Kotlin external declarations using Karakum"
+
+            dependsOn(ktlintFormat)
         }
     }
 }

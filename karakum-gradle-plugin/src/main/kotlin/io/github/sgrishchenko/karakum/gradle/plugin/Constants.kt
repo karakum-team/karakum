@@ -11,5 +11,6 @@ val properties = Properties().apply {
 }
 
 internal val nodeVersion: String = properties.getProperty("nodeVersion")
+internal val ktlintVersion: String = properties.getProperty("ktlintVersion")
 internal val karakumVersion: String = properties.getProperty("karakumVersion")
 internal val arrowKtVersion: String = properties.getProperty("arrowKtVersion")
