@@ -1,0 +1,12 @@
+{
+  "input": "node_modules/js-file-download/js-file-download.d.ts",
+  "output": "generated",
+  "libraryName": "js-file-download",
+  "moduleNameMapper": {
+    ".+": "js-file-download"
+  },
+  "namespaceStrategy": {
+    "js-file-download": "ignore"
+  },
+  "plugins": "karakum/plugins/*.ts"
+}

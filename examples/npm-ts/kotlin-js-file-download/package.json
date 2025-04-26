@@ -1,0 +1,18 @@
+{
+  "name": "kotlin-js-file-download",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx --node-options '--experimental-strip-types' -- karakum --config karakum.config.json",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.2",
+    "karakum": "^1.0.0-alpha.66",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "js-file-download": "^0.4.12"
+  }
+}
