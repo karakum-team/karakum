@@ -39,7 +39,10 @@ kotlin {
                 customField("description", description)
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
-                customField("exports", "./kotlin/karakum.mjs")
+                customField("exports", mapOf(
+                    "types" to "./kotlin/karakum.d.ts",
+                    "default" to "./kotlin/karakum.mjs",
+                ))
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
                 customField("scripts", mapOf("distribute" to "npm publish"))
             }
@@ -125,6 +128,24 @@ val copyNpmResources by tasks.registering(Copy::class) {
     dependsOn(tasks.named("jsProductionExecutableCompileSync"))
 }
 
+val prepareTypeScriptDefinitions by tasks.registering {
+    group = "publishing"
+    doLast {
+        val npmProjectDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir
+
+        val baseDefinitions = npmProjectDir.get().file("kotlin/karakum-types.d.ts")
+        val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.ts")
+
+        val resultDefinitions = """
+            |${baseDefinitions.asFile.readText()}
+            |${generatedDefinitions.asFile.readText()}
+        """.trimMargin()
+
+        generatedDefinitions.asFile.writeText(resultDefinitions)
+    }
+    dependsOn(tasks.named("jsProductionExecutableCompileSync"))
+}
+
 val npmPublish = NodeJsExec.register(
     compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
     name = "npmPublish",
@@ -135,6 +156,7 @@ val npmPublish = NodeJsExec.register(
     args("--run", "distribute", "--", "--//registry.npmjs.org/:_authToken=$npmAuthToken")
     dependsOn(
         copyNpmResources,
+        prepareTypeScriptDefinitions,
         tasks.build,
     )
 }

@@ -1,47 +1,46 @@
-declare module "karakum" {
-    export type Many<T> = T | T[]
-    export type ReadonlyRecord<K extends PropertyKey, V> = Readonly<Record<K, V>>
-    export type Rule = string | ReadonlyRecord<string, string>
-    export type JsTuple2<A, B> = [A, B]
+import {
+    CompilerOptions,
+    Program,
+    SourceFile,
+    CommentRange,
 
-    export type Granularity = "bundle" | "file" | "top-level"
-    export type NamespaceStrategy = "ignore" | "object" | "package"
-    export type ConflictResolutionStrategy = "join" | "replace" | "error"
+    Declaration,
+    NamedDeclaration,
+    ModuleDeclaration,
+    ParameterDeclaration,
+    TypeParameterDeclaration,
+    SignatureDeclarationBase,
 
-    export type ParameterDeclarationStrategy = "function" | "lambda"
+    TypeNode,
+    UnionTypeNode,
+    TypeReferenceNode,
 
-    export type AnonymousDeclaration = string | {
-        name: string,
-        declaration: string,
-        reference: string,
-    }
+    HeritageClause
+} from "typescript"
 
-    export type InjectionType =
-        | "MEMBER"
-        | "STATIC_MEMBER"
+type Symbol = symbol
+export type Many<T> = T | T[]
+export type ReadonlyRecord<K extends PropertyKey, V> = Readonly<Record<K, V>>
+export type Rule = string | ReadonlyRecord<string, string>
+export type JsTuple2<A, B> = [A, B]
 
-        | "PARAMETER"
-        | "TYPE_PARAMETER"
+export type Granularity = "bundle" | "file" | "top-level"
+export type NamespaceStrategy = "ignore" | "object" | "package"
+export type ConflictResolutionStrategy = "join" | "replace" | "error"
 
-        | "HERITAGE_CLAUSE"
+export type ParameterDeclarationStrategy = "function" | "lambda"
 
-    /*export {
-        CompilerOptions,
-        Program,
-        SourceFile,
-        CommentRange,
-
-        Declaration,
-        NamedDeclaration,
-        ModuleDeclaration,
-        ParameterDeclaration,
-        TypeParameterDeclaration,
-        SignatureDeclarationBase,
-
-        TypeNode,
-        UnionTypeNode,
-        TypeReferenceNode,
-
-        HeritageClause
-    } from "typescript"*/
+export type AnonymousDeclaration = string | {
+    name: string,
+    declaration: string,
+    reference: string,
 }
+
+export type InjectionType =
+    | "MEMBER"
+    | "STATIC_MEMBER"
+
+    | "PARAMETER"
+    | "TYPE_PARAMETER"
+
+    | "HERITAGE_CLAUSE"
