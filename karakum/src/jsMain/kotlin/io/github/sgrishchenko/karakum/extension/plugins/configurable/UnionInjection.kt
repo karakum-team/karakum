@@ -4,6 +4,8 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.array.ReadonlyArray
+import js.array.tupleOf
+import js.collections.JsMap
 import js.symbol.Symbol
 import typescript.*
 
@@ -15,8 +17,13 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()
     private val coveredUnionParents = mutableSetOf<typescript.Symbol>()
 
+    @JsExport.Ignore
     val uncoveredUnionParents
-        get() = unionParents.filter { it.key !in coveredUnionParents }
+        get() = unionParents
+            .filter { it.key !in coveredUnionParents }
+            .map { (key, value) -> tupleOf(key, value) }
+            .toTypedArray()
+            .let(::JsMap)
 
     fun isCovered(node: NamedDeclaration): Boolean {
         val symbol = getSymbol(node)
@@ -270,7 +277,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
 
-        for ((symbol, parentNames) in unionService?.uncoveredUnionParents ?: emptyMap()) {
+        for ((symbol, parentNames) in unionService?.uncoveredUnionParents ?: JsMap()) {
             @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
             val firstDeclaration = symbol.declarations?.getOrNull(0) as NamedDeclaration?
             val name = firstDeclaration?.name

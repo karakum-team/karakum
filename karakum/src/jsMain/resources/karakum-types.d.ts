@@ -3,6 +3,7 @@ import {
     Program,
     SourceFile,
     CommentRange,
+    Symbol as TsSymbol,
 
     Declaration,
     NamedDeclaration,
@@ -44,3 +45,7 @@ export type InjectionType =
     | "TYPE_PARAMETER"
 
     | "HERITAGE_CLAUSE"
+
+export declare class UnionService {
+    readonly uncoveredUnionParents: Map<TsSymbol, Array<string>>
+}
