@@ -27,12 +27,8 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v3
 
       - run: ./gradlew build --no-daemon
-      - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
 
-      - run: ./gradlew publishToMavenLocal --no-daemon
-        env:
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+      - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
 
       - run: ./gradlew build --no-daemon
         working-directory: ./examples/gradle/kotlin-js-file-download
