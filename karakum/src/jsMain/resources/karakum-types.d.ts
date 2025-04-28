@@ -12,6 +12,7 @@ import {
     TypeParameterDeclaration,
     SignatureDeclarationBase,
 
+    Node,
     TypeNode,
     UnionTypeNode,
     TypeReferenceNode,

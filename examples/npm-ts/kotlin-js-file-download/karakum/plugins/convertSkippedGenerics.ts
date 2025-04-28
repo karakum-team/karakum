@@ -1,7 +1,7 @@
 import ts, {type Node} from "typescript"
-import type {Context} from "karakum"
+import type {Context, Render} from "karakum"
 
-export default function (node: Node, context: Context, render: (node: Node) => string) {
+export default function (node: Node, context: Context, render: Render<Node>) {
     if (
         ts.isTypeReferenceNode(node)
 
