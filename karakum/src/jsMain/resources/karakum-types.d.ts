@@ -46,6 +46,8 @@ export type InjectionType =
 
     | "HERITAGE_CLAUSE"
 
-export declare class UnionService {
+export type Render<TNode extends Node> = (node: Node) => string
+
+export declare interface UnionService {
     readonly uncoveredUnionParents: Map<TsSymbol, Array<string>>
 }

@@ -137,9 +137,9 @@ val prepareTypeScriptDefinitions by tasks.registering {
         val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.ts")
 
         val resultDefinitions = """
-            |${baseDefinitions.asFile.readText()}
-            |${generatedDefinitions.asFile.readText()}
-        """.trimMargin()
+            ||${baseDefinitions.asFile.readText()}
+            ||${generatedDefinitions.asFile.readText()}
+        """.trimMargin("||")
 
         generatedDefinitions.asFile.writeText(resultDefinitions)
     }

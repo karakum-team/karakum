@@ -7,7 +7,6 @@ import js.array.ReadonlyArray
 import seskar.js.JsNativeInvoke
 import typescript.*
 
-@JsExport
 external interface Render<in TNode : Node> {
     @JsNativeInvoke
     operator fun invoke(node: TNode): String
