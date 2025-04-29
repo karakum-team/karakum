@@ -17,16 +17,21 @@ private fun normalizeOption(
         ?: defaultValue
 }
 
+private fun createDefaultExtensionPatterns(name: String) = arrayOf(
+    "karakum/$name/*.js",
+    "karakum/$name/*.ts",
+)
+
 suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfiguration {
     val cwd = toPosix(configuration.cwd ?: process.cwd())
 
     val extensions = loadExtensions(ExtensionConfiguration(
-        plugins = normalizeOption(configuration.plugins, arrayOf("karakum/plugins/*.js")),
-        injections = normalizeOption(configuration.injections, arrayOf("karakum/injections/*.js")),
-        annotations = normalizeOption(configuration.annotations, arrayOf("karakum/annotations/*.js")),
-        nameResolvers = normalizeOption(configuration.nameResolvers, arrayOf("karakum/nameResolvers/*.js")),
-        inheritanceModifiers = normalizeOption(configuration.inheritanceModifiers, arrayOf("karakum/inheritanceModifiers/*.js")),
-        varianceModifiers = normalizeOption(configuration.varianceModifiers, arrayOf("karakum/varianceModifiers/*.js")),
+        plugins = normalizeOption(configuration.plugins, createDefaultExtensionPatterns("plugins")),
+        injections = normalizeOption(configuration.injections, createDefaultExtensionPatterns("injections")),
+        annotations = normalizeOption(configuration.annotations, createDefaultExtensionPatterns("annotations")),
+        nameResolvers = normalizeOption(configuration.nameResolvers, createDefaultExtensionPatterns("nameResolvers")),
+        inheritanceModifiers = normalizeOption(configuration.inheritanceModifiers, createDefaultExtensionPatterns("inheritanceModifiers")),
+        varianceModifiers = normalizeOption(configuration.varianceModifiers, createDefaultExtensionPatterns("varianceModifiers")),
     ), cwd)
 
     return PartialConfiguration(
