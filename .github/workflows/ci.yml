@@ -24,7 +24,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - uses: gradle/actions/wrapper-validation@v3
+      - uses: gradle/actions/wrapper-validation@v4
 
       - run: ./gradlew build --no-daemon
 
