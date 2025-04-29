@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "npx --node-options '--experimental-strip-types' -- karakum --config karakum.config.json",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit --skipLibCheck false"
   },
   "devDependencies": {
     "@types/node": "^22.15.2",
-    "karakum": "^1.0.0-alpha.68",
+    "karakum": "^1.0.0-alpha.69",
     "typescript": "^5.7.2"
   },
   "dependencies": {
