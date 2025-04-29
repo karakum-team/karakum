@@ -64,7 +64,7 @@ jobs:
       - run: npm ci
         working-directory: ./examples/npm-ts/kotlin-js-file-download
 
-      - run: npm check
+      - run: npm run check
         working-directory: ./examples/npm-ts/kotlin-js-file-download
 
       - run: npm start
