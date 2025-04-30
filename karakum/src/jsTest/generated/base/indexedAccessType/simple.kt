@@ -7,6 +7,10 @@
 
 package sandbox.base.indexedAccessType
 
+external interface URL {
+
+}
+
 external interface AgnosticDataRouteMatch {
 var params: Any /* string | number */
 var matches: js.array.ReadonlyArray<String>

@@ -1,3 +1,5 @@
+interface URL {}
+
 type AgnosticDataRouteMatch = {
     params: string | number
     matches: string[]

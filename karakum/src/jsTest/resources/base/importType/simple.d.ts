@@ -1,1 +1,3 @@
-export declare const DataRouterStateContext: React.Context<import("./router").RouterState | null>;
+interface Context<T> {}
+
+export declare const DataRouterStateContext: Context<import("./router").RouterState | null>;

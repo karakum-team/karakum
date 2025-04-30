@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.base
 
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
+import js.objects.recordOf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
@@ -13,6 +14,14 @@ class BaseTest {
             output = testOutput
             libraryName = "sandbox-base"
             verbose = true
+            importInjector = recordOf(
+                "mappedType/simple.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+                "void/simple.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+            )
         }
     }
 }

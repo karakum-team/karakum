@@ -7,21 +7,21 @@
 
 package sandbox.base.`interface`
 
-external interface ExampleInterface {
+external interface ExampleBoundInterface {
 var firstField: String
 var secondField: Double
 }
 
-external interface GenericInterface<T, U : ExampleInterface> {
+external interface GenericInterface<T, U : ExampleBoundInterface> {
 var firstField: T
 var secondField: Double
 fun firstMethod(firstParam: String, secondParam: U): Unit
 }
 
 external interface InterfaceWithGenericMethod {
-fun <T, U : ExampleInterface> genericMethod(firstParam: T, secondParam: Double): Unit
+fun <T, U : ExampleBoundInterface> genericMethod(firstParam: T, secondParam: Double): Unit
 }
 
-external interface ChildGenericInterface<T> : GenericInterface<T, ExampleInterface> {
+external interface ChildGenericInterface<T> : GenericInterface<T, ExampleBoundInterface> {
 
 }

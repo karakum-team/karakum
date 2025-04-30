@@ -9,15 +9,15 @@ package sandbox.base.typeLiteral
 
 typealias HydrationState = String
 
-external fun createMemoryRouter(routes: js.array.ReadonlyArray<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
+external fun createMemoryRouter(routes: js.array.ReadonlyArray<String>, opts: CreateMemoryRouterOpts = definedExternally): Unit
 
-external class MyClass {
-constructor (options: MyClassOptions)
-fun method(options: MyClassMethodOptions): String
+external class MyClassWithLiteralInParameter {
+constructor (options: MyClassWithLiteralInParameterOptions)
+fun method(options: MyClassWithLiteralInParameterMethodOptions): String
 }
 
-external interface MyInterface {
-fun method(options: MyInterfaceMethodOptions): String
+external interface MyInterfaceWithLiteralInParameter {
+fun method(options: MyInterfaceWithLiteralInParameterMethodOptions): String
 }
 
 external interface ShouldRevalidateFunction {
@@ -33,27 +33,27 @@ var initialEntries: js.array.ReadonlyArray<String>?
 var initialIndex: Double?
 }
 
-external interface MyClassOptions {
+external interface MyClassWithLiteralInParameterOptions {
 var first: String
 var second: Double
 }
 
-external interface MyClassMethodOptions {
+external interface MyClassWithLiteralInParameterMethodOptions {
 var third: Boolean
 var fourth: js.array.ReadonlyArray<String>
 }
 
-external interface MyInterfaceMethodOptions {
+external interface MyInterfaceWithLiteralInParameterMethodOptions {
 var first: Boolean
 var second: js.array.ReadonlyArray<String>
 }
 
 external interface ShouldRevalidateFunctionArgs {
-var currentUrl: URL
+var currentUrl: String
 }
 
 external interface BlockerFunctionArgs {
-var currentLocation: Location
-var nextLocation: Location
-var historyAction: HistoryAction
+var currentLocation: String
+var nextLocation: String
+var historyAction: () -> Unit
 }

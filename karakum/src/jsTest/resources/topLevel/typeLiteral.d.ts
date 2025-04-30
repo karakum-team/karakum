@@ -1,11 +1,13 @@
 type HydrationState = string
 
+interface RouteObject {}
+
 export declare function createMemoryRouter(routes: RouteObject[], opts?: {
     basename?: string;
     hydrationData?: HydrationState;
     initialEntries?: string[];
     initialIndex?: number;
-}): RemixRouter;
+}): void;
 
 
 export declare class MyClassWithTypeLiteral {

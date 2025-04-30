@@ -4,4 +4,4 @@
 
 package sandbox.top.level
 
-external fun createMemoryRouter(routes: js.array.ReadonlyArray<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): RemixRouter
+external fun createMemoryRouter(routes: js.array.ReadonlyArray<RouteObject>, opts: CreateMemoryRouterOpts = definedExternally): Unit

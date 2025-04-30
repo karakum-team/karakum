@@ -9,15 +9,15 @@ package sandbox.base.typeLiteral
 
 external fun useRevalidator(): UseRevalidatorResult
 
-external class MyClass {
+external class MyClassWithLiteralInReturn {
 
 companion object {
-fun getDerivedStateFromProps(): MyClassGetDerivedStateFromPropsResult
+fun getDerivedStateFromProps(): MyClassWithLiteralInReturnGetDerivedStateFromPropsResult
 }
 }
 
-external interface MyInterface {
-fun getDerivedStateFromProps(): MyInterfaceGetDerivedStateFromPropsResult
+external interface MyInterfaceWithLiteralInReturn {
+fun getDerivedStateFromProps(): MyInterfaceWithLiteralInReturnGetDerivedStateFromPropsResult
 }
 
 external interface MapRoutePropertiesFunction {
@@ -28,14 +28,14 @@ external interface UseRevalidatorResult {
 var revalidate: () -> Unit
 }
 
-external interface MyClassGetDerivedStateFromPropsResult {
+external interface MyClassWithLiteralInReturnGetDerivedStateFromPropsResult {
 var error: Any?
-var location: Location
+var location: String
 }
 
-external interface MyInterfaceGetDerivedStateFromPropsResult {
+external interface MyInterfaceWithLiteralInReturnGetDerivedStateFromPropsResult {
 var error: Any?
-var location: Location
+var location: String
 }
 
 external interface MapRoutePropertiesFunctionResult {

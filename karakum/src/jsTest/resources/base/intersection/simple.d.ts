@@ -1,4 +1,6 @@
+interface AgnosticBaseRouteObject {}
+
 export declare type AgnosticNonIndexRouteObject = AgnosticBaseRouteObject & {
-    children?: AgnosticRouteObject[];
+    children?: string[];
     index?: false;
 };

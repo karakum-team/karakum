@@ -7,4 +7,8 @@
 
 package sandbox.base.typeAlias
 
+external interface Response {
+
+}
+
 typealias JsonFunction<Data> = (data: Data, init: (Any)? /* use undefined for default */) -> Response

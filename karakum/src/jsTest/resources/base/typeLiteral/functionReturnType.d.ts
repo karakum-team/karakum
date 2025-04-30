@@ -2,17 +2,17 @@ export declare function useRevalidator(): {
     revalidate: () => void;
 };
 
-export declare class MyClass {
+export declare class MyClassWithLiteralInReturn {
     static getDerivedStateFromProps(): {
         error: any;
-        location: Location;
+        location: string;
     };
 }
 
-export interface MyInterface {
+export interface MyInterfaceWithLiteralInReturn {
     getDerivedStateFromProps(): {
         error: any;
-        location: Location;
+        location: string;
     };
 }
 

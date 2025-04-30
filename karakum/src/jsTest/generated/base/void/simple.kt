@@ -7,6 +7,8 @@
 
 package sandbox.base.void
 
+import js.promise.Promise
+
 external interface InterfaceWithVoidSignatures {
 @seskar.js.JsNativeInvoke
 operator fun  invoke(): Unit
