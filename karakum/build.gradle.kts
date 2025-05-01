@@ -63,8 +63,7 @@ kotlin {
         }
 
         jsTest {
-//            TODO: fix errors in test and move to sources
-            resources.srcDir(layout.projectDirectory.dir("src/jsTest/generated"))
+            kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/generated"))
             kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/functional"))
 
             dependencies {
