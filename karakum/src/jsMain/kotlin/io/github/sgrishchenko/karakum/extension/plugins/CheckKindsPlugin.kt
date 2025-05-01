@@ -41,7 +41,7 @@ private val supportedKinds = setOf(
     SyntaxKind.VoidKeyword, // Unit
     SyntaxKind.UnionType, // optional types are supported TODO: preprocess unions
     SyntaxKind.UndefinedKeyword, // null
-    SyntaxKind.TupleType, // TODO: support tuples
+    SyntaxKind.TupleType, // js.array.JsTuple
     SyntaxKind.FunctionType, // (params) -> returnType // TODO: generate type aliases for generics
     SyntaxKind.ThisType, // Unit /* this */
     SyntaxKind.TypeLiteral, // TODO: generate type aliases for type literal
@@ -85,6 +85,7 @@ private val supportedKinds = setOf(
     SyntaxKind.ObjectKeyword, // Any
     SyntaxKind.ImportType,
     SyntaxKind.MappedType,
+    SyntaxKind.NamedTupleMember, // /* name */ type
 )
 
 class CheckKindsPlugin : Plugin {

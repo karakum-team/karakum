@@ -1,0 +1,31 @@
+package io.github.sgrishchenko.karakum.extension.plugins
+
+import io.github.sgrishchenko.karakum.extension.createPlugin
+import io.github.sgrishchenko.karakum.extension.ifPresent
+import typescript.asArray
+import typescript.isRestTypeNode
+import typescript.isTupleTypeNode
+
+val convertTupleType = createPlugin plugin@{ node, context, render ->
+    if (!isTupleTypeNode(node)) return@plugin null
+
+    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+
+    checkCoverageService?.cover(node)
+
+    if (node.elements.asArray().any { isRestTypeNode(it) }) {
+        checkCoverageService?.deepCover(node)
+
+        return@plugin "js.array.JsTuple /* ${typeScriptService?.printNode(node)} */"
+    }
+
+    val tupleSize = node.elements.asArray().size
+
+    val elements = node.elements.asArray()
+        .map { render(it) }
+        .filter { it.isNotEmpty() }
+        .joinToString(separator = ", ")
+
+    "js.array.JsTuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}"
+}

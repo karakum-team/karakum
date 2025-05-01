@@ -83,6 +83,7 @@ fun createPlugins(
     convertFunctionType,
     convertLiteralType,
     convertArrayType,
+    convertTupleType,
     convertTypeAliasDeclaration,
     convertEnumDeclaration,
     convertEnumMember,
