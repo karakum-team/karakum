@@ -81,6 +81,7 @@ fun createPlugins(
     convertMethodDeclaration,
     convertConstructorDeclaration,
     convertFunctionType,
+    convertConstructorType,
     convertLiteralType,
     convertArrayType,
     convertTupleType,

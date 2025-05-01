@@ -35,4 +35,4 @@ external fun functionWithPromiseVoidReturnType(): Promise<js.core.Void>
 
 typealias functionTypeWithVoidReturnType = () -> Unit
 
-typealias constructorTypeWithVoidReturnType = /* new () => void */
+typealias constructorTypeWithVoidReturnType = js.function.JsConstructorFunction<js.array.JsTuple, Unit>

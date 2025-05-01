@@ -20,12 +20,13 @@ val convertTupleType = createPlugin plugin@{ node, context, render ->
         return@plugin "js.array.ReadonlyArray<Any?> /* ${typeScriptService?.printNode(node)} */"
     }
 
-    val tupleSize = node.elements.asArray().size
-
-    val elements = node.elements.asArray()
+    val elementArray = node.elements.asArray()
         .map { render(it) }
         .filter { it.isNotEmpty() }
-        .joinToString(separator = ", ")
+
+    val tupleSize = elementArray.size
+
+    val elements = elementArray.joinToString(separator = ", ")
 
     "js.array.JsTuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}"
 }
