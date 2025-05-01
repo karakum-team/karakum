@@ -1,3 +1,5 @@
+type SimpleEmptyTuple = []
+
 type SimpleTuple1 = [string]
 
 type SimpleTuple2 = [string, number]

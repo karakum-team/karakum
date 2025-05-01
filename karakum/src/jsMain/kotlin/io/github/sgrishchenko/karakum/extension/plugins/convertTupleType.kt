@@ -17,7 +17,7 @@ val convertTupleType = createPlugin plugin@{ node, context, render ->
     if (node.elements.asArray().any { isRestTypeNode(it) }) {
         checkCoverageService?.deepCover(node)
 
-        return@plugin "js.array.JsTuple /* ${typeScriptService?.printNode(node)} */"
+        return@plugin "js.array.ReadonlyArray<Any?> /* ${typeScriptService?.printNode(node)} */"
     }
 
     val tupleSize = node.elements.asArray().size
