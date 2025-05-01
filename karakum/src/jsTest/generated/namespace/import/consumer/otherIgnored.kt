@@ -6,5 +6,6 @@ package import.consumer
 
 // unhandled import: Ignored from "ignored-import"
 // unhandled import: other as OtherIgnored from "ignored-import"
+import ignored.import.other as OtherIgnored
 
 external val otherIgnored: OtherIgnored

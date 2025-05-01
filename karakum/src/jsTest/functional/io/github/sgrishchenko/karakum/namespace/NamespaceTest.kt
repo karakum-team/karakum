@@ -32,6 +32,7 @@ class NamespaceTest {
 
                 "import-provider" to NamespaceStrategy.`package`,
                 "other-import-provider" to NamespaceStrategy.`package`,
+                "ignored-import" to NamespaceStrategy.`package`,
                 "import-consumer" to NamespaceStrategy.`package`,
             )
             importMapper = recordOf(
@@ -41,6 +42,14 @@ class NamespaceTest {
                     "\\*" to "",
                     ".+" to "other.import.provider.",
                 )
+            )
+            importInjector = recordOf(
+                "import/consumer/ignored.kt" to arrayOf(
+                    "ignored.import.Ignored",
+                ),
+                "import/consumer/otherIgnored.kt" to arrayOf(
+                    "ignored.import.other as OtherIgnored",
+                ),
             )
             verbose = true
         }

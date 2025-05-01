@@ -16,6 +16,14 @@ declare module "other-import-provider" {
     export default X
 }
 
+declare module "ignored-import" {
+    export interface Ignored {
+    }
+
+    export interface other {
+    }
+}
+
 declare module "import-consumer" {
     import {SomeValue} from "import-provider"
 

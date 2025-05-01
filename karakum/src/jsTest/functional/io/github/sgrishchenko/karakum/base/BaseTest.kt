@@ -1,5 +1,7 @@
 package io.github.sgrishchenko.karakum.base
 
+import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyClassInheritance
+import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyPropertyInheritance
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
@@ -14,9 +16,16 @@ class BaseTest {
             output = testOutput
             libraryName = "sandbox-base"
             verbose = true
+            inheritanceModifiers = manyOf(
+                modifyClassInheritance,
+                modifyPropertyInheritance,
+            )
             importInjector = recordOf(
                 "mappedType/simple.kt" to arrayOf(
                     "js.promise.Promise",
+                ),
+                "property/doubleOptionality.kt" to arrayOf(
+                    "sandbox.base.AgnosticBaseRouteObjectHandle15",
                 ),
                 "void/simple.kt" to arrayOf(
                     "js.promise.Promise",

@@ -17,4 +17,9 @@ declare class ParentClass {
 }
 
 declare class ChildClass extends ParentClass implements ChildInterface {
+    firstField: string;
+    secondField: number;
+    thirdField: string;
+    fourthField: number;
+    otherField: boolean;
 }

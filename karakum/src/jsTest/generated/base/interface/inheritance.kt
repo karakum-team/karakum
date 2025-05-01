@@ -21,10 +21,14 @@ external interface ChildInterface : FirstParentInterface, SecondParentInterface 
 var otherField: Boolean
 }
 
-external class ParentClass {
+open external class ParentClass {
 
 }
 
 external class ChildClass : ParentClass, ChildInterface {
-
+override var firstField: String
+override var secondField: Double
+override var thirdField: String
+override var fourthField: Double
+override var otherField: Boolean
 }
