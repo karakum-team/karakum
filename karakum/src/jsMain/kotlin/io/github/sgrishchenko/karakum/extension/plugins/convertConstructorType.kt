@@ -21,7 +21,7 @@ val convertConstructorType = createPlugin plugin@{ node, context, render ->
     val returnType = render(node.type)
 
     if (node.parameters.asArray().any { it.dotDotDotToken != null }) {
-        return@plugin "js.function.ConstructorFunction<Nothing, ${returnType}> /* ${typeScriptService?.printNode(node)} */"
+        return@plugin "js.function.ConstructorFunction<js.array.VariadicTuple, ${returnType}> /* ${typeScriptService?.printNode(node)} */"
     }
 
     val parameterArray = node.parameters.asArray()

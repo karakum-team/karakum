@@ -19,4 +19,4 @@ typealias SimpleConstructor2 = js.function.ConstructorFunction<js.array.Tuple2</
 
 typealias SimpleConstructor3 = js.function.ConstructorFunction<js.array.Tuple3</* firstArg */ String, /* secondArg */ Double, /* thirdOptionalArg */ Boolean? /* use undefined for default */>, ConstructorTypeInstance>
 
-typealias ConstructorWithRest = js.function.ConstructorFunction<Nothing, ConstructorTypeInstance> /* new (firstArg: string, secondArg: number, ...rest: unknown[]) => ConstructorTypeInstance */
+typealias ConstructorWithRest = js.function.ConstructorFunction<js.array.VariadicTuple, ConstructorTypeInstance> /* new (firstArg: string, secondArg: number, ...rest: unknown[]) => ConstructorTypeInstance */

@@ -16,7 +16,7 @@ typealias SimpleTuple2 = js.array.Tuple2<String, Double>
 typealias SimpleTuple3 = js.array.Tuple3<String, Double, Boolean>
 
 external interface TupleWithRest<A : js.array.ReadonlyArray<Any?>> {
-var tuple: js.array.ReadonlyArray<Any?> /* [
+var tuple: js.array.VariadicTuple /* [
     string,
     number,
     ...A,
