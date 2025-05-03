@@ -19,8 +19,8 @@ kotlin {
     sourceSets {
         jsMain {
             dependencies {
-                api("org.jetbrains.kotlin-wrappers:kotlin-js:2025.3.19")
-                api("org.jetbrains.kotlin-wrappers:kotlin-web:2025.3.19")
+                api("org.jetbrains.kotlin-wrappers:kotlin-js:2025.5.2")
+                api("org.jetbrains.kotlin-wrappers:kotlin-web:2025.5.2")
 
                 api(npm("js-file-download", "^0.4.12"))
             }

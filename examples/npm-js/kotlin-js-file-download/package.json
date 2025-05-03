@@ -6,8 +6,8 @@
     "start": "karakum --config karakum.config.json"
   },
   "devDependencies": {
-    "karakum": "^1.0.0-alpha.69",
-    "typescript": "^5.7.2"
+    "karakum": "^1.0.0-alpha.70",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "js-file-download": "^0.4.12"
