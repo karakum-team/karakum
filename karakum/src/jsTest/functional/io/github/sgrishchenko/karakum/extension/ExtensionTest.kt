@@ -14,7 +14,6 @@ class ExtensionTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "extension"
-            verbose = true
             plugins = manyOf(
                 convertErrorTypeReferenceNode
             )

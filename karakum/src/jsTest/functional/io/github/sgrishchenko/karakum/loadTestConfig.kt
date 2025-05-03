@@ -5,6 +5,7 @@ import node.buffer.BufferEncoding
 import node.fs.readFile
 
 external interface TestConfig {
+    val update: Boolean
     val lib: String
     val generated: String
     val output: String

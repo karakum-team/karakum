@@ -14,7 +14,6 @@ class BundleTest {
             output = "${testOutput}/customBundle.kt"
             libraryName = "sandbox-bundle"
             granularity = Granularity.bundle
-            verbose = true
         }
     }
 }

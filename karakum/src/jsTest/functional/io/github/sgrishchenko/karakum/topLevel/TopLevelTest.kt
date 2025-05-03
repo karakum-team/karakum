@@ -19,7 +19,6 @@ class TopLevelTest {
             moduleNameMapper = recordOf(
                 "^(?!sandbox-top-level/myFunction1$).*" to "sandbox-top-level"
             )
-            verbose = true
             plugins = manyOf(
                 blankOutExportStatement
             )

@@ -10,8 +10,6 @@ import node.path.path
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-private val isUpdate = false // TODO: Boolean(process.env['KARAKUM_TEST_UPDATE']);
-
 private suspend fun readDir(dirName: String): ReadonlyArray<String> {
     return readdir(dirName, ReaddirWithFileTypesAsyncOptions(withFileTypes = true, recursive = true))
         .filter { it.isFile() }
@@ -25,6 +23,7 @@ suspend fun generateTests(
 ) {
     val testConfig = loadTestConfig()
 
+    val isUpdate = testConfig.update
     val cwd = path.resolve(testConfig.lib, "kotlin", dirName)
     val expectedOutputDirName = path.resolve(testConfig.generated, dirName)
     val actualOutputDirName = path.resolve(testConfig.output, dirName)
@@ -33,9 +32,8 @@ suspend fun generateTests(
 
     generate {
         this.cwd = cwd
-        Object.assign(this, createConfiguration(output))
-        // TODO: enable
         verbose = true
+        Object.assign(this, createConfiguration(output))
     }
 
     if (isUpdate) {

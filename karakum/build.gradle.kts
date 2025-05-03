@@ -63,7 +63,11 @@ kotlin {
         }
 
         jsTest {
-            kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/generated"))
+            val functionalTestUpdate: String? by project
+
+            if (!functionalTestUpdate.toBoolean()) {
+                kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/generated"))
+            }
             kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/functional"))
 
             dependencies {
@@ -108,8 +112,13 @@ mavenPublishing {
 }
 
 tasks.named<ProcessResources>("jsTestProcessResources") {
+    val functionalTestUpdate: String? by project
+
+    inputs.property("functionalTestUpdate", functionalTestUpdate).optional(true)
+
     filesMatching("test.config.json") {
         expand(
+            "functionalTestUpdate" to functionalTestUpdate.toBoolean(),
             "functionalTestLib" to kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.posixPath,
             "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.posixPath,
             "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.posixPath,

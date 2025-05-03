@@ -51,7 +51,6 @@ class NamespaceTest {
                     "ignored.import.other as OtherIgnored",
                 ),
             )
-            verbose = true
         }
     }
 }

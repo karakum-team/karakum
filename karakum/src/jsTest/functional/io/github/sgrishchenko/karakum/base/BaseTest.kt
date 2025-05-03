@@ -15,7 +15,6 @@ class BaseTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "sandbox-base"
-            verbose = true
             inheritanceModifiers = manyOf(
                 modifyClassInheritance,
                 modifyPropertyInheritance,

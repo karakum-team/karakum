@@ -1,4 +1,5 @@
 {
+  "update": ${functionalTestUpdate},
   "lib": "${functionalTestLib}",
   "generated": "${functionalTestGenerated}",
   "output": "${functionalTestOutput}"
