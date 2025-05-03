@@ -28,5 +28,5 @@ val convertTupleType = createPlugin plugin@{ node, context, render ->
 
     val elements = elementArray.joinToString(separator = ", ")
 
-    "js.array.JsTuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}"
+    "js.array.Tuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}"
 }

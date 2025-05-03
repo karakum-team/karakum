@@ -15,13 +15,13 @@ val convertConstructorType = createPlugin plugin@{ node, context, render ->
     checkCoverageService?.cover(node)
 
     if (node.typeParameters != null) {
-        return@plugin "js.function.JsConstructorFunction<Nothing, Any?> /* ${typeScriptService?.printNode(node)} */"
+        return@plugin "js.function.ConstructorFunction<Nothing, Any?> /* ${typeScriptService?.printNode(node)} */"
     }
 
     val returnType = render(node.type)
 
     if (node.parameters.asArray().any { it.dotDotDotToken != null }) {
-        return@plugin "js.function.JsConstructorFunction<Nothing, ${returnType}> /* ${typeScriptService?.printNode(node)} */"
+        return@plugin "js.function.ConstructorFunction<Nothing, ${returnType}> /* ${typeScriptService?.printNode(node)} */"
     }
 
     val parameterArray = node.parameters.asArray()
@@ -36,5 +36,5 @@ val convertConstructorType = createPlugin plugin@{ node, context, render ->
 
     val elements = parameterArray.joinToString(separator = ", ")
 
-    "js.function.JsConstructorFunction<js.array.JsTuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}, ${returnType}>"
+    "js.function.ConstructorFunction<js.array.Tuple${ifPresent(elements) { "${tupleSize}<${elements}>" }}, ${returnType}>"
 }

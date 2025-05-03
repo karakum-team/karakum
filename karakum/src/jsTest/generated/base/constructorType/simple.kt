@@ -11,12 +11,12 @@ external interface ConstructorTypeInstance {
 
 }
 
-typealias SimpleEmptyConstructor = js.function.JsConstructorFunction<js.array.JsTuple, ConstructorTypeInstance>
+typealias SimpleEmptyConstructor = js.function.ConstructorFunction<js.array.Tuple, ConstructorTypeInstance>
 
-typealias SimpleConstructor1 = js.function.JsConstructorFunction<js.array.JsTuple1</* firstArg */ String>, ConstructorTypeInstance>
+typealias SimpleConstructor1 = js.function.ConstructorFunction<js.array.Tuple1</* firstArg */ String>, ConstructorTypeInstance>
 
-typealias SimpleConstructor2 = js.function.JsConstructorFunction<js.array.JsTuple2</* firstArg */ String, /* secondArg */ Double>, ConstructorTypeInstance>
+typealias SimpleConstructor2 = js.function.ConstructorFunction<js.array.Tuple2</* firstArg */ String, /* secondArg */ Double>, ConstructorTypeInstance>
 
-typealias SimpleConstructor3 = js.function.JsConstructorFunction<js.array.JsTuple3</* firstArg */ String, /* secondArg */ Double, /* thirdOptionalArg */ Boolean? /* use undefined for default */>, ConstructorTypeInstance>
+typealias SimpleConstructor3 = js.function.ConstructorFunction<js.array.Tuple3</* firstArg */ String, /* secondArg */ Double, /* thirdOptionalArg */ Boolean? /* use undefined for default */>, ConstructorTypeInstance>
 
-typealias ConstructorWithRest = js.function.JsConstructorFunction<Nothing, ConstructorTypeInstance> /* new (firstArg: string, secondArg: number, ...rest: unknown[]) => ConstructorTypeInstance */
+typealias ConstructorWithRest = js.function.ConstructorFunction<Nothing, ConstructorTypeInstance> /* new (firstArg: string, secondArg: number, ...rest: unknown[]) => ConstructorTypeInstance */

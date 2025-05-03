@@ -7,13 +7,13 @@
 
 package sandbox.base.tuple
 
-typealias SimpleEmptyTuple = js.array.JsTuple
+typealias SimpleEmptyTuple = js.array.Tuple
 
-typealias SimpleTuple1 = js.array.JsTuple1<String>
+typealias SimpleTuple1 = js.array.Tuple1<String>
 
-typealias SimpleTuple2 = js.array.JsTuple2<String, Double>
+typealias SimpleTuple2 = js.array.Tuple2<String, Double>
 
-typealias SimpleTuple3 = js.array.JsTuple3<String, Double, Boolean>
+typealias SimpleTuple3 = js.array.Tuple3<String, Double, Boolean>
 
 external interface TupleWithRest<A : js.array.ReadonlyArray<Any?>> {
 var tuple: js.array.ReadonlyArray<Any?> /* [
@@ -24,4 +24,4 @@ var tuple: js.array.ReadonlyArray<Any?> /* [
 ] */
 }
 
-typealias TupleWithNames = js.array.JsTuple3</* first: */ String, /* second: */ Double, /* third: */ Boolean>
+typealias TupleWithNames = js.array.Tuple3</* first: */ String, /* second: */ Double, /* third: */ Boolean>

@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
-import js.array.JsTuple2
+import js.array.Tuple2
 import js.array.ReadonlyArray
 import js.array.tupleOf
 
@@ -9,7 +9,7 @@ private class DeepMapEntry<K, V> {
     var isInitialized = false
     val children = mutableMapOf<K, DeepMapEntry<K, V>>()
 
-    fun entries(prefix: ReadonlyArray<K>): ReadonlyArray<JsTuple2<ReadonlyArray<K>, V>> {
+    fun entries(prefix: ReadonlyArray<K>): ReadonlyArray<Tuple2<ReadonlyArray<K>, V>> {
         val children = children.flatMap { (key, value) ->
             value.entries(prefix + key).asIterable()
         }.toTypedArray()
