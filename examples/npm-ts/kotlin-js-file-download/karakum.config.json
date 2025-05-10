@@ -7,6 +7,5 @@
   },
   "namespaceStrategy": {
     "js-file-download": "ignore"
-  },
-  "plugins": "karakum/plugins/*.ts"
+  }
 }
