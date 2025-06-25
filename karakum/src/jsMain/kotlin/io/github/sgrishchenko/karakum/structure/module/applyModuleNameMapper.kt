@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.structure.module
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.util.applyMapper
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 
 @JsPlainObject
 external interface ModuleMappingResult {

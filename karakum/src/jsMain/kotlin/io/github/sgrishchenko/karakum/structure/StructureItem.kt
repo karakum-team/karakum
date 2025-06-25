@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.structure
 
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import typescript.Node
 
 @JsPlainObject

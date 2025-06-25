@@ -8,7 +8,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStra
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import seskar.js.JsValue
 import typescript.*
 

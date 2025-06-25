@@ -6,8 +6,8 @@ import io.github.sgrishchenko.karakum.structure.InputStructureItemMeta
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
 import js.objects.recordOf
+import kotlinx.js.JsPlainObject
 import typescript.*
 
 @JsPlainObject

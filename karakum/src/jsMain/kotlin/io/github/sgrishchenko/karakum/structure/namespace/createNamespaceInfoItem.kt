@@ -6,8 +6,8 @@ import io.github.sgrishchenko.karakum.structure.StructureItem
 import io.github.sgrishchenko.karakum.structure.module.extractModuleName
 import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
 import js.objects.Object
+import kotlinx.js.JsPlainObject
 import typescript.*
 
 @JsPlainObject

@@ -4,9 +4,9 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.Many
 import io.github.sgrishchenko.karakum.util.Rule
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
 import js.objects.ReadonlyRecord
 import js.objects.Record
+import kotlinx.js.JsPlainObject
 import seskar.js.JsValue
 import typescript.CompilerOptions
 

@@ -5,7 +5,7 @@ import io.github.sgrishchenko.karakum.util.glob
 import io.github.sgrishchenko.karakum.util.toModuleName
 import js.array.ReadonlyArray
 import js.import.import
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 
 @JsPlainObject
 external interface ExtensionConfiguration {

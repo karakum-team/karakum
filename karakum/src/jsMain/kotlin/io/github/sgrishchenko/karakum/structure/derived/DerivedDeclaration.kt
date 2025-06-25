@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.structure.derived
 
 import io.github.sgrishchenko.karakum.structure.StructureItem
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import typescript.ModuleDeclaration
 
 @JsExport

@@ -6,7 +6,7 @@ import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import typescript.*
 import kotlin.contracts.contract
 

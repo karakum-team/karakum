@@ -7,9 +7,9 @@ import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
 import js.objects.ReadonlyRecord
 import js.symbol.Symbol
+import kotlinx.js.JsPlainObject
 import typescript.Node
 import typescript.SyntaxKind
 

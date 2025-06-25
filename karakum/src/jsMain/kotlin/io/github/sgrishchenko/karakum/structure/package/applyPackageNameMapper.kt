@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum.structure.`package`
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.util.applyMapper
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import node.path.path
 
 @JsPlainObject

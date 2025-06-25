@@ -3,11 +3,11 @@ package io.github.sgrishchenko.karakum.schema
 import js.import.import
 import js.json.parse
 import js.json.stringify
-import js.objects.JsPlainObject
 import js.objects.Object
 import js.objects.ReadonlyRecord
 import js.objects.recordOf
 import js.reflect.Reflect
+import kotlinx.js.JsPlainObject
 import node.buffer.BufferEncoding.Companion.utf8
 import node.fs.readFile
 import node.fs.rm

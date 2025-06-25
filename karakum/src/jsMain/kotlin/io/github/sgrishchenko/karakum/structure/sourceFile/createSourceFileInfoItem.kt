@@ -8,7 +8,7 @@ import io.github.sgrishchenko.karakum.structure.`package`.dirNameToPackage
 import io.github.sgrishchenko.karakum.structure.removePrefix
 import io.github.sgrishchenko.karakum.util.camelize
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import node.path.path
 
 @JsPlainObject

@@ -8,9 +8,9 @@ import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileNam
 import io.github.sgrishchenko.karakum.util.normalizeItems
 import io.github.sgrishchenko.karakum.util.toPosix
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
 import js.objects.Object
 import js.objects.ReadonlyRecord
+import kotlinx.js.JsPlainObject
 import node.path.path
 
 @JsPlainObject

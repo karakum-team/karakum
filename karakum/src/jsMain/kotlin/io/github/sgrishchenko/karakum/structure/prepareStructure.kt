@@ -6,7 +6,7 @@ import io.github.sgrishchenko.karakum.structure.bundle.createBundleInfoItem
 import io.github.sgrishchenko.karakum.structure.module.applyModuleNameMapper
 import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper
 import js.array.ReadonlyArray
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import typescript.*
 
 @JsPlainObject

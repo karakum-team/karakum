@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
-import js.objects.JsPlainObject
+import kotlinx.js.JsPlainObject
 import typescript.*
 
 @JsPlainObject
