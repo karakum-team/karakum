@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
-import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.structure.import.removeUnusedImports
 import io.github.sgrishchenko.karakum.structure.`package`.createPackageName
 import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileName
@@ -18,7 +17,6 @@ fun createTargetFile(
     val hasRuntime = item.hasRuntime
     val imports = item.imports
 
-    val granularity  = configuration.granularity
     val disclaimer = configuration.disclaimer
 
     val packageName = createPackageName(packageChunks)
@@ -34,16 +32,10 @@ fun createTargetFile(
 
     val jsModule = if (hasRuntime) "@file:JsModule(\"${moduleName}\")" else ""
     val jsQualifier = if (hasRuntime && qualifier != null) "@file:JsQualifier(\"${qualifier}\")" else ""
-    val typeAliasSuppress = if (granularity == Granularity.topLevel) "" else """
-@file:Suppress(
-    "NON_EXTERNAL_DECLARATION_IN_INAPPROPRIATE_FILE",
-)
-    """.trim()
 
     val fileAnnotations = arrayOf(
         jsModule,
         jsQualifier,
-        typeAliasSuppress
     )
         .filter { it.isNotEmpty() }
         .joinToString(separator = "\n")

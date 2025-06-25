@@ -39,7 +39,6 @@ internal suspend fun cli() {
 
 @JsExport
 @JsName("cli")
-@Suppress("NON_EXPORTABLE_TYPE")
 fun cliAsync(): Promise<Unit> =
     IsolatedCoroutineScope()
         .promise { cli() }

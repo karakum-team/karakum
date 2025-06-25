@@ -271,7 +271,6 @@ suspend fun generate(block: MutableConfiguration.() -> Unit) {
 
 @JsExport
 @JsName("generate")
-@Suppress("NON_EXPORTABLE_TYPE")
 fun generateAsync(partialConfiguration: PartialConfiguration): Promise<Unit> =
     IsolatedCoroutineScope()
         .promise { generate(partialConfiguration) }
