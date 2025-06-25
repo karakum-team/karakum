@@ -39,11 +39,11 @@ class AccessorsPlugin : Plugin {
             var accessorInfo = accessors[symbol] ?: emptyAccessorInfo()
 
             if (isGetAccessor(node)) {
-                accessorInfo = accessorInfo.copy(getter = node)
+                accessorInfo = AccessorInfo.copy(accessorInfo, getter = node)
             }
 
             if (isSetAccessor(node)) {
-                accessorInfo = accessorInfo.copy(setter = node)
+                accessorInfo = AccessorInfo.copy(accessorInfo, setter = node)
             }
 
             accessors[symbol] = accessorInfo

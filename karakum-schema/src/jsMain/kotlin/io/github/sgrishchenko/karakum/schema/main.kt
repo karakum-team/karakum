@@ -61,9 +61,9 @@ suspend fun main() {
     val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, utf8))
 
     val definitions = recordOf(
-        "Granularity" to granularitySchema.copy(`$schema` = undefined),
-        "NamespaceStrategy" to namespaceStrategySchema.copy(`$schema` = undefined),
-        "ConflictResolutionStrategy" to conflictResolutionStrategySchema.copy(`$schema` = undefined),
+        "Granularity" to Schema.copy(granularitySchema, `$schema` = undefined),
+        "NamespaceStrategy" to Schema.copy(namespaceStrategySchema, `$schema` = undefined),
+        "ConflictResolutionStrategy" to Schema.copy(conflictResolutionStrategySchema, `$schema` = undefined),
     )
 
     val resultConfigurationSchema = Object.assign(
