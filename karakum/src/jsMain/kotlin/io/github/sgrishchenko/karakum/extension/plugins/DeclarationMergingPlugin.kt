@@ -9,7 +9,7 @@ import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.JsArrays
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import js.symbol.Symbol
 import typescript.*
 import kotlin.contracts.contract
@@ -21,7 +21,7 @@ val declarationMergingServiceKey = Symbol()
 class DeclarationMergingService @JsExport.Ignore constructor(private val program: Program) {
     private val coveredSymbols = mutableSetOf<typescript.Symbol>()
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private val printer = createPrinter(jso {
+    private val printer = createPrinter(unsafeJso {
         removeComments = true
         newLine = NewLineKind.LineFeed
     })

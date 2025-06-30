@@ -4,8 +4,11 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.array.ReadonlyArray
+import js.array.component1
+import js.array.component2
 import js.array.tupleOf
 import js.collections.JsMap
+import js.iterable.iterator
 import js.symbol.Symbol
 import typescript.*
 

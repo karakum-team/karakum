@@ -1,6 +1,8 @@
 package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
+import js.array.component1
+import js.array.component2
 import js.objects.Object
 
 fun generateImports(

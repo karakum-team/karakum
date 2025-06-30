@@ -5,6 +5,8 @@ import io.github.sgrishchenko.karakum.util.recordOrNull
 import io.github.sgrishchenko.karakum.util.singleOrNull
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
+import js.array.component1
+import js.array.component2
 import js.objects.Object
 import js.objects.recordOf
 import typescript.*

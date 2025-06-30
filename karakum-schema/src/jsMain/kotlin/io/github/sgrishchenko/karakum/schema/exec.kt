@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.schema
 
+import js.promise.await
 import node.childProcess.ExecException
 import node.childProcess.exec
 import node.util.promisify

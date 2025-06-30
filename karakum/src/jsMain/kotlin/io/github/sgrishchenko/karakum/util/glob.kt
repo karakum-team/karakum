@@ -2,7 +2,8 @@ package io.github.sgrishchenko.karakum.util
 
 import js.array.JsArrays
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
+import js.promise.await
 import node.fs.GlobOptionsWithFileTypes
 import node.path.path
 
@@ -12,7 +13,7 @@ suspend fun glob(
     ignore: ReadonlyArray<String> = emptyArray()
 ): ReadonlyArray<String> {
     val fileNames = JsArrays.fromAsync(
-        node.fs.glob(patterns, jso<GlobOptionsWithFileTypes> {
+        node.fs.glob(patterns, unsafeJso<GlobOptionsWithFileTypes> {
             this.cwd = cwd
             withFileTypes = true
             excludeWithFileTypes = { file ->

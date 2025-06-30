@@ -5,7 +5,7 @@ import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.json.parse
-import js.objects.jso
+import js.objects.unsafeJso
 import js.promise.Promise
 import node.buffer.BufferEncoding.Companion.utf8
 import node.fs.readFile
@@ -15,10 +15,10 @@ import node.util.ParseArgsOptionConfigType.Companion.string
 import node.util.parseArgs
 
 internal suspend fun cli() {
-    val config = jso<ParseArgsConfig> {
+    val config = unsafeJso<ParseArgsConfig> {
         args = process.argv.drop(2).toTypedArray()
-        options = jso {
-            this["config"] = jso {
+        options = unsafeJso {
+            this["config"] = unsafeJso {
                 type = string
             }
         }

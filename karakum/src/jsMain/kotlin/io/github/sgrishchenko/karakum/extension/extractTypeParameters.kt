@@ -3,9 +3,7 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.traverse
-import js.array.Tuple2
-import js.array.ReadonlyArray
-import js.array.tupleOf
+import js.array.*
 import typescript.*
 
 typealias TypeParameterExtractionResult = ReadonlyArray<Tuple2<Node, Declaration>>

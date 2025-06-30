@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum
 import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import js.array.ReadonlyArray
 import js.objects.Object
-import js.objects.jso
+import js.objects.unsafeJso
 import node.buffer.BufferEncoding
 import node.fs.*
 import node.path.path
@@ -37,7 +37,7 @@ suspend fun generateTests(
     }
 
     if (isUpdate) {
-        rm(actualOutputDirName, jso<RmOptions> {
+        rm(actualOutputDirName, unsafeJso<RmOptions> {
             recursive = true
             force = true
         })

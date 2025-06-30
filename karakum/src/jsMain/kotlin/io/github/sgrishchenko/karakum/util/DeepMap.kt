@@ -1,8 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
-import js.array.Tuple2
-import js.array.ReadonlyArray
-import js.array.tupleOf
+import js.array.*
 
 private class DeepMapEntry<K, V> {
     var value: V? = null

@@ -7,7 +7,7 @@ import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.setParentNodes
-import js.objects.jso
+import js.objects.unsafeJso
 import js.symbol.Symbol
 import typescript.*
 
@@ -17,7 +17,7 @@ val typeScriptServiceKey = Symbol()
 @JsExport
 class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private val printer = createPrinter(jso {
+    private val printer = createPrinter(unsafeJso {
         removeComments = true
         newLine = NewLineKind.LineFeed
     })

@@ -20,7 +20,7 @@ import js.array.ReadonlyArray
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.objects.Object
-import js.objects.jso
+import js.objects.unsafeJso
 import js.promise.Promise
 import node.fs.*
 import node.path.path
@@ -73,7 +73,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val cwd = configuration.cwd
 
     val preparedCompilerOptions = Object.assign(
-        jso {
+        unsafeJso {
             lib = arrayOf("lib.esnext.d.ts")
             types = emptyArray()
             strict = true
@@ -90,12 +90,12 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     }
 
     if (outputFileName != null) {
-        rm(outputFileName, jso<RmOptions> {
+        rm(outputFileName, unsafeJso<RmOptions> {
             recursive = true
             force = true
         })
     } else {
-        rm(output, jso<RmOptions> {
+        rm(output, unsafeJso<RmOptions> {
             recursive = true
             force = true
         })
