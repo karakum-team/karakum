@@ -28,7 +28,6 @@ val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, rende
             val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
             """
-@seskar.js.JsNativeInvoke
 ${ifPresent(inheritanceModifier) { "$it "}}operator fun ${ifPresent(typeParameters) { "<${it}>" }} invoke(${parameters})${ifPresent(returnType) { ": $it" }}
             """.trim()
         }

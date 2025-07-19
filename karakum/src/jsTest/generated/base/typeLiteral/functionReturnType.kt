@@ -18,7 +18,6 @@ fun getDerivedStateFromProps(): MyInterfaceWithLiteralInReturnGetDerivedStateFro
 }
 
 external interface MapRoutePropertiesFunction {
-@seskar.js.JsNativeInvoke
 operator fun  invoke(route: MapRoutePropertiesFunctionRoute): MapRoutePropertiesFunctionResult
 }
 external interface UseRevalidatorResult {

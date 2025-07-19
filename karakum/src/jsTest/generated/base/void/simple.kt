@@ -7,17 +7,14 @@ package sandbox.base.void
 import js.promise.Promise
 
 external interface InterfaceWithVoidSignatures {
-@seskar.js.JsNativeInvoke
 operator fun  invoke(): Unit
 /* new (): void; */
 fun someMethod(): Unit
 }
 
 external interface TypeWithVoidSignatures {
-@seskar.js.JsNativeGetter
 operator fun get(key: String): js.core.Void?
 
-@seskar.js.JsNativeSetter
 operator fun set(key: String, value: js.core.Void?)
 }
 
