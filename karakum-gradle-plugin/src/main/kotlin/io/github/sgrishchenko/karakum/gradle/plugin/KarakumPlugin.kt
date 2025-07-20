@@ -65,7 +65,7 @@ class KarakumPlugin : Plugin<Project> {
             args(
                 "--format",
                 "--reporter=plain,output=${reporterOutput.get().asFile.absolutePath}",
-                "${karakum.output.asFile.get().absolutePath}/**/*.kt",
+                "${karakum.output.asFile.get().absoluteFile.invariantSeparatorsPath}/**/*.kt",
             )
             // do not report violations that cannot be auto-corrected
             isIgnoreExitValue = true
