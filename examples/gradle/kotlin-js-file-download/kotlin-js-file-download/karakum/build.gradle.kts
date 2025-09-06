@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.73"
+    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.76"
 }
 
 repositories {
