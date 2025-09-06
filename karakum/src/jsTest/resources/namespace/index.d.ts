@@ -48,3 +48,7 @@ declare module "will-be-mapped" {
         const nestedMappedValue: number
     }
 }
+
+declare module "will-be-erased" {
+    const topLevelConst: number
+}

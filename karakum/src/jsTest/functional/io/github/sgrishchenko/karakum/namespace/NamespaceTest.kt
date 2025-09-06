@@ -22,13 +22,15 @@ class NamespaceTest {
                 "will/be/mapped" to "was/mapped/main"
             )
             moduleNameMapper = recordOf(
-                "will-be-mapped#AndThis" to "was-mapped#Nested"
+                "will-be-mapped#AndThis" to "was-mapped#Nested",
+                "will-be-erased" to ""
             )
             namespaceStrategy = recordOf(
                 "package-namespace.ObjectNamespace" to NamespaceStrategy.`object`,
                 "package-namespace" to NamespaceStrategy.`package`,
                 "IgnoreNamespace" to NamespaceStrategy.ignore,
                 "will-be-mapped" to NamespaceStrategy.`package`,
+                "will-be-erased" to NamespaceStrategy.`package`,
 
                 "import-provider" to NamespaceStrategy.`package`,
                 "other-import-provider" to NamespaceStrategy.`package`,

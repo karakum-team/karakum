@@ -30,7 +30,7 @@ fun createTargetFile(
         .filter { it.isNotEmpty() }
         .joinToString(separator = "\n")
 
-    val jsModule = if (hasRuntime) "@file:JsModule(\"${moduleName}\")" else ""
+    val jsModule = if (hasRuntime && moduleName.isNotEmpty()) "@file:JsModule(\"${moduleName}\")" else ""
     val jsQualifier = if (hasRuntime && qualifier != null) "@file:JsQualifier(\"${qualifier}\")" else ""
 
     val fileAnnotations = arrayOf(
