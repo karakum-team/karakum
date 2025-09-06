@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx --node-options '--experimental-strip-types' -- karakum --config karakum.config.json",
+    "start": "karakum --config karakum.config.json",
     "check": "tsc --noEmit --skipLibCheck false"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
-    "karakum": "^1.0.0-alpha.73",
+    "karakum": "^1.0.0-alpha.76",
     "typescript": "^5.8.3"
   },
   "dependencies": {
