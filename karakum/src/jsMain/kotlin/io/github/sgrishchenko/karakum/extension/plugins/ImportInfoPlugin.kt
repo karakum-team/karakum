@@ -43,7 +43,7 @@ class ImportInfoPlugin(program: Program, importInfo: ImportInfo) : Plugin {
 
     override fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (isImportDeclaration(node)) {
-            val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+            val checkCoverageService = context.lookupService(checkCoverageServiceKey)
             checkCoverageService?.deepCover(node)
 
             return ""

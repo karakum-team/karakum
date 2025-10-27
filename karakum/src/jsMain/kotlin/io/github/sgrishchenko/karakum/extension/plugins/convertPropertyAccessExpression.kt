@@ -6,7 +6,7 @@ import typescript.isPropertyAccessExpression
 val convertPropertyAccessExpression = createPlugin plugin@{ node, context, render ->
     if (!isPropertyAccessExpression(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     "${render(node.expression)}.${render(node.name)}"

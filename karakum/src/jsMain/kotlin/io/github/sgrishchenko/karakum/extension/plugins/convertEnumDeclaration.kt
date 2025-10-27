@@ -10,16 +10,16 @@ import typescript.isEnumDeclaration
 val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isEnumDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    val declarationMergingService = context.lookupService(declarationMergingServiceKey)
     if (declarationMergingService?.isCovered(node) == true) return@plugin ""
     declarationMergingService?.cover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
 
     val name = render(node.name)
 

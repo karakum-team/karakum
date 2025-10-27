@@ -8,11 +8,11 @@ import typescript.isCallSignatureDeclaration
 val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isCallSignatureDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
 
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
     val typeParameters = node.typeParameters
         ?.asArray()

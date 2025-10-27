@@ -7,7 +7,7 @@ import typescript.isModuleBlock
 val convertModuleBlock = createPlugin plugin@{ node, context, render ->
     if (!isModuleBlock(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     node.statements.asArray().joinToString(separator = "\n") { render(it) }

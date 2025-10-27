@@ -65,8 +65,8 @@ class CheckCoveragePlugin : Plugin {
     private val checkCoverageService = CheckCoverageService()
 
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
-        val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        val configurationService = context.lookupService(configurationServiceKey)
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         val result = this.checkCoverageService.emit{ uncoveredNode ->
             if (configurationService?.configuration?.verbose == true) {

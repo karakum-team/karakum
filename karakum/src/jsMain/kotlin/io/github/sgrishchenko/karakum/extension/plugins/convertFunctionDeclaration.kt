@@ -10,7 +10,7 @@ import typescript.isFunctionDeclaration
 val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isFunctionDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
@@ -22,8 +22,8 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     // skip body
     node.body?.let { checkCoverageService?.deepCover(it) }
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
     val name = node.name?.let { render(it) } ?: "Anonymous"
 

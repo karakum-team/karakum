@@ -57,14 +57,9 @@ class AnonymousDeclarationPlugin(
     override fun traverse(node: Node, context: Context) = Unit
 
     override fun render(node: Node, context: Context, next: Render<Node>): String? {
-        val nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
-        if (nameResolverService == null) error("AnonymousDeclarationPlugin can't work without NameResolverService")
-
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-        if (typeScriptService == null) error("AnonymousDeclarationPlugin can't work without TypeScriptService")
-
-        val annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
-        if (annotationService == null) error("AnonymousDeclarationPlugin can't work without AnnotationService")
+        val nameResolverService = context.requireService(nameResolverServiceKey)
+        val typeScriptService = context.requireService(typeScriptServiceKey)
+        val annotationService = context.requireService(annotationServiceKey)
 
         val annotations = annotationService.resolveAnonymousAnnotations(node, context)
 

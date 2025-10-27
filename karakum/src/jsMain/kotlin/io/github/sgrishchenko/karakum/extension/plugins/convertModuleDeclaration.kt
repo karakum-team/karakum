@@ -7,11 +7,11 @@ import typescript.isModuleDeclaration
 val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isModuleDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
     val namespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy(node)
 

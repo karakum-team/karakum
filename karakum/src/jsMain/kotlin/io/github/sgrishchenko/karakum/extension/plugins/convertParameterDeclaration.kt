@@ -73,16 +73,16 @@ fun convertParameterDeclarations(
     val template = configuration.template
     val initialSignature = extractSignature(node)
 
-    val commentService = context.lookupService<CommentService>(commentServiceKey)
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val commentService = context.lookupService(commentServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     if (strategy == function) {
-        val annotationService = context.lookupService<AnnotationService>(annotationServiceKey)
+        val annotationService = context.lookupService(annotationServiceKey)
         val annotations = annotationService?.resolveAnnotations(node, context) ?: emptyArray()
         val leadingComment = commentService?.renderLeadingComments(node) ?: ""
         val delimiter = "\n\n${leadingComment}${annotations.joinToString(separator = "\n")}"
 
-        val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+        val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
         val signatures = expandUnions(initialSignature, context)
 
         return signatures.joinToString(separator = delimiter) { signature ->
@@ -152,7 +152,7 @@ fun convertParameterDeclarationWithFixedType(
     val strategy = configuration.strategy
     val inheritanceModifier = configuration.inheritanceModifier
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
     node.dotDotDotToken?.let { checkCoverageService?.cover(it) }
@@ -222,7 +222,7 @@ private fun expandUnions(
 ): ReadonlyArray<Signature> {
     val currentSignatures = mutableListOf(initialSignature)
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
 
     for (parameterIndex in initialSignature.indices) {
         var signatureIndex = 0

@@ -6,7 +6,7 @@ import typescript.isQualifiedName
 val convertQualifiedName = createPlugin plugin@{ node, context, render ->
     if (!isQualifiedName(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     "${render(node.left)}.${render(node.right)}"

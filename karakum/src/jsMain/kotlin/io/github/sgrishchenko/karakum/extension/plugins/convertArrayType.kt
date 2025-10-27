@@ -12,7 +12,7 @@ val convertArrayType = createPlugin plugin@{ node, context, render ->
     ) {
         val type = node.type
         if (isArrayTypeNode(type)) {
-            val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+            val checkCoverageService = context.lookupService(checkCoverageServiceKey)
             checkCoverageService?.cover(node)
             checkCoverageService?.cover(type)
 
@@ -21,7 +21,7 @@ val convertArrayType = createPlugin plugin@{ node, context, render ->
     }
 
     if (isArrayTypeNode(node)) {
-        val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
         return@plugin "js.array.ReadonlyArray<${render(node.elementType)}>"

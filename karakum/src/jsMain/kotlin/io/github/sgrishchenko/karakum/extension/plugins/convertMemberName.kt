@@ -53,7 +53,7 @@ val convertMemberName = createPlugin plugin@{ node, context, _ ->
             || (isGetAccessor(parent) && parent.name === node)
             || (isSetAccessor(parent) && parent.name === node)
         ) {
-            val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+            val checkCoverageService = context.lookupService(checkCoverageServiceKey)
             checkCoverageService?.cover(node)
 
             if (isNumericLiteral(node)) return@plugin "`${node.text}`"

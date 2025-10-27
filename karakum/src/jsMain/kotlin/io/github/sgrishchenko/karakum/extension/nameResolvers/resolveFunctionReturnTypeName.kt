@@ -9,7 +9,7 @@ import typescript.Node
 import typescript.isFunctionDeclaration
 
 val resolveFunctionReturnTypeName: NameResolver = nameResolver@{ node, context ->
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }

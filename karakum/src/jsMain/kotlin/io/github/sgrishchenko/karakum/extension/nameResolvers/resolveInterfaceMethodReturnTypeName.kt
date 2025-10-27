@@ -11,7 +11,7 @@ import typescript.isInterfaceDeclaration
 import typescript.isMethodSignature
 
 val resolveInterfaceMethodReturnTypeName: NameResolver = nameResolver@{ node, context ->
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }

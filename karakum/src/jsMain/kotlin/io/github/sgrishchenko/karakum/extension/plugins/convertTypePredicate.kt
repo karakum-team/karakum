@@ -6,10 +6,10 @@ import typescript.isTypePredicateNode
 val convertTypePredicate = createPlugin plugin@{ node, context, _ ->
     if (!isTypePredicateNode(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.deepCover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     // TODO: support contracts
 

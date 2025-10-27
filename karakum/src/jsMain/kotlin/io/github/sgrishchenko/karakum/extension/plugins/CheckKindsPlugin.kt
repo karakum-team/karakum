@@ -94,7 +94,7 @@ class CheckKindsPlugin : Plugin {
     override fun render(node: Node, context: Context, next: Render<Node>) = null
 
     override fun traverse(node: Node, context: Context){
-        val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
+        val configurationService = context.lookupService(configurationServiceKey)
 
         if (
             configurationService?.configuration?.verbose == true

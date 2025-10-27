@@ -8,14 +8,14 @@ import typescript.SyntaxKind
 import typescript.isMappedTypeNode
 
 fun convertMappedTypeBody(node: MappedTypeNode, context: Context, render: Render<Node>): String {
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val getterInheritanceModifier = inheritanceModifierService?.resolveGetterInheritanceModifier(node, context)
     val setterInheritanceModifier = inheritanceModifierService?.resolveSetterInheritanceModifier(node, context)
 
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
     val injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
     val readonlyToken = node.readonlyToken
@@ -54,12 +54,12 @@ fun convertMappedType (
     context: Context,
     render: Render<Node>,
 ): String {
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
     val heritageInjections = injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
     val namespace = typeScriptService?.findClosestNamespace(node)

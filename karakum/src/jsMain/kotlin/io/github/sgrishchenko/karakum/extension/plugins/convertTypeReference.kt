@@ -6,7 +6,7 @@ import typescript.isTypeReferenceNode
 val convertTypeReference = createPlugin plugin@{ node, context, render ->
     if (!isTypeReferenceNode(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     render(node.typeName) + convertNodeWithTypeArguments(node, render)

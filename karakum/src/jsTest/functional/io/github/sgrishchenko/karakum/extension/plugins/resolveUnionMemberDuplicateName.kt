@@ -8,8 +8,8 @@ import typescript.isStringLiteral
 import typescript.isTypeAliasDeclaration
 import typescript.isUnionTypeNode
 
-val resolveUnionMemberDuplicateName: NameResolver =  nameResolver@{ node, context ->
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+val resolveUnionMemberDuplicateName: NameResolver = nameResolver@{ node, context ->
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()
     }

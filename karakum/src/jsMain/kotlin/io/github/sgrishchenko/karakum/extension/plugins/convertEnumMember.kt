@@ -6,7 +6,7 @@ import typescript.isEnumMember
 val convertEnumMember = createPlugin plugin@{ node, context, render ->
     if (!isEnumMember(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     // skip initializer

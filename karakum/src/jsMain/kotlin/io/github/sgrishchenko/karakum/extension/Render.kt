@@ -83,7 +83,7 @@ fun renderResolvedNullable(
 }
 
 fun createRender(context: Context, plugins: ReadonlyArray<Plugin>): Render<Node> {
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     fun render(node: Node, parentNode: Node?, parentIndex: Int): String {
         for ((index, plugin) in plugins.withIndex()) {

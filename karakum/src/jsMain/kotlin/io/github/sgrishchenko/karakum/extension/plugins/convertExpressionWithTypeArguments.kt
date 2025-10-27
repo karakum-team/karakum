@@ -6,7 +6,7 @@ import typescript.isExpressionWithTypeArguments
 val convertExpressionWithTypeArguments = createPlugin plugin@{ node, context, render ->
     if (!isExpressionWithTypeArguments(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     render(node.expression) + convertNodeWithTypeArguments(node, render)

@@ -34,7 +34,7 @@ private fun resolveConstructors(
 
     val parentReference = heritageClause.types.asArray()[0].expression
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
     val typeChecker = typeScriptService?.program?.getTypeChecker()
     val parentSymbol = typeChecker?.getSymbolAtLocation(parentReference)
     if (parentSymbol == null) return emptyArray()
@@ -42,7 +42,7 @@ private fun resolveConstructors(
     val parentDeclaration = parentSymbol.valueDeclaration
     if (parentDeclaration == null || !isClassDeclaration(parentDeclaration)) return emptyArray()
 
-    val declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    val declarationMergingService = context.lookupService(declarationMergingServiceKey)
 
     val mergedMembers = declarationMergingService
         ?.getMembers(parentDeclaration, context)
@@ -54,16 +54,16 @@ private fun resolveConstructors(
 val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isClassDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
+    val declarationMergingService = context.lookupService(declarationMergingServiceKey)
     declarationMergingService?.cover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
 
     val exportModifier = node.modifiers?.asArray()?.find { it.kind === SyntaxKind.ExportKeyword }
     if (exportModifier != null) checkCoverageService?.cover(exportModifier)

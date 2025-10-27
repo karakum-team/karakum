@@ -106,7 +106,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         val exports = this.getUniqMembers(symbol.exports)
             .filter { member -> !isTypeParameterDeclaration(member) }
 
-        val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+        val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
         return (members + exports).filter { member ->
             val parent = member.parent

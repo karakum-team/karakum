@@ -12,7 +12,7 @@ fun convertLiteral(
     val primitivePlugin = convertPrimitive(predicate, render)
 
     return createPlugin plugin@{ node, context, pluginRender ->
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         if (isPrefixUnaryExpression(node) && predicate(node.operand)) {
             val result = primitivePlugin.render(node.operand, context, pluginRender)

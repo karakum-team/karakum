@@ -11,7 +11,7 @@ val convertTypeOperator = createPlugin plugin@{ node, context, _ ->
         node.operator == SyntaxKind.UniqueKeyword
         && node.type.kind == SyntaxKind.SymbolKeyword
     ) {
-        val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
         checkCoverageService?.cover(node.type)
 

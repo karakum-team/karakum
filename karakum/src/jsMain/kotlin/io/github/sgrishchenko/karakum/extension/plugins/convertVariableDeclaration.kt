@@ -9,16 +9,16 @@ import typescript.isVariableDeclaration
 val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isVariableDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     // skip initializer
     node.initializer?.let { checkCoverageService?.cover(it) }
 
-    val commentService = context.lookupService<CommentService>(commentServiceKey)
-    val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+    val commentService = context.lookupService(commentServiceKey)
+    val configurationService = context.lookupService(configurationServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
     val modifier = if (node.parent.flags.toString().toInt() and NodeFlags.Const.toString().toInt() != 0) {
         "val "

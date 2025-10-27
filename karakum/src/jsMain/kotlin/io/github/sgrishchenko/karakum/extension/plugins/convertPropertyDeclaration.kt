@@ -11,11 +11,11 @@ import typescript.isPropertyDeclaration
 val convertPropertyDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isPropertyDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
 
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 

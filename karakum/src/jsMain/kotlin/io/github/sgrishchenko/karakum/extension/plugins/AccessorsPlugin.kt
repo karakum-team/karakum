@@ -24,7 +24,7 @@ class AccessorsPlugin : Plugin {
 
     override fun traverse(node: Node, context: Context) {
         if (isGetAccessor(node) || isSetAccessor(node)) {
-            val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+            val typeScriptService = context.lookupService(typeScriptServiceKey)
             val typeChecker = typeScriptService?.program?.getTypeChecker()
 
             val name = when {
@@ -52,9 +52,9 @@ class AccessorsPlugin : Plugin {
 
     override fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (isSetAccessor(node) || isGetAccessor(node)) {
-            val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-            val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-            val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+            val checkCoverageService = context.lookupService(checkCoverageServiceKey)
+            val typeScriptService = context.lookupService(typeScriptServiceKey)
+            val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
             val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
 

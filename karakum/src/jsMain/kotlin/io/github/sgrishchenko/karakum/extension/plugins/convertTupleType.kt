@@ -9,8 +9,8 @@ import typescript.isTupleTypeNode
 val convertTupleType = createPlugin plugin@{ node, context, render ->
     if (!isTupleTypeNode(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     checkCoverageService?.cover(node)
 

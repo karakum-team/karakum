@@ -63,8 +63,7 @@ private fun extractUnionMemberName(node: LiteralTypeNode): String? {
 }
 
 private fun resolveUnionMemberName(node: LiteralTypeNode, context: Context): String {
-    val nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
-    if (nameResolverService == null) error("AnonymousDeclarationPlugin can't work without NameResolverService")
+    val nameResolverService = context.requireService(nameResolverServiceKey)
 
     val resolvedName = nameResolverService.tryResolveName(node, context)
     if (resolvedName != null) return resolvedName
@@ -142,12 +141,12 @@ fun convertLiteralUnionType(
     context: Context,
     render: Render<Node>,
 ): LiteralUnionRenderResult {
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
 
     val types = flatUnionTypes(node, context)
 

@@ -10,11 +10,11 @@ import typescript.isIndexSignatureDeclaration
 val convertIndexedSignatureDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isIndexSignatureDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
 
     checkCoverageService?.cover(node)
 
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
     val getterInheritanceModifier = inheritanceModifierService?.resolveGetterInheritanceModifier(node, context)
     val setterInheritanceModifier = inheritanceModifierService?.resolveSetterInheritanceModifier(node, context)

@@ -26,13 +26,13 @@ fun convertInheritedTypeLiteral(
     context: Context,
     render: Render<Node>,
 ): String {
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
-    val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
+    val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
+    val injectionService = context.lookupService(injectionServiceKey)
 
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     val injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)

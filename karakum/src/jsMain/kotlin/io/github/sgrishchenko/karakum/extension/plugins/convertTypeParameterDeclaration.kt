@@ -7,10 +7,10 @@ import typescript.isTypeParameterDeclaration
 val convertTypeParameterDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isTypeParameterDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val varianceModifierService = context.lookupService<VarianceModifierService>(varianceModifierServiceKey)
+    val varianceModifierService = context.lookupService(varianceModifierServiceKey)
 
     val name = render(node.name)
 

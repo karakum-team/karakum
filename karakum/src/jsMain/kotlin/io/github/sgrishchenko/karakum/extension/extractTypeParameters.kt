@@ -13,7 +13,7 @@ fun extractTypeParameters(
     node: Node,
     context: Context
 ): TypeParameterExtractionResult {
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     val result = mutableListOf<Tuple2<Node, Declaration>>()
 

@@ -43,9 +43,9 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     }
 
     fun register(union: UnionTypeNode, reference: TypeReferenceNode) {
-        val nameResolverService = context.lookupService<NameResolverService>(nameResolverServiceKey)
+        val nameResolverService = context.lookupService(nameResolverServiceKey)
 
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
         val typeChecker = typeScriptService?.program?.getTypeChecker()
 
         val symbol = typeChecker?.getSymbolAtLocation(reference.typeName)
@@ -81,7 +81,7 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     private fun getSymbol(node: NamedDeclaration): typescript.Symbol? {
         val name = node.name ?: return null
 
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
         val typeChecker = typeScriptService?.program?.getTypeChecker()
         return typeChecker?.getSymbolAtLocation(name)
     }
@@ -102,7 +102,7 @@ class UnionInjection : Injection {
 
             val name = context.resolveName(node)
 
-            val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+            val injectionService = context.lookupService(injectionServiceKey)
             val heritageInjections =
                 injectionService?.resolveInjections(node, InjectionType.HERITAGE_CLAUSE, context, render)
 
@@ -168,7 +168,7 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
                     ?.filter { it.isNotEmpty() }
                     ?.joinToString(separator = ", ")
 
-                val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+                val injectionService = context.lookupService(injectionServiceKey)
                 val heritageInjections =
                     injectionService?.resolveInjections(node.type, InjectionType.HERITAGE_CLAUSE, context, next)
 
@@ -202,7 +202,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
 
                 val type = next(node.type)
 
-                val injectionService = context.lookupService<InjectionService>(injectionServiceKey)
+                val injectionService = context.lookupService(injectionServiceKey)
                 val heritageInjections =
                     injectionService?.resolveInjections(node.type, InjectionType.HERITAGE_CLAUSE, context, next)
 
@@ -278,7 +278,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
     }
 
     override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
-        val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         for ((symbol, parentNames) in unionService?.uncoveredUnionParents ?: JsMap()) {
             @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")

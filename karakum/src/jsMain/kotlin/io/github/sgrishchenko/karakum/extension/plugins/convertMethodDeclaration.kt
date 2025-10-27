@@ -9,12 +9,12 @@ import typescript.isMethodDeclaration
 val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isMethodDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     checkCoverageService?.cover(node)
 
-    val inheritanceModifierService = context.lookupService<InheritanceModifierService>(inheritanceModifierServiceKey)
+    val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
     val name = escapeIdentifier(render(node.name))
     val annotation = createKebabAnnotation(node.name)

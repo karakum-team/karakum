@@ -6,8 +6,8 @@ import typescript.isIndexedAccessTypeNode
 val convertIndexedAccessType = createPlugin plugin@{ node, context, render ->
     if (!isIndexedAccessTypeNode(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     checkCoverageService?.deepCover(node)
 

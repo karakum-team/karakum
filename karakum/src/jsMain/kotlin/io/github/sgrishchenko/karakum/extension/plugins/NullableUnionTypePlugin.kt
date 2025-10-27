@@ -29,7 +29,7 @@ fun isPossiblyNullableType(node: TypeNode, context: Context): Boolean {
         )
     }
 
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     val typeChecker = typeScriptService?.program?.getTypeChecker()
 
@@ -45,7 +45,7 @@ fun isPossiblyNullableType(node: TypeNode, context: Context): Boolean {
 }
 
 private fun resolveTypeIfNeeded(node: TypeNode, context: Context): Node {
-    val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
     if (isIndexedAccessTypeNode(node)) {
         val resolvedType = typeScriptService?.resolveType(node)
@@ -102,7 +102,7 @@ fun flatUnionTypes(node: UnionTypeNode, context: Context): ReadonlyArray<TypeNod
 
     for (type in node.types) {
         if (isIndexedAccessTypeNode(type)) {
-            val typeScriptService = context.lookupService<TypeScriptService>(typeScriptServiceKey)
+            val typeScriptService = context.lookupService(typeScriptServiceKey)
 
             val resolvedType = typeScriptService?.resolveType(type)
 
@@ -131,7 +131,7 @@ class NullableUnionTypePlugin : Plugin {
     override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
     override fun render(node: Node, context: Context, next: Render<Node>): String? {
-        val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+        val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
         if (isNullableOnlyUnionType(node, context)) {

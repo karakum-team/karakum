@@ -17,14 +17,9 @@ fun generateDerivedDeclarations(
     declarations: ReadonlyArray<DerivedDeclaration>,
     context: Context,
 ): ReadonlyArray<DerivedFile> {
-    val configurationService = context.lookupService<ConfigurationService>(configurationServiceKey)
-    if (configurationService == null) error("ConfigurationService required")
-
-    val importInfoService = context.lookupService<ImportInfoService>(importInfoServiceKey)
-    if (importInfoService == null) error("NamespaceInfoService required")
-
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
-    if (namespaceInfoService == null) error("NamespaceInfoService required")
+    val configurationService = context.requireService(configurationServiceKey)
+    val importInfoService = context.requireService(importInfoServiceKey)
+    val namespaceInfoService = context.requireService(namespaceInfoServiceKey)
 
     val configuration = configurationService.configuration
     val granularity = configuration.granularity

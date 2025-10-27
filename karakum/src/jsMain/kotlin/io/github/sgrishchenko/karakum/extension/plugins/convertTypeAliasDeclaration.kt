@@ -7,7 +7,7 @@ import typescript.*
 val convertTypeAliasDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isTypeAliasDeclaration(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }

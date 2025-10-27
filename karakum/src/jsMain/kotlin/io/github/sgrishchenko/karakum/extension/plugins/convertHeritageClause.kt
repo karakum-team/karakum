@@ -7,7 +7,7 @@ import typescript.isHeritageClause
 val convertHeritageClause = createPlugin plugin@{ node, context, render ->
     if (!isHeritageClause(node)) return@plugin null
 
-    val checkCoverageService = context.lookupService<CheckCoverageService>(checkCoverageServiceKey)
+    val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     node.types.asArray()
