@@ -95,7 +95,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
     fun getMembers(
         node: NamedDeclaration,
         context: Context,
-    ): ReadonlyArray<Declaration>? {
+    ): ReadonlyArray<NamedDeclaration>? {
         val symbol = this.getSymbol(node)
         if (symbol == null) return null
 
@@ -132,16 +132,18 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         }.toTypedArray()
     }
 
-    private fun getUniqMembers(symbolTable: SymbolTable?): ReadonlyArray<Declaration> {
+    private fun getUniqMembers(symbolTable: SymbolTable?): ReadonlyArray<NamedDeclaration> {
         val typeChecker = this.program.getTypeChecker()
 
         return (symbolTable?.let { JsArrays.from(it.values()) } ?: emptyArray())
             .flatMap { symbol ->
                 val declarations = symbol.declarations ?: emptyArray()
                 val firstDeclaration = declarations.getOrNull(0) ?: return@flatMap emptyList()
-                if (!isSignatureDeclaration(firstDeclaration)) return@flatMap listOf(firstDeclaration)
 
-                val declarationMap = declarations.fold(DeepMap<Any, Declaration>()) { acc, declaration ->
+                @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+                if (!isSignatureDeclaration(firstDeclaration)) return@flatMap listOf(firstDeclaration as NamedDeclaration)
+
+                val declarationMap = declarations.fold(DeepMap<Any, NamedDeclaration>()) { acc, declaration ->
                     if (!isSignatureDeclaration(declaration)) return@fold acc
 
                     val parameterSymbols = declaration.parameters.asArray()
