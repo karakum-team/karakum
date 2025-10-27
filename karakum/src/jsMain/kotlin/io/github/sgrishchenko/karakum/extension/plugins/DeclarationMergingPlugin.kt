@@ -94,7 +94,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
 
     fun getMembers(
         node: NamedDeclaration,
-        resolveNamespaceStrategy: (node: ModuleDeclaration) -> NamespaceStrategy?,
+        context: Context,
     ): ReadonlyArray<Declaration>? {
         val symbol = this.getSymbol(node)
         if (symbol == null) return null
@@ -105,12 +105,14 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         val exports = this.getUniqMembers(symbol.exports)
             .filter { member -> !isTypeParameterDeclaration(member) }
 
+        val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
+
         return (members + exports).filter { member ->
             val parent = member.parent
 
             if (
                 isModuleBlock(parent)
-                && resolveNamespaceStrategy(parent.parent) == NamespaceStrategy.`package`
+                && namespaceInfoService?.resolveNamespaceStrategy(parent.parent) == NamespaceStrategy.`package`
             ) {
                 return@filter false
             }
@@ -120,7 +122,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
 
                 if (
                     isModuleBlock(grandparent)
-                    && resolveNamespaceStrategy(grandparent.parent) == NamespaceStrategy.`package`
+                    && namespaceInfoService?.resolveNamespaceStrategy(grandparent.parent) == NamespaceStrategy.`package`
                 ) {
                     return@filter false
                 }

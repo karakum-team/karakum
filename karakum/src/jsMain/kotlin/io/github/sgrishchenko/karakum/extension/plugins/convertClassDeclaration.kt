@@ -43,10 +43,9 @@ private fun resolveConstructors(
     if (parentDeclaration == null || !isClassDeclaration(parentDeclaration)) return emptyArray()
 
     val declarationMergingService = context.lookupService<DeclarationMergingService>(declarationMergingServiceKey)
-    val namespaceInfoService = context.lookupService<NamespaceInfoService>(namespaceInfoServiceKey)
 
     val mergedMembers = declarationMergingService
-        ?.getMembers(parentDeclaration) { namespaceInfoService?.resolveNamespaceStrategy(it) }
+        ?.getMembers(parentDeclaration, context)
         ?: parentDeclaration.members.asArray()
 
     return resolveConstructors(parentDeclaration, mergedMembers, context)
@@ -106,7 +105,7 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
         .joinToString(separator = ", ")
 
     val mergedMembers = declarationMergingService
-        ?.getMembers(node) { namespaceInfoService?.resolveNamespaceStrategy(it) }
+        ?.getMembers(node, context)
         ?: node.members.asArray()
 
     // cover private members

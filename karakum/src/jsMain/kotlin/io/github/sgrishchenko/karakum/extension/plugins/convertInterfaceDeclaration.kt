@@ -60,7 +60,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
 
     val members = (
             declarationMergingService
-                ?.getMembers(node) { namespaceInfoService?.resolveNamespaceStrategy(it) }
+                ?.getMembers(node, context)
                 ?: node.members.asArray()
             )
         .joinToString(separator = "\n") { render(it) }
