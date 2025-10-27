@@ -28,6 +28,8 @@ jobs:
 
       - run: ./gradlew build --no-daemon
 
+      - run: ./gradlew :karakum:prepareTypeScriptDefinitions --no-daemon
+
       - run: ./gradlew :karakum-schema:jsNodeProductionRun --no-daemon
 
   build-examples:

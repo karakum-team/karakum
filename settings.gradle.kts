@@ -38,8 +38,8 @@ dependencyResolutionManagement {
             val typescriptVersion: String by settings
             library("typescript", "npm", "typescript").version(typescriptVersion)
 
-            val typescriptJsonSchemaVersion: String by settings
-            library("typescriptJsonSchema", "npm", "typescript-json-schema").version(typescriptJsonSchemaVersion)
+            val tsJsonSchemaGeneratorVersion: String by settings
+            library("tsJsonSchemaGenerator", "npm", "ts-json-schema-generator").version(tsJsonSchemaGeneratorVersion)
         }
 
         val wrappers by creating {

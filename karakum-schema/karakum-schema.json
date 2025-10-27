@@ -19,9 +19,9 @@
         },
         "ConflictResolutionStrategy": {
             "enum": [
-                "error",
                 "join",
-                "replace"
+                "replace",
+                "error"
             ],
             "type": "string"
         }
@@ -29,7 +29,6 @@
     "additionalProperties": false,
     "properties": {
         "annotations": {
-            "title": "annotations",
             "anyOf": [
                 {
                     "type": "string"
@@ -40,7 +39,8 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "annotations"
         },
         "compilerOptions": {
             "title": "compilerOptions",
@@ -56,12 +56,12 @@
             }
         },
         "cwd": {
-            "title": "cwd",
-            "type": "string"
+            "type": "string",
+            "title": "cwd"
         },
         "disclaimer": {
-            "title": "disclaimer",
-            "type": "string"
+            "type": "string",
+            "title": "disclaimer"
         },
         "granularity": {
             "title": "granularity",
@@ -69,7 +69,6 @@
             "$ref": "#/definitions/Granularity"
         },
         "ignoreInput": {
-            "title": "ignoreInput",
             "anyOf": [
                 {
                     "type": "string"
@@ -80,10 +79,10 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "ignoreInput"
         },
         "ignoreOutput": {
-            "title": "ignoreOutput",
             "anyOf": [
                 {
                     "type": "string"
@@ -94,7 +93,8 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "ignoreOutput"
         },
         "importInjector": {
             "title": "importInjector",
@@ -124,7 +124,6 @@
             }
         },
         "inheritanceModifiers": {
-            "title": "inheritanceModifiers",
             "anyOf": [
                 {
                     "type": "string"
@@ -135,10 +134,10 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "inheritanceModifiers"
         },
         "injections": {
-            "title": "injections",
             "anyOf": [
                 {
                     "type": "string"
@@ -149,7 +148,8 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "injections"
         },
         "input": {
             "title": "input",
@@ -166,7 +166,6 @@
             ]
         },
         "inputRoots": {
-            "title": "inputRoots",
             "anyOf": [
                 {
                     "type": "string"
@@ -177,15 +176,16 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "inputRoots"
         },
         "libraryName": {
-            "title": "libraryName",
-            "type": "string"
+            "type": "string",
+            "title": "libraryName"
         },
         "libraryNameOutputPrefix": {
-            "title": "libraryNameOutputPrefix",
-            "type": "boolean"
+            "type": "boolean",
+            "title": "libraryNameOutputPrefix"
         },
         "moduleNameMapper": {
             "title": "moduleNameMapper",
@@ -195,7 +195,6 @@
             }
         },
         "nameResolvers": {
-            "title": "nameResolvers",
             "anyOf": [
                 {
                     "type": "string"
@@ -206,7 +205,8 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "nameResolvers"
         },
         "namespaceStrategy": {
             "title": "namespaceStrategy",
@@ -216,8 +216,8 @@
             }
         },
         "output": {
-            "title": "output",
-            "type": "string"
+            "type": "string",
+            "title": "output"
         },
         "packageNameMapper": {
             "title": "packageNameMapper",
@@ -227,7 +227,6 @@
             }
         },
         "plugins": {
-            "title": "plugins",
             "anyOf": [
                 {
                     "type": "string"
@@ -238,10 +237,10 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "plugins"
         },
         "varianceModifiers": {
-            "title": "varianceModifiers",
             "anyOf": [
                 {
                     "type": "string"
@@ -252,12 +251,17 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "varianceModifiers"
         },
         "verbose": {
-            "title": "verbose",
-            "type": "boolean"
+            "type": "boolean",
+            "title": "verbose"
         }
     },
+    "required": [
+        "input",
+        "output"
+    ],
     "type": "object"
 }

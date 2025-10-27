@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalWasmJsInterop::class)
+
 package io.github.sgrishchenko.karakum.schema
 
 import js.import.import
@@ -22,13 +24,13 @@ external interface Schema {
     val definitions: ReadonlyRecord<String, Any>?
 }
 
-private suspend fun generateSchema(outputFileName: String, typings: String, entity: String) {
+private suspend fun generateSchema(path: String, type: String, out: String) {
     val nodeExecutable = process.argv[0]
 
-    val typescriptJsonSchema = import.meta.resolve("typescript-json-schema/bin/typescript-json-schema")
+    val typescriptJsonSchema = import.meta.resolve("ts-json-schema-generator/bin/ts-json-schema-generator")
         .let { fileURLToPath(it) }
 
-    exec("$nodeExecutable $typescriptJsonSchema --titles --noExtraProps --ignoreErrors --out $outputFileName $typings $entity")
+    exec("$nodeExecutable $typescriptJsonSchema --path $path --type $type --out $out --no-type-check --no-top-ref")
 }
 
 suspend fun main() {
@@ -50,10 +52,10 @@ suspend fun main() {
     val conflictResolutionStrategySchemaFileName = path.resolve(outputPath, "conflict-resolution-strategy-schema.json")
     val configurationSchemaFileName = path.resolve(outputPath, "karakum-schema.json")
 
-    generateSchema(granularitySchemaFileName, additionalTypings, "Granularity")
-    generateSchema(namespaceStrategySchemaFileName, additionalTypings, "NamespaceStrategy")
-    generateSchema(conflictResolutionStrategySchemaFileName, additionalTypings, "ConflictResolutionStrategy")
-    generateSchema(configurationSchemaFileName, typings, "SchemaConfiguration")
+    generateSchema(additionalTypings, "Granularity", granularitySchemaFileName)
+    generateSchema(additionalTypings, "NamespaceStrategy", namespaceStrategySchemaFileName)
+    generateSchema(additionalTypings, "ConflictResolutionStrategy", conflictResolutionStrategySchemaFileName)
+    generateSchema(typings, "SchemaConfiguration", configurationSchemaFileName)
 
     val granularitySchema: Schema = parse(readFile(granularitySchemaFileName, utf8))
     val namespaceStrategySchema: Schema = parse(readFile(namespaceStrategySchemaFileName, utf8))
@@ -61,9 +63,9 @@ suspend fun main() {
     val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, utf8))
 
     val definitions = recordOf(
-        "Granularity" to Schema.copy(granularitySchema, `$schema` = undefined),
-        "NamespaceStrategy" to Schema.copy(namespaceStrategySchema, `$schema` = undefined),
-        "ConflictResolutionStrategy" to Schema.copy(conflictResolutionStrategySchema, `$schema` = undefined),
+        "Granularity" to Schema.copy(granularitySchema, `$schema` = undefined, definitions = undefined),
+        "NamespaceStrategy" to Schema.copy(namespaceStrategySchema, `$schema` = undefined, definitions = undefined),
+        "ConflictResolutionStrategy" to Schema.copy(conflictResolutionStrategySchema, `$schema` = undefined, definitions = undefined),
     )
 
     val resultConfigurationSchema = Object.assign(
@@ -71,8 +73,21 @@ suspend fun main() {
         Schema(definitions = definitions),
         configurationSchema.apply {
             Reflect.deleteProperty(this, "\$schema")
+            Reflect.deleteProperty(this, "definitions")
 
             Reflect.get(this, "properties")?.let { properties ->
+                Reflect.ownKeys(properties).forEach { key ->
+                    Reflect.get(properties, key)?.let { property ->
+                        Reflect.set(property, "title", key)
+
+                        Reflect.get(property, "type")?.let { type ->
+                            if (type is Array<*> && type.size == 2 && type[1] == "null") {
+                                Reflect.set(property, "type", type.first())
+                            }
+                        }
+                    }
+                }
+
                 arrayOf(
                     "inputRoots",
                     "input",
@@ -84,8 +99,10 @@ suspend fun main() {
                     "nameResolvers",
                     "inheritanceModifiers",
                     "varianceModifiers",
-                ).forEach {
-                    Reflect.get(properties, it)?.let { property ->
+                ).forEach { key ->
+                    Reflect.get(properties, key)?.let { property ->
+                        Reflect.deleteProperty(property, "\$ref")
+
                         val anyOf = arrayOf(
                             recordOf("type" to "string"),
                             recordOf(
@@ -99,21 +116,29 @@ suspend fun main() {
                 }
 
                 Reflect.get(properties, "granularity")?.let { granularity ->
+                    Reflect.deleteProperty(granularity, "anyOf")
+
                     Reflect.set(granularity, "type", "string")
                     Reflect.set(granularity, "\$ref", "#/definitions/Granularity")
                 }
 
                 Reflect.get(properties, "moduleNameMapper")?.let { moduleNameMapper ->
+                    Reflect.deleteProperty(moduleNameMapper, "anyOf")
+
                     Reflect.set(moduleNameMapper, "type", "object")
                     Reflect.set(moduleNameMapper, "additionalProperties", recordOf("type" to "string"))
                 }
 
                 Reflect.get(properties, "packageNameMapper")?.let { packageNameMapper ->
+                    Reflect.deleteProperty(packageNameMapper, "anyOf")
+
                     Reflect.set(packageNameMapper, "type", "object")
                     Reflect.set(packageNameMapper, "additionalProperties", recordOf("type" to "string"))
                 }
 
                 Reflect.get(properties, "importInjector")?.let { importInjector ->
+                    Reflect.deleteProperty(importInjector, "anyOf")
+
                     val additionalProperties = recordOf(
                         "type" to "array",
                         "items" to recordOf(
@@ -126,6 +151,8 @@ suspend fun main() {
                 }
 
                 Reflect.get(properties, "importMapper")?.let { importMapper ->
+                    Reflect.deleteProperty(importMapper, "anyOf")
+
                     val additionalProperties = recordOf(
                         "anyOf" to arrayOf(
                             recordOf("type" to "string"),
@@ -141,16 +168,22 @@ suspend fun main() {
                 }
 
                 Reflect.get(properties, "namespaceStrategy")?.let { namespaceStrategy ->
+                    Reflect.deleteProperty(namespaceStrategy, "anyOf")
+
                     Reflect.set(namespaceStrategy, "type", "object")
                     Reflect.set(namespaceStrategy, "additionalProperties", recordOf("\$ref" to "#/definitions/NamespaceStrategy"))
                 }
 
                 Reflect.get(properties, "conflictResolutionStrategy")?.let { conflictResolutionStrategy ->
+                    Reflect.deleteProperty(conflictResolutionStrategy, "anyOf")
+
                     Reflect.set(conflictResolutionStrategy, "type", "object")
                     Reflect.set(conflictResolutionStrategy, "additionalProperties", recordOf("\$ref" to "#/definitions/ConflictResolutionStrategy"))
                 }
 
                 Reflect.get(properties, "compilerOptions")?.let { compilerOptions ->
+                    Reflect.deleteProperty(compilerOptions, "anyOf")
+
                     Reflect.set(compilerOptions, "type", "object")
                     Reflect.set(compilerOptions, "\$ref", "https://json.schemastore.org/tsconfig#/definitions/compilerOptionsDefinition/properties/compilerOptions")
                     Reflect.set(compilerOptions, "additionalProperties", false)
