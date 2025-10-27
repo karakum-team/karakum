@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.nameResolvers
 
 import io.github.sgrishchenko.karakum.extension.NameResolver
-import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.capitalize
 import io.github.sgrishchenko.karakum.util.getParentOrNull

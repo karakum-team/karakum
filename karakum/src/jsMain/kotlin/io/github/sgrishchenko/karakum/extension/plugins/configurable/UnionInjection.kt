@@ -9,7 +9,6 @@ import js.array.component2
 import js.array.tupleOf
 import js.collections.JsMap
 import js.iterable.iterator
-import js.symbol.Symbol
 import typescript.*
 
 @JsExport

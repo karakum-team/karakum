@@ -1,12 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.ContextKey
-import io.github.sgrishchenko.karakum.extension.GeneratedFile
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.Render
-import js.symbol.Symbol
+import io.github.sgrishchenko.karakum.extension.*
 import typescript.Node
 
 @JsExport

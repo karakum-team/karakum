@@ -2,11 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.util.getParentOrNull
-import typescript.Node
-import typescript.isLiteralTypeNode
-import typescript.isStringLiteral
-import typescript.isTypeAliasDeclaration
-import typescript.isUnionTypeNode
+import typescript.*
 
 val resolveUnionMemberDuplicateName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService(typeScriptServiceKey)

@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
-import js.symbol.Symbol
 import typescript.Node
 
 @JsExport

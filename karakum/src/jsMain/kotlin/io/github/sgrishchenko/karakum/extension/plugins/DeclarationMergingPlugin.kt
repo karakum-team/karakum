@@ -1,17 +1,12 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.ContextKey
-import io.github.sgrishchenko.karakum.extension.GeneratedFile
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.Render
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.objects.unsafeJso
-import js.symbol.Symbol
 import typescript.*
 import kotlin.contracts.contract
 

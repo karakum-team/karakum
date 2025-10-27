@@ -1,6 +1,5 @@
 package io.github.sgrishchenko.karakum.extension
 
-import io.github.sgrishchenko.karakum.extension.plugins.TypeScriptService
 import io.github.sgrishchenko.karakum.extension.plugins.isPossiblyNullableType
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray

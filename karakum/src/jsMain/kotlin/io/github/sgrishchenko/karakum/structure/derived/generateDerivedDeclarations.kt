@@ -4,7 +4,9 @@ import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.DerivedFile
-import io.github.sgrishchenko.karakum.extension.plugins.*
+import io.github.sgrishchenko.karakum.extension.plugins.configurationServiceKey
+import io.github.sgrishchenko.karakum.extension.plugins.importInfoServiceKey
+import io.github.sgrishchenko.karakum.extension.plugins.namespaceInfoServiceKey
 import io.github.sgrishchenko.karakum.structure.StructureItem
 import io.github.sgrishchenko.karakum.structure.bundle.createBundleInfoItem
 import io.github.sgrishchenko.karakum.structure.namespace.createNamespaceInfoItem
