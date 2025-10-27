@@ -17,17 +17,18 @@ import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
 import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
-import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.objects.Object
 import js.objects.unsafeJso
 import js.promise.Promise
+import kotlinx.coroutines.CoroutineScope
 import node.fs.*
 import node.path.path
 import node.process.process
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
+import kotlin.coroutines.EmptyCoroutineContext
 
 private fun checkCasing(fileNames: ReadonlyArray<String>) {
     var isConflict = false
@@ -272,5 +273,5 @@ suspend fun generate(block: MutableConfiguration.() -> Unit) {
 @JsExport
 @JsName("generate")
 fun generateAsync(partialConfiguration: PartialConfiguration): Promise<Unit> =
-    IsolatedCoroutineScope()
+    CoroutineScope(EmptyCoroutineContext)
         .promise { generate(partialConfiguration) }

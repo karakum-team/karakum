@@ -2,17 +2,18 @@ package io.github.sgrishchenko.karakum
 
 import io.github.sgrishchenko.karakum.configuration.SchemaConfiguration
 import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
-import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import js.json.parse
 import js.objects.unsafeJso
 import js.promise.Promise
+import kotlinx.coroutines.CoroutineScope
 import node.buffer.BufferEncoding.Companion.utf8
 import node.fs.readFile
 import node.process.process
 import node.util.ParseArgsConfig
-import node.util.ParseArgsOptionConfigType.Companion.string
+import node.util.ParseArgsOptionsType.Companion.string
 import node.util.parseArgs
+import kotlin.coroutines.EmptyCoroutineContext
 
 internal suspend fun cli() {
     val config = unsafeJso<ParseArgsConfig> {
@@ -40,5 +41,5 @@ internal suspend fun cli() {
 @JsExport
 @JsName("cli")
 fun cliAsync(): Promise<Unit> =
-    IsolatedCoroutineScope()
+    CoroutineScope(EmptyCoroutineContext)
         .promise { cli() }

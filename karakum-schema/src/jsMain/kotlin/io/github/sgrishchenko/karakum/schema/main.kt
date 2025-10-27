@@ -37,7 +37,7 @@ suspend fun main() {
 
     val typings = karakum
         .let { path.dirname(it) }
-        .let { path.resolve(it, "karakum.d.ts") }
+        .let { path.resolve(it, "karakum.d.mts") }
 
     val additionalTypings = karakum
         .let { path.dirname(it) }

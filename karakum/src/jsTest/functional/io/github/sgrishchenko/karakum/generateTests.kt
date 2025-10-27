@@ -13,6 +13,7 @@ import kotlin.test.assertTrue
 private suspend fun readDir(dirName: String): ReadonlyArray<String> {
     return readdir(dirName, ReaddirWithFileTypesAsyncOptions(withFileTypes = true, recursive = true))
         .filter { it.isFile() }
+        .map { it.unsafeCast<Dirent<String>>() }
         .map { path.resolve(it.parentPath, it.name) }
         .toTypedArray()
 }

@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
@@ -40,7 +39,7 @@ kotlin {
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
                 customField("exports", mapOf(
-                    "types" to "./kotlin/karakum.d.ts",
+                    "types" to "./kotlin/karakum.d.mts",
                     "default" to "./kotlin/karakum.mjs",
                 ))
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
@@ -106,7 +105,7 @@ mavenPublishing {
         }
     }
 
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     signAllPublications()
 }
@@ -142,7 +141,7 @@ val prepareTypeScriptDefinitions by tasks.registering {
         val npmProjectDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir
 
         val baseDefinitions = npmProjectDir.get().file("kotlin/karakum-types.d.ts")
-        val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.ts")
+        val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.mts")
 
         val resultDefinitions = """
             ||${baseDefinitions.asFile.readText()}

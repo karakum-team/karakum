@@ -4,6 +4,7 @@ import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.objects.unsafeJso
 import js.promise.await
+import node.fs.Dirent
 import node.fs.GlobOptionsWithFileTypes
 import node.path.path
 
@@ -16,7 +17,7 @@ suspend fun glob(
         node.fs.glob(patterns, unsafeJso<GlobOptionsWithFileTypes> {
             this.cwd = cwd
             withFileTypes = true
-            excludeWithFileTypes = { file ->
+            exclude = { file: Dirent<String> ->
                 val fileName = path.resolve(file.parentPath, file.name)
 
                 ignore.any { path.matchesGlob(fileName, it) }
@@ -25,6 +26,7 @@ suspend fun glob(
     ).await()
 
     return fileNames
+        .map { it.unsafeCast<Dirent<String>>() }
         .map { toPosix(path.resolve(it.parentPath, it.name)) }
         .toTypedArray()
 }
