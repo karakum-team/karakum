@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
+import io.github.sgrishchenko.karakum.extension.ContextKey
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
@@ -12,7 +13,7 @@ import typescript.ModuleDeclaration
 import typescript.Node
 
 @JsExport
-val namespaceInfoServiceKey = Symbol()
+val namespaceInfoServiceKey = ContextKey<NamespaceInfoService>()
 
 @JsExport
 class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: NamespaceInfo) {

@@ -6,7 +6,7 @@ import js.symbol.Symbol
 import typescript.Node
 
 @JsExport
-val nameResolverServiceKey = Symbol()
+val nameResolverServiceKey = ContextKey<NameResolverService>()
 
 @JsExport
 class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyArray<NameResolver>) {

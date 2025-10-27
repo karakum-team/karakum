@@ -6,7 +6,7 @@ import js.symbol.Symbol
 import typescript.Node
 
 @JsExport
-val injectionServiceKey = Symbol()
+val injectionServiceKey = ContextKey<InjectionService>()
 
 @JsExport
 class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection>) {

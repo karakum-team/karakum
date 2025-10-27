@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
+import io.github.sgrishchenko.karakum.extension.ContextKey
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
@@ -12,7 +13,7 @@ import js.symbol.Symbol
 import typescript.*
 
 @JsExport
-val typeScriptServiceKey = Symbol()
+val typeScriptServiceKey = ContextKey<TypeScriptService>()
 
 @JsExport
 class TypeScriptService @JsExport.Ignore constructor(val program: Program) {

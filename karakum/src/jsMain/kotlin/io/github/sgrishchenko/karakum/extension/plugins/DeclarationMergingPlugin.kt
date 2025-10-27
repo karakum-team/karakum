@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.Context
+import io.github.sgrishchenko.karakum.extension.ContextKey
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
@@ -15,7 +16,7 @@ import typescript.*
 import kotlin.contracts.contract
 
 @JsExport
-val declarationMergingServiceKey = Symbol()
+val declarationMergingServiceKey = ContextKey<DeclarationMergingService>()
 
 @JsExport
 class DeclarationMergingService @JsExport.Ignore constructor(private val program: Program) {

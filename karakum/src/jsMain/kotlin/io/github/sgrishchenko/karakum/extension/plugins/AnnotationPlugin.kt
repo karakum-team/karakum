@@ -6,7 +6,7 @@ import js.symbol.Symbol
 import typescript.Node
 
 @JsExport
-val annotationServiceKey = Symbol()
+val annotationServiceKey = ContextKey<AnnotationService>()
 
 @JsExport
 class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation>) {

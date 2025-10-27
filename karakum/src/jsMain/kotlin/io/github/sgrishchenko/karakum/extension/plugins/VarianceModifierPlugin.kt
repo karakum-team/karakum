@@ -6,7 +6,7 @@ import js.symbol.Symbol
 import typescript.Node
 
 @JsExport
-val varianceModifierServiceKey = Symbol()
+val varianceModifierServiceKey = ContextKey<VarianceModifierService>()
 
 @JsExport
 class VarianceModifierService @JsExport.Ignore constructor(

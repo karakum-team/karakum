@@ -6,7 +6,7 @@ import js.symbol.Symbol
 import typescript.Node
 
 @JsExport
-val inheritanceModifierServiceKey = Symbol()
+val inheritanceModifierServiceKey = ContextKey<InheritanceModifierService>()
 
 @JsExport
 class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier>) {

@@ -13,7 +13,7 @@ import js.symbol.Symbol
 import typescript.*
 
 @JsExport
-val unionServiceKey = Symbol()
+val unionServiceKey = ContextKey<UnionService>()
 
 @JsExport
 class UnionService @JsExport.Ignore constructor(private val context: Context) {
