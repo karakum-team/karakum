@@ -160,7 +160,7 @@ val npmPublish = NodeJsExec.register(
     val npmAuthToken: String? by project
 
     group = "publishing"
-    args("--run", "distribute", "--", "--//registry.npmjs.org/:_authToken=$npmAuthToken")
+    args("--run", "distribute"/*, "--", "--//registry.npmjs.org/:_authToken=$npmAuthToken"*/)
     dependsOn(
         copyNpmResources,
         prepareTypeScriptDefinitions,
