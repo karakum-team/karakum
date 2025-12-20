@@ -8,7 +8,7 @@
     "check": "tsc --noEmit --skipLibCheck false"
   },
   "devDependencies": {
-    "@types/node": "^22.15.3",
+    "@types/node": "^24.10.4",
     "karakum": "^1.0.0-alpha.76",
     "typescript": "^5.8.3"
   },
