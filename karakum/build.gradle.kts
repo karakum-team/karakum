@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
+import org.jetbrains.kotlin.gradle.targets.js.npm.NpmExtension
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
@@ -151,6 +152,18 @@ val prepareTypeScriptDefinitions by tasks.registering {
         generatedDefinitions.asFile.writeText(resultDefinitions)
     }
     dependsOn(tasks.named("jsProductionExecutableCompileSync"))
+}
+
+val npmPublish2 by tasks.registering(Exec::class) {
+    group = "publishing"
+    executable = NpmExtension[project].environment.executable
+    workingDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir.get().asFile
+    args("publish")
+    dependsOn(
+        copyNpmResources,
+        prepareTypeScriptDefinitions,
+        tasks.build,
+    )
 }
 
 val npmPublish = NodeJsExec.register(
