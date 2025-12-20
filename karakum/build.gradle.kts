@@ -44,7 +44,7 @@ kotlin {
                     "default" to "./kotlin/karakum.mjs",
                 ))
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
-                customField("scripts", mapOf("distribute" to "npm publish"))
+                customField("scripts", mapOf("distribute" to "${NpmExtension[project].environment.executable} publish"))
             }
         }
     }
@@ -157,7 +157,7 @@ val prepareTypeScriptDefinitions by tasks.registering {
 val npmPublish2 by tasks.registering(Exec::class) {
     group = "publishing"
     executable = NpmExtension[project].environment.executable
-    workingDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir.get().asFile
+    workingDir(kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir)
     args("publish")
     dependsOn(
         copyNpmResources,
