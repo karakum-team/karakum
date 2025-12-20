@@ -3,11 +3,9 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.isPossiblyNullableType
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
-import seskar.js.JsNativeInvoke
 import typescript.*
 
 external interface Render<in TNode : Node> {
-    @JsNativeInvoke
     operator fun invoke(node: TNode): String
 }
 
