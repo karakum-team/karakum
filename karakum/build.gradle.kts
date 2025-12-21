@@ -48,7 +48,6 @@ kotlin {
                     "default" to "./kotlin/karakum.mjs",
                 ))
                 customField("bin", mapOf("karakum" to "kotlin/karakum-bin.mjs"))
-                customField("scripts", mapOf("distribute" to "${NpmExtension[project].environment.executable} publish"))
             }
         }
     }
@@ -158,7 +157,7 @@ val prepareTypeScriptDefinitions by tasks.registering {
     dependsOn(tasks.named("jsProductionExecutableCompileSync"))
 }
 
-val npmPublish2 by tasks.registering(Exec::class) {
+val npmPublish by tasks.registering(Exec::class) {
     val npmProject = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject
     val nodePath = File(npmProject.nodeJs.executable.get()).parent
 
@@ -167,21 +166,6 @@ val npmPublish2 by tasks.registering(Exec::class) {
     environment("PATH", "$nodePath${File.pathSeparator}${environment["PATH"]}")
     workingDir(npmProject.dir)
     args("publish", "--tag=latest")
-    dependsOn(
-        copyNpmResources,
-        prepareTypeScriptDefinitions,
-        tasks.build,
-    )
-}
-
-val npmPublish = NodeJsExec.register(
-    compilation = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME),
-    name = "npmPublish",
-) {
-    val npmAuthToken: String? by project
-
-    group = "publishing"
-    args("--run", "distribute"/*, "--", "--//registry.npmjs.org/:_authToken=$npmAuthToken"*/)
     dependsOn(
         copyNpmResources,
         prepareTypeScriptDefinitions,

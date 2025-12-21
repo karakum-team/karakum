@@ -23,9 +23,7 @@ jobs:
 
       - uses: gradle/actions/wrapper-validation@v5
 
-      - run: ./gradlew npmPublish2 --no-daemon
-        env:
-          ORG_GRADLE_PROJECT_npmAuthToken: ${{ secrets.NPM_AUTH_TOKEN }}
+      - run: ./gradlew npmPublish --no-daemon
 
       - run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache --no-daemon
         env:
