@@ -155,10 +155,14 @@ val prepareTypeScriptDefinitions by tasks.registering {
 }
 
 val npmPublish2 by tasks.registering(Exec::class) {
+    val npmProject = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject
+    val nodePath = File(npmProject.nodeJs.executable.get()).parent
+
     group = "publishing"
     executable = NpmExtension[project].environment.executable
-    workingDir(kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir)
-    args("publish")
+    environment("PATH", "$nodePath${File.pathSeparator}${environment["PATH"]}")
+    workingDir(npmProject.dir)
+    args("publish", "--tag=latest")
     dependsOn(
         copyNpmResources,
         prepareTypeScriptDefinitions,
