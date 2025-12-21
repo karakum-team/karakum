@@ -39,6 +39,10 @@ kotlin {
                 customField("description", description)
                 customField("keywords", listOf("kotlin", "typescript"))
                 customField("license", "Apache-2.0")
+                customField("repository", mapOf(
+                    "type" to "git",
+                    "url" to "https://github.com/karakum-team/karakum.git",
+                ))
                 customField("exports", mapOf(
                     "types" to "./kotlin/karakum.d.mts",
                     "default" to "./kotlin/karakum.mjs",
