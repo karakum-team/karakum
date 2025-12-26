@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
 import io.github.sgrishchenko.karakum.configuration.SchemaConfiguration
 import io.github.sgrishchenko.karakum.configuration.reifyConfiguration
 import io.github.sgrishchenko.karakum.util.Many
+import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.json.parse
 import js.objects.unsafeJso
@@ -16,7 +17,7 @@ import node.util.ParseArgsOptionsType.Companion.string
 import node.util.parseArgs
 import kotlin.coroutines.EmptyCoroutineContext
 
-suspend fun parseArgs(args: Array<String>): PartialConfiguration {
+suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
     val config = unsafeJso<ParseArgsConfig> {
         this.args = args
         options = unsafeJso {

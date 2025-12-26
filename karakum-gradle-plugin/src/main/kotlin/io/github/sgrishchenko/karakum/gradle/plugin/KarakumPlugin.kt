@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMainFunctionArgumentsDsl::class)
+
 package io.github.sgrishchenko.karakum.gradle.plugin
 
 import org.gradle.api.Plugin
@@ -6,6 +8,7 @@ import org.gradle.api.attributes.Bundling
 import org.gradle.api.tasks.JavaExec
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalMainFunctionArgumentsDsl
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
@@ -21,7 +24,9 @@ class KarakumPlugin : Plugin<Project> {
         val kotlin = the<KotlinMultiplatformExtension>()
 
         kotlin.js {
-            nodejs()
+            nodejs {
+                passCliArgumentsToMainFunction()
+            }
 
             compilerOptions {
                 target.convention("es2015")
@@ -52,7 +57,7 @@ class KarakumPlugin : Plugin<Project> {
         }
 
         val jsNodeProductionRun by tasks.named<NodeJsExec>("jsNodeProductionRun") {
-            args(karakum.output.asFile.get().absolutePath)
+            args("--output", karakum.output.asFile.get().absolutePath)
         }
 
         val ktlintFormat by tasks.registering(JavaExec::class) {

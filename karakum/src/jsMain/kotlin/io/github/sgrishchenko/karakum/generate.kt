@@ -263,6 +263,11 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
 }
 
 suspend fun generate(
+    args: ReadonlyArray<String>,
+    block: MutableConfiguration.() -> Unit,
+) = generate(parseArgs(args), block)
+
+suspend fun generate(
     partialConfiguration: PartialConfiguration = PartialConfiguration(),
     block: MutableConfiguration.() -> Unit,
 ) {
