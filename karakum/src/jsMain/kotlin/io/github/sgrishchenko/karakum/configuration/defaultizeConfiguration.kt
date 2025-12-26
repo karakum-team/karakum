@@ -46,7 +46,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
     val inputFileNames = glob(input, cwd, ignoreInput)
 
-    val absoluteOutput = toAbsolute(configuration.output, cwd)
+    val absoluteOutput = toAbsolute(configuration.output ?: process.cwd(), cwd)
 
     var output = absoluteOutput
     var outputFileName: String? = null

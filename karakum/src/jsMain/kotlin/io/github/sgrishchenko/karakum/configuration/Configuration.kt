@@ -54,8 +54,8 @@ sealed external interface ConflictResolutionStrategy {
 external interface SchemaConfiguration {
     val inputRoots: Many<String>?
 
-    val input: Many<String>
-    val output: String
+    val input: Many<String>?
+    val output: String?
 
     val ignoreInput: Many<String>?
     val ignoreOutput: Many<String>?

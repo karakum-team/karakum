@@ -262,11 +262,13 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     }
 }
 
-suspend fun generate(block: MutableConfiguration.() -> Unit) {
-    val configuration = MutableConfiguration(
-        input = manyOf(),
-        output = process.cwd(),
-    ).apply(block)
+suspend fun generate(
+    partialConfiguration: PartialConfiguration = PartialConfiguration(),
+    block: MutableConfiguration.() -> Unit,
+) {
+    val configuration = MutableConfiguration()
+    Object.assign(configuration, partialConfiguration)
+    configuration.apply(block)
     generate(configuration)
 }
 

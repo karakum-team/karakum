@@ -152,7 +152,6 @@
             "title": "injections"
         },
         "input": {
-            "title": "input",
             "anyOf": [
                 {
                     "type": "string"
@@ -163,7 +162,8 @@
                         "type": "string"
                     }
                 }
-            ]
+            ],
+            "title": "input"
         },
         "inputRoots": {
             "anyOf": [
@@ -259,9 +259,5 @@
             "title": "verbose"
         }
     },
-    "required": [
-        "input",
-        "output"
-    ],
     "type": "object"
 }
