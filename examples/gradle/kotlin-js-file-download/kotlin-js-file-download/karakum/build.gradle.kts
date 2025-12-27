@@ -1,11 +1,14 @@
 plugins {
-    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.85"
+    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.89"
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    jsMainImplementation(npm("js-file-download", "0.4.12"))
+karakum {
+    library {
+        name = "js-file-download"
+        version = "0.4.12"
+    }
 }
