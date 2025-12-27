@@ -45,9 +45,12 @@ class KarakumPlugin : Plugin<Project> {
                 implementation("io.arrow-kt:arrow-core:$arrowKtVersion")
 
                 // default dependency
-                if (karakum.libraryName.isPresent) {
-                    implementation(npm(karakum.libraryName.get(), karakum.libraryVersion.get()))
-                }
+                implementation(
+                    karakum.libraryName
+                        .zip(karakum.libraryVersion) { name, version ->
+                            npm(name, version)
+                        }
+                )
             }
         }
 
