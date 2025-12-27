@@ -21,6 +21,12 @@ class KarakumPlugin : Plugin<Project> {
 
         the<NodeJsEnvSpec>().version.convention(nodeVersion)
 
+        with(extensions.extraProperties) {
+            "kotlin.js.yarn".let { if (!has(it)) set(it, false) }
+            "kotlin.js.stdlib.dom.api.included".let { if (!has(it)) set(it, false) }
+            "kotlin.js.ir.output.granularity".let { if (!has(it)) set(it, "per-file") }
+        }
+
         val karakum = extensions.create<KarakumExtension>("karakum").apply {
             output.convention(layout.projectDirectory.dir("../src/jsMain/kotlin"))
         }
