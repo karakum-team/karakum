@@ -115,7 +115,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
         varianceModifiers = varianceModifiers,
 
-        moduleNameMapper = configuration.moduleNameMapper ?: recordOf(),
+        moduleNameMapper = configuration.moduleNameMapper ?: recordOf("^.*$" to libraryName),
         packageNameMapper = configuration.packageNameMapper ?: recordOf(),
 
         importInjector = configuration.importInjector ?: recordOf(),

@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.InputResolutionStrategy
 import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import js.array.ReadonlyArray
 import js.objects.Object
+import js.objects.recordOf
 import js.objects.unsafeJso
 import node.buffer.BufferEncoding
 import node.fs.*
@@ -35,6 +36,7 @@ suspend fun generateTests(
     generate {
         this.cwd = cwd
         inputResolutionStrategy = InputResolutionStrategy.plain
+        moduleNameMapper = recordOf()
         verbose = true
         Object.assign(this, createConfiguration(output))
     }
