@@ -50,22 +50,26 @@ suspend fun main() {
     val granularitySchemaFileName = path.resolve(outputPath, "granularity-schema.json")
     val namespaceStrategySchemaFileName = path.resolve(outputPath, "namespace-strategy-schema.json")
     val conflictResolutionStrategySchemaFileName = path.resolve(outputPath, "conflict-resolution-strategy-schema.json")
+    val inputResolutionStrategySchemaFileName = path.resolve(outputPath, "input-resolution-strategy-schema.json")
     val configurationSchemaFileName = path.resolve(outputPath, "karakum-schema.json")
 
     generateSchema(additionalTypings, "Granularity", granularitySchemaFileName)
     generateSchema(additionalTypings, "NamespaceStrategy", namespaceStrategySchemaFileName)
     generateSchema(additionalTypings, "ConflictResolutionStrategy", conflictResolutionStrategySchemaFileName)
+    generateSchema(additionalTypings, "InputResolutionStrategy", inputResolutionStrategySchemaFileName)
     generateSchema(typings, "SchemaConfiguration", configurationSchemaFileName)
 
     val granularitySchema: Schema = parse(readFile(granularitySchemaFileName, utf8))
     val namespaceStrategySchema: Schema = parse(readFile(namespaceStrategySchemaFileName, utf8))
     val conflictResolutionStrategySchema: Schema = parse(readFile(conflictResolutionStrategySchemaFileName, utf8))
+    val inputResolutionStrategySchema: Schema = parse(readFile(inputResolutionStrategySchemaFileName, utf8))
     val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, utf8))
 
     val definitions = recordOf(
         "Granularity" to Schema.copy(granularitySchema, `$schema` = undefined, definitions = undefined),
         "NamespaceStrategy" to Schema.copy(namespaceStrategySchema, `$schema` = undefined, definitions = undefined),
         "ConflictResolutionStrategy" to Schema.copy(conflictResolutionStrategySchema, `$schema` = undefined, definitions = undefined),
+        "InputResolutionStrategy" to Schema.copy(inputResolutionStrategySchema, `$schema` = undefined, definitions = undefined),
     )
 
     val resultConfigurationSchema = Object.assign(

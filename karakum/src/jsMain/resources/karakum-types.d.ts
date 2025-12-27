@@ -29,6 +29,7 @@ export type Tuple2<A, B> = [A, B]
 export type Granularity = "bundle" | "file" | "top-level"
 export type NamespaceStrategy = "ignore" | "object" | "package"
 export type ConflictResolutionStrategy = "join" | "replace" | "error"
+export type InputResolutionStrategy = "node" | "plain"
 
 export type ParameterDeclarationStrategy = "function" | "lambda"
 

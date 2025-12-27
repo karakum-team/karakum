@@ -49,10 +49,26 @@ sealed external interface ConflictResolutionStrategy {
     }
 }
 
+sealed external interface InputResolutionStrategy {
+    companion object {
+        @JsValue("node")
+        val node: InputResolutionStrategy
+
+        @JsValue("plain")
+        val plain: InputResolutionStrategy
+    }
+}
+
 @JsExport
 @JsPlainObject
 external interface SchemaConfiguration {
     val inputRoots: Many<String>?
+
+    /**
+     * @TJS-type string
+     * @$ref #/definitions/InputResolutionStrategy
+     * */
+    val inputResolutionStrategy: InputResolutionStrategy?
 
     val input: Many<String>?
     val output: String?
@@ -151,6 +167,7 @@ external interface PartialConfiguration : SchemaConfiguration {
 @JsPlainObject
 external interface MutableConfiguration : PartialConfiguration {
     override var inputRoots: Many<String>?
+    override var inputResolutionStrategy: InputResolutionStrategy?
 
     override var input: Many<String>
     override var output: String
@@ -198,6 +215,7 @@ external interface MutableConfiguration : PartialConfiguration {
 @JsPlainObject
 external interface Configuration {
     val inputRoots: ReadonlyArray<String>
+    val inputResolutionStrategy: InputResolutionStrategy
 
     val input: ReadonlyArray<String>
     val inputFileNames: ReadonlyArray<String>

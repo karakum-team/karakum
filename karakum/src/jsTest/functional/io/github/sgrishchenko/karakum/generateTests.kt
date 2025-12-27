@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum
 
+import io.github.sgrishchenko.karakum.configuration.InputResolutionStrategy
 import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import js.array.ReadonlyArray
 import js.objects.Object
@@ -33,6 +34,7 @@ suspend fun generateTests(
 
     generate {
         this.cwd = cwd
+        inputResolutionStrategy = InputResolutionStrategy.plain
         verbose = true
         Object.assign(this, createConfiguration(output))
     }

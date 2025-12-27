@@ -3,6 +3,7 @@ package io.github.sgrishchenko.karakum.configuration
 import io.github.sgrishchenko.karakum.util.*
 import js.array.ReadonlyArray
 import js.objects.recordOf
+import node.module.findPackageJSON
 import node.path.path
 import node.process.process
 import typescript.CompilerOptions
@@ -44,7 +45,19 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
     val ignoreInput = normalizeOption(configuration.ignoreInput)
     val ignoreOutput = normalizeOption(configuration.ignoreOutput)
 
-    val inputFileNames = glob(input, cwd, ignoreInput)
+    val inputResolutionStrategy = configuration.inputResolutionStrategy ?: InputResolutionStrategy.node
+
+    val libraryName = configuration.libraryName ?: ""
+    val libraryLocation = if (inputResolutionStrategy == InputResolutionStrategy.node) {
+        val packageJSON = requireNotNull(findPackageJSON(libraryName, cwd))
+        path.dirname(packageJSON)
+    } else null
+
+    val inputCwd = when (inputResolutionStrategy) {
+        InputResolutionStrategy.node -> requireNotNull(libraryLocation)
+        InputResolutionStrategy.plain -> cwd
+    }
+    val inputFileNames = glob(input, inputCwd, ignoreInput)
 
     val absoluteOutput = toAbsolute(configuration.output ?: process.cwd(), cwd)
 
@@ -68,8 +81,13 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
     return Configuration(
         inputRoots = normalizeOption(configuration.inputRoots) {
-            arrayOf(resolveDefaultInputRoot(inputFileNames))
+            if (inputResolutionStrategy == InputResolutionStrategy.node) {
+                arrayOf(requireNotNull(libraryLocation))
+            } else {
+                arrayOf(resolveDefaultInputRoot(inputFileNames))
+            }
         },
+        inputResolutionStrategy = inputResolutionStrategy,
         inputFileNames = inputFileNames,
 
         input = input,
@@ -80,7 +98,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         ignoreInput = ignoreInput,
         ignoreOutput = ignoreOutput,
 
-        libraryName = configuration.libraryName ?: "",
+        libraryName = libraryName,
         libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?: false,
 
         granularity = configuration.granularity ?: Granularity.file,

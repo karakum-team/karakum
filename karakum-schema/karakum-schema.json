@@ -24,6 +24,13 @@
                 "error"
             ],
             "type": "string"
+        },
+        "InputResolutionStrategy": {
+            "enum": [
+                "node",
+                "plain"
+            ],
+            "type": "string"
         }
     },
     "additionalProperties": false,
@@ -164,6 +171,17 @@
                 }
             ],
             "title": "input"
+        },
+        "inputResolutionStrategy": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/InputResolutionStrategy"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "inputResolutionStrategy"
         },
         "inputRoots": {
             "anyOf": [
