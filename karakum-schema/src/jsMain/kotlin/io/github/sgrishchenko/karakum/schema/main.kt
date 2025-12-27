@@ -199,5 +199,6 @@ suspend fun main() {
     rm(granularitySchemaFileName)
     rm(namespaceStrategySchemaFileName)
     rm(conflictResolutionStrategySchemaFileName)
+    rm(inputResolutionStrategySchemaFileName)
     writeFile(configurationSchemaFileName, stringify(resultConfigurationSchema, { _, value -> value }, 4))
 }
