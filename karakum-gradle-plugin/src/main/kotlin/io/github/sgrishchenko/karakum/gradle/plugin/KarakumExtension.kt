@@ -1,7 +1,9 @@
 package io.github.sgrishchenko.karakum.gradle.plugin
 
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 
 interface KarakumExtension {
     val output: DirectoryProperty
@@ -14,6 +16,11 @@ interface KarakumExtension {
             override val version = libraryVersion
         }
         block(library)
+    }
+
+    fun library(dependency: Provider<Dependency>) {
+        libraryName.set(dependency.map { it.name })
+        libraryVersion.set(dependency.map { it.version })
     }
 
     interface Library {
