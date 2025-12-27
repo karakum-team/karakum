@@ -63,7 +63,7 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
         ?: PartialConfiguration(
             input = input,
             output = output,
-            libraryName = output
+            libraryName = libraryName
         )
 }
 
