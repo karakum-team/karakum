@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.configuration
 
 import io.github.sgrishchenko.karakum.util.*
 import js.array.ReadonlyArray
+import js.import.import
 import js.objects.recordOf
 import node.module.findPackageJSON
 import node.path.path
@@ -49,7 +50,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
     val libraryName = configuration.libraryName ?: ""
     val libraryLocation = if (inputResolutionStrategy == InputResolutionStrategy.node) {
-        val packageJSON = requireNotNull(findPackageJSON(libraryName, cwd))
+        val packageJSON = requireNotNull(findPackageJSON(libraryName, import.meta.url))
         path.dirname(packageJSON)
     } else null
 
