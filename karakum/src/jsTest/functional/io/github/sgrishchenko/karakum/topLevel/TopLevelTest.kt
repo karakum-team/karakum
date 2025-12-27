@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.topLevel
 
 import io.github.sgrishchenko.karakum.configuration.Granularity
+import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.topLevel.plugins.blankOutExportStatement
 import io.github.sgrishchenko.karakum.util.manyOf

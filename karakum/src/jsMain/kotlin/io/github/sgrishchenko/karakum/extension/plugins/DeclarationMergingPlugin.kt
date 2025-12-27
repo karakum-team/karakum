@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull

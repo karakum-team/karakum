@@ -2,6 +2,9 @@ package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.Granularity
+import io.github.sgrishchenko.karakum.configuration.bundle
+import io.github.sgrishchenko.karakum.configuration.file
+import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.structure.bundle.createBundleInfoItem
 import io.github.sgrishchenko.karakum.structure.module.applyModuleNameMapper
 import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper

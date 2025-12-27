@@ -6,58 +6,58 @@ import io.github.sgrishchenko.karakum.util.Rule
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import js.objects.Record
+import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import seskar.js.JsValue
 import typescript.CompilerOptions
 
 sealed external interface Granularity {
-    companion object {
-        @JsValue("bundle")
-        val bundle: Granularity
-
-        @JsValue("file")
-        val file: Granularity
-
-        @JsValue("top-level")
-        val topLevel: Granularity
-    }
+    companion object
 }
+
+inline val Granularity.Companion.bundle: Granularity
+    get() = unsafeCast("bundle")
+
+inline val Granularity.Companion.file: Granularity
+    get() = unsafeCast("file")
+
+inline val Granularity.Companion.topLevel: Granularity
+    get() = unsafeCast("top-level")
 
 sealed external interface NamespaceStrategy {
-    companion object {
-        @JsValue("ignore")
-        val ignore: NamespaceStrategy
-
-        @JsValue("object")
-        val `object`: NamespaceStrategy
-
-        @JsValue("package")
-        val `package`: NamespaceStrategy
-    }
+    companion object
 }
+
+inline val NamespaceStrategy.Companion.ignore: NamespaceStrategy
+    get() = unsafeCast("ignore")
+
+inline val NamespaceStrategy.Companion.`object`: NamespaceStrategy
+    get() = unsafeCast("object")
+
+inline val NamespaceStrategy.Companion.`package`: NamespaceStrategy
+    get() = unsafeCast("package")
 
 sealed external interface ConflictResolutionStrategy {
-    companion object {
-        @JsValue("join")
-        val join: ConflictResolutionStrategy
-
-        @JsValue("replace")
-        val replace: ConflictResolutionStrategy
-
-        @JsValue("error")
-        val error: ConflictResolutionStrategy
-    }
+    companion object
 }
+
+inline val ConflictResolutionStrategy.Companion.join: ConflictResolutionStrategy
+    get() = unsafeCast("join")
+
+inline val ConflictResolutionStrategy.Companion.replace: ConflictResolutionStrategy
+    get() = unsafeCast("replace")
+
+inline val ConflictResolutionStrategy.Companion.error: ConflictResolutionStrategy
+    get() = unsafeCast("error")
 
 sealed external interface InputResolutionStrategy {
-    companion object {
-        @JsValue("node")
-        val node: InputResolutionStrategy
-
-        @JsValue("plain")
-        val plain: InputResolutionStrategy
-    }
+    companion object
 }
+
+inline val InputResolutionStrategy.Companion.node: InputResolutionStrategy
+    get() = unsafeCast("node")
+
+inline val InputResolutionStrategy.Companion.plain: InputResolutionStrategy
+    get() = unsafeCast("plain")
 
 @JsExport
 @JsPlainObject

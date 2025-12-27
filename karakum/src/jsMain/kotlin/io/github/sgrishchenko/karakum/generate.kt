@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
 import io.github.sgrishchenko.karakum.configuration.defaultizeConfiguration
+import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
@@ -14,7 +15,6 @@ import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileNam
 import io.github.sgrishchenko.karakum.structure.prepareStructure
 import io.github.sgrishchenko.karakum.structure.resolveConflicts
 import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
-import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.coroutines.promise
@@ -24,7 +24,6 @@ import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
 import node.fs.*
 import node.path.path
-import node.process.process
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram

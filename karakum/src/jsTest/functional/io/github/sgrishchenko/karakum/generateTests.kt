@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum
 
 import io.github.sgrishchenko.karakum.configuration.InputResolutionStrategy
 import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
+import io.github.sgrishchenko.karakum.configuration.plain
 import js.array.ReadonlyArray
 import js.objects.Object
 import js.objects.recordOf

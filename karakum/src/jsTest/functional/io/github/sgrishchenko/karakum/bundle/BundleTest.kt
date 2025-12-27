@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.bundle
 
 import io.github.sgrishchenko.karakum.configuration.Granularity
+import io.github.sgrishchenko.karakum.configuration.bundle
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import kotlinx.coroutines.test.runTest

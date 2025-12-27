@@ -2,6 +2,9 @@ package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.ConflictResolutionStrategy
+import io.github.sgrishchenko.karakum.configuration.error
+import io.github.sgrishchenko.karakum.configuration.join
+import io.github.sgrishchenko.karakum.configuration.replace
 import io.github.sgrishchenko.karakum.extension.DerivedFile
 import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileName

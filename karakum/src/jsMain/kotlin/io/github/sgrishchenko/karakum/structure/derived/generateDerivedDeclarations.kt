@@ -2,6 +2,9 @@ package io.github.sgrishchenko.karakum.structure.derived
 
 import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.bundle
+import io.github.sgrishchenko.karakum.configuration.`package`
+import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.DerivedFile
 import io.github.sgrishchenko.karakum.extension.plugins.configurationServiceKey

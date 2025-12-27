@@ -1,6 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.`object`
+import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent

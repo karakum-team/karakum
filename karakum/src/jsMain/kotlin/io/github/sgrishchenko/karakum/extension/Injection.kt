@@ -1,27 +1,27 @@
 package io.github.sgrishchenko.karakum.extension
 
 import js.array.ReadonlyArray
-import seskar.js.JsValue
+import js.reflect.unsafeCast
 import typescript.Node
 
 sealed external interface InjectionType {
-    companion object {
-        @JsValue("MEMBER")
-        val MEMBER: InjectionType
-
-        @JsValue("STATIC_MEMBER")
-        val STATIC_MEMBER: InjectionType
-
-        @JsValue("PARAMETER")
-        val PARAMETER: InjectionType
-
-        @JsValue("TYPE_PARAMETER")
-        val TYPE_PARAMETER: InjectionType
-
-        @JsValue("HERITAGE_CLAUSE")
-        val HERITAGE_CLAUSE: InjectionType
-    }
+    companion object
 }
+
+inline val InjectionType.Companion.MEMBER: InjectionType
+    get() = unsafeCast("MEMBER")
+
+inline val InjectionType.Companion.STATIC_MEMBER: InjectionType
+    get() = unsafeCast("STATIC_MEMBER")
+
+inline val InjectionType.Companion.PARAMETER: InjectionType
+    get() = unsafeCast("PARAMETER")
+
+inline val InjectionType.Companion.TYPE_PARAMETER: InjectionType
+    get() = unsafeCast("TYPE_PARAMETER")
+
+inline val InjectionType.Companion.HERITAGE_CLAUSE: InjectionType
+    get() = unsafeCast("HERITAGE_CLAUSE")
 
 @JsExport
 external interface InjectionContext : Context {

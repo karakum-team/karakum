@@ -3,24 +3,22 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createPlugin
-import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.function
-import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationStrategy.Companion.lambda
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.array.ReadonlyArray
+import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import seskar.js.JsValue
 import typescript.*
 
 sealed external interface ParameterDeclarationStrategy {
-    companion object {
-        @JsValue("function")
-        val function: ParameterDeclarationStrategy
-
-        @JsValue("lambda")
-        val lambda: ParameterDeclarationStrategy
-    }
+    companion object
 }
+
+inline val ParameterDeclarationStrategy.Companion.function: ParameterDeclarationStrategy
+    get() = unsafeCast("function")
+
+inline val ParameterDeclarationStrategy.Companion.lambda: ParameterDeclarationStrategy
+    get() = unsafeCast("lambda")
 
 @JsExport
 @JsPlainObject
@@ -55,7 +53,7 @@ val convertParameterDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isParameter(node)) return@plugin null
 
     convertParameterDeclarationWithFixedType(node, context, render, ParameterDeclarationConfiguration(
-        strategy = if (isFunctionTypeNode(node.parent)) lambda else function,
+        strategy = if (isFunctionTypeNode(node.parent)) ParameterDeclarationStrategy.lambda else ParameterDeclarationStrategy.function,
         type = node.type,
         nullable = false,
     ))
@@ -76,7 +74,7 @@ fun convertParameterDeclarations(
     val commentService = context.lookupService(commentServiceKey)
     val typeScriptService = context.lookupService(typeScriptServiceKey)
 
-    if (strategy == function) {
+    if (strategy == ParameterDeclarationStrategy.function) {
         val annotationService = context.lookupService(annotationServiceKey)
         val annotations = annotationService?.resolveAnnotations(node, context) ?: emptyArray()
         val leadingComment = commentService?.renderLeadingComments(node) ?: ""
@@ -115,7 +113,7 @@ fun convertParameterDeclarations(
         }
     }
 
-    if (strategy == lambda) {
+    if (strategy == ParameterDeclarationStrategy.lambda) {
         val parameters = node.parameters.asArray()
             .filter { parameter -> !isThisParameter(parameter) }
             .map { parameter ->
@@ -174,11 +172,11 @@ fun convertParameterDeclarationWithFixedType(
         if (anonymousParameters.size == 1) "options" else "param${parameterIndex}"
     }
 
-    val isOptional = strategy == lambda && node.questionToken != null
+    val isOptional = strategy == ParameterDeclarationStrategy.lambda && node.questionToken != null
 
     val defaultValue = configuration.defaultValue ?: "definedExternally"
 
-    val isDefinedExternally = strategy == function
+    val isDefinedExternally = strategy == ParameterDeclarationStrategy.function
         && node.questionToken != null
         && inheritanceModifier !== "override"
         && defaultValue !== ""

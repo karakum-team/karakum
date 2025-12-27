@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.structure.namespace
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.structure.StructureItem
 import io.github.sgrishchenko.karakum.structure.module.extractModuleName
 import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
