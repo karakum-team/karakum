@@ -21,6 +21,10 @@ class KarakumPlugin : Plugin<Project> {
 
         the<NodeJsEnvSpec>().version.convention(nodeVersion)
 
+        val karakum = extensions.create<KarakumExtension>("karakum").apply {
+            output.convention(layout.projectDirectory.dir("../src/jsMain/kotlin"))
+        }
+
         val kotlin = the<KotlinMultiplatformExtension>()
 
         kotlin.js {
@@ -39,6 +43,11 @@ class KarakumPlugin : Plugin<Project> {
             dependencies {
                 implementation("io.github.sgrishchenko:karakum:$karakumVersion")
                 implementation("io.arrow-kt:arrow-core:$arrowKtVersion")
+
+                // default dependency
+                if (karakum.libraryName.isPresent) {
+                    implementation(npm(karakum.libraryName.get(), karakum.libraryVersion.get()))
+                }
             }
         }
 
@@ -52,12 +61,15 @@ class KarakumPlugin : Plugin<Project> {
             }
         }
 
-        val karakum = extensions.create<KarakumExtension>("karakum").apply {
-            output.convention(layout.projectDirectory.dir("../src/jsMain/kotlin"))
-        }
-
         val jsNodeProductionRun by tasks.named<NodeJsExec>("jsNodeProductionRun") {
-            args("--output", karakum.output.asFile.get().absolutePath)
+            if (karakum.libraryName.isPresent) {
+                args(
+                    "--library-name", karakum.libraryName.get(),
+                    "--output", karakum.output.asFile.get().absolutePath,
+                )
+            } else {
+                args("--output", karakum.output.asFile.get().absolutePath)
+            }
         }
 
         val ktlintFormat by tasks.registering(JavaExec::class) {

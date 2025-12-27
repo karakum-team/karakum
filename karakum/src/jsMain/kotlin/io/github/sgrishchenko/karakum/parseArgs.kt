@@ -30,6 +30,10 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
                 type = string
             }
 
+            this["library-name"] = unsafeJso {
+                type = string
+            }
+
             this["config"] = unsafeJso {
                 type = string
             }
@@ -40,6 +44,7 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
 
     val input = results.values["input"]?.unsafeCast<Many<String>>()
     val output = results.values["output"]?.toString()
+    val libraryName = results.values["library-name"]?.toString()
 
     val configuration = results.values["config"]?.toString()
         ?.let { readFile(it, utf8) }
@@ -50,11 +55,16 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
         ?.let {
             PartialConfiguration.copy(
                 it,
-                input = it.input ?: input,
-                output = it.output ?: output,
+                input = input ?: it.input,
+                output = output ?: it.output,
+                libraryName = libraryName ?: it.libraryName,
             )
         }
-        ?: PartialConfiguration(input = input, output = output)
+        ?: PartialConfiguration(
+            input = input,
+            output = output,
+            libraryName = output
+        )
 }
 
 @JsExport
