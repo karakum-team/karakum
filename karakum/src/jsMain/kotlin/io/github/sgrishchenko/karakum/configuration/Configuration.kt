@@ -257,4 +257,5 @@ external interface Configuration {
     val disclaimer: String
     val verbose: Boolean
     val cwd: String
+    val inputCwd: String
 }

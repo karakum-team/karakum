@@ -131,5 +131,6 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         verbose = configuration.verbose ?: false,
         disclaimer = configuration.disclaimer ?: defaultDisclaimer,
         cwd = cwd,
+        inputCwd = inputCwd,
     )
 }

@@ -70,7 +70,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val inheritanceModifiers = configuration.inheritanceModifiers
     val varianceModifiers = configuration.varianceModifiers
     val compilerOptions = configuration.compilerOptions
-    val cwd = configuration.cwd
+    val inputCwd = configuration.inputCwd
 
     val preparedCompilerOptions = Object.assign(
         unsafeJso {
@@ -105,7 +105,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
 
     val sourceFiles = program.getSourceFiles()
         .filter { sourceFile ->
-            val relativeFileName = path.relative(cwd, sourceFile.fileName)
+            val relativeFileName = path.relative(inputCwd, sourceFile.fileName)
             input.any { pattern ->
                 if (path.isAbsolute(pattern)) {
                     path.matchesGlob(sourceFile.fileName, pattern)
@@ -115,7 +115,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
             }
         }
         .filter { sourceFile ->
-            val relativeFileName = path.relative(cwd, sourceFile.fileName)
+            val relativeFileName = path.relative(inputCwd, sourceFile.fileName)
             ignoreInput.all { pattern ->
                 if (path.isAbsolute(pattern)) {
                     !path.matchesGlob(sourceFile.fileName, pattern)
