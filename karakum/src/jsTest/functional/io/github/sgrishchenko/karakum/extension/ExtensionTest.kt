@@ -1,5 +1,7 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.configuration.Granularity
+import io.github.sgrishchenko.karakum.configuration.file
 import io.github.sgrishchenko.karakum.extension.nameResolvers.convertErrorTypeReferenceNode
 import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
@@ -14,6 +16,7 @@ class ExtensionTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "extension"
+            granularity = Granularity.file
             plugins = manyOf(
                 convertErrorTypeReferenceNode
             )

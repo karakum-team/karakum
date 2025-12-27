@@ -1,5 +1,6 @@
 package js.file.download.karakum
 
+import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.generate
 import io.github.sgrishchenko.karakum.util.manyOf
@@ -18,6 +19,7 @@ suspend fun main(args: ReadonlyArray<String>) {
     generate(args) {
         input = manyOf("$jsFileDownloadPackage/js-file-download.d.ts")
         libraryName = "js-file-download"
+        granularity = Granularity.file
         moduleNameMapper = recordOf(
             ".+" to "js-file-download",
         )

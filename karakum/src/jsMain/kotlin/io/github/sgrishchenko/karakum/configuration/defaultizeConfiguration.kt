@@ -101,7 +101,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         libraryName = libraryName,
         libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?: false,
 
-        granularity = configuration.granularity ?: Granularity.file,
+        granularity = configuration.granularity ?: Granularity.topLevel,
 
         plugins = plugins,
 

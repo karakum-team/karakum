@@ -2,6 +2,7 @@
   "input": "node_modules/js-file-download/js-file-download.d.ts",
   "output": "generated",
   "libraryName": "js-file-download",
+  "granularity": "file",
   "moduleNameMapper": {
     ".+": "js-file-download"
   },

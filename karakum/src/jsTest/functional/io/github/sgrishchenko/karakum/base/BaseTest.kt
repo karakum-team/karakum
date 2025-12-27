@@ -2,6 +2,8 @@ package io.github.sgrishchenko.karakum.base
 
 import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyClassInheritance
 import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyPropertyInheritance
+import io.github.sgrishchenko.karakum.configuration.Granularity
+import io.github.sgrishchenko.karakum.configuration.file
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
@@ -15,6 +17,7 @@ class BaseTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "sandbox-base"
+            granularity = Granularity.file
             inheritanceModifiers = manyOf(
                 modifyClassInheritance,
                 modifyPropertyInheritance,
