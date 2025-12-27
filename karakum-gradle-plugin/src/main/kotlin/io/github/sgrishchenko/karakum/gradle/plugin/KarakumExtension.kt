@@ -18,7 +18,7 @@ interface KarakumExtension {
         block(library)
     }
 
-    fun library(dependency: Provider<Dependency>) {
+    fun library(dependency: Provider<out Dependency>) {
         libraryName.set(dependency.map { it.name })
         libraryVersion.set(dependency.map { it.version })
     }
