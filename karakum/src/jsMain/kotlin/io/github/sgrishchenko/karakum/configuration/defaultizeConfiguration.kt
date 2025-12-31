@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.configuration
 
+import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.util.*
 import js.array.ReadonlyArray
 import js.import.import
@@ -116,7 +117,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
         varianceModifiers = varianceModifiers,
 
-        moduleNameMapper = configuration.moduleNameMapper ?: recordOf("^.*$" to libraryName),
+        moduleNameMapper = configuration.moduleNameMapper ?: recordOf("^.*$" to prepareLibraryName(libraryName)),
         packageNameMapper = configuration.packageNameMapper ?: recordOf(),
 
         importInjector = configuration.importInjector ?: recordOf(),
