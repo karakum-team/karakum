@@ -27,6 +27,7 @@ kotlin {
             optIn.addAll(
                 "kotlin.contracts.ExperimentalContracts",
                 "kotlin.js.ExperimentalJsExport",
+                "kotlin.js.ExperimentalWasmJsInterop",
             )
         }
 
