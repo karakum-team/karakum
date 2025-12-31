@@ -41,4 +41,5 @@ val outputPath: String = layout.projectDirectory.asFile.path
 
 tasks.withType<NodeJsExec>().configureEach {
     args(outputPath)
+    dependsOn(project(":karakum").tasks.named("prepareTypeScriptDefinitions"))
 }
