@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.structure.`package`
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
+import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.structure.removePrefix
 import js.array.ReadonlyArray
 import node.path.path
@@ -28,7 +29,7 @@ fun packageToOutputFileName(
     fileName: String,
     configuration: Configuration,
 ): String {
-    val libraryName = configuration.libraryName
+    val libraryName = prepareLibraryName(configuration.libraryName)
     val libraryNameOutputPrefix = configuration.libraryNameOutputPrefix
 
     val result = packageToFileName(packageChunks, fileName)

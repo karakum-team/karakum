@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.structure.StructureItem
 import io.github.sgrishchenko.karakum.structure.module.extractModuleName
 import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
 import io.github.sgrishchenko.karakum.structure.`package`.dirNameToPackage
+import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.structure.removePrefix
 import io.github.sgrishchenko.karakum.util.camelize
 import js.array.ReadonlyArray
@@ -40,7 +41,7 @@ fun createSourceFileInfoItem(
     configuration: Configuration,
 ): SourceFileInfoItem {
     val inputRoots = configuration.inputRoots
-    val libraryName = configuration.libraryName
+    val libraryName = prepareLibraryName(configuration.libraryName)
 
     val dirName = extractDirName(inputRoots, sourceFileName)
     val fileName = extractFileName(sourceFileName)

@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.structure.module
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
+import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.structure.removePrefix
 import js.array.ReadonlyArray
 import node.path.path
@@ -16,7 +17,7 @@ fun extractModuleName(
     configuration: Configuration,
 ): String {
     val inputRoots = configuration.inputRoots
-    val libraryName = configuration.libraryName
+    val libraryName = prepareLibraryName(configuration.libraryName)
 
     val relativeFileName = generateRelativeFileName(inputRoots, sourceFileName)
 
