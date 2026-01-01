@@ -1,13 +1,17 @@
 package io.github.sgrishchenko.karakum.structure
 
 fun prepareLibraryName(libraryName: String): String {
-    return libraryName
-        .removePrefix("@types/")
-        .let {
-            if ("__" in it) {
-                "@" + it.replace("__", "/")
-            } else (
-                it
-            )
-        }
+    return if (libraryName.startsWith("@types/")) {
+        libraryName
+            .removePrefix("@types/")
+            .let {
+                if ("__" in it) {
+                    "@" + it.replaceFirst("__", "/")
+                } else {
+                    it
+                }
+            }
+    } else {
+        libraryName
+    }
 }
