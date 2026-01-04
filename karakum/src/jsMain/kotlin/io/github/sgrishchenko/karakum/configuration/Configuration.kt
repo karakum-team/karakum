@@ -10,19 +10,6 @@ import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.CompilerOptions
 
-sealed external interface Granularity {
-    companion object
-}
-
-inline val Granularity.Companion.bundle: Granularity
-    get() = unsafeCast("bundle")
-
-inline val Granularity.Companion.file: Granularity
-    get() = unsafeCast("file")
-
-inline val Granularity.Companion.topLevel: Granularity
-    get() = unsafeCast("top-level")
-
 sealed external interface NamespaceStrategy {
     companion object
 }
@@ -78,12 +65,6 @@ external interface SchemaConfiguration {
 
     val libraryName: String?
     val libraryNameOutputPrefix: Boolean?
-
-    /**
-     * @TJS-type string
-     * @$ref #/definitions/Granularity
-     * */
-    val granularity: Granularity?
 
     val plugins: Many<Any>?
 
@@ -178,8 +159,6 @@ external interface MutableConfiguration : PartialConfiguration {
     override var libraryName: String?
     override var libraryNameOutputPrefix: Boolean?
 
-    override var granularity: Granularity?
-
     override var plugins: Many<Plugin>?
 
     override var injections: Many<Injection>?
@@ -227,8 +206,6 @@ external interface Configuration {
 
     val libraryName: String
     val libraryNameOutputPrefix: Boolean
-
-    val granularity: Granularity
 
     val plugins: ReadonlyArray<Plugin>
 

@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.topLevel
 
-import io.github.sgrishchenko.karakum.configuration.Granularity
-import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.topLevel.plugins.blankOutExportStatement
 import io.github.sgrishchenko.karakum.util.manyOf
@@ -16,7 +14,6 @@ class TopLevelTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "sandbox-top-level"
-            granularity = Granularity.topLevel
             moduleNameMapper = recordOf(
                 "^(?!sandbox-top-level/myFunction1$).*" to "sandbox-top-level"
             )

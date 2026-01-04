@@ -1,11 +1,6 @@
 package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.Configuration
-import io.github.sgrishchenko.karakum.configuration.Granularity
-import io.github.sgrishchenko.karakum.configuration.bundle
-import io.github.sgrishchenko.karakum.configuration.file
-import io.github.sgrishchenko.karakum.configuration.topLevel
-import io.github.sgrishchenko.karakum.structure.bundle.createBundleInfoItem
 import io.github.sgrishchenko.karakum.structure.module.applyModuleNameMapper
 import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper
 import js.array.ReadonlyArray
@@ -128,78 +123,44 @@ private val topLevelMatcher: TopLevelMatcher = matcher@{ node ->
     null
 }
 
-private fun applyGranularity(
-    items: ReadonlyArray<InputStructureItem>,
-    configuration: Configuration,
-): ReadonlyArray<InputStructureItem> {
-    val granularity = configuration.granularity
+private fun applyGranularity(items: ReadonlyArray<InputStructureItem>): ReadonlyArray<InputStructureItem> {
+    return items.flatMap { item ->
+        val result = mutableListOf<InputStructureItem>()
 
-    if (granularity == Granularity.file) {
-        return items
-    }
+        for (node in item.nodes) {
+            val topLevelMatches = topLevelMatcher(node)
 
-    if (granularity == Granularity.bundle) {
-        val bundleItem = createBundleInfoItem(configuration)
-
-        return arrayOf(
-            InputStructureItem(
-                fileName = bundleItem.fileName,
-                `package` = bundleItem.`package`,
-                moduleName = bundleItem.moduleName,
-                qualifier = bundleItem.qualifier,
-                hasRuntime = bundleItem.hasRuntime,
-                imports = bundleItem.imports,
-
-                nodes = items.flatMap { it.nodes.asIterable() }.toTypedArray(),
-                meta = InputStructureItemMeta(
-                    type = "Bundle",
-                    name = items.joinToString(separator = "") { "\n\t${it.meta.name} [${it.meta.type}]" }
-                ),
-            )
-        )
-    }
-
-    if (granularity == Granularity.topLevel) {
-        return items.flatMap { item ->
-            val result = mutableListOf<InputStructureItem>()
-
-            for (node in item.nodes) {
-                val topLevelMatches = topLevelMatcher(node)
-
-                if (topLevelMatches != null) {
-                    for (topLevelMatch in topLevelMatches) {
-                        result += InputStructureItem(
-                            fileName = "${topLevelMatch.name}.kt",
-                            `package` = item.`package`,
-                            moduleName = item.moduleName,
-                            qualifier = item.qualifier,
-                            hasRuntime = topLevelMatch.hasRuntime,
-                            imports = item.imports,
-
-                            nodes = arrayOf(topLevelMatch.node),
-                            meta = item.meta,
-                        )
-                    }
-                } else {
+            if (topLevelMatches != null) {
+                for (topLevelMatch in topLevelMatches) {
                     result += InputStructureItem(
-                        fileName = item.fileName,
+                        fileName = "${topLevelMatch.name}.kt",
                         `package` = item.`package`,
                         moduleName = item.moduleName,
                         qualifier = item.qualifier,
-                        hasRuntime = item.hasRuntime,
+                        hasRuntime = topLevelMatch.hasRuntime,
                         imports = item.imports,
 
-                        nodes = arrayOf(node),
+                        nodes = arrayOf(topLevelMatch.node),
                         meta = item.meta,
                     )
                 }
+            } else {
+                result += InputStructureItem(
+                    fileName = item.fileName,
+                    `package` = item.`package`,
+                    moduleName = item.moduleName,
+                    qualifier = item.qualifier,
+                    hasRuntime = item.hasRuntime,
+                    imports = item.imports,
+
+                    nodes = arrayOf(node),
+                    meta = item.meta,
+                )
             }
+        }
 
-            result
-        }.toTypedArray()
-    }
-
-    error("Unknown granularity type: $granularity")
+        result
+    }.toTypedArray()
 }
 
 private fun applyMappers(
@@ -239,6 +200,6 @@ fun prepareStructure(
     items: ReadonlyArray<InputStructureItem>,
     configuration: Configuration,
 ): ReadonlyArray<InputStructureItem> {
-    val granularItems = applyGranularity(items, configuration)
+    val granularItems = applyGranularity(items)
     return applyMappers(granularItems, configuration)
 }

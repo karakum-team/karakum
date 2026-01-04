@@ -1,11 +1,9 @@
 package io.github.sgrishchenko.karakum.namespace
 
-import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.ignore
 import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.configuration.`package`
-import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.ruleOf
@@ -20,7 +18,6 @@ class NamespaceTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "sandbox-namespace"
-            granularity = Granularity.topLevel
             packageNameMapper = recordOf(
                 "will/be/mapped/andthis" to "was/mapped/nested",
                 "will/be/mapped" to "was/mapped/main"

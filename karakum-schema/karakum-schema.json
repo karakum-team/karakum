@@ -1,14 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "Granularity": {
-            "enum": [
-                "bundle",
-                "file",
-                "top-level"
-            ],
-            "type": "string"
-        },
         "NamespaceStrategy": {
             "enum": [
                 "ignore",
@@ -69,11 +61,6 @@
         "disclaimer": {
             "type": "string",
             "title": "disclaimer"
-        },
-        "granularity": {
-            "title": "granularity",
-            "type": "string",
-            "$ref": "#/definitions/Granularity"
         },
         "ignoreInput": {
             "anyOf": [

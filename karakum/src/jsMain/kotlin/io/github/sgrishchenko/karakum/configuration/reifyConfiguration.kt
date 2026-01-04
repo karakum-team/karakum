@@ -42,7 +42,6 @@ suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfi
         ignoreOutput = configuration.ignoreOutput,
         libraryName = configuration.libraryName,
         libraryNameOutputPrefix = configuration.libraryNameOutputPrefix,
-        granularity = configuration.granularity,
         moduleNameMapper = configuration.moduleNameMapper,
         packageNameMapper = configuration.packageNameMapper,
         importInjector = configuration.importInjector,

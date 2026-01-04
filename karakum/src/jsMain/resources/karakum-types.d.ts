@@ -26,7 +26,6 @@ export type ReadonlyRecord<K extends PropertyKey, V> = Readonly<Record<K, V>>
 export type Rule = string | ReadonlyRecord<string, string>
 export type Tuple2<A, B> = [A, B]
 
-export type Granularity = "bundle" | "file" | "top-level"
 export type NamespaceStrategy = "ignore" | "object" | "package"
 export type ConflictResolutionStrategy = "join" | "replace" | "error"
 export type InputResolutionStrategy = "node" | "plain"

@@ -1,17 +1,13 @@
 package io.github.sgrishchenko.karakum.structure.derived
 
-import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.bundle
 import io.github.sgrishchenko.karakum.configuration.`package`
-import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.DerivedFile
 import io.github.sgrishchenko.karakum.extension.plugins.configurationServiceKey
 import io.github.sgrishchenko.karakum.extension.plugins.importInfoServiceKey
 import io.github.sgrishchenko.karakum.extension.plugins.namespaceInfoServiceKey
 import io.github.sgrishchenko.karakum.structure.StructureItem
-import io.github.sgrishchenko.karakum.structure.bundle.createBundleInfoItem
 import io.github.sgrishchenko.karakum.structure.namespace.createNamespaceInfoItem
 import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper
 import io.github.sgrishchenko.karakum.structure.sourceFile.createSourceFileInfoItem
@@ -27,7 +23,6 @@ fun generateDerivedDeclarations(
     val namespaceInfoService = context.requireService(namespaceInfoServiceKey)
 
     val configuration = configurationService.configuration
-    val granularity = configuration.granularity
 
     val structureItems: List<DerivedDeclarationStructureItem> = declarations.map { generatedInfo ->
         val sourceFileName = generatedInfo.sourceFileName
@@ -36,20 +31,6 @@ fun generateDerivedDeclarations(
         val body = generatedInfo.body
 
         val imports = importInfoService.resolveImports(sourceFileName, namespace)
-
-        if (granularity == Granularity.bundle) {
-            val item = createBundleInfoItem(configuration)
-
-            return@map DerivedDeclarationStructureItem(
-                fileName = item.fileName,
-                `package` = item.`package`,
-                moduleName = item.moduleName,
-                qualifier = item.qualifier,
-                hasRuntime = item.hasRuntime,
-                imports = item.imports,
-                body = body,
-            )
-        }
 
         val item: StructureItem =
             if (
@@ -61,27 +42,15 @@ fun generateDerivedDeclarations(
                 createSourceFileInfoItem(sourceFileName, imports, configuration)
             }
 
-        if (granularity == Granularity.topLevel) {
-            DerivedDeclarationStructureItem(
-                fileName = fileName,
-                `package` = item.`package`,
-                moduleName = item.moduleName,
-                qualifier = item.qualifier,
-                hasRuntime = item.hasRuntime,
-                imports = item.imports,
-                body = body,
-            )
-        } else {
-            DerivedDeclarationStructureItem(
-                fileName = item.fileName,
-                `package` = item.`package`,
-                moduleName = item.moduleName,
-                qualifier = item.qualifier,
-                hasRuntime = item.hasRuntime,
-                imports = item.imports,
-                body = body,
-            )
-        }
+        DerivedDeclarationStructureItem(
+            fileName = fileName,
+            `package` = item.`package`,
+            moduleName = item.moduleName,
+            qualifier = item.qualifier,
+            hasRuntime = item.hasRuntime,
+            imports = item.imports,
+            body = body,
+        )
     }
 
     return structureItems

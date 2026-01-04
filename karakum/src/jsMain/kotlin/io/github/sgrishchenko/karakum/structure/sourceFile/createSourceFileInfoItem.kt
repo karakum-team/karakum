@@ -30,8 +30,8 @@ private fun extractDirName(prefixes: ReadonlyArray<String>, sourceFileName: Stri
 private fun extractFileName(sourceFileName: String): String {
     return camelize(
         path.basename(sourceFileName)
-            .replace("\\.d\\.ts$".toRegex(), ".kt")
-            .replace("\\.ts$".toRegex(), ".kt")
+            .replace("\\.d\\.ts$".toRegex(), "")
+            .replace("\\.ts$".toRegex(), "")
     )
 }
 
@@ -46,12 +46,12 @@ fun createSourceFileInfoItem(
     val dirName = extractDirName(inputRoots, sourceFileName)
     val fileName = extractFileName(sourceFileName)
 
-    val packageChunks = moduleNameToPackage(libraryName) + dirNameToPackage(dirName)
+    val packageChunks = moduleNameToPackage(libraryName) + dirNameToPackage(dirName) + fileName
 
     val moduleName = extractModuleName(sourceFileName, configuration)
 
     return SourceFileInfoItem(
-        fileName = fileName,
+        fileName = "module.kt",
         `package` = packageChunks,
         moduleName = moduleName,
         qualifier = null,

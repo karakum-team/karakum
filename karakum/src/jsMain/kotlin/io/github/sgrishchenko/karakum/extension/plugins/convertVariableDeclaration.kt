@@ -1,10 +1,8 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.Granularity
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.configuration.`package`
-import io.github.sgrishchenko.karakum.configuration.topLevel
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.NodeFlags
 import typescript.isVariableDeclaration
@@ -19,7 +17,6 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
     node.initializer?.let { checkCoverageService?.cover(it) }
 
     val commentService = context.lookupService(commentServiceKey)
-    val configurationService = context.lookupService(configurationServiceKey)
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
@@ -42,11 +39,8 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
     var leadingComment = ""
 
     if (
-        configurationService?.configuration?.granularity === Granularity.topLevel
-        && (
-            namespace == null
-            || namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`package`
-        )
+        namespace == null
+        || namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`package`
     ) {
         leadingComment = commentService?.renderLeadingComments(node.parent) ?: ""
     }

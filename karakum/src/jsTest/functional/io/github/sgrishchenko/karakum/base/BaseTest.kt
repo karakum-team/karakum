@@ -2,8 +2,6 @@ package io.github.sgrishchenko.karakum.base
 
 import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyClassInheritance
 import io.github.sgrishchenko.karakum.base.inheritanceModifiers.modifyPropertyInheritance
-import io.github.sgrishchenko.karakum.configuration.Granularity
-import io.github.sgrishchenko.karakum.configuration.file
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
@@ -17,19 +15,39 @@ class BaseTest {
             input = manyOf("**/*.d.ts")
             output = testOutput
             libraryName = "sandbox-base"
-            granularity = Granularity.file
             inheritanceModifiers = manyOf(
                 modifyClassInheritance,
                 modifyPropertyInheritance,
             )
+            packageNameMapper = recordOf(
+                "VariableWithAnonymousType.kt" to "VariableWithAnonymousType.interface.kt"
+            )
             importInjector = recordOf(
-                "mappedType/simple.kt" to arrayOf(
+                "importType/simple/DataRouterStateContext.kt" to arrayOf(
+                    "sandbox.base.importType.router.RouterState"
+                ),
+                "mappedType/simple/MappedTypeContainerMappedType.kt" to arrayOf(
                     "js.promise.Promise",
                 ),
-                "property/doubleOptionality.kt" to arrayOf(
-                    "sandbox.base.AgnosticBaseRouteObjectHandle15",
+                "mappedType/simple/NamedOptionsFlags.kt" to arrayOf(
+                    "js.promise.Promise",
                 ),
-                "void/simple.kt" to arrayOf(
+                "mappedType/simple/OptionalOptionsFlags.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+                "mappedType/simple/OptionsFlags.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+                "mappedType/simple/OptionsFlagsWithTypeLiteral.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+                "mappedType/simple/ReadonlyOptionsFlags.kt" to arrayOf(
+                    "js.promise.Promise",
+                ),
+                "property/doubleOptionality/AgnosticBaseRouteObject.kt" to arrayOf(
+                    "sandbox.base.generated.AgnosticBaseRouteObjectHandle15",
+                ),
+                "void/simple/functionWithPromiseVoidReturnType.kt" to arrayOf(
                     "js.promise.Promise",
                 ),
             )
