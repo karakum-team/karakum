@@ -4,126 +4,11 @@ import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.structure.module.applyModuleNameMapper
 import io.github.sgrishchenko.karakum.structure.`package`.applyPackageNameMapper
 import js.array.ReadonlyArray
-import kotlinx.js.JsPlainObject
-import typescript.*
 
-@JsPlainObject
-external interface TopLevelMatch {
-    val name: String
-    val node: Declaration
-    val hasRuntime: Boolean
-}
-
-typealias TopLevelMatcher = (node: Node) -> ReadonlyArray<TopLevelMatch>?
-
-private val classMatcher: TopLevelMatcher = matcher@{ node ->
-    if (isClassDeclaration(node)) {
-        val name = node.name?.text ?: return@matcher null
-
-        arrayOf(TopLevelMatch(
-            name = name,
-            node = node,
-            hasRuntime = true,
-        ))
-    } else {
-        null
-    }
-}
-
-private val interfaceMatcher: TopLevelMatcher = { node ->
-    if (isInterfaceDeclaration(node)) {
-        val name = node.name.text
-
-        arrayOf(TopLevelMatch(
-            name = name,
-            node = node,
-            hasRuntime = false,
-        ))
-    } else {
-        null
-    }
-}
-
-private val typeAliasMatcher: TopLevelMatcher = { node ->
-    if (isTypeAliasDeclaration(node)) {
-        val name = node.name.text
-
-        arrayOf(TopLevelMatch(
-            name = name,
-            node = node,
-            hasRuntime = false,
-        ))
-    } else {
-        null
-    }
-}
-
-private val enumMatcher: TopLevelMatcher = { node ->
-    if (isEnumDeclaration(node)) {
-        val name = node.name.text
-
-        arrayOf(TopLevelMatch(
-            name = name,
-            node = node,
-            hasRuntime = true,
-        ))
-    } else {
-        null
-    }
-}
-
-private val functionMatcher: TopLevelMatcher = matcher@{ node ->
-    if (isFunctionDeclaration(node)) {
-        val name = node.name?.text ?: return@matcher null
-
-        arrayOf(TopLevelMatch(
-            name = name,
-            node = node,
-            hasRuntime = true,
-        ))
-    } else {
-        null
-    }
-}
-
-private val variableMatcher: TopLevelMatcher = { node ->
-    if (isVariableStatement(node)) {
-        node.declarationList.declarations.asArray()
-            .mapNotNull { declaration ->
-                val nameNode = declaration.name
-                if (!isIdentifier(nameNode)) return@mapNotNull null
-
-                TopLevelMatch(
-                    name = nameNode.text,
-                    node = declaration,
-                    hasRuntime = true,
-                )
-            }
-            .toTypedArray()
-    } else {
-        null
-    }
-}
-
-private val topLevelMatchers: ReadonlyArray<TopLevelMatcher> = arrayOf(
-    classMatcher,
-    interfaceMatcher,
-    typeAliasMatcher,
-    enumMatcher,
-    functionMatcher,
-    variableMatcher,
-)
-
-private val topLevelMatcher: TopLevelMatcher = matcher@{ node ->
-    for (matcher in topLevelMatchers) {
-        val result = matcher(node)
-        if (result != null) return@matcher result
-    }
-
-    null
-}
-
-private fun applyGranularity(items: ReadonlyArray<InputStructureItem>): ReadonlyArray<InputStructureItem> {
+private fun applyGranularity(
+    items: ReadonlyArray<InputStructureItem>,
+    topLevelMatcher: TopLevelMatcher,
+): ReadonlyArray<InputStructureItem> {
     return items.flatMap { item ->
         val result = mutableListOf<InputStructureItem>()
 
@@ -198,8 +83,9 @@ private fun applyMappers(
 
 fun prepareStructure(
     items: ReadonlyArray<InputStructureItem>,
+    topLevelMatcher: TopLevelMatcher,
     configuration: Configuration,
 ): ReadonlyArray<InputStructureItem> {
-    val granularItems = applyGranularity(items)
+    val granularItems = applyGranularity(items, topLevelMatcher)
     return applyMappers(granularItems, configuration)
 }

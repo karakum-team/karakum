@@ -9,6 +9,7 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
 import io.github.sgrishchenko.karakum.structure.TargetFile
+import io.github.sgrishchenko.karakum.structure.createTopLevelMatcher
 import io.github.sgrishchenko.karakum.structure.import.collectImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.collectNamespaceInfo
 import io.github.sgrishchenko.karakum.structure.`package`.packageToOutputFileName
@@ -133,14 +134,18 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val namespaceInfo = collectNamespaceInfo(sourceFiles, importInfo, configuration)
     val sourceFileInfo = collectSourceFileInfo(sourceFiles, importInfo, configuration)
 
+    val topLevelMatcher = createTopLevelMatcher(namespaceInfo)
+
     val namespaceStructure = prepareStructure(
         namespaceInfo
             .filter { it.strategy == NamespaceStrategy.`package` }
             .toTypedArray(),
+        topLevelMatcher,
         configuration,
     )
     val sourceFileStructure = prepareStructure(
         sourceFileInfo,
+        topLevelMatcher,
         configuration,
     )
     val structure = namespaceStructure + sourceFileStructure

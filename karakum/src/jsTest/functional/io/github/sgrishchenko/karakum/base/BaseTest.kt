@@ -20,7 +20,7 @@ class BaseTest {
                 modifyPropertyInheritance,
             )
             packageNameMapper = recordOf(
-                "VariableWithAnonymousType.kt" to "VariableWithAnonymousType.interface.kt"
+                "VariableWithAnonymousType.kt" to "VariableWithAnonymousType.interface.kt",
             )
             importInjector = recordOf(
                 "importType/simple/DataRouterStateContext.kt" to arrayOf(
