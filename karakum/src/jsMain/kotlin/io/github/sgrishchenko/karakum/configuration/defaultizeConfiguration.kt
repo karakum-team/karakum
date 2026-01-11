@@ -101,7 +101,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         ignoreOutput = ignoreOutput,
 
         libraryName = libraryName,
-        libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?: false,
+        libraryNameOutputPrefix = configuration.libraryNameOutputPrefix ?: true,
 
         plugins = plugins,
 
