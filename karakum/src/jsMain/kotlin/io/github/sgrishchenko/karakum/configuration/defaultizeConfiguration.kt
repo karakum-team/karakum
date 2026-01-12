@@ -52,7 +52,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
     val libraryName = configuration.libraryName ?: ""
     val libraryLocation = if (inputResolutionStrategy == InputResolutionStrategy.node) {
         val packageJSON = requireNotNull(findPackageJSON(libraryName, import.meta.url))
-        path.dirname(packageJSON)
+        toPosix(path.dirname(packageJSON))
     } else null
 
     val inputCwd = when (inputResolutionStrategy) {
