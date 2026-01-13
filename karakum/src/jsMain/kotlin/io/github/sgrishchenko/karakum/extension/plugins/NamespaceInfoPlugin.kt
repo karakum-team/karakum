@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
+import io.github.sgrishchenko.karakum.structure.namespace.resolveDefaultNamespaceStrategy
 import typescript.ModuleDeclaration
 import typescript.Node
 
@@ -14,11 +15,11 @@ val namespaceInfoServiceKey = ContextKey<NamespaceInfoService>()
 class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: NamespaceInfo) {
     private val namespaceInfo = namespaceInfo.associate { it.name to it.strategy }
 
-    fun resolveNamespaceStrategy(node: ModuleDeclaration): NamespaceStrategy? {
+    fun resolveNamespaceStrategy(node: ModuleDeclaration): NamespaceStrategy {
         val name = extractNamespaceName(node)
         val detailedName = name.joinToString(separator = ".") { it.detailedName }
 
-        return namespaceInfo[detailedName]
+        return namespaceInfo[detailedName] ?: resolveDefaultNamespaceStrategy(node)
     }
 }
 

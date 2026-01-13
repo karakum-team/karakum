@@ -3,6 +3,7 @@ package io.github.sgrishchenko.karakum.structure.namespace
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`object`
+import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.structure.StructureItem
 import io.github.sgrishchenko.karakum.structure.module.extractModuleName
 import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
@@ -27,7 +28,12 @@ external interface NamespaceNameChunk {
     val isAmbient: Boolean
 }
 
-val defaultNamespaceStrategy = NamespaceStrategy.`object`
+fun resolveDefaultNamespaceStrategy(namespace: ModuleDeclaration) =
+    if (isStringLiteral(namespace.name)) {
+        NamespaceStrategy.`package`
+    } else {
+        NamespaceStrategy.`object`
+    }
 
 fun extractNamespaceName(
     namespace: ModuleDeclaration,
@@ -124,6 +130,6 @@ fun createNamespaceInfoItem(
         hasRuntime = hasRuntime,
         imports = imports,
         name = detailedName,
-        strategy = defaultNamespaceStrategy
+        strategy = resolveDefaultNamespaceStrategy(namespace)
     )
 }
