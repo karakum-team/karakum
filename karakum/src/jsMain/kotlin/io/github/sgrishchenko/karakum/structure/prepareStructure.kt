@@ -23,7 +23,7 @@ private fun applyGranularity(
                         moduleName = item.moduleName,
                         qualifier = item.qualifier,
                         hasRuntime = topLevelMatch.hasRuntime,
-                        imports = item.imports,
+                        imports = topLevelMatch.imports ?: item.imports,
 
                         nodes = arrayOf(topLevelMatch.node),
                         meta = item.meta,

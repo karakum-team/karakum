@@ -134,7 +134,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val namespaceInfo = collectNamespaceInfo(sourceFiles, importInfo, configuration)
     val sourceFileInfo = collectSourceFileInfo(sourceFiles, importInfo, configuration)
 
-    val topLevelMatcher = createTopLevelMatcher(namespaceInfo)
+    val topLevelMatcher = createTopLevelMatcher(importInfo, namespaceInfo)
 
     val namespaceStructure = prepareStructure(
         namespaceInfo

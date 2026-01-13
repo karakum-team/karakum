@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.structure
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`object`
+import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
 import js.array.ReadonlyArray
@@ -25,6 +26,7 @@ external interface TopLevelMatch {
     val name: String
     val node: Declaration
     val hasRuntime: Boolean
+    val imports: ReadonlyArray<String>?
 }
 
 typealias TopLevelMatcher = (node: Node) -> ReadonlyArray<TopLevelMatch>?
@@ -122,7 +124,7 @@ private fun moduleNameToFileName(moduleName: String): String {
     return moduleName.replace("""[<>:"/\\|?*]""".toRegex(), "_")
 }
 
-private fun createNamespaceMatcher(namespaceInfo: NamespaceInfo): TopLevelMatcher = matcher@{ node ->
+private fun createNamespaceMatcher(importInfo: ImportInfo, namespaceInfo: NamespaceInfo): TopLevelMatcher = matcher@{ node ->
     if (isModuleDeclaration(node)) {
         val namespaceStrategy = resolveNamespaceStrategy(node, namespaceInfo)
         if (namespaceStrategy != NamespaceStrategy.`object`) return@matcher null
@@ -138,6 +140,7 @@ private fun createNamespaceMatcher(namespaceInfo: NamespaceInfo): TopLevelMatche
             name = name,
             node = node,
             hasRuntime = true,
+            imports = importInfo[node],
         ))
     } else {
         null
@@ -151,18 +154,18 @@ private fun resolveNamespaceStrategy(node: ModuleDeclaration, namespaceInfo: Nam
     return namespaceInfo.find { it.name == detailedName }?.strategy
 }
 
-private fun createTopLevelMatchers(namespaceInfo: NamespaceInfo): ReadonlyArray<TopLevelMatcher> = arrayOf(
+private fun createTopLevelMatchers(importInfo: ImportInfo, namespaceInfo: NamespaceInfo): ReadonlyArray<TopLevelMatcher> = arrayOf(
     classMatcher,
     interfaceMatcher,
     typeAliasMatcher,
     enumMatcher,
     functionMatcher,
     variableMatcher,
-    createNamespaceMatcher(namespaceInfo),
+    createNamespaceMatcher(importInfo, namespaceInfo),
 )
 
-fun createTopLevelMatcher(namespaceInfo: NamespaceInfo): TopLevelMatcher {
-    val topLevelMatchers = createTopLevelMatchers(namespaceInfo)
+fun createTopLevelMatcher(importInfo: ImportInfo, namespaceInfo: NamespaceInfo): TopLevelMatcher {
+    val topLevelMatchers = createTopLevelMatchers(importInfo, namespaceInfo)
 
     return matcher@{ node ->
         for (matcher in topLevelMatchers) {

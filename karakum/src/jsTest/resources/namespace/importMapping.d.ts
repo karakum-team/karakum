@@ -44,6 +44,9 @@ declare module "import-consumer" {
     const otherIgnored: OtherIgnored
 
     namespace Nested {
+        import {Z} from "other-import-provider"
+
         const x: X
+        const z: Z
     }
 }
