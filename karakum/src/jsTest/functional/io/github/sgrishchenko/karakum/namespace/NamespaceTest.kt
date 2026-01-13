@@ -27,16 +27,9 @@ class NamespaceTest {
                 "will-be-erased" to ""
             )
             namespaceStrategy = recordOf(
-                "package-namespace.ObjectNamespace" to NamespaceStrategy.`object`,
-                "package-namespace" to NamespaceStrategy.`package`,
+                "package-namespace.NestedNamespace" to NamespaceStrategy.`package`,
                 "IgnoreNamespace" to NamespaceStrategy.ignore,
-                "will-be-mapped" to NamespaceStrategy.`package`,
-                "will-be-erased" to NamespaceStrategy.`package`,
-
-                "import-provider" to NamespaceStrategy.`package`,
-                "other-import-provider" to NamespaceStrategy.`package`,
-                "ignored-import" to NamespaceStrategy.`package`,
-                "import-consumer" to NamespaceStrategy.`package`,
+                "will-be-mapped.AndThis" to NamespaceStrategy.`package`,
             )
             importMapper = recordOf(
                 "^import-provider" to ruleOf("import.provider"),
