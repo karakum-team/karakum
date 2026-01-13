@@ -184,6 +184,10 @@
             ],
             "title": "inputRoots"
         },
+        "isolatedOutputPackage": {
+            "type": "boolean",
+            "title": "isolatedOutputPackage"
+        },
         "libraryName": {
             "type": "string",
             "title": "libraryName"

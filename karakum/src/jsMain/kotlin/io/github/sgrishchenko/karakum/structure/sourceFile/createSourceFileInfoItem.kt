@@ -46,12 +46,17 @@ fun createSourceFileInfoItem(
     val dirName = extractDirName(inputRoots, sourceFileName)
     val fileName = extractFileName(sourceFileName)
 
-    val packageChunks = moduleNameToPackage(libraryName) + dirNameToPackage(dirName) + fileName
+    var packageChunks = moduleNameToPackage(libraryName) + dirNameToPackage(dirName)
+    if (configuration.isolatedOutputPackage) packageChunks += fileName
 
     val moduleName = extractModuleName(sourceFileName, configuration)
 
     return SourceFileInfoItem(
-        fileName = "module.kt",
+        fileName = if (configuration.isolatedOutputPackage) {
+            "module.kt"
+        } else {
+            "$fileName.kt"
+        },
         `package` = packageChunks,
         moduleName = moduleName,
         qualifier = null,

@@ -65,6 +65,7 @@ external interface SchemaConfiguration {
 
     val libraryName: String?
     val libraryNameOutputPrefix: Boolean?
+    val isolatedOutputPackage: Boolean?
 
     val plugins: Many<Any>?
 
@@ -158,6 +159,7 @@ external interface MutableConfiguration : PartialConfiguration {
 
     override var libraryName: String?
     override var libraryNameOutputPrefix: Boolean?
+    override var isolatedOutputPackage: Boolean?
 
     override var plugins: Many<Plugin>?
 
@@ -206,6 +208,7 @@ external interface Configuration {
 
     val libraryName: String
     val libraryNameOutputPrefix: Boolean
+    val isolatedOutputPackage: Boolean
 
     val plugins: ReadonlyArray<Plugin>
 

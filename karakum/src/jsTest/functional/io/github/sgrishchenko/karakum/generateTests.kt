@@ -38,6 +38,7 @@ suspend fun generateTests(
         this.cwd = cwd
         inputResolutionStrategy = InputResolutionStrategy.plain
         libraryNameOutputPrefix = false
+        isolatedOutputPackage = true
         moduleNameMapper = recordOf()
         verbose = true
         Object.assign(this, createConfiguration(output))
