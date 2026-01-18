@@ -71,13 +71,10 @@ class KarakumPlugin : Plugin<Project> {
         }
 
         val jsNodeProductionRun by tasks.named<NodeJsExec>("jsNodeProductionRun") {
+            args("--output", karakum.output.asFile.get().absolutePath)
+
             if (karakum.libraryName.isPresent) {
-                args(
-                    "--library-name", karakum.libraryName.get(),
-                    "--output", karakum.output.asFile.get().absolutePath,
-                )
-            } else {
-                args("--output", karakum.output.asFile.get().absolutePath)
+                args("--library-name", karakum.libraryName.get())
             }
         }
 
@@ -87,12 +84,20 @@ class KarakumPlugin : Plugin<Project> {
             classpath = ktlint
             mainClass = "com.pinterest.ktlint.Main"
             jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
+
             val reporterOutput = layout.buildDirectory.file("reports/ktlint/ktlint-format.txt")
+
             args(
                 "--format",
                 "--reporter=plain,output=${reporterOutput.get().asFile.absolutePath}",
-                "${karakum.output.asFile.get().absoluteFile.invariantSeparatorsPath}/**/*.kt",
             )
+
+            val kotlinFiles = fileTree(karakum.output.asFile) {
+                include("**/*.kt")
+            }
+
+            args(kotlinFiles.files.map { it.absolutePath })
+
             // do not report violations that cannot be auto-corrected
             isIgnoreExitValue = true
 
