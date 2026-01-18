@@ -2,8 +2,6 @@
   "libraryName": "js-file-download",
   "input": "js-file-download.d.ts",
   "output": "generated",
-  "granularity": "file",
-  "namespaceStrategy": {
-    "js-file-download": "ignore"
-  }
+  "libraryNameOutputPrefix": false,
+  "isolatedOutputPackage": true
 }
