@@ -83,12 +83,13 @@ class KarakumPlugin : Plugin<Project> {
             description = "Check Kotlin code style and format"
             classpath = ktlint
             mainClass = "com.pinterest.ktlint.Main"
+            workingDir = karakum.output.asFile.get()
             jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
             val reporterOutput = layout.buildDirectory.file("reports/ktlint/ktlint-format.txt")
             args(
                 "--format",
                 "--reporter=plain,output=${reporterOutput.get().asFile.absolutePath}",
-                "${karakum.output.asFile.get().absoluteFile.invariantSeparatorsPath}/**/*.kt",
+                "**/*.kt",
             )
             // do not report violations that cannot be auto-corrected
             isIgnoreExitValue = true
