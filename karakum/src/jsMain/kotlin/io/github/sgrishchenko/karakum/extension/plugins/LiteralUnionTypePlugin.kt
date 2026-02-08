@@ -110,7 +110,7 @@ private fun resolveUnionMemberEntry(node: LiteralTypeNode, context: Context): Li
         return LiteralUnionMemberEntry.copy(entry, key = resolvedName)
     }
 
-    return LiteralUnionMemberEntry.copy(entry, escapeIdentifier(entry.key))
+    return LiteralUnionMemberEntry.copy(entry, key = escapeIdentifier(entry.key))
 }
 
 private fun isNegativeNumericLikeLiteralType(node: LiteralTypeNode): Boolean {
