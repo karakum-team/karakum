@@ -31,6 +31,8 @@ declare namespace ObjectNamespace {
 
     namespace InnerObjectNamespace {
         const innerObjectNamespaceValue: number
+
+        type innerObjectNamespaceUnion = "5" | "6";
     }
 }
 

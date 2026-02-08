@@ -9,17 +9,15 @@ val objectNamespaceValue: Double
 /** my favorite constant */
 val objectNamespaceValueWithComment: Double
 sealed interface objectNamespaceUnion {
-companion object {
-@seskar.js.JsValue("0")
-val `0`: objectNamespaceUnion
-@seskar.js.JsValue("1")
-val `1`: objectNamespaceUnion
-}
+companion object
 }
 interface ObjectNamespaceInterface {
 var someProperty: ObjectNamespaceInterfaceSomeProperty
 }
 object InnerObjectNamespace {
 val innerObjectNamespaceValue: Double
+sealed interface innerObjectNamespaceUnion {
+companion object
+}
 }
 }

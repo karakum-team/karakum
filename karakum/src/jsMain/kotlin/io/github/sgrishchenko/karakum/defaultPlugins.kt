@@ -34,6 +34,7 @@ fun createPlugins(
 
     NullableUnionTypePlugin(),
     AccessorsPlugin(),
+    TypeAliasDeclarationPlugin(),
 
     createTypeLiteralPlugin(),
     createMappedTypePlugin(),
@@ -87,7 +88,6 @@ fun createPlugins(
     convertLiteralType,
     convertArrayType,
     convertTupleType,
-    convertTypeAliasDeclaration,
     convertEnumDeclaration,
     convertEnumMember,
     convertVariableStatement,

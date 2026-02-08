@@ -3,15 +3,15 @@
 package sandbox.base.union.mixedLiteralEnum
 
 sealed external interface MixedLiteralEnumWithDuplicates {
-companion object {
-@seskar.js.JsRawValue("true")
-val `true`: MixedLiteralEnumWithDuplicates
-@seskar.js.JsRawValue("false")
-val `false`: MixedLiteralEnumWithDuplicates
+companion object
+}
+inline val MixedLiteralEnumWithDuplicates.Companion.`true`: MixedLiteralEnumWithDuplicates
+    get() = js.reflect.unsafeCast(true)
+
+inline val MixedLiteralEnumWithDuplicates.Companion.`false`: MixedLiteralEnumWithDuplicates
+    get() = js.reflect.unsafeCast(false)
 /*
 Duplicated names were generated:
 `true` for "true"
 `false` for "false"
 */
-}
-}

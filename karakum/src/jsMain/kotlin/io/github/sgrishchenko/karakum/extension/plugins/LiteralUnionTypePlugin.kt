@@ -8,71 +8,109 @@ import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
+import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.*
 import kotlin.contracts.contract
+
+sealed external interface LiteralUnionMemberEntryType {
+    companion object
+}
+
+inline val LiteralUnionMemberEntryType.Companion.string: LiteralUnionMemberEntryType
+    get() = unsafeCast("string")
+
+inline val LiteralUnionMemberEntryType.Companion.boolean: LiteralUnionMemberEntryType
+    get() = unsafeCast("boolean")
+
+inline val LiteralUnionMemberEntryType.Companion.number: LiteralUnionMemberEntryType
+    get() = unsafeCast("number")
+
+inline val LiteralUnionMemberEntryType.Companion.bigInt: LiteralUnionMemberEntryType
+    get() = unsafeCast("bigInt")
 
 @JsPlainObject
 external interface LiteralUnionMemberEntry {
     val key: String
     val value: String
-    val isString: Boolean
+    val type: LiteralUnionMemberEntryType
 }
 
 @JsPlainObject
 external interface LiteralUnionRenderResult {
     val declaration: String
+    val generated: String
     val nullable: Boolean
 }
 
-private fun extractBooleanUnionMemberName(node: LiteralTypeNode): String? {
-    if (node.literal.kind === SyntaxKind.TrueKeyword) return "`true`"
-    if (node.literal.kind === SyntaxKind.FalseKeyword) return "`false`"
+private fun extractBooleanUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
+    if (node.literal.kind === SyntaxKind.TrueKeyword) {
+        return LiteralUnionMemberEntry("`true`", "true", LiteralUnionMemberEntryType.boolean)
+    }
+    if (node.literal.kind === SyntaxKind.FalseKeyword) {
+        return LiteralUnionMemberEntry("`false`", "false", LiteralUnionMemberEntryType.boolean)
+    }
     return null
 }
 
-private fun extractStringUnionMemberName(node: LiteralTypeNode): String? {
+private fun extractStringUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
     val literal = node.literal
-    if (isStringLiteral(literal)) return convertMemberNameLiteral(literal)
+    if (isStringLiteral(literal)) {
+        return LiteralUnionMemberEntry(
+            convertMemberNameLiteral(literal),
+            literal.text,
+            LiteralUnionMemberEntryType.string,
+        )
+    }
     return null
 }
 
-private fun extractNumericUnionMemberName(node: LiteralTypeNode): String? {
+private fun extractNumericUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
     val literal = node.literal
-    if (isNumericLiteral(literal)) return "`${literal.text}`"
-    if (isBigIntLiteral(literal)) return "`${literal.text}`"
+    if (isNumericLiteral(literal)) {
+        return LiteralUnionMemberEntry("`${literal.text}`", literal.text, LiteralUnionMemberEntryType.number)
+    }
+    if (isBigIntLiteral(literal)) {
+        return LiteralUnionMemberEntry("`${literal.text}`", literal.text, LiteralUnionMemberEntryType.bigInt)
+    }
     return null
 }
 
-private fun extractPrefixUnaryExpressionUnionMemberName(node: LiteralTypeNode): String? {
+private fun extractPrefixUnaryExpressionUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
     val literal = node.literal
     if (
         isPrefixUnaryExpression(literal)
         && literal.operator == SyntaxKind.MinusToken
     ) {
         val operand = literal.operand
-        if (isNumericLiteral(operand)) return "`-${operand.text}`"
-        if (isBigIntLiteral(operand)) return "`-${operand.text}`"
+        if (isNumericLiteral(operand)) {
+            return LiteralUnionMemberEntry("`-${operand.text}`", "-${operand.text}", LiteralUnionMemberEntryType.number)
+        }
+        if (isBigIntLiteral(operand)) {
+            return LiteralUnionMemberEntry("`-${operand.text}`", "-${operand.text}", LiteralUnionMemberEntryType.bigInt)
+        }
     }
     return null
 }
 
-private fun extractUnionMemberName(node: LiteralTypeNode): String? {
-    return extractBooleanUnionMemberName(node)
-        ?: extractStringUnionMemberName(node)
-        ?: extractNumericUnionMemberName(node)
-        ?: extractPrefixUnaryExpressionUnionMemberName(node)
+private fun extractUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
+    return extractBooleanUnionMemberEntry(node)
+        ?: extractStringUnionMemberEntry(node)
+        ?: extractNumericUnionMemberEntry(node)
+        ?: extractPrefixUnaryExpressionUnionMemberEntry(node)
 }
 
-private fun resolveUnionMemberName(node: LiteralTypeNode, context: Context): String {
+private fun resolveUnionMemberEntry(node: LiteralTypeNode, context: Context): LiteralUnionMemberEntry {
     val nameResolverService = context.requireService(nameResolverServiceKey)
 
+    val entry = extractUnionMemberEntry(node) ?: error("Unsupported literal type")
+
     val resolvedName = nameResolverService.tryResolveName(node, context)
-    if (resolvedName != null) return resolvedName
+    if (resolvedName != null) {
+        return LiteralUnionMemberEntry.copy(entry, key = resolvedName)
+    }
 
-    val extractedName = extractUnionMemberName(node) ?: error("Unsupported literal type")
-
-    return escapeIdentifier(extractedName)
+    return LiteralUnionMemberEntry.copy(entry, escapeIdentifier(entry.key))
 }
 
 private fun isNegativeNumericLikeLiteralType(node: LiteralTypeNode): Boolean {
@@ -139,6 +177,7 @@ fun isNullableLiteralUnionType(node: Node, context: Context): Boolean {
 fun convertLiteralUnionType(
     node: UnionTypeNode,
     name: String,
+    qualifiedName: String,
     isInlined: Boolean,
     context: Context,
     render: Render<Node>,
@@ -155,47 +194,22 @@ fun convertLiteralUnionType(
     val nonNullableTypes = types.filter { !isNullableType(it) }
     val nullableTypes = types.filter { isNullableType(it) }
 
-    val stringEntries: List<LiteralUnionMemberEntry> = nonNullableTypes
+    val entries: List<LiteralUnionMemberEntry> = nonNullableTypes
         .mapNotNull {
             if (!isSupportedLiteralType(it)) return@mapNotNull null
 
-            val literal = it.literal
-            if (!isStringLiteral(literal)) return@mapNotNull null
-
             checkCoverageService?.deepCover(it)
 
-            LiteralUnionMemberEntry(
-                key = resolveUnionMemberName(it, context),
-                value = literal.text,
-                isString = true,
-            )
+            resolveUnionMemberEntry(it, context)
         }
-
-    val otherEntries: List<LiteralUnionMemberEntry> = nonNullableTypes
-        .mapNotNull {
-            if (!isSupportedLiteralType(it)) return@mapNotNull null
-
-            val literal = it.literal
-            if (isStringLiteral(literal)) return@mapNotNull null
-
-            checkCoverageService?.deepCover(it)
-
-            val value = typeScriptService?.printNode(it)
-            if (value == null) error("Unsupported literal type")
-
-            LiteralUnionMemberEntry(
-                key = resolveUnionMemberName(it, context),
-                value = value,
-                isString = false,
-            )
-        }
+        // other entries should have priority over strings
+        .sortedBy { it.type == LiteralUnionMemberEntryType.string }
 
     val existingKeys = mutableListOf<String>()
     val uniqueEntries = mutableListOf<LiteralUnionMemberEntry>()
     val duplicatedEntries = mutableListOf<LiteralUnionMemberEntry>()
 
-    // other entries should have priority over strings
-    for (entry in otherEntries + stringEntries) {
+    for (entry in entries) {
         if (entry.key !in existingKeys) {
             uniqueEntries += entry
             existingKeys += entry.key
@@ -204,22 +218,31 @@ fun convertLiteralUnionType(
         }
     }
 
-    val body = uniqueEntries.joinToString(separator = "\n") { entry ->
-        if (entry.isString) {
-            """
-@seskar.js.JsValue("${entry.value}")
-val ${entry.key}: $name
-            """.trim()
-        } else {
-            """
-@seskar.js.JsRawValue("${entry.value}")
-val ${entry.key}: $name
-            """.trim()
+    val values = uniqueEntries.joinToString(separator = "\n\n") { entry ->
+        when (entry.type) {
+            LiteralUnionMemberEntryType.string -> {
+                """
+inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
+    get() = js.reflect.unsafeCast("${entry.value}")
+                """.trim()
+            }
+            LiteralUnionMemberEntryType.bigInt -> {
+                """
+inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
+    get() = js.reflect.unsafeCast(js.core.BigInt("${entry.value.removeSuffix("n")}"))
+                """.trim()
+            }
+            else -> {
+                """
+inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
+    get() = js.reflect.unsafeCast(${entry.value})
+                """.trim()
+            }
         }
     }
 
     val comment = duplicatedEntries.joinToString(separator = "\n") { entry ->
-        if (entry.isString) {
+        if (entry.type == LiteralUnionMemberEntryType.string) {
             "${entry.key} for \"${entry.value}\""
         } else {
             "${entry.key} for ${entry.value}"
@@ -246,23 +269,26 @@ val ${entry.key}: $name
 
     val declaration = """
 sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
-companion object {
-${body}${ifPresent(comment) {
-    "\n" + """
+companion object
+}
+    """.trim()
+
+    val generated = """
+        ${values}${ifPresent(comment) {
+            "\n" + """
 /*
 Duplicated names were generated:
 $it
 */
-    """.trim()
-}}
-}
-}
+            """.trim() + "\n"
+        }}
     """.trim()
 
     val nullable = nullableTypes.isNotEmpty()
 
     return LiteralUnionRenderResult(
         declaration = declaration,
+        generated = generated,
         nullable = nullable,
     )
 }
@@ -271,16 +297,18 @@ fun createLiteralUnionTypePlugin() = createAnonymousDeclarationPlugin plugin@{ n
     if (!isNullableLiteralUnionType(node, context)) return@plugin null
 
     val name = context.resolveName(node)
+    val qualifiedName = name
 
-    val result = convertLiteralUnionType(node, name, false, context, render)
+    val result = convertLiteralUnionType(node, name, qualifiedName, false, context, render)
     val declaration = result.declaration
+    val generated = result.generated
     val nullable = result.nullable
 
     val reference = if (nullable) "${name}?" else name
 
     AnonymousDeclaration(
         name = name,
-        declaration = declaration,
+        declaration = "$declaration\n\n$generated",
         reference = reference,
     )
 }

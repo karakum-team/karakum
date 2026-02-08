@@ -3,10 +3,10 @@
 package extension.union
 
 sealed external interface UnionWithDuplicatesAndResolution {
-companion object {
-@seskar.js.JsRawValue("true")
-val `true`: UnionWithDuplicatesAndResolution
-@seskar.js.JsValue("true")
-val stringTrue: UnionWithDuplicatesAndResolution
+companion object
 }
-}
+inline val UnionWithDuplicatesAndResolution.Companion.`true`: UnionWithDuplicatesAndResolution
+    get() = js.reflect.unsafeCast(true)
+
+inline val UnionWithDuplicatesAndResolution.Companion.stringTrue: UnionWithDuplicatesAndResolution
+    get() = js.reflect.unsafeCast("true")

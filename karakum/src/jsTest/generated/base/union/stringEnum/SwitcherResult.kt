@@ -3,10 +3,11 @@
 package sandbox.base.union.stringEnum
 
 sealed external interface SwitcherResult {
-companion object {
-@seskar.js.JsValue("on")
-val on: SwitcherResult
-@seskar.js.JsValue("off")
-val off: SwitcherResult
+companion object
 }
-}
+
+inline val SwitcherResult.Companion.on: SwitcherResult
+    get() = js.reflect.unsafeCast("on")
+
+inline val SwitcherResult.Companion.off: SwitcherResult
+    get() = js.reflect.unsafeCast("off")

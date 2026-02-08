@@ -3,10 +3,11 @@
 package sandbox.base.function.stringUnionParam
 
 sealed external interface SetVibrancyType {
-companion object {
-@seskar.js.JsValue("light")
-val light: SetVibrancyType
-@seskar.js.JsValue("dark")
-val dark: SetVibrancyType
+companion object
 }
-}
+
+inline val SetVibrancyType.Companion.light: SetVibrancyType
+    get() = js.reflect.unsafeCast("light")
+
+inline val SetVibrancyType.Companion.dark: SetVibrancyType
+    get() = js.reflect.unsafeCast("dark")

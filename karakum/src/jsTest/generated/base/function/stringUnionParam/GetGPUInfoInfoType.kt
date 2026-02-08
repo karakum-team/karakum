@@ -3,10 +3,11 @@
 package sandbox.base.function.stringUnionParam
 
 sealed external interface GetGPUInfoInfoType {
-companion object {
-@seskar.js.JsValue("basic")
-val basic: GetGPUInfoInfoType
-@seskar.js.JsValue("complete")
-val complete: GetGPUInfoInfoType
+companion object
 }
-}
+
+inline val GetGPUInfoInfoType.Companion.basic: GetGPUInfoInfoType
+    get() = js.reflect.unsafeCast("basic")
+
+inline val GetGPUInfoInfoType.Companion.complete: GetGPUInfoInfoType
+    get() = js.reflect.unsafeCast("complete")
