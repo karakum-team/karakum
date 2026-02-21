@@ -19,12 +19,17 @@ import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.coroutines.promise
+import js.import.import
 import js.objects.Object
+import js.objects.ReadonlyRecord
+import js.objects.Record
 import js.objects.unsafeJso
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
+import node.buffer.BufferEncoding
 import node.fs.*
 import node.path.path
+import node.url.fileURLToPath
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
@@ -150,6 +155,16 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     )
     val structure = namespaceStructure + sourceFileStructure
 
+    val karakumPath = import.meta.resolve("karakum")
+        .let { fileURLToPath(it) }
+
+    val browserApiPath = karakumPath
+        .let { path.dirname(it) }
+        .let { path.resolve(it, "browser-api.json") }
+
+    val browserApi = readFile(browserApiPath, BufferEncoding.utf8)
+        .let { JSON.parse<ReadonlyRecord<String, String>>(it) }
+
     val defaultPlugins = createPlugins(
         configuration,
         injections,
@@ -159,6 +174,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         program,
         namespaceInfo,
         importInfo,
+        browserApi,
     )
 
     val converterPlugins = listOf(

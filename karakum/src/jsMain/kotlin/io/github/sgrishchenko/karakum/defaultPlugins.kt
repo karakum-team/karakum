@@ -6,6 +6,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import js.array.ReadonlyArray
+import js.objects.ReadonlyRecord
 import typescript.*
 
 private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == kind }
@@ -19,6 +20,7 @@ fun createPlugins(
     program: Program,
     namespaceInfo: NamespaceInfo,
     importInfo: ImportInfo,
+    browserApi: ReadonlyRecord<String, String>,
 ): ReadonlyArray<Plugin> = arrayOf(
     ConfigurationPlugin(configuration),
     TypeScriptPlugin(program),
@@ -55,7 +57,7 @@ fun createPlugins(
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword)) { "js.symbol.Symbol" },
     convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.core.BigInt" },
 
-    convertBuiltinTypeReference, // should be applied before identifiers
+    createBuiltinTypePlugin(browserApi), // should be applied before identifiers
 
     createPlugin { node, _, _ -> if (isIdentifier(node)) node.text else null },
 

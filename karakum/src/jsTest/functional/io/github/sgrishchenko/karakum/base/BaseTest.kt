@@ -26,29 +26,8 @@ class BaseTest {
                 "importType/simple/DataRouterStateContext.kt" to arrayOf(
                     "sandbox.base.importType.router.RouterState"
                 ),
-                "mappedType/simple/MappedTypeContainerMappedType.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
-                "mappedType/simple/NamedOptionsFlags.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
-                "mappedType/simple/OptionalOptionsFlags.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
-                "mappedType/simple/OptionsFlags.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
-                "mappedType/simple/OptionsFlagsWithTypeLiteral.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
-                "mappedType/simple/ReadonlyOptionsFlags.kt" to arrayOf(
-                    "js.promise.Promise",
-                ),
                 "property/doubleOptionality/AgnosticBaseRouteObject.kt" to arrayOf(
                     "sandbox.base.generated.AgnosticBaseRouteObjectHandle15",
-                ),
-                "void/simple/functionWithPromiseVoidReturnType.kt" to arrayOf(
-                    "js.promise.Promise",
                 ),
             )
         }

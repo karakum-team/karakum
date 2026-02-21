@@ -4,6 +4,14 @@ import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import typescript.Node
 
+private val builtinSources = listOf(
+    "^.*/typescript/lib/lib\\.decorators.+\\.d\\.ts$".toRegex(),
+    "^.*/typescript/lib/lib\\.dom.+\\.d\\.ts$".toRegex(),
+    "^.*/typescript/lib/lib\\.es.+\\.d\\.ts$".toRegex(),
+    "^.*/typescript/lib/lib\\.scripthost.+\\.d\\.ts$".toRegex(),
+    "^.*/typescript/lib/lib\\.webworker.+\\.d\\.ts$".toRegex(),
+)
+
 @JsExport
 fun isBuiltin(node: Node, context: Context): Boolean {
     val typeScriptService = context.lookupService(typeScriptServiceKey) ?: return false
@@ -22,7 +30,6 @@ fun isBuiltin(node: Node, context: Context): Boolean {
     return allDeclarations.any { declaration ->
         val sourceFileName = declaration.getSourceFileOrNull()?.fileName
 
-        sourceFileName != null
-                && sourceFileName.matches("^.*/typescript/lib/lib\\.es.+\\.d\\.ts$".toRegex())
+        sourceFileName != null && builtinSources.any { it.matches(sourceFileName) }
     }
 }
