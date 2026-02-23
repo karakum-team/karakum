@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.NamedDeclaration
 import typescript.Node
 import typescript.isIdentifier
@@ -94,9 +93,7 @@ fun Matcher.matches(node: Node, context: Context): Boolean {
         var current = node
 
         for (predicate in predicateChain.drop(1)) {
-            current = typeScriptService?.getParent(current)
-                ?: current.getParentOrNull()
-                        ?: continue@predicateChains
+            current = typeScriptService?.getParent(current) ?: continue@predicateChains
 
             if (!predicate(current)) continue@predicateChains
         }
