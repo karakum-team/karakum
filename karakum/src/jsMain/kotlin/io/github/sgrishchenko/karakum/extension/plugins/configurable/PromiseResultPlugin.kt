@@ -1,30 +1,12 @@
 package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.GeneratedFile
-import io.github.sgrishchenko.karakum.extension.Matcher
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.Render
-import io.github.sgrishchenko.karakum.extension.isBuiltin
-import io.github.sgrishchenko.karakum.extension.match
-import io.github.sgrishchenko.karakum.extension.matches
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import kotlinx.js.JsPlainObject
 import typescript.Node
 import typescript.asArray
-import typescript.isIdentifier
 import typescript.isTypeReferenceNode
 import typescript.isUnionTypeNode
-
-private fun isPromiseType(node: Node, context: Context): Boolean {
-    if (!isTypeReferenceNode(node)) return false
-
-    val typeName = node.typeName
-
-    return isIdentifier(typeName)
-            && typeName.text == "Promise"
-            && isBuiltin(typeName, context)
-}
 
 @JsExport
 @JsPlainObject

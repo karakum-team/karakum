@@ -1,7 +1,5 @@
 // Automatically generated - do not modify!
 
-@file:JsModule("extension/numbers")
-
 package extension.numbers
 
 external class ClassWithNumbers {
