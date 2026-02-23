@@ -3,18 +3,21 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.nameResolvers.convertErrorTypeReferenceNode
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPluginStrategy
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResultPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import kotlinx.coroutines.test.runTest
 import typescript.isClassDeclaration
+import typescript.isFunctionDeclaration
 import typescript.isInterfaceDeclaration
 import typescript.isMethodDeclaration
 import typescript.isMethodSignature
 import typescript.isParameter
 import typescript.isPropertyDeclaration
 import typescript.isPropertySignature
+import typescript.isUnionTypeNode
 import kotlin.test.Test
 
 class ExtensionTest {
@@ -56,6 +59,11 @@ class ExtensionTest {
                             match(::isMethodDeclaration, "numberMethod3")
                         }
                     },
+                ),
+                PromiseResultPlugin(
+                    ignore = match {
+                        match(::isFunctionDeclaration, "returnsPromiseResultIgnored")
+                    }
                 ),
                 convertErrorTypeReferenceNode,
             )
