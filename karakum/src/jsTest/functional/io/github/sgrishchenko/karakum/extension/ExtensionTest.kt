@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.nameResolvers.convertErrorTypeRe
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPluginStrategy
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseFunctionPlugin
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseMethodPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResultPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
@@ -11,6 +12,7 @@ import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
 import kotlinx.coroutines.test.runTest
+import typescript.Node
 import typescript.asArray
 import typescript.isClassDeclaration
 import typescript.isFunctionDeclaration
@@ -24,6 +26,14 @@ import typescript.isPropertySignature
 import typescript.isTypeReferenceNode
 import typescript.isUnionTypeNode
 import kotlin.test.Test
+
+private fun isCustomPromise(node: Node, context: Context): Boolean {
+    if (!isTypeReferenceNode(node)) return false
+
+    val typeName = node.typeName
+
+    return isIdentifier(typeName) && typeName.text == "CustomPromise"
+}
 
 class ExtensionTest {
     @Test
@@ -69,21 +79,17 @@ class ExtensionTest {
                         }
                     },
                 ),
+
                 PromiseResultPlugin(
                     ignore = match {
                         match(::isFunctionDeclaration, "returnsPromiseResultIgnored")
                     }
                 ),
                 PromiseResultPlugin(
-                    isPromiseType = isPromiseType@{ node, _ ->
-                        if (!isTypeReferenceNode(node)) return@isPromiseType false
-
-                        val typeName = node.typeName
-
-                        isIdentifier(typeName) && typeName.text == "CustomPromise"
-                    },
+                    isPromiseType = ::isCustomPromise,
                     renderPayload = { _, _, _ -> "Any?" }
                 ),
+
                 PromiseFunctionPlugin(
                     ignore = match {
                         match(::isFunctionDeclaration, "returnsPromiseIgnored")
@@ -94,15 +100,28 @@ class ExtensionTest {
                     }
                 ),
                 PromiseFunctionPlugin(
-                    isPromiseType = isPromiseType@{ node, _ ->
-                        if (!isTypeReferenceNode(node)) return@isPromiseType false
-
-                        val typeName = node.typeName
-
-                        isIdentifier(typeName) && typeName.text == "CustomPromise"
-                    },
+                    isPromiseType = ::isCustomPromise,
                     renderPayload = { _, _, _ -> "Any?" }
                 ),
+
+                PromiseMethodPlugin(
+                    ignore = match {
+                        match(::isInterfaceDeclaration, "InterfaceWithPromiseMethods")
+                            .match(::isMethodSignature, "returnsPromiseIgnored")
+
+                        match(::isClassDeclaration, "ClassWithPromiseMethods")
+                            .match(::isMethodDeclaration, "returnsPromiseIgnored")
+                    },
+                    exclude = { node, signature ->
+                        node.name?.let { isIdentifier(it) && it.text == "returnsPromise2" } == true
+                                && node.parameters.asArray().first().type?.let { isUnionTypeNode(it) } == true
+                    }
+                ),
+                PromiseMethodPlugin(
+                    isPromiseType = ::isCustomPromise,
+                    renderPayload = { _, _, _ -> "Any?" }
+                ),
+
                 convertErrorTypeReferenceNode,
             )
             nameResolvers = manyOf(

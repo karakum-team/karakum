@@ -37,9 +37,9 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     }
 
     val typeParameters = node.typeParameters?.asArray()
-        ?.map{ render(it) }
+        ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
-        ?.joinToString(separator =", ")
+        ?.joinToString(separator = ", ")
 
     val returnType = node.type?.let { render(it) }
 
