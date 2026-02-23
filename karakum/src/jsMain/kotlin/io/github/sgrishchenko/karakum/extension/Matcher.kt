@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.NamedDeclaration
 import typescript.Node
@@ -76,20 +77,32 @@ fun match(
     return scope.children
 }
 
-private fun Matcher.toPredicateChain(): List<(Node) -> Boolean> {
-    if (children.isEmpty()) return listOf(predicate)
-    return children.flatMap { it.toPredicateChain() + predicate }
+private fun Matcher.toPredicateChains(): List<List<(Node) -> Boolean>> {
+    if (children.isEmpty()) return listOf(listOf(predicate))
+    return children.flatMap { child -> child.toPredicateChains().map { it + predicate } }
 }
 
-fun Matcher.matches(node: Node): Boolean {
-    val predicates = toPredicateChain()
+fun Matcher.matches(node: Node, context: Context): Boolean {
+    val predicateChains = toPredicateChains()
 
-    var current = node
+    val typeScriptService = context.lookupService(typeScriptServiceKey)
 
-    for (predicate in predicates) {
-        if (!predicate(node)) return false
-        current = current.getParentOrNull() ?: return false
+    predicateChains@ for (predicateChain in predicateChains) {
+        val firstPredicate = predicateChain.firstOrNull() ?: return true
+        if (!firstPredicate(node)) continue@predicateChains
+
+        var current = node
+
+        for (predicate in predicateChain.drop(1)) {
+            current = typeScriptService?.getParent(current)
+                ?: current.getParentOrNull()
+                        ?: continue@predicateChains
+
+            if (!predicate(current)) continue@predicateChains
+        }
+
+        return true
     }
 
-    return true
+    return false
 }

@@ -1,0 +1,14 @@
+// Automatically generated - do not modify!
+
+@file:JsModule("extension/numbers")
+
+package extension.numbers
+
+external class ClassWithNumbers {
+var numberField1: Int
+var numberField2: Double
+var numberField3: Double /* fallback */
+fun numberMethod1(numberParam: Int): Double /* fallback */
+fun numberMethod2(numberParam: Double): Double /* fallback */
+fun numberMethod3(numberParam: Double /* fallback */): Double
+}

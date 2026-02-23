@@ -52,3 +52,5 @@ export type Render<TNode extends Node> = (node: TNode) => string
 export declare interface UnionService {
     readonly uncoveredUnionParents: Map<TsSymbol, Array<string>>
 }
+
+export type NumberPluginStrategy = "loose" | "strict"
