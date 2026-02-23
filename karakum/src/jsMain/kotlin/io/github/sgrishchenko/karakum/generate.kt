@@ -22,7 +22,6 @@ import js.coroutines.promise
 import js.import.import
 import js.objects.Object
 import js.objects.ReadonlyRecord
-import js.objects.Record
 import js.objects.unsafeJso
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
