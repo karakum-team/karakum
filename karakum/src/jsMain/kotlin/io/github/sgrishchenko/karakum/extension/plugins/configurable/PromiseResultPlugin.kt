@@ -7,22 +7,33 @@ import typescript.Node
 import typescript.asArray
 import typescript.isTypeReferenceNode
 import typescript.isUnionTypeNode
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseType as defaultIsPromiseType
 
 @JsExport
 @JsPlainObject
 external interface PromiseResultPluginConfiguration {
+    val isPromiseType: ((Node, Context) -> Boolean)?
     val ignore: ((Node) -> Boolean)?
 }
 
 @JsExport
 class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plugin {
+    private val isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType
     private lateinit var ignoreMatchers: List<Matcher>
 
     @JsExport.Ignore
-    constructor(ignore: ((Node) -> Boolean)? = null): this(PromiseResultPluginConfiguration(ignore))
+    constructor(
+        isPromiseType: ((Node, Context) -> Boolean)? = null,
+        ignore: ((Node) -> Boolean)? = null
+    ): this(
+        PromiseResultPluginConfiguration(isPromiseType, ignore)
+    )
 
     @JsExport.Ignore
-    constructor(ignore: List<Matcher>): this(PromiseResultPluginConfiguration()) {
+    constructor(
+        isPromiseType: ((Node, Context) -> Boolean)? = null,
+        ignore: List<Matcher>
+    ): this(PromiseResultPluginConfiguration(isPromiseType)) {
         ignoreMatchers = ignore
     }
 
