@@ -74,6 +74,16 @@ class ExtensionTest {
                         match(::isFunctionDeclaration, "returnsPromiseResultIgnored")
                     }
                 ),
+                PromiseResultPlugin(
+                    isPromiseType = isPromiseType@{ node, _ ->
+                        if (!isTypeReferenceNode(node)) return@isPromiseType false
+
+                        val typeName = node.typeName
+
+                        isIdentifier(typeName) && typeName.text == "CustomPromise"
+                    },
+                    renderPayload = { _, _, _ -> "Any?" }
+                ),
                 PromiseFunctionPlugin(
                     ignore = match {
                         match(::isFunctionDeclaration, "returnsPromiseIgnored")
