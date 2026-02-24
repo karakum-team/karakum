@@ -6,7 +6,6 @@ import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import js.array.ReadonlyArray
-import js.objects.ReadonlyRecord
 import typescript.*
 
 private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == kind }

@@ -1,10 +1,6 @@
 package io.github.sgrishchenko.karakum
 
-import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.PartialConfiguration
-import io.github.sgrishchenko.karakum.configuration.defaultizeConfiguration
-import io.github.sgrishchenko.karakum.configuration.`package`
+import io.github.sgrishchenko.karakum.configuration.*
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
@@ -19,16 +15,12 @@ import io.github.sgrishchenko.karakum.structure.sourceFile.collectSourceFileInfo
 import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.coroutines.promise
-import js.import.import
 import js.objects.Object
-import js.objects.ReadonlyRecord
 import js.objects.unsafeJso
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
-import node.buffer.BufferEncoding
 import node.fs.*
 import node.path.path
-import node.url.fileURLToPath
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
