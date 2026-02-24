@@ -20,7 +20,6 @@ fun createPlugins(
     program: Program,
     namespaceInfo: NamespaceInfo,
     importInfo: ImportInfo,
-    browserApi: ReadonlyRecord<String, String>,
 ): ReadonlyArray<Plugin> = arrayOf(
     ConfigurationPlugin(configuration),
     TypeScriptPlugin(program),
@@ -57,7 +56,7 @@ fun createPlugins(
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword)) { "js.symbol.Symbol" },
     convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.core.BigInt" },
 
-    createBuiltinTypePlugin(browserApi), // should be applied before identifiers
+    convertBuiltinTypeReference, // should be applied before identifiers
 
     createPlugin { node, _, _ -> if (isIdentifier(node)) node.text else null },
 

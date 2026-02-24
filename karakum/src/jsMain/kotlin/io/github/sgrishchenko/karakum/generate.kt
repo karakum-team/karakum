@@ -154,16 +154,6 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     )
     val structure = namespaceStructure + sourceFileStructure
 
-    val karakumPath = import.meta.resolve("karakum")
-        .let { fileURLToPath(it) }
-
-    val browserApiPath = karakumPath
-        .let { path.dirname(it) }
-        .let { path.resolve(it, "browser-api.json") }
-
-    val browserApi = readFile(browserApiPath, BufferEncoding.utf8)
-        .let { JSON.parse<ReadonlyRecord<String, String>>(it) }
-
     val defaultPlugins = createPlugins(
         configuration,
         injections,
@@ -173,7 +163,6 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         program,
         namespaceInfo,
         importInfo,
-        browserApi,
     )
 
     val converterPlugins = listOf(
