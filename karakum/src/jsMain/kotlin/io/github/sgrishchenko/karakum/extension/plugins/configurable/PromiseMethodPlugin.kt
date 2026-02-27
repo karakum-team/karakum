@@ -29,6 +29,15 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
 
     @JsExport.Ignore
     constructor(
+        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
+    ) : this(
+        PromiseMethodPluginConfiguration(
+            renderPayload = renderPayload
+        )
+    )
+
+    @JsExport.Ignore
+    constructor(
         isPromiseType: ((Node, Context) -> Boolean)? = null,
         ignore: ((Node, Context) -> Boolean)? = null,
         exclude: ((Node, SignatureContext) -> Boolean)? = null,
@@ -45,7 +54,7 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
     @JsExport.Ignore
     constructor(
         isPromiseType: List<Matcher<Context>>? = null,
-        ignore: List<Matcher<Context>>,
+        ignore: List<Matcher<Context>>? = null,
         exclude: List<Matcher<SignatureContext>>? = null,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ) : this(
@@ -54,8 +63,8 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
         )
     ) {
         isPromiseType?.let { isPromiseTypeMatchers = it }
-        ignoreMatchers = ignore
-        exclude?.let { excludeMatchers = exclude }
+        ignore?.let { ignoreMatchers = it }
+        exclude?.let { excludeMatchers = it }
     }
 
     init {

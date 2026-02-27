@@ -87,7 +87,7 @@ class ExtensionTest {
                     }
                 ),
                 PromiseResultPlugin(
-                    isPromiseType = ::isCustomPromise,
+                    isPromiseType = match(::isCustomPromise),
                     renderPayload = { _, _, _ -> "Any?" }
                 ),
 
@@ -104,7 +104,7 @@ class ExtensionTest {
                     }
                 ),
                 PromiseFunctionPlugin(
-                    isPromiseType = ::isCustomPromise,
+                    isPromiseType = match(::isCustomPromise),
                     renderPayload = { _, _, _ -> "Any?" }
                 ),
 
@@ -130,7 +130,7 @@ class ExtensionTest {
                     }
                 ),
                 PromiseMethodPlugin(
-                    isPromiseType = ::isCustomPromise,
+                    isPromiseType = match(::isCustomPromise),
                     renderPayload = { _, _, _ -> "Any?" }
                 ),
 

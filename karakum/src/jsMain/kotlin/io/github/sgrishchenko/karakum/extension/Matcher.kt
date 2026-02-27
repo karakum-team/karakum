@@ -111,6 +111,12 @@ fun <TContext: Context> match(
     return scope.children
 }
 
+fun <TContext: Context> match(
+    predicate: (Node, TContext) -> Boolean,
+): List<Matcher<TContext>> {
+    return match { match(predicate) }
+}
+
 private fun <TContext: Context> Matcher<TContext>.toPredicateChains(): List<List<(Node, TContext) -> Boolean>> {
     if (children.isEmpty()) return listOf(listOf(predicate))
     return children.flatMap { child -> child.toPredicateChains().map { it + predicate } }
