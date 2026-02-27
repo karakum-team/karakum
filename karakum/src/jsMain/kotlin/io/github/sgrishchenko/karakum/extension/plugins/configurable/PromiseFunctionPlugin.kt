@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
-import io.github.sgrishchenko.karakum.extension.plugins.Signature
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
@@ -16,16 +15,16 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseTy
 @JsPlainObject
 external interface PromiseFunctionPluginConfiguration {
     val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node) -> Boolean)?
-    val exclude: ((node: FunctionDeclaration, signature: Signature) -> Boolean)?
+    val ignore: ((Node, Context) -> Boolean)?
+    val exclude: ((Node, SignatureContext) -> Boolean)?
     val renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)?
 }
 
 @JsExport
 class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) : Plugin {
-    private val isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType
+    private lateinit var isPromiseTypeMatchers: List<Matcher<Context>>
     private lateinit var ignoreMatchers: List<Matcher<Context>>
-    private val exclude = configuration.exclude ?: { _, _ -> false }
+    private lateinit var excludeMatchers: List<Matcher<SignatureContext>>
     private val renderPayload = configuration.renderPayload ?: { node, _, render ->
         val typeArguments = requireNotNull(node.typeArguments)
         render(typeArguments.asArray().first())
@@ -36,8 +35,8 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
     @JsExport.Ignore
     constructor(
         isPromiseType: ((Node, Context) -> Boolean)? = null,
-        ignore: ((Node) -> Boolean)? = null,
-        exclude: ((node: FunctionDeclaration, signature: Signature) -> Boolean)? = null,
+        ignore: ((Node, Context) -> Boolean)? = null,
+        exclude: ((Node, SignatureContext) -> Boolean)? = null,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ) : this(
         PromiseFunctionPluginConfiguration(
@@ -50,24 +49,37 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
 
     @JsExport.Ignore
     constructor(
-        isPromiseType: ((Node, Context) -> Boolean)? = null,
+        isPromiseType: List<Matcher<Context>>? = null,
         ignore: List<Matcher<Context>>,
-        exclude: ((node: FunctionDeclaration, signature: Signature) -> Boolean)? = null,
+        exclude: List<Matcher<SignatureContext>>? = null,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ) : this(
         PromiseFunctionPluginConfiguration(
-            isPromiseType,
-            exclude = exclude,
-            renderPayload = renderPayload,
+            renderPayload = renderPayload
         )
     ) {
+        isPromiseType?.let { isPromiseTypeMatchers = it }
         ignoreMatchers = ignore
+        exclude?.let { excludeMatchers = exclude }
     }
 
     init {
+        if (!::isPromiseTypeMatchers.isInitialized) {
+            isPromiseTypeMatchers = match {
+                configuration.isPromiseType?.let { match(it) }
+                    ?: match(::defaultIsPromiseType)
+            }
+        }
+
         if (!::ignoreMatchers.isInitialized) {
             ignoreMatchers = match {
                 configuration.ignore?.let { match(it) }
+            }
+        }
+
+        if (!::excludeMatchers.isInitialized) {
+            excludeMatchers = match {
+                configuration.exclude?.let { match(it) }
             }
         }
     }
@@ -80,10 +92,10 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
         if (!isFunctionDeclaration(node)) return null
 
         val type = node.type ?: return null
-        if (!isPromiseType(type, context)) return null
+        if (!isPromiseTypeMatchers.matches(type, context)) return null
         require(isTypeReferenceNode(type))
 
-        if (ignoreMatchers.any { it.matches(node, context) }) return null
+        if (ignoreMatchers.matches(node, context)) return null
 
         val sourceFileName = node.getSourceFileOrNull()?.fileName ?: "generated.d.ts"
 
@@ -113,7 +125,11 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
             ParameterDeclarationsConfiguration(
                 strategy = ParameterDeclarationStrategy.function,
                 template = template@{ parameters, signature ->
-                    if (exclude(node, signature)) return@template ""
+                    val signatureContext = object : SignatureContext, Context by context {
+                        override val signature = signature
+                    }
+
+                    if (excludeMatchers.matches(node, signatureContext)) return@template ""
 
                     """
                         @seskar.js.JsAsync
@@ -138,7 +154,11 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
             ParameterDeclarationsConfiguration(
                 strategy = ParameterDeclarationStrategy.function,
                 template = template@{ parameters, signature ->
-                    if (exclude(node, signature)) return@template ""
+                    val signatureContext = object : SignatureContext, Context by context {
+                        override val signature = signature
+                    }
+
+                    if (excludeMatchers.matches(node, signatureContext)) return@template ""
 
                     """
                         @JsName("$name")

@@ -6,6 +6,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugi
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseFunctionPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseMethodPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResultPlugin
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.SignatureContext
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
@@ -94,9 +95,12 @@ class ExtensionTest {
                     ignore = match {
                         match(::isFunctionDeclaration, "returnsPromiseIgnored")
                     },
-                    exclude = { node, signature ->
-                        node.name?.text == "returnsPromise2"
-                                && node.parameters.asArray().first().type?.let { isUnionTypeNode(it) } == true
+                    exclude = match {
+                        match { node, context ->
+                            isFunctionDeclaration(node)
+                                    && node.name?.text == "returnsPromise2"
+                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                        }
                     }
                 ),
                 PromiseFunctionPlugin(
