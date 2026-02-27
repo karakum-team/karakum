@@ -56,9 +56,7 @@ fun <TContext : Context> MatcherScope<TContext>.match(
     vararg predicates: (Node, TContext) -> Boolean,
     block: MatcherScope<TContext>.() -> Unit = { },
 ) {
-    val scope = MatcherScopeImpl<TContext>().also(block)
-    val matcher = MatcherImpl(all(predicate.wrap(), *predicates), scope.children)
-    children.add(matcher)
+    match(predicate.wrap(), *predicates, block = block)
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
@@ -87,10 +85,7 @@ fun <TContext : Context> MatcherScope<TContext>.match(
     predicate: (Node) -> Boolean,
     vararg predicates: (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
-    val scope = MatcherScopeImpl<TContext>()
-    val matcher = MatcherDelegateImpl(all(predicate.wrap(), *predicates), scope::children)
-    children.add(matcher)
-    return scope
+    return match(predicate.wrap(), *predicates)
 }
 
 fun <TContext : Context> withName(name: String): (Node, TContext) -> Boolean {
