@@ -6,7 +6,6 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugi
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseFunctionPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseMethodPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResultPlugin
-import io.github.sgrishchenko.karakum.extension.plugins.configurable.SignatureContext
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
@@ -14,7 +13,6 @@ import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
 import kotlinx.coroutines.test.runTest
 import typescript.Node
-import typescript.asArray
 import typescript.isClassDeclaration
 import typescript.isFunctionDeclaration
 import typescript.isIdentifier
