@@ -14,13 +14,13 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseTy
 @JsPlainObject
 external interface PromiseResultPluginConfiguration {
     val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node) -> Boolean)?
+    val ignore: ((Node, Context) -> Boolean)?
     val renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)?
 }
 
 @JsExport
 class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plugin {
-    private val isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType
+    private lateinit var isPromiseTypeMatchers: List<Matcher<Context>>
     private lateinit var ignoreMatchers: List<Matcher<Context>>
     private val renderPayload = configuration.renderPayload ?: { node, _, render ->
         val typeArguments = requireNotNull(node.typeArguments)
@@ -30,7 +30,7 @@ class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plu
     @JsExport.Ignore
     constructor(
         isPromiseType: ((Node, Context) -> Boolean)? = null,
-        ignore: ((Node) -> Boolean)? = null,
+        ignore: ((Node, Context) -> Boolean)? = null,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ): this(
         PromiseResultPluginConfiguration(
@@ -42,19 +42,26 @@ class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plu
 
     @JsExport.Ignore
     constructor(
-        isPromiseType: ((Node, Context) -> Boolean)? = null,
+        isPromiseType: List<Matcher<Context>>? = null,
         ignore: List<Matcher<Context>>,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ): this(
         PromiseResultPluginConfiguration(
-            isPromiseType,
             renderPayload = renderPayload
         )
     ) {
+        isPromiseType?.let { isPromiseTypeMatchers = it }
         ignoreMatchers = ignore
     }
 
     init {
+        if (!::isPromiseTypeMatchers.isInitialized) {
+            isPromiseTypeMatchers = match {
+                configuration.isPromiseType?.let { match(it) }
+                    ?: match(::defaultIsPromiseType)
+            }
+        }
+
         if (!::ignoreMatchers.isInitialized) {
             ignoreMatchers = match {
                 configuration.ignore?.let { match(it) }
@@ -70,16 +77,16 @@ class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plu
         if (!isUnionTypeNode(node)) return null
 
         if (node.types.asArray().size != 2) return null
-        if (node.types.asArray().none { isPromiseType(it, context) }) return null
+        if (node.types.asArray().none { isPromiseTypeMatchers.matches(it, context) }) return null
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         val parent = typeScriptService?.getParent(node)
 
-        if (parent != null && ignoreMatchers.any { it.matches(parent, context) }) return null
+        if (parent != null && ignoreMatchers.matches(parent, context)) return null
 
-        val promiseType = node.types.asArray().first { isPromiseType(it, context) }
-        val otherType = node.types.asArray().first { !isPromiseType(it, context) }
+        val promiseType = node.types.asArray().first { isPromiseTypeMatchers.matches(it, context) }
+        val otherType = node.types.asArray().first { !isPromiseTypeMatchers.matches(it, context) }
 
         require(isTypeReferenceNode(promiseType))
 

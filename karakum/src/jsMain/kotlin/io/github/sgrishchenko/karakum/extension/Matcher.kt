@@ -138,3 +138,8 @@ fun <TContext: Context> Matcher<TContext>.matches(node: Node, context: TContext)
 
     return false
 }
+
+fun <TContext: Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
+    return any { it.matches(node, context) }
+}
+

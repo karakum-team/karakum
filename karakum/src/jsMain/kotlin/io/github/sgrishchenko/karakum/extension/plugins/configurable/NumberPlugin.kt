@@ -31,7 +31,7 @@ inline val NumberPluginStrategy.Companion.loose: NumberPluginStrategy
 external interface NumberPluginConfiguration {
     val strategy: NumberPluginStrategy?
     val defaultNumberType: String?
-    val matchers: ReadonlyRecord<String, (Node) -> Boolean>?
+    val matchers: ReadonlyRecord<String, (Node, Context) -> Boolean>?
 }
 
 @JsExport
@@ -46,7 +46,7 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
     constructor(
         strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
         defaultNumberType: String? = null,
-        vararg matchers: Pair<String, (Node) -> Boolean>,
+        vararg matchers: Pair<String, (Node, Context) -> Boolean>,
     ) : this(
         NumberPluginConfiguration(
             strategy,
@@ -102,9 +102,7 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
         val parent = typeScriptService?.getParent(node) ?: return null
 
         for ((numberType, matchers) in matchers) {
-            for (matcher in matchers) {
-                if (matcher.matches(parent, context)) return numberType
-            }
+            if (matchers.matches(parent, context)) return numberType
         }
 
         if (strategy == NumberPluginStrategy.loose) return defaultNumberType
