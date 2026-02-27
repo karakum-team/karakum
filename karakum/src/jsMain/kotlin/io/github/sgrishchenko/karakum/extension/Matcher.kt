@@ -5,17 +5,17 @@ import typescript.NamedDeclaration
 import typescript.Node
 import typescript.isIdentifier
 
-interface Matcher<in TContext: Context> {
+interface Matcher<in TContext : Context> {
     val predicate: (Node, TContext) -> Boolean
     val children: List<Matcher<TContext>>
 }
 
-private class MatcherImpl<in TContext: Context>(
+private class MatcherImpl<in TContext : Context>(
     override val predicate: (Node, TContext) -> Boolean,
     override val children: List<Matcher<TContext>>,
 ) : Matcher<TContext>
 
-private class MatcherDelegateImpl<in TContext: Context>(
+private class MatcherDelegateImpl<in TContext : Context>(
     override val predicate: (Node, TContext) -> Boolean,
     val childrenProvider: () -> List<Matcher<TContext>>,
 ) : Matcher<TContext> {
@@ -23,106 +23,102 @@ private class MatcherDelegateImpl<in TContext: Context>(
         get() = childrenProvider()
 }
 
-interface MatcherScope<TContext: Context> {
+interface MatcherScope<TContext : Context> {
     val children: MutableList<Matcher<TContext>>
 }
 
-private class MatcherScopeImpl<TContext: Context>(
+private class MatcherScopeImpl<TContext : Context>(
     override val children: MutableList<Matcher<TContext>> = mutableListOf(),
 ) : MatcherScope<TContext>
 
-fun <TContext: Context> MatcherScope<TContext>.match(
+private fun <TContext : Context> all(
+    vararg predicates: (Node, TContext) -> Boolean,
+): (Node, TContext) -> Boolean {
+    return { node, context -> predicates.all { it(node, context) } }
+}
+
+private fun <TContext : Context> ((Node) -> Boolean).wrap(): (Node, TContext) -> Boolean {
+    return { node, _ -> invoke(node) }
+}
+
+fun <TContext : Context> MatcherScope<TContext>.match(
     predicate: (Node, TContext) -> Boolean,
+    vararg predicates: (Node, TContext) -> Boolean,
     block: MatcherScope<TContext>.() -> Unit = { },
 ) {
     val scope = MatcherScopeImpl<TContext>().also(block)
-    val matcher = MatcherImpl(predicate, scope.children)
+    val matcher = MatcherImpl(all(predicate, *predicates), scope.children)
     children.add(matcher)
 }
 
-fun <TContext: Context> MatcherScope<TContext>.match(
+fun <TContext : Context> MatcherScope<TContext>.match(
     predicate: (Node) -> Boolean,
+    vararg predicates: (Node, TContext) -> Boolean,
     block: MatcherScope<TContext>.() -> Unit = { },
 ) {
     val scope = MatcherScopeImpl<TContext>().also(block)
-    val matcher = MatcherImpl({ node, _ -> predicate(node) }, scope.children)
+    val matcher = MatcherImpl(all(predicate.wrap(), *predicates), scope.children)
     children.add(matcher)
 }
 
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: (Node, TContext) -> Boolean,
+): MatcherScope<TContext> {
+    return match(predicate, predicates = emptyArray())
+}
+
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: (Node, TContext) -> Boolean,
+    vararg predicates: (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     val scope = MatcherScopeImpl<TContext>()
-    val matcher = MatcherDelegateImpl(predicate, scope::children)
+    val matcher = MatcherDelegateImpl(all(predicate, *predicates), scope::children)
     children.add(matcher)
     return scope
 }
 
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: (Node) -> Boolean,
+): MatcherScope<TContext> {
+    return match(predicate, predicates = emptyArray())
+}
+
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: (Node) -> Boolean,
+    vararg predicates: (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     val scope = MatcherScopeImpl<TContext>()
-    val matcher = MatcherDelegateImpl({ node, _ -> predicate(node) }, scope::children)
+    val matcher = MatcherDelegateImpl(all(predicate.wrap(), *predicates), scope::children)
     children.add(matcher)
     return scope
 }
 
-private fun <TContext: Context> ((Node, TContext) -> Boolean).withName(name: String): (Node, TContext) -> Boolean {
-    return { node, context ->
+fun <TContext : Context> withName(name: String): (Node, TContext) -> Boolean {
+    return { node, _ ->
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-        this(node, context) && (node as NamedDeclaration).name.let { it != null && isIdentifier(it) && it.text == name }
+        (node as NamedDeclaration).name.let { it != null && isIdentifier(it) && it.text == name }
     }
 }
 
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean,
-    name: String,
-    block: MatcherScope<TContext>.() -> Unit,
-) {
-    match(predicate.withName(name), block)
-}
-
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean,
-    name: String,
-    block: MatcherScope<TContext>.() -> Unit,
-) {
-    match({ node: Node, _: TContext -> predicate(node) }.withName(name), block)
-}
-
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean,
-    name: String
-): MatcherScope<TContext> {
-    return match(predicate.withName(name))
-}
-
-fun <TContext: Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean,
-    name: String
-): MatcherScope<TContext> {
-    return match({ node: Node, _: TContext -> predicate(node) }.withName(name))
-}
-
-fun <TContext: Context> match(
+fun <TContext : Context> match(
     block: MatcherScope<TContext>.() -> Unit,
 ): List<Matcher<TContext>> {
     val scope = MatcherScopeImpl<TContext>().also(block)
     return scope.children
 }
 
-fun <TContext: Context> match(
+fun <TContext : Context> match(
     predicate: (Node, TContext) -> Boolean,
 ): List<Matcher<TContext>> {
     return match { match(predicate) }
 }
 
-private fun <TContext: Context> Matcher<TContext>.toPredicateChains(): List<List<(Node, TContext) -> Boolean>> {
+private fun <TContext : Context> Matcher<TContext>.toPredicateChains(): List<List<(Node, TContext) -> Boolean>> {
     if (children.isEmpty()) return listOf(listOf(predicate))
     return children.flatMap { child -> child.toPredicateChains().map { it + predicate } }
 }
 
-fun <TContext: Context> Matcher<TContext>.matches(node: Node, context: TContext): Boolean {
+fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: TContext): Boolean {
     val predicateChains = toPredicateChains()
 
     val typeScriptService = context.lookupService(typeScriptServiceKey)
@@ -145,7 +141,7 @@ fun <TContext: Context> Matcher<TContext>.matches(node: Node, context: TContext)
     return false
 }
 
-fun <TContext: Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
+fun <TContext : Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
     return any { it.matches(node, context) }
 }
 

@@ -52,38 +52,38 @@ class ExtensionTest {
                     NumberPluginStrategy.loose,
                     defaultNumberType = "Double /* fallback */",
                     "Int" to match {
-                        match(::isInterfaceDeclaration, "InterfaceWithNumbers") {
-                            match(::isPropertySignature, "numberField1")
-                            match(::isMethodSignature, "numberMethod1")
-                                .match(::isParameter, "numberParam")
+                        match(::isInterfaceDeclaration, withName("InterfaceWithNumbers")) {
+                            match(::isPropertySignature, withName("numberField1"))
+                            match(::isMethodSignature, withName("numberMethod1"))
+                                .match(::isParameter, withName("numberParam"))
                         }
 
-                        match(::isClassDeclaration, "ClassWithNumbers") {
-                            match(::isPropertyDeclaration, "numberField1")
-                            match(::isMethodDeclaration, "numberMethod1")
-                                .match(::isParameter, "numberParam")
+                        match(::isClassDeclaration, withName("ClassWithNumbers")) {
+                            match(::isPropertyDeclaration, withName("numberField1"))
+                            match(::isMethodDeclaration, withName("numberMethod1"))
+                                .match(::isParameter, withName("numberParam"))
                         }
                     },
                     "Double" to match {
-                        match(::isInterfaceDeclaration, "InterfaceWithNumbers") {
-                            match(::isPropertySignature, "numberField2")
-                            match(::isMethodSignature, "numberMethod2")
-                                .match(::isParameter, "numberParam")
-                            match(::isMethodSignature, "numberMethod3")
+                        match(::isInterfaceDeclaration, withName("InterfaceWithNumbers")) {
+                            match(::isPropertySignature, withName("numberField2"))
+                            match(::isMethodSignature, withName("numberMethod2"))
+                                .match(::isParameter, withName("numberParam"))
+                            match(::isMethodSignature, withName("numberMethod3"))
                         }
 
-                        match(::isClassDeclaration, "ClassWithNumbers") {
-                            match(::isPropertyDeclaration, "numberField2")
-                            match(::isMethodDeclaration, "numberMethod2")
-                                .match(::isParameter, "numberParam")
-                            match(::isMethodDeclaration, "numberMethod3")
+                        match(::isClassDeclaration, withName("ClassWithNumbers")) {
+                            match(::isPropertyDeclaration, withName("numberField2"))
+                            match(::isMethodDeclaration, withName("numberMethod2"))
+                                .match(::isParameter, withName("numberParam"))
+                            match(::isMethodDeclaration, withName("numberMethod3"))
                         }
                     },
                 ),
 
                 PromiseResultPlugin(
                     ignore = match {
-                        match(::isFunctionDeclaration, "returnsPromiseResultIgnored")
+                        match(::isFunctionDeclaration, withName("returnsPromiseResultIgnored"))
                     }
                 ),
                 PromiseResultPlugin(
@@ -93,14 +93,16 @@ class ExtensionTest {
 
                 PromiseFunctionPlugin(
                     ignore = match {
-                        match(::isFunctionDeclaration, "returnsPromiseIgnored")
+                        match(::isFunctionDeclaration, withName("returnsPromiseIgnored"))
                     },
                     exclude = match {
-                        match { node, context ->
-                            isFunctionDeclaration(node)
-                                    && node.name?.text == "returnsPromise2"
-                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
-                        }
+                        match(
+                            ::isFunctionDeclaration,
+                            withName("returnsPromise2"),
+                            { _, context ->
+                                context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                            }
+                        )
                     }
                 ),
                 PromiseFunctionPlugin(
@@ -110,23 +112,27 @@ class ExtensionTest {
 
                 PromiseMethodPlugin(
                     ignore = match {
-                        match(::isInterfaceDeclaration, "InterfaceWithPromiseMethods")
-                            .match(::isMethodSignature, "returnsPromiseIgnored")
+                        match(::isInterfaceDeclaration, withName("InterfaceWithPromiseMethods"))
+                            .match(::isMethodSignature, withName("returnsPromiseIgnored"))
 
-                        match(::isClassDeclaration, "ClassWithPromiseMethods")
-                            .match(::isMethodDeclaration, "returnsPromiseIgnored")
+                        match(::isClassDeclaration, withName("ClassWithPromiseMethods"))
+                            .match(::isMethodDeclaration, withName("returnsPromiseIgnored"))
                     },
                     exclude = match {
-                        match { node, context ->
-                            isMethodSignature(node) &&
-                                    node.name.let { isIdentifier(it) && it.text == "returnsPromise2" }
-                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
-                        }
-                        match { node, context ->
-                            isMethodDeclaration(node) &&
-                                    node.name.let { isIdentifier(it) && it.text == "returnsPromise2" }
-                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
-                        }
+                        match(
+                            ::isMethodSignature,
+                            withName("returnsPromise2"),
+                            { _, context ->
+                                context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                            }
+                        )
+                        match(
+                            ::isMethodDeclaration,
+                            withName("returnsPromise2"),
+                            { _, context ->
+                                context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                            }
+                        )
                     }
                 ),
                 PromiseMethodPlugin(
