@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
-import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import kotlinx.js.JsPlainObject
@@ -118,7 +117,7 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
 
         val nameNode = node.name ?: return null
 
-        val name = escapeIdentifier(next(nameNode))
+        val name = next(nameNode)
 
         val typeParameters = node.typeParameters?.asArray()
             ?.map { next(it) }
