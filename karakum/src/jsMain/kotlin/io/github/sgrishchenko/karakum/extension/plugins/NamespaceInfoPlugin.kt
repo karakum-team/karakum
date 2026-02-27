@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
+import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
@@ -20,6 +21,14 @@ class NamespaceInfoService @JsExport.Ignore constructor(namespaceInfo: Namespace
         val detailedName = name.joinToString(separator = ".") { it.detailedName }
 
         return namespaceInfo[detailedName] ?: resolveDefaultNamespaceStrategy(node)
+    }
+
+    fun resolveExternalModifier(node: ModuleDeclaration?): String {
+        return if (node != null && resolveNamespaceStrategy(node) == NamespaceStrategy.`object`) {
+            ""
+        } else {
+            "external"
+        }
     }
 }
 

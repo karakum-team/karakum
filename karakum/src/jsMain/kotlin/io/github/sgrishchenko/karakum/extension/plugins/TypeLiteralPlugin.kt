@@ -40,10 +40,10 @@ fun convertTypeLiteral(
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (isInlined && namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
+    val externalModifier = if (!isInlined) {
+        "external"
+    } else {
+        (namespaceInfoService?.resolveExternalModifier(namespace) ?: "external")
     }
 
     val injectedHeritageClauses = heritageInjections
@@ -51,7 +51,7 @@ fun convertTypeLiteral(
         ?.joinToString(separator = ", ")
 
     return """
-${ifPresent(inheritanceModifier) { "$it "}}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>"}}${(ifPresent(injectedHeritageClauses) { ": $it"})} {
+${ifPresent(inheritanceModifier) { "$it "}}${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>"}}${(ifPresent(injectedHeritageClauses) { ": $it"})} {
 ${convertTypeLiteralBody(node, context, render)}
 }
     """.trim()

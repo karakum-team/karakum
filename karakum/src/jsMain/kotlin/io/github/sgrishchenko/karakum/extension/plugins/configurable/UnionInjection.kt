@@ -109,10 +109,18 @@ class UnionInjection : Injection {
                 ?.filter { it.isNotEmpty() }
                 ?.joinToString(separator = ", ")
 
+            val typeScriptService = context.lookupService(typeScriptServiceKey)
+
+            val namespace = typeScriptService?.findClosestNamespace(node)
+
+            val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+
+            val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
+
             // TODO: support template literals
             // TODO: support nullable unions
             val declaration = """
-sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 }
             """.trim()
 
@@ -153,6 +161,14 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
         val anonymousUnionDeclaration = anonymousUnionDeclarationPlugin.render(node, context, next)
         if (anonymousUnionDeclaration != null) return anonymousUnionDeclaration
 
+        val typeScriptService = context.lookupService(typeScriptServiceKey)
+
+        val namespace = typeScriptService?.findClosestNamespace(node)
+
+        val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+
+        val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
+
         if (isTypeAliasDeclaration(node)) {
             val typeNode = node.type
 
@@ -178,7 +194,7 @@ sealed external interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>"
                 // TODO: support template literals
                 // TODO: support nullable unions
                 return """
-sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 }
                 """.trim()
             }
@@ -219,7 +235,7 @@ sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifP
                 // TODO: support template literals
                 // TODO: support nullable unions
                 return """
-sealed external interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it" }} {
+sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it" }} {
 }
                 """.trim()
 

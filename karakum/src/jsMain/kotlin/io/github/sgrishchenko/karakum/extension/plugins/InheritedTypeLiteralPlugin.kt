@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.*
 import typescript.*
 import kotlin.contracts.contract
@@ -41,10 +39,10 @@ fun convertInheritedTypeLiteral(
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (isInlined && namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
+    val externalModifier = if (!isInlined) {
+        "external"
+    } else {
+        (namespaceInfoService?.resolveExternalModifier(namespace) ?: "external")
     }
 
     val typeReferences = node.types.asArray().filter { isTypeReferenceNode(it) }
@@ -80,7 +78,7 @@ fun convertInheritedTypeLiteral(
     val injectedMembers = (injections ?: emptyArray()).joinToString(separator = "\n")
 
     return """
-${ifPresent(inheritanceModifier) { "$it "}}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}> "}}${(ifPresent(fullHeritageClauses) { " : $it"})} {
+${ifPresent(inheritanceModifier) { "$it "}}${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}> "}}${(ifPresent(fullHeritageClauses) { " : $it"})} {
 ${ifPresent(accessors) { "${it}\n" }}${members}${ifPresent(injectedMembers) { "\n${it}"}}
 }
     """.trim()

@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.*
 import typescript.MappedTypeNode
 import typescript.Node
@@ -65,10 +63,10 @@ fun convertMappedType (
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (isInlined && namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
+    val externalModifier = if (!isInlined) {
+        "external"
+    } else {
+        (namespaceInfoService?.resolveExternalModifier(namespace) ?: "external")
     }
 
     val injectedHeritageClauses = heritageInjections
@@ -76,7 +74,7 @@ fun convertMappedType (
         ?.joinToString(separator = ", ")
 
     return """
-${ifPresent(inheritanceModifier) { "$it " }}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${(ifPresent(injectedHeritageClauses) { " : $it" })} {
+${ifPresent(inheritanceModifier) { "$it " }}${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${(ifPresent(injectedHeritageClauses) { " : $it" })} {
 ${convertMappedTypeBody(node, context, render)}
 }
     """.trim()

@@ -91,6 +91,10 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
 
         val namespace = typeScriptService.findClosestNamespace(node)
 
+        val namespaceInfoService = context.requireService(namespaceInfoServiceKey)
+
+        val externalModifier = namespaceInfoService.resolveExternalModifier(namespace)
+
         val nameNode = node.name ?: return null
 
         val name = escapeIdentifier(next(nameNode))
@@ -113,7 +117,7 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
 
                     """
                         @seskar.js.JsAsync
-                        external suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it" }
+                        ${ifPresent(externalModifier) { "$it " }}suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it" }
                     }
                     """.trimIndent()
                 }
@@ -138,7 +142,7 @@ class PromiseFunctionPlugin(configuration: PromiseFunctionPluginConfiguration) :
 
                     """
                         @JsName("$name")
-                        external fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }
+                        ${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }
                     }
                     """.trimIndent()
                 }

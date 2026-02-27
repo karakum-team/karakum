@@ -1,9 +1,9 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.NodeFlags
 import typescript.isVariableDeclaration
 
@@ -30,11 +30,7 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
-    }
+    val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
     var leadingComment = ""
 
@@ -49,5 +45,5 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
         ?.let { render(it) }
         ?: "Any? /* should be inferred */" // TODO: infer types
 
-    "${leadingComment}${externalModifier}${modifier}${name}: $type"
+    "${leadingComment}${ifPresent(externalModifier) { "$it " }}${modifier}${name}: $type"
 }

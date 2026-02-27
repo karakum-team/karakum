@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.configuration.ignore
 import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.isModuleDeclaration
 
 val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
@@ -27,16 +28,12 @@ val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
 
         val namespace = typeScriptService?.findClosestNamespace(node.parent)
 
-        var externalModifier = "external "
-
-        if (namespace != null && namespaceInfoService.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-            externalModifier = ""
-        }
+        val externalModifier = namespaceInfoService.resolveExternalModifier(namespace)
 
         val body = node.body?.let { render(it) } ?: ""
 
         return@plugin """
-${externalModifier}object $name {
+${ifPresent(externalModifier) { "$it " }}object $name {
 $body
 }
         """.trim()

@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.createPlugin
@@ -29,11 +27,7 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
-    }
+    val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
     val injectedHeritageClauses = heritageInjections
         ?.filter { it.isNotEmpty() }
@@ -47,7 +41,7 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
         .joinToString(separator = "\n") { member -> "${render(member)}: $name" }
 
     """
-sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 companion object {
 $members
 }

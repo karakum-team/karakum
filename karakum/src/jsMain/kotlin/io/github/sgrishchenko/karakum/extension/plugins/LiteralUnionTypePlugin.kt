@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
 import io.github.sgrishchenko.karakum.extension.InjectionType
@@ -253,14 +251,10 @@ inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (
-        isInlined
-        && namespace != null
-        && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`
-    ) {
-        externalModifier = ""
+    val externalModifier = if (!isInlined) {
+        "external"
+    } else {
+        (namespaceInfoService?.resolveExternalModifier(namespace) ?: "external")
     }
 
     val injectedHeritageClauses = heritageInjections
@@ -268,7 +262,7 @@ inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
         ?.joinToString(separator = ", ")
 
     val declaration = """
-sealed ${externalModifier}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed ${ifPresent(externalModifier) { "$it "}}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 companion object
 }
     """.trim()

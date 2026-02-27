@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
 import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.MEMBER
@@ -37,11 +35,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
-    }
+    val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
     val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters?.asArray())
         ?.map { render(it) }
@@ -72,7 +66,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
         .joinToString(separator = "\n")
 
     """
-${ifPresent(inheritanceModifier) { "$it " }}${externalModifier}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it"}} {
+${ifPresent(inheritanceModifier) { "$it " }}${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(fullHeritageClauses) { " : $it"}} {
 ${members}${ifPresent(injectedMembers) { "\n${it}"}}
 }
     """.trim()

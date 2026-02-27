@@ -1,7 +1,5 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.SyntaxKind
@@ -30,11 +28,7 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
 
     val namespace = typeScriptService?.findClosestNamespace(node)
 
-    var externalModifier = "external "
-
-    if (namespace != null && namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`object`) {
-        externalModifier = ""
-    }
+    val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
     val typeParameters = node.typeParameters?.asArray()
         ?.map { render(it) }
@@ -46,7 +40,7 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
         strategy = ParameterDeclarationStrategy.function,
         template = { parameters, _ ->
-            "${externalModifier}fun ${ifPresent(typeParameters) { "<${it}> "}}${name}(${parameters})${ifPresent(returnType) { ": $it"}}"
+            "${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> "}}${name}(${parameters})${ifPresent(returnType) { ": $it"}}"
         }
     ))
 }
