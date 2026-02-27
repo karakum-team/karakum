@@ -116,9 +116,17 @@ class ExtensionTest {
                         match(::isClassDeclaration, "ClassWithPromiseMethods")
                             .match(::isMethodDeclaration, "returnsPromiseIgnored")
                     },
-                    exclude = { node, signature ->
-                        node.name?.let { isIdentifier(it) && it.text == "returnsPromise2" } == true
-                                && node.parameters.asArray().first().type?.let { isUnionTypeNode(it) } == true
+                    exclude = match {
+                        match { node, context ->
+                            isMethodSignature(node) &&
+                                    node.name.let { isIdentifier(it) && it.text == "returnsPromise2" }
+                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                        }
+                        match { node, context ->
+                            isMethodDeclaration(node) &&
+                                    node.name.let { isIdentifier(it) && it.text == "returnsPromise2" }
+                                    && context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
+                        }
                     }
                 ),
                 PromiseMethodPlugin(
