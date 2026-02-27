@@ -38,7 +38,7 @@ external interface NumberPluginConfiguration {
 class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
     private val strategy = configuration.strategy ?: NumberPluginStrategy.loose
     private val defaultNumberType = configuration.defaultNumberType ?: "Double"
-    private lateinit var matchers: List<Pair<String, List<Matcher>>>
+    private lateinit var matchers: List<Pair<String, List<Matcher<Context>>>>
 
     private val uncoveredNodes = mutableSetOf<Node>()
 
@@ -63,7 +63,7 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
     constructor(
         strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
         defaultNumberType: String? = null,
-        vararg matchers: Pair<String, List<Matcher>>,
+        vararg matchers: Pair<String, List<Matcher<Context>>>,
     ) : this(
         NumberPluginConfiguration(
             strategy,

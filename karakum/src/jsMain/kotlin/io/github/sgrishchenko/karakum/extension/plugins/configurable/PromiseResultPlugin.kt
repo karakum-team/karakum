@@ -21,7 +21,7 @@ external interface PromiseResultPluginConfiguration {
 @JsExport
 class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plugin {
     private val isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType
-    private lateinit var ignoreMatchers: List<Matcher>
+    private lateinit var ignoreMatchers: List<Matcher<Context>>
     private val renderPayload = configuration.renderPayload ?: { node, _, render ->
         val typeArguments = requireNotNull(node.typeArguments)
         render(typeArguments.asArray().first())
@@ -43,7 +43,7 @@ class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plu
     @JsExport.Ignore
     constructor(
         isPromiseType: ((Node, Context) -> Boolean)? = null,
-        ignore: List<Matcher>,
+        ignore: List<Matcher<Context>>,
         renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
     ): this(
         PromiseResultPluginConfiguration(
