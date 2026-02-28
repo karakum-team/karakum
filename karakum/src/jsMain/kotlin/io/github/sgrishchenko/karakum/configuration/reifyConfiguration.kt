@@ -31,6 +31,7 @@ suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfi
         annotations = normalizeOption(configuration.annotations, createDefaultExtensionPatterns("annotations")),
         nameResolvers = normalizeOption(configuration.nameResolvers, createDefaultExtensionPatterns("nameResolvers")),
         inheritanceModifiers = normalizeOption(configuration.inheritanceModifiers, createDefaultExtensionPatterns("inheritanceModifiers")),
+        mutabilityModifiers = normalizeOption(configuration.mutabilityModifiers, createDefaultExtensionPatterns("mutabilityModifiers")),
         varianceModifiers = normalizeOption(configuration.varianceModifiers, createDefaultExtensionPatterns("varianceModifiers")),
     ), cwd)
 
@@ -59,6 +60,7 @@ suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfi
         annotations = manyOf(values = extensions.annotations),
         nameResolvers = manyOf(values = extensions.nameResolvers),
         inheritanceModifiers = manyOf(values = extensions.inheritanceModifiers),
+        mutabilityModifiers = manyOf(values = extensions.mutabilityModifiers),
         varianceModifiers = manyOf(values = extensions.varianceModifiers),
     )
 }

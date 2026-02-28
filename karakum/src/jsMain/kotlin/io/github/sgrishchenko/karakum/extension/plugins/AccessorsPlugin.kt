@@ -55,8 +55,10 @@ class AccessorsPlugin : Plugin {
             val checkCoverageService = context.lookupService(checkCoverageServiceKey)
             val typeScriptService = context.lookupService(typeScriptServiceKey)
             val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
+            val mutabilityModifierService = context.lookupService(mutabilityModifierServiceKey)
 
             val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+            val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
             val typeChecker = typeScriptService?.program?.getTypeChecker()
 
@@ -84,7 +86,7 @@ class AccessorsPlugin : Plugin {
 
             val accessorInfo = this.accessors[symbol] ?: emptyAccessorInfo()
 
-            val modifier = if (accessorInfo.setter != null) "var " else "val "
+            val modifier = mutabilityModifier ?: if (accessorInfo.setter != null) "var" else "val"
 
             val name = escapeIdentifier(next(accessorName))
             val annotation = createKebabAnnotation(accessorName)
@@ -101,7 +103,7 @@ class AccessorsPlugin : Plugin {
             }
 
             return """
-${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}${modifier}${name}: $type
+${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}${modifier} ${name}: $type
             """.trim()
         }
 

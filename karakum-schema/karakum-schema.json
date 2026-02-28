@@ -203,6 +203,20 @@
                 "type": "string"
             }
         },
+        "mutabilityModifiers": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "title": "mutabilityModifiers"
+        },
         "nameResolvers": {
             "anyOf": [
                 {

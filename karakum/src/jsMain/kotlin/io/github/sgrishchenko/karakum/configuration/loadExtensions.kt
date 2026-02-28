@@ -14,6 +14,7 @@ external interface ExtensionConfiguration {
     val annotations: ReadonlyArray<String>
     val nameResolvers: ReadonlyArray<String>
     val inheritanceModifiers: ReadonlyArray<String>
+    val mutabilityModifiers: ReadonlyArray<String>
     val varianceModifiers: ReadonlyArray<String>
 }
 
@@ -24,6 +25,7 @@ external interface Extensions {
     val annotations: ReadonlyArray<Annotation>
     val nameResolvers: ReadonlyArray<NameResolver>
     val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
+    val mutabilityModifiers: ReadonlyArray<MutabilityModifier>
     val varianceModifiers: ReadonlyArray<VarianceModifier>
 }
 
@@ -110,6 +112,12 @@ suspend fun loadExtensions(
         cwd,
     )
 
+    val mutabilityModifiers = loadExtensions<MutabilityModifier>(
+        "Mutability modifier",
+        configuration.mutabilityModifiers,
+        cwd,
+    )
+
     val varianceModifiers = loadExtensions<VarianceModifier>(
         "Variance Modifier",
         configuration.varianceModifiers,
@@ -122,6 +130,7 @@ suspend fun loadExtensions(
         annotations = annotations,
         nameResolvers = nameResolvers,
         inheritanceModifiers = inheritanceModifiers,
+        mutabilityModifiers = mutabilityModifiers,
         varianceModifiers = varianceModifiers,
     )
 }

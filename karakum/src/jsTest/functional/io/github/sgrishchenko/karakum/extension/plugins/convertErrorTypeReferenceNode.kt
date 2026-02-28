@@ -1,4 +1,4 @@
-package io.github.sgrishchenko.karakum.extension.nameResolvers
+package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import typescript.isExpressionWithTypeArguments

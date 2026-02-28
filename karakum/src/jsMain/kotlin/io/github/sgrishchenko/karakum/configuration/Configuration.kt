@@ -77,6 +77,8 @@ external interface SchemaConfiguration {
 
     val inheritanceModifiers: Many<Any>?
 
+    val mutabilityModifiers: Many<Any>?
+
     val varianceModifiers: Many<Any>?
 
     /**
@@ -140,6 +142,8 @@ external interface PartialConfiguration : SchemaConfiguration {
 
     override val inheritanceModifiers: Many<InheritanceModifier>?
 
+    override val mutabilityModifiers: Many<MutabilityModifier>?
+
     override val varianceModifiers: Many<VarianceModifier>?
 
     override val importMapper: Record<String, Rule>?
@@ -170,6 +174,8 @@ external interface MutableConfiguration : PartialConfiguration {
     override var nameResolvers: Many<NameResolver>?
 
     override var inheritanceModifiers: Many<InheritanceModifier>?
+
+    override var mutabilityModifiers: Many<MutabilityModifier>?
 
     override var varianceModifiers: Many<VarianceModifier>?
 
@@ -219,6 +225,8 @@ external interface Configuration {
     val nameResolvers: ReadonlyArray<NameResolver>
 
     val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
+
+    val mutabilityModifiers: ReadonlyArray<MutabilityModifier>
 
     val varianceModifiers: ReadonlyArray<VarianceModifier>
 

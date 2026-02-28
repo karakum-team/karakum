@@ -4,6 +4,6 @@ import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.plugins.Signature
 
 @JsExport
-interface SignatureContext : Context {
+external interface SignatureContext : Context {
     val signature: Signature
 }

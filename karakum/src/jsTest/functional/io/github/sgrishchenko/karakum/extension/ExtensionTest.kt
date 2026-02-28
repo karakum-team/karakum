@@ -1,13 +1,14 @@
 package io.github.sgrishchenko.karakum.extension
 
-import io.github.sgrishchenko.karakum.extension.nameResolvers.convertErrorTypeReferenceNode
+import io.github.sgrishchenko.karakum.extension.mutabilityModifiers.modifyCustomMutability
+import io.github.sgrishchenko.karakum.extension.plugins.convertErrorTypeReferenceNode
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPluginStrategy
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseFunctionPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseMethodPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResultPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
-import io.github.sgrishchenko.karakum.extension.plugins.resolveUnionMemberDuplicateName
+import io.github.sgrishchenko.karakum.extension.nameResolvers.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
 import io.github.sgrishchenko.karakum.util.manyOf
 import js.objects.recordOf
@@ -140,8 +141,13 @@ class ExtensionTest {
 
                 convertErrorTypeReferenceNode,
             )
+
             nameResolvers = manyOf(
-                resolveUnionMemberDuplicateName
+                ::resolveUnionMemberDuplicateName
+            )
+
+            mutabilityModifiers = manyOf(
+                ::modifyCustomMutability,
             )
         }
     }

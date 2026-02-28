@@ -65,6 +65,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val annotations = configuration.annotations
     val nameResolvers = configuration.nameResolvers
     val inheritanceModifiers = configuration.inheritanceModifiers
+    val mutabilityModifiers = configuration.mutabilityModifiers
     val varianceModifiers = configuration.varianceModifiers
     val compilerOptions = configuration.compilerOptions
     val inputCwd = configuration.inputCwd
@@ -151,6 +152,7 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
         injections,
         nameResolvers,
         inheritanceModifiers,
+        mutabilityModifiers,
         varianceModifiers,
         program,
         namespaceInfo,

@@ -98,6 +98,7 @@ suspend fun main() {
                     "annotations",
                     "nameResolvers",
                     "inheritanceModifiers",
+                    "mutabilityModifiers",
                     "varianceModifiers",
                 ).forEach { key ->
                     Reflect.get(properties, key)?.let { property ->

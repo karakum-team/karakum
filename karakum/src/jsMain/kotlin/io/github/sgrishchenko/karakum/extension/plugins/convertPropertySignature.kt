@@ -16,15 +16,17 @@ val convertPropertySignature = createPlugin plugin@{ node, context, render ->
     checkCoverageService?.cover(node)
 
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
+    val mutabilityModifierService = context.lookupService(mutabilityModifierServiceKey)
 
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
+    val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
     val readonly = node.modifiers?.asArray()?.find { modifier -> modifier.kind === SyntaxKind.ReadonlyKeyword }
     readonly?.let { checkCoverageService?.cover(it) }
 
     node.questionToken?.let { checkCoverageService?.cover(it) }
 
-    val modifier = if (readonly != null) "val " else "var "
+    val modifier = mutabilityModifier ?: if (readonly != null) "val" else "var"
 
     val name = escapeIdentifier(render(node.name))
     val annotation = createKebabAnnotation(node.name)
@@ -33,5 +35,5 @@ val convertPropertySignature = createPlugin plugin@{ node, context, render ->
 
     val type = renderNullable(node.type, isOptional, context, render)
 
-    "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}${modifier}${name}: $type"
+    "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}${modifier} ${name}: $type"
 }

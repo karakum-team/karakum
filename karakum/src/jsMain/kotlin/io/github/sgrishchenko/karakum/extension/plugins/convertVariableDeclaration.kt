@@ -19,11 +19,14 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
     val commentService = context.lookupService(commentServiceKey)
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
+    val mutabilityModifierService = context.lookupService(mutabilityModifierServiceKey)
 
-    val modifier = if (node.parent.flags.toString().toInt() and NodeFlags.Const.toString().toInt() != 0) {
-        "val "
+    val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
+
+    val modifier = mutabilityModifier ?: if (node.parent.flags.toString().toInt() and NodeFlags.Const.toString().toInt() != 0) {
+        "val"
     } else {
-        "var "
+        "var"
     }
 
     val name = render(node.name)
@@ -45,5 +48,5 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
         ?.let { render(it) }
         ?: "Any? /* should be inferred */" // TODO: infer types
 
-    "${leadingComment}${ifPresent(externalModifier) { "$it " }}${modifier}${name}: $type"
+    "${leadingComment}${ifPresent(externalModifier) { "$it " }}${modifier} ${name}: $type"
 }

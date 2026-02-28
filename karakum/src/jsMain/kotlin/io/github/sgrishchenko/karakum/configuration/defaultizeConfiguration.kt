@@ -76,6 +76,7 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
     val annotations = normalizeOption(configuration.annotations)
     val nameResolvers = normalizeOption(configuration.nameResolvers)
     val inheritanceModifiers = normalizeOption(configuration.inheritanceModifiers)
+    val mutabilityModifiers = normalizeOption(configuration.mutabilityModifiers)
     val varianceModifiers = normalizeOption(configuration.varianceModifiers)
 
     @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
@@ -113,6 +114,8 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         nameResolvers = nameResolvers,
 
         inheritanceModifiers = inheritanceModifiers,
+
+        mutabilityModifiers = mutabilityModifiers,
 
         varianceModifiers = varianceModifiers,
 
