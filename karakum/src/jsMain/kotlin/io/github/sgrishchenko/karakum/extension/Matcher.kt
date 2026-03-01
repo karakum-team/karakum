@@ -90,14 +90,14 @@ fun <TContext : Context> MatcherScope<TContext>.match(
     return match(predicate.wrap(), *predicates)
 }
 
-fun <TContext : Context> withName(name: String): (Node, TContext) -> Boolean {
+fun withName(name: String): (Node, Any?) -> Boolean {
     return { node, _ ->
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
         (node as NamedDeclaration).name.let { it != null && isIdentifier(it) && it.text == name }
     }
 }
 
-fun <TContext : Context> withFile(glob: String): (Node, TContext) -> Boolean {
+fun withFile(glob: String): (Node, Any?) -> Boolean {
     return { node, _ ->
         node.getSourceFileOrNull().let { it != null && path.matchesGlob(it.fileName, glob) }
     }

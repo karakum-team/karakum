@@ -8,12 +8,10 @@ import typescript.isClassDeclaration
 
 val modifyClassInheritance = resolve(
     "open" to match {
-        setOf(
-            "GrandparentWithConstructor",
-            "ParentWithoutConstructor",
-            "ParentWithConstructor",
-        ).forEach {
-            match(::isClassDeclaration, withFile("**/class/parentConstructors.d.ts"), withName(it))
+        withFile("**/class/parentConstructors.d.ts").let {
+            match(::isClassDeclaration, withName("GrandparentWithConstructor"), it)
+            match(::isClassDeclaration, withName("ParentWithoutConstructor"), it)
+            match(::isClassDeclaration, withName("ParentWithConstructor"), it)
         }
 
         match(
