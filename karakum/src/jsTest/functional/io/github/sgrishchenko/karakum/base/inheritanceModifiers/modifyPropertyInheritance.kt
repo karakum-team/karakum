@@ -1,33 +1,24 @@
 package io.github.sgrishchenko.karakum.base.inheritanceModifiers
 
-import io.github.sgrishchenko.karakum.extension.InheritanceModifier
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
+import io.github.sgrishchenko.karakum.extension.match
+import io.github.sgrishchenko.karakum.extension.resolve
+import io.github.sgrishchenko.karakum.extension.withFile
+import io.github.sgrishchenko.karakum.extension.withName
 import typescript.isClassDeclaration
-import typescript.isIdentifier
 import typescript.isPropertyDeclaration
 
-val modifyPropertyInheritance: InheritanceModifier = inheritanceModifier@{ node, context ->
-    val sourceFileName = node.getSourceFileOrNull()?.fileName ?: return@inheritanceModifier null
-
-    if (!isPropertyDeclaration(node)) return@inheritanceModifier null
-
-    val name = node.name
-    val parent = node.parent
-
-    if (!isIdentifier(name)) return@inheritanceModifier null
-    if (!isClassDeclaration(parent)) return@inheritanceModifier null
-
-    if (
-        sourceFileName.endsWith("interface/inheritance.d.ts") &&
-        parent.name?.text == "ChildClass" &&
-        (name.text == "firstField" ||
-                name.text == "secondField" ||
-                name.text == "thirdField" ||
-                name.text == "fourthField" ||
-                name.text == "otherField")
-    ) {
-        return@inheritanceModifier "override"
+val modifyPropertyInheritance = resolve(
+    "override" to match {
+        match(
+            ::isClassDeclaration,
+            withFile("**/interface/inheritance.d.ts"),
+            withName("ChildClass"),
+        ) {
+            match(::isPropertyDeclaration, withName("firstField"))
+            match(::isPropertyDeclaration, withName("secondField"))
+            match(::isPropertyDeclaration, withName("thirdField"))
+            match(::isPropertyDeclaration, withName("fourthField"))
+            match(::isPropertyDeclaration, withName("otherField"))
+        }
     }
-
-    null
-}
+)

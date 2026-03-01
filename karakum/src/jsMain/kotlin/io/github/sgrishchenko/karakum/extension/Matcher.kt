@@ -1,6 +1,8 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
+import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
+import node.path.path
 import typescript.NamedDeclaration
 import typescript.Node
 import typescript.isIdentifier
@@ -95,11 +97,27 @@ fun <TContext : Context> withName(name: String): (Node, TContext) -> Boolean {
     }
 }
 
+fun <TContext : Context> withFile(glob: String): (Node, TContext) -> Boolean {
+    return { node, _ ->
+        node.getSourceFileOrNull().let { it != null && path.matchesGlob(it.fileName, glob) }
+    }
+}
+
 fun <TContext : Context> match(
     block: MatcherScope<TContext>.() -> Unit,
 ): List<Matcher<TContext>> {
     val scope = MatcherScopeImpl<TContext>().also(block)
     return scope.children
+}
+
+fun <TContext : Context> resolve(
+    vararg matchers: Pair<String, List<Matcher<TContext>>>,
+): (Node, TContext) -> String? {
+    return { node, context ->
+        matchers.firstNotNullOfOrNull { (result, matcher) ->
+            result.takeIf { matcher.matches(node, context) }
+        }
+    }
 }
 
 fun <TContext : Context> match(
@@ -139,4 +157,3 @@ fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: TContext
 fun <TContext : Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
     return any { it.matches(node, context) }
 }
-

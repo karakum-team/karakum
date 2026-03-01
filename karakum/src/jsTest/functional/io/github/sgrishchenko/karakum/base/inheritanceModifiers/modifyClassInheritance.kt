@@ -1,31 +1,25 @@
 package io.github.sgrishchenko.karakum.base.inheritanceModifiers
 
-import io.github.sgrishchenko.karakum.extension.InheritanceModifier
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
+import io.github.sgrishchenko.karakum.extension.match
+import io.github.sgrishchenko.karakum.extension.resolve
+import io.github.sgrishchenko.karakum.extension.withFile
+import io.github.sgrishchenko.karakum.extension.withName
 import typescript.isClassDeclaration
 
-val modifyClassInheritance: InheritanceModifier = inheritanceModifier@{ node, context ->
-    val sourceFileName = node.getSourceFileOrNull()?.fileName ?: return@inheritanceModifier null
+val modifyClassInheritance = resolve(
+    "open" to match {
+        setOf(
+            "GrandparentWithConstructor",
+            "ParentWithoutConstructor",
+            "ParentWithConstructor",
+        ).forEach {
+            match(::isClassDeclaration, withFile("**/class/parentConstructors.d.ts"), withName(it))
+        }
 
-    if (!isClassDeclaration(node)) return@inheritanceModifier null
-
-    if (
-        sourceFileName.endsWith("class/parentConstructors.d.ts") &&
-        (node.name?.text == "GrandparentWithConstructor" ||
-                node.name?.text == "ParentWithoutConstructor" ||
-                node.name?.text == "ParentWithConstructor")
-
-    ) {
-        return@inheritanceModifier "open"
+        match(
+            ::isClassDeclaration,
+            withFile("**/interface/inheritance.d.ts"),
+            withName("ParentClass")
+        )
     }
-
-    if (
-        sourceFileName.endsWith("interface/inheritance.d.ts") &&
-        (node.name?.text == "ParentClass")
-
-    ) {
-        return@inheritanceModifier "open"
-    }
-
-    null
-}
+)
