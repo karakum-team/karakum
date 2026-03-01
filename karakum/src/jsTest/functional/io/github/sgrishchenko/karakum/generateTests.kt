@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import io.github.sgrishchenko.karakum.configuration.plain
 import js.array.ReadonlyArray
 import js.objects.Object
-import js.objects.recordOf
 import js.objects.unsafeJso
 import node.buffer.BufferEncoding
 import node.fs.*
@@ -39,7 +38,7 @@ suspend fun generateTests(
         inputResolutionStrategy = InputResolutionStrategy.plain
         libraryNameOutputPrefix = false
         isolatedOutputPackage = true
-        moduleNameMapper = recordOf()
+        moduleNameMapper = mapOf()
         verbose = true
         Object.assign(this, createConfiguration(output))
     }

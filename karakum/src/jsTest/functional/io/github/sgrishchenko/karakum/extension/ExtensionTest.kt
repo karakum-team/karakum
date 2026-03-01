@@ -10,8 +10,6 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResu
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.nameResolvers.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
-import io.github.sgrishchenko.karakum.util.manyOf
-import js.objects.recordOf
 import kotlinx.coroutines.test.runTest
 import typescript.Node
 import typescript.isClassDeclaration
@@ -39,14 +37,14 @@ class ExtensionTest {
     @Test
     fun test() = runTest {
         generateTests("extension") { testOutput ->
-            input = manyOf("**/*.d.ts")
+            input = listOf("**/*.d.ts")
             output = testOutput
             libraryName = "extension"
-            moduleNameMapper = recordOf(
+            moduleNameMapper = mapOf(
                 // prevent importing of fake modules
                 "extension/.+" to ""
             )
-            plugins = manyOf(
+            plugins = listOf(
                 NumberPlugin(
                     NumberPluginStrategy.loose,
                     defaultNumberType = "Double /* fallback */",
@@ -142,11 +140,11 @@ class ExtensionTest {
                 convertErrorTypeReferenceNode,
             )
 
-            nameResolvers = manyOf(
+            nameResolvers = listOf(
                 ::resolveUnionMemberDuplicateName
             )
 
-            mutabilityModifiers = manyOf(
+            mutabilityModifiers = listOf(
                 ::modifyCustomMutability,
             )
         }

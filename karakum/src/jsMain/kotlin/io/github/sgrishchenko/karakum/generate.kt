@@ -273,10 +273,7 @@ suspend fun generate(
     partialConfiguration: PartialConfiguration = PartialConfiguration(),
     block: MutableConfiguration.() -> Unit,
 ) {
-    val configuration = MutableConfiguration()
-    Object.assign(configuration, partialConfiguration)
-    configuration.apply(block)
-    generate(configuration)
+    generate(buildConfiguration(partialConfiguration, block))
 }
 
 @JsExport

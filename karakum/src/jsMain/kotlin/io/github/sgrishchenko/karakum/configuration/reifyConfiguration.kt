@@ -1,11 +1,14 @@
 package io.github.sgrishchenko.karakum.configuration
 
 import io.github.sgrishchenko.karakum.util.Many
+import io.github.sgrishchenko.karakum.util.Rule
 import io.github.sgrishchenko.karakum.util.manyOf
 import io.github.sgrishchenko.karakum.util.toArray
 import io.github.sgrishchenko.karakum.util.toPosix
 import js.array.ReadonlyArray
+import js.objects.ReadonlyRecord
 import node.process.process
+import typescript.CompilerOptions
 
 private fun normalizeOption(
     patterns: Many<Any>?,
@@ -47,10 +50,10 @@ suspend fun reifyConfiguration(configuration: SchemaConfiguration): PartialConfi
         moduleNameMapper = configuration.moduleNameMapper,
         packageNameMapper = configuration.packageNameMapper,
         importInjector = configuration.importInjector,
-        importMapper = configuration.importMapper,
+        importMapper = configuration.importMapper.unsafeCast<ReadonlyRecord<String, Rule>?>(),
         namespaceStrategy = configuration.namespaceStrategy,
         conflictResolutionStrategy = configuration.conflictResolutionStrategy,
-        compilerOptions = configuration.compilerOptions,
+        compilerOptions = configuration.compilerOptions.unsafeCast<CompilerOptions?>(),
         disclaimer = configuration.disclaimer,
         verbose = configuration.verbose,
         cwd = configuration.cwd,

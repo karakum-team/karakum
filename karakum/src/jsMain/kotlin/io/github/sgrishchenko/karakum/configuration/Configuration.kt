@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.util.Many
 import io.github.sgrishchenko.karakum.util.Rule
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
-import js.objects.Record
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.CompilerOptions
@@ -131,71 +130,103 @@ external interface SchemaConfiguration {
 
 @JsExport
 @JsPlainObject
-external interface PartialConfiguration : SchemaConfiguration {
-    override val plugins: Many<Plugin>?
+external interface PartialConfiguration {
+    val inputRoots: Many<String>?
 
-    override val injections: Many<Injection>?
+    /**
+     * @TJS-type string
+     * @$ref #/definitions/InputResolutionStrategy
+     * */
+    val inputResolutionStrategy: InputResolutionStrategy?
 
-    override val annotations: Many<Annotation>?
+    val input: Many<String>?
+    val output: String?
 
-    override val nameResolvers: Many<NameResolver>?
+    val ignoreInput: Many<String>?
+    val ignoreOutput: Many<String>?
 
-    override val inheritanceModifiers: Many<InheritanceModifier>?
+    val libraryName: String?
+    val libraryNameOutputPrefix: Boolean?
+    val isolatedOutputPackage: Boolean?
 
-    override val mutabilityModifiers: Many<MutabilityModifier>?
+    val plugins: Many<Plugin>?
 
-    override val varianceModifiers: Many<VarianceModifier>?
+    val injections: Many<Injection>?
 
-    override val importMapper: Record<String, Rule>?
-    override val compilerOptions: CompilerOptions?
+    val annotations: Many<Annotation>?
+
+    val nameResolvers: Many<NameResolver>?
+
+    val inheritanceModifiers: Many<InheritanceModifier>?
+
+    val mutabilityModifiers: Many<MutabilityModifier>?
+
+    val varianceModifiers: Many<VarianceModifier>?
+
+    val moduleNameMapper: ReadonlyRecord<String, String>?
+
+    val packageNameMapper: ReadonlyRecord<String, String>?
+
+    val importInjector: ReadonlyRecord<String, ReadonlyArray<String>>?
+
+    val importMapper: ReadonlyRecord<String, Rule>?
+
+    val namespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>?
+
+    val conflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>?
+
+    val compilerOptions: CompilerOptions?
+
+    val disclaimer: String?
+    val verbose: Boolean?
+    val cwd: String?
 }
 
-@JsPlainObject
-external interface MutableConfiguration : PartialConfiguration {
-    override var inputRoots: Many<String>?
-    override var inputResolutionStrategy: InputResolutionStrategy?
+interface MutableConfiguration {
+    var inputRoots: List<String>?
+    var inputResolutionStrategy: InputResolutionStrategy?
 
-    override var input: Many<String>
-    override var output: String
+    var input: List<String>?
+    var output: String?
 
-    override var ignoreInput: Many<String>?
-    override var ignoreOutput: Many<String>?
+    var ignoreInput: List<String>?
+    var ignoreOutput: List<String>?
 
-    override var libraryName: String?
-    override var libraryNameOutputPrefix: Boolean?
-    override var isolatedOutputPackage: Boolean?
+    var libraryName: String?
+    var libraryNameOutputPrefix: Boolean?
+    var isolatedOutputPackage: Boolean?
 
-    override var plugins: Many<Plugin>?
+    var plugins: List<Plugin>?
 
-    override var injections: Many<Injection>?
+    var injections: List<Injection>?
 
-    override var annotations: Many<Annotation>?
+    var annotations: List<Annotation>?
 
-    override var nameResolvers: Many<NameResolver>?
+    var nameResolvers: List<NameResolver>?
 
-    override var inheritanceModifiers: Many<InheritanceModifier>?
+    var inheritanceModifiers: List<InheritanceModifier>?
 
-    override var mutabilityModifiers: Many<MutabilityModifier>?
+    var mutabilityModifiers: List<MutabilityModifier>?
 
-    override var varianceModifiers: Many<VarianceModifier>?
+    var varianceModifiers: List<VarianceModifier>?
 
-    override var moduleNameMapper: ReadonlyRecord<String, String>?
+    var moduleNameMapper: Map<String, String>?
 
-    override var packageNameMapper: ReadonlyRecord<String, String>?
+    var packageNameMapper: Map<String, String>?
 
-    override var importInjector: ReadonlyRecord<String, ReadonlyArray<String>>?
+    var importInjector: Map<String, List<String>>?
 
-    override var importMapper: Record<String, Rule>?
+    var importMapper: Map<String, Rule>?
 
-    override var namespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>?
+    var namespaceStrategy: Map<String, NamespaceStrategy>?
 
-    override var conflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>?
+    var conflictResolutionStrategy: Map<String, ConflictResolutionStrategy>?
 
-    override var compilerOptions: CompilerOptions?
+    var compilerOptions: CompilerOptions?
 
-    override var disclaimer: String?
-    override var verbose: Boolean?
-    override var cwd: String?
+    var disclaimer: String?
+    var verbose: Boolean?
+    var cwd: String?
 }
 
 @JsExport
