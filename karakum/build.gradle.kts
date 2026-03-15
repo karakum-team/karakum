@@ -41,7 +41,7 @@ kotlin {
                 customField("license", "Apache-2.0")
                 customField("repository", mapOf(
                     "type" to "git",
-                    "url" to "https://github.com/karakum-team/karakum.git",
+                    "url" to "git+https://github.com/karakum-team/karakum.git",
                 ))
                 customField("exports", mapOf(
                     "types" to "./kotlin/karakum.d.mts",
