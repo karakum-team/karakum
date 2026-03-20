@@ -65,7 +65,7 @@ fun createPlugins(
 
     convertLiteral(::isStringLiteral) { "String" },
     convertLiteral(::isNumericLiteral) { "Double" },
-    convertLiteral(::isBigIntLiteral) { "js.core.BigInt" },
+    convertLiteral(::isBigIntLiteral) { "js.numbers.BigInt" },
 
     convertLiteral(::isThisTypeNode) { "Unit" },
     convertLiteral(::isTemplateLiteralTypeNode) { "String" },

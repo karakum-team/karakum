@@ -7,6 +7,7 @@ import js.array.ReadonlyArray
 import js.objects.Object
 import js.objects.unsafeJso
 import node.buffer.BufferEncoding
+import node.buffer.utf8
 import node.fs.*
 import node.path.path
 import kotlin.test.assertEquals

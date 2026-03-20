@@ -6,7 +6,7 @@ import kotlinx.js.JsPlainObject
 import typescript.*
 
 @JsPlainObject
-private external interface AccessorInfo {
+internal external interface AccessorInfo {
     val getter: GetAccessorDeclaration?
     val setter: SetAccessorDeclaration?
 }

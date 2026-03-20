@@ -10,11 +10,13 @@ import js.json.parse
 import js.objects.unsafeJso
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
-import node.buffer.BufferEncoding.Companion.utf8
+import node.buffer.BufferEncoding
+import node.buffer.utf8
 import node.fs.readFile
 import node.util.ParseArgsConfig
-import node.util.ParseArgsOptionsType.Companion.string
+import node.util.ParseArgsOptionsType
 import node.util.parseArgs
+import node.util.string
 import kotlin.coroutines.EmptyCoroutineContext
 
 suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
@@ -22,20 +24,20 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
         this.args = args
         options = unsafeJso {
             this["input"] = unsafeJso {
-                type = string
+                type = ParseArgsOptionsType.string
                 multiple = true
             }
 
             this["output"] = unsafeJso {
-                type = string
+                type = ParseArgsOptionsType.string
             }
 
             this["library-name"] = unsafeJso {
-                type = string
+                type = ParseArgsOptionsType.string
             }
 
             this["config"] = unsafeJso {
-                type = string
+                type = ParseArgsOptionsType.string
             }
         }
     }
@@ -47,7 +49,7 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
     val libraryName = results.values["library-name"]?.toString()
 
     val configuration = results.values["config"]?.toString()
-        ?.let { readFile(it, utf8) }
+        ?.let { readFile(it, BufferEncoding.utf8) }
         ?.let { parse<SchemaConfiguration>(it) }
         ?.let { reifyConfiguration(it) }
 

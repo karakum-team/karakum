@@ -10,7 +10,8 @@ import js.objects.ReadonlyRecord
 import js.objects.recordOf
 import js.reflect.Reflect
 import kotlinx.js.JsPlainObject
-import node.buffer.BufferEncoding.Companion.utf8
+import node.buffer.BufferEncoding
+import node.buffer.utf8
 import node.fs.readFile
 import node.fs.rm
 import node.fs.writeFile
@@ -57,10 +58,10 @@ suspend fun main() {
     generateSchema(additionalTypings, "InputResolutionStrategy", inputResolutionStrategySchemaFileName)
     generateSchema(typings, "SchemaConfiguration", configurationSchemaFileName)
 
-    val namespaceStrategySchema: Schema = parse(readFile(namespaceStrategySchemaFileName, utf8))
-    val conflictResolutionStrategySchema: Schema = parse(readFile(conflictResolutionStrategySchemaFileName, utf8))
-    val inputResolutionStrategySchema: Schema = parse(readFile(inputResolutionStrategySchemaFileName, utf8))
-    val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, utf8))
+    val namespaceStrategySchema: Schema = parse(readFile(namespaceStrategySchemaFileName, BufferEncoding.utf8))
+    val conflictResolutionStrategySchema: Schema = parse(readFile(conflictResolutionStrategySchemaFileName, BufferEncoding.utf8))
+    val inputResolutionStrategySchema: Schema = parse(readFile(inputResolutionStrategySchemaFileName, BufferEncoding.utf8))
+    val configurationSchema: Schema = parse(readFile(configurationSchemaFileName, BufferEncoding.utf8))
 
     val definitions = recordOf(
         "NamespaceStrategy" to Schema.copy(namespaceStrategySchema, `$schema` = undefined, definitions = undefined),

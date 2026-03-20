@@ -227,7 +227,7 @@ inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
             LiteralUnionMemberEntryType.bigInt -> {
                 """
 inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
-    get() = js.reflect.unsafeCast(js.core.BigInt("${entry.value.removeSuffix("n")}"))
+    get() = js.reflect.unsafeCast(js.numbers.BigInt("${entry.value.removeSuffix("n")}"))
                 """.trim()
             }
             else -> {

@@ -18,10 +18,10 @@ inline val MixedLiteralEnum.Companion.`-123`: MixedLiteralEnum
     get() = js.reflect.unsafeCast(-123)
 
 inline val MixedLiteralEnum.Companion.`123n`: MixedLiteralEnum
-    get() = js.reflect.unsafeCast(js.core.BigInt("123"))
+    get() = js.reflect.unsafeCast(js.numbers.BigInt("123"))
 
 inline val MixedLiteralEnum.Companion.`-123n`: MixedLiteralEnum
-    get() = js.reflect.unsafeCast(js.core.BigInt("-123"))
+    get() = js.reflect.unsafeCast(js.numbers.BigInt("-123"))
 
 inline val MixedLiteralEnum.Companion.someValue: MixedLiteralEnum
     get() = js.reflect.unsafeCast("someValue")

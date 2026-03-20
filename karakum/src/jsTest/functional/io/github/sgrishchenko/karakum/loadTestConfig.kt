@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum
 
 import js.json.parse
 import node.buffer.BufferEncoding
+import node.buffer.utf8
 import node.fs.readFile
 
 external interface TestConfig {

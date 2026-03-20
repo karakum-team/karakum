@@ -8,9 +8,6 @@ import typescript.isIdentifier
 import typescript.isTypeReferenceNode
 
 private val readonlyBuiltinTypeTypes = mapOf(
-    "ArrayLike" to "js.array.ArrayLike",
-    "ReadonlyArray" to "js.array.ReadonlyArray",
-
     "Array" to "js.array.ReadonlyArray",
     "Record" to "js.objects.ReadonlyRecord",
     "Map" to "js.collections.ReadonlyMap",

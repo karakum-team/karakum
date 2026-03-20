@@ -75,7 +75,7 @@ private val supportedKinds = setOf(
     SyntaxKind.BindingElement, // ignore
     SyntaxKind.UnknownKeyword, // Any?
     SyntaxKind.SymbolKeyword, // js.symbol.Symbol
-    SyntaxKind.BigIntKeyword, // js.core.BigInt
+    SyntaxKind.BigIntKeyword, // js.numbers.BigInt
     SyntaxKind.StaticKeyword, // companion object
     SyntaxKind.ExportAssignment, // ignore
     SyntaxKind.EndOfFileToken, // skip
