@@ -9,12 +9,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly(kotlin("gradle-plugin"))
-
     api(libs.multiplatform)
     api(libs.plugin.jsPlainObjects)
 
-    testImplementation(kotlin("test"))
+    testImplementation(libs.test)
 }
 
 kotlin {
