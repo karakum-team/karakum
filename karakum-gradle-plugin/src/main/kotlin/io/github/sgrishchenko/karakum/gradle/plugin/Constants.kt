@@ -6,7 +6,7 @@ internal const val KARAKUM_GRADLE_PLUGIN_GROUP = "karakum"
 
 private object Constants
 
-val properties = Properties().apply {
+private val properties = Properties().apply {
     Constants::class.java.getResourceAsStream("/version.properties").use(::load)
 }
 
