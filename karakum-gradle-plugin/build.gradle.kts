@@ -48,5 +48,18 @@ publishing {
 }
 
 tasks.processResources {
-    expand(project.properties)
+    val nodeVersion: String? by project
+    val ktlintVersion: String? by project
+    val arrowKtVersion: String? by project
+
+    val properties = mapOf(
+        "karakumVersion" to version,
+        "nodeVersion" to nodeVersion,
+        "ktlintVersion" to ktlintVersion,
+        "arrowKtVersion" to arrowKtVersion,
+    )
+
+    inputs.properties(properties)
+
+    expand(properties)
 }

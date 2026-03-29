@@ -35,6 +35,8 @@ kotlin {
         generateTypeScriptDefinitions()
 
         compilations.named(MAIN_COMPILATION_NAME) {
+            val description = description
+
             packageJson {
                 customField("description", description)
                 customField("keywords", listOf("kotlin", "typescript"))
@@ -116,16 +118,21 @@ mavenPublishing {
 
 tasks.named<ProcessResources>("jsTestProcessResources") {
     val functionalTestUpdate: String? by project
+    val functionalTestLib = kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.posixPath
+    val functionalTestGenerated = layout.projectDirectory.dir("src/jsTest/generated").asFile.posixPath
+    val functionalTestOutput = layout.buildDirectory.dir("karakum/output").get().asFile.posixPath
 
-    inputs.property("functionalTestUpdate", functionalTestUpdate).optional(true)
+    val properties = mapOf(
+        "functionalTestUpdate" to functionalTestUpdate.toBoolean(),
+        "functionalTestLib" to functionalTestLib,
+        "functionalTestGenerated" to functionalTestGenerated,
+        "functionalTestOutput" to functionalTestOutput,
+    )
+
+    inputs.properties(properties)
 
     filesMatching("test.config.json") {
-        expand(
-            "functionalTestUpdate" to functionalTestUpdate.toBoolean(),
-            "functionalTestLib" to kotlin.js().compilations.getByName(TEST_COMPILATION_NAME).npmProject.dir.get().asFile.posixPath,
-            "functionalTestGenerated" to layout.projectDirectory.dir("src/jsTest/generated").asFile.posixPath,
-            "functionalTestOutput" to layout.buildDirectory.dir("karakum/output").get().asFile.posixPath,
-        )
+        expand(properties)
     }
 }
 
@@ -136,17 +143,20 @@ val copyNpmResources by tasks.registering(Copy::class) {
         rootProject.layout.projectDirectory.file("README.md"),
     )
     into(kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir)
-    dependsOn(tasks.named("jsProductionExecutableCompileSync"))
+    dependsOn(
+        rootProject.tasks.named("kotlinNpmInstall"),
+        tasks.named("jsProductionExecutableCompileSync"),
+    )
 }
 
 val prepareTypeScriptDefinitions by tasks.registering {
+    val npmProjectDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir
+
+    val baseDefinitions = npmProjectDir.get().file("kotlin/karakum-types.d.ts")
+    val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.mts")
+
     group = "publishing"
     doLast {
-        val npmProjectDir = kotlin.js().compilations.getByName(MAIN_COMPILATION_NAME).npmProject.dir
-
-        val baseDefinitions = npmProjectDir.get().file("kotlin/karakum-types.d.ts")
-        val generatedDefinitions = npmProjectDir.get().file("kotlin/karakum.d.mts")
-
         val resultDefinitions = """
             ||${baseDefinitions.asFile.readText()}
             ||${generatedDefinitions.asFile.readText()}
