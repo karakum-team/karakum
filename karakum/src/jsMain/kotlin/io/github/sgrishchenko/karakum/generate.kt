@@ -35,8 +35,8 @@ private fun checkCasing(fileNames: ReadonlyArray<String>) {
             val otherFileName = fileNames[j]
 
             if (
-                fileName !== otherFileName
-                && fileName.lowercase() === otherFileName.lowercase()
+                fileName != otherFileName
+                && fileName.equals(otherFileName, ignoreCase = true)
             ) {
                 isConflict = true
 
@@ -73,8 +73,6 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val preparedCompilerOptions = Object.assign(
         unsafeJso {
             lib = arrayOf("lib.esnext.d.ts")
-            types = emptyArray()
-            strict = true
         },
         compilerOptions
     )
