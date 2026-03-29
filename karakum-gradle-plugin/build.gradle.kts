@@ -4,10 +4,6 @@ plugins {
     id("com.gradle.plugin-publish")
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api(libs.multiplatform)
     api(libs.plugin.jsPlainObjects)

@@ -6,10 +6,6 @@ plugins {
     `node-conventions`
 }
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     js {
         outputModuleName = "karakum-schema"
