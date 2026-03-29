@@ -24,7 +24,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val injectionService = context.lookupService(injectionServiceKey)
 
-    val exportModifier = node.modifiers?.asArray()?.find { it.kind === SyntaxKind.ExportKeyword }
+    val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
     exportModifier?.let { checkCoverageService?.cover(exportModifier) }
 
     val name = render(node.name)

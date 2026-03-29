@@ -178,8 +178,8 @@ fun convertParameterDeclarationWithFixedType(
 
     val isDefinedExternally = strategy == ParameterDeclarationStrategy.function
         && node.questionToken != null
-        && inheritanceModifier !== "override"
-        && defaultValue !== ""
+        && inheritanceModifier != "override"
+        && defaultValue != ""
 
     var renderedType = renderNullable(type, isOptional || configuration.nullable, context, render)
 
@@ -201,7 +201,7 @@ fun convertParameterDeclarationWithFixedType(
 private fun isThisParameter(parameter: ParameterDeclaration): Boolean {
     val name = parameter.name
 
-    return isIdentifier(name) && name.text === "this"
+    return isIdentifier(name) && name.text == "this"
 }
 
 private fun extractSignature(node: SignatureDeclarationBase): Signature =

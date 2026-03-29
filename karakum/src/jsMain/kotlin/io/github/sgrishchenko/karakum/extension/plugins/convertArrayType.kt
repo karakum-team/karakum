@@ -8,7 +8,7 @@ import typescript.isTypeOperatorNode
 val convertArrayType = createPlugin plugin@{ node, context, render ->
     if (
         isTypeOperatorNode(node) &&
-        node.operator === SyntaxKind.ReadonlyKeyword
+        node.operator == SyntaxKind.ReadonlyKeyword
     ) {
         val type = node.type
         if (isArrayTypeNode(type)) {

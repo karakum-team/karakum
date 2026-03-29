@@ -67,10 +67,10 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val injectionService = context.lookupService(injectionServiceKey)
 
-    val exportModifier = node.modifiers?.asArray()?.find { it.kind === SyntaxKind.ExportKeyword }
+    val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
     if (exportModifier != null) checkCoverageService?.cover(exportModifier)
 
-    val declareModifier = node.modifiers?.asArray()?.find { it.kind === SyntaxKind.DeclareKeyword }
+    val declareModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.DeclareKeyword }
     if (declareModifier != null) checkCoverageService?.cover(declareModifier)
 
     val name = node.name?.let { render(it) } ?: "Anonymous"

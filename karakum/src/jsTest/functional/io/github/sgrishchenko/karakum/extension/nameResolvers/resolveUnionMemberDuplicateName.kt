@@ -22,7 +22,7 @@ fun resolveUnionMemberDuplicateName(node: Node, context: Context): String? {
         ?: return null
     if (!isTypeAliasDeclaration(typeAlias)) return null
 
-    if (typeAlias.name.text !== "UnionWithDuplicates") return "stringTrue"
+    if (typeAlias.name.text != "UnionWithDuplicates") return "stringTrue"
 
     return null
 }

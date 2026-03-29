@@ -16,12 +16,12 @@ fun convertLiteral(
 
         if (isPrefixUnaryExpression(node) && predicate(node.operand)) {
             val result = primitivePlugin.render(node.operand, context, pluginRender)
-            if (result === null) return@plugin null
+            if (result == null) return@plugin null
 
             "$result /* ${typeScriptService?.printNode(node)} */"
         } else {
             val result = primitivePlugin.render(node, context, pluginRender)
-            if (result === null) return@plugin null
+            if (result == null) return@plugin null
 
             "$result /* ${typeScriptService?.printNode(node)} */"
         }

@@ -42,10 +42,10 @@ external interface LiteralUnionRenderResult {
 }
 
 private fun extractBooleanUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEntry? {
-    if (node.literal.kind === SyntaxKind.TrueKeyword) {
+    if (node.literal.kind == SyntaxKind.TrueKeyword) {
         return LiteralUnionMemberEntry("`true`", "true", LiteralUnionMemberEntryType.boolean)
     }
-    if (node.literal.kind === SyntaxKind.FalseKeyword) {
+    if (node.literal.kind == SyntaxKind.FalseKeyword) {
         return LiteralUnionMemberEntry("`false`", "false", LiteralUnionMemberEntryType.boolean)
     }
     return null
@@ -128,8 +128,8 @@ private fun isSupportedLiteralType(node: Node): Boolean {
     }
 
     return isLiteralTypeNode(node) && (
-        node.literal.kind === SyntaxKind.TrueKeyword
-        || node.literal.kind === SyntaxKind.FalseKeyword
+        node.literal.kind == SyntaxKind.TrueKeyword
+        || node.literal.kind == SyntaxKind.FalseKeyword
 
         || isStringLiteral(node.literal)
 

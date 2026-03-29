@@ -7,10 +7,10 @@ import js.array.ReadonlyArray
 import typescript.*
 import kotlin.contracts.contract
 
-private fun isNull(type: Node) = isLiteralTypeNode(type) && type.literal.kind === SyntaxKind.NullKeyword
-private fun isUndefined(type: Node) = type.kind === SyntaxKind.UndefinedKeyword
-private fun isAny(type: Node) = type.kind === SyntaxKind.AnyKeyword
-private fun isUnknown(type: Node) = type.kind === SyntaxKind.UnknownKeyword
+private fun isNull(type: Node) = isLiteralTypeNode(type) && type.literal.kind == SyntaxKind.NullKeyword
+private fun isUndefined(type: Node) = type.kind == SyntaxKind.UndefinedKeyword
+private fun isAny(type: Node) = type.kind == SyntaxKind.AnyKeyword
+private fun isUnknown(type: Node) = type.kind == SyntaxKind.UnknownKeyword
 
 fun isNullableType(type: Node) = isNull(type) || isUndefined(type)
 

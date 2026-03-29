@@ -95,8 +95,8 @@ private fun resolveTargetFileConflicts(
 
             if (conflictResolutionStrategy == ConflictResolutionStrategy.join) {
                 if (
-                    item.moduleName !== other.moduleName
-                    || item.qualifier !== other.qualifier
+                    item.moduleName != other.moduleName
+                    || item.qualifier != other.qualifier
                 ) {
                     // items are incompatible
                     return@merge null
@@ -201,7 +201,7 @@ private fun resolveDerivedFilesConflicts(
             }
 
             if (conflictResolutionStrategy == ConflictResolutionStrategy.replace) {
-                if (item.body !== other.body) return@merge null
+                if (item.body != other.body) return@merge null
                 return@merge other
             }
 
@@ -234,11 +234,11 @@ private fun resolveCompoundFilesConflicts(
         compoundFiles,
         { item -> item.fileName },
         merge@{ outputFileName, item, other ->
-            if (item.body === "") {
+            if (item.body == "") {
                 return@merge other
             }
 
-            if (other.body === "") {
+            if (other.body == "") {
                 return@merge item
             }
 

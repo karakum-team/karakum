@@ -11,7 +11,7 @@ val convertErrorTypeReferenceNode = createPlugin plugin@{ node, _, _ ->
 
         if (
             isIdentifier(typeName)
-            && typeName.text === "Error"
+            && typeName.text == "Error"
         ) {
             return@plugin "js.errors.JsError"
         }
@@ -22,7 +22,7 @@ val convertErrorTypeReferenceNode = createPlugin plugin@{ node, _, _ ->
 
         if (
             isIdentifier(expression)
-            && expression.text === "Error"
+            && expression.text == "Error"
         ) {
             return@plugin "js.errors.JsError"
         }

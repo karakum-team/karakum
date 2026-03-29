@@ -21,7 +21,7 @@ val convertPropertySignature = createPlugin plugin@{ node, context, render ->
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
-    val readonly = node.modifiers?.asArray()?.find { modifier -> modifier.kind === SyntaxKind.ReadonlyKeyword }
+    val readonly = node.modifiers?.asArray()?.find { modifier -> modifier.kind == SyntaxKind.ReadonlyKeyword }
     readonly?.let { checkCoverageService?.cover(it) }
 
     node.questionToken?.let { checkCoverageService?.cover(it) }

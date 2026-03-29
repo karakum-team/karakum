@@ -122,13 +122,13 @@ fun collectImportInfo(
                                 for ((importName, importAlias) in Object.entries(importNames)) {
                                     if (importNameRegexp.containsMatchIn(importName) && importName in unhandledImportNames) {
                                         if (packageName.endsWith(".")) {
-                                            imports += if (importName === importAlias) {
+                                            imports += if (importName == importAlias) {
                                                 "import ${packageName}${importName}"
                                             } else {
                                                 "import ${packageName}${importName} as $importAlias"
                                             }
                                         } else if (packageName.isNotEmpty()) {
-                                            imports += if (importName === importAlias || " as " in packageName) {
+                                            imports += if (importName == importAlias || " as " in packageName) {
                                                 "import $packageName"
                                             } else {
                                                 "import $packageName as $importAlias"

@@ -25,7 +25,7 @@ fun createKebabAnnotation(node: Node): String {
 }
 
 fun convertMemberNameLiteral(node: StringLiteral): String {
-    return if (node.text === "") {
+    return if (node.text == "") {
         "`_`"
     } else if (isValidIdentifier(node.text)) {
         node.text
