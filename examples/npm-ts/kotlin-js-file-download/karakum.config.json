@@ -3,5 +3,11 @@
   "input": "js-file-download.d.ts",
   "output": "generated",
   "libraryNameOutputPrefix": false,
-  "isolatedOutputPackage": true
+  "isolatedOutputPackage": true,
+  "compilerOptions": {
+    "lib": [
+      "lib.esnext.d.ts",
+      "lib.dom.d.ts"
+    ]
+  }
 }
