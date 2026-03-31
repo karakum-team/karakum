@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "karakum": "^1.0.0-alpha.104",
-    "typescript": "^6.0.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "js-file-download": "^0.4.12"
