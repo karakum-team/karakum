@@ -4,10 +4,6 @@
 
 package js.file.download
 
-import js.buffer.ArrayBuffer
-import js.buffer.ArrayBufferView
-import web.blob.Blob
-
 external fun fileDownload(
     data: String,
     filename: String,
@@ -16,21 +12,21 @@ external fun fileDownload(
 ): Unit
 
 external fun fileDownload(
-    data: ArrayBuffer,
+    data: js.buffer.ArrayBuffer,
     filename: String,
     mime: String = definedExternally,
     bom: String = definedExternally,
 ): Unit
 
 external fun fileDownload(
-    data: ArrayBufferView<*>,
+    data: js.buffer.ArrayBufferView<*>,
     filename: String,
     mime: String = definedExternally,
     bom: String = definedExternally,
 ): Unit
 
 external fun fileDownload(
-    data: Blob,
+    data: web.blob.Blob,
     filename: String,
     mime: String = definedExternally,
     bom: String = definedExternally,
