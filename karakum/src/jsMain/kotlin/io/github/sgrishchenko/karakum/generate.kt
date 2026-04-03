@@ -72,7 +72,10 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
 
     val preparedCompilerOptions = Object.assign(
         unsafeJso {
-            lib = arrayOf("lib.esnext.d.ts")
+            lib = arrayOf(
+                "lib.esnext.d.ts",
+                "lib.dom.d.ts",
+            )
         },
         compilerOptions
     )
