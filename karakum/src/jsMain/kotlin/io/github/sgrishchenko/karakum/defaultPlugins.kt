@@ -109,4 +109,5 @@ fun createPlugins(
     convertTypeQuery,
     convertConditionalType,
     convertNamedTupleMember,
+    convertOptionalType,
 )

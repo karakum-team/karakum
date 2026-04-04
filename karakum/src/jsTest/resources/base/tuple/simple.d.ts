@@ -11,3 +11,7 @@ interface TupleWithRest<A extends unknown[]> {
 }
 
 type TupleWithNames = [first: string, second: number, third: boolean]
+
+type TupleWithOptionalType = [string, number, boolean?]
+
+type TupleWithNamesAndOptionalType = [first: string, second: number, third?: boolean]
