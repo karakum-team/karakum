@@ -1,0 +1,119 @@
+package io.github.sgrishchenko.karakum.extension.annotations.configurable
+
+import io.github.sgrishchenko.karakum.extension.*
+import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
+import js.array.ReadonlyArray
+import kotlinx.js.JsPlainObject
+import typescript.*
+
+@JsExport
+@JsPlainObject
+external interface JsPlainObjectAnnotationConfiguration {
+    val isJsPlainObject: ((Node, AnnotationContext) -> Boolean)?
+    val ignore: ((Node, AnnotationContext) -> Boolean)?
+}
+
+private fun getDeclarations(node: Node, context: Context): ReadonlyArray<Node>? {
+    val typeScriptService = context.requireService(typeScriptServiceKey)
+    val typeChecker = typeScriptService.program.getTypeChecker()
+
+    var symbol = typeChecker.getSymbolAtLocation(node) ?: return null
+
+    // TODO: provide bit mask for TypeFlags
+    if ((symbol.flags.toString().toInt() and SymbolFlags.Alias.toString().toInt()) != 0) {
+        symbol = typeChecker.getAliasedSymbol(symbol)
+    }
+
+    return symbol.declarations
+}
+
+private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
+    if (
+        isInterfaceDeclaration(node)
+        && node.members.asArray().all(::isPropertySignature)
+        && node.heritageClauses
+            ?.asArray()
+            ?.flatMap { it.types.asArray().asIterable() }
+            ?.all { type ->
+                val declarations = getDeclarations(type.expression, context)
+
+                declarations != null && declarations.all { isJsPlainObject(it, context) }
+            }
+        ?: true
+    ) {
+        return true
+    }
+
+    if (isTypeAliasDeclaration(node)) {
+        return isJsPlainObject(node.type, context)
+    }
+
+    if (
+        isTypeLiteralNode(node)
+        && node.members.asArray().all(::isPropertySignature)
+    ) {
+        return true
+    }
+
+    if (isIntersectionTypeNode(node)) {
+        return node.types.asArray().all { type ->
+            if (isTypeReferenceNode(type)) {
+                val declarations = getDeclarations(type.typeName, context)
+
+                declarations != null && declarations.all { isJsPlainObject(it, context) }
+            } else {
+                isJsPlainObject(type, context)
+            }
+        }
+    }
+
+    return false
+}
+
+@JsExport
+fun JsPlainObjectAnnotation(configuration: JsPlainObjectAnnotationConfiguration): Annotation {
+    return JsPlainObjectAnnotation(
+        isJsPlainObject = configuration.isJsPlainObject,
+        ignore = configuration.ignore,
+    )
+}
+
+fun JsPlainObjectAnnotation(): Annotation =
+    JsPlainObjectAnnotation(
+        JsPlainObjectAnnotationConfiguration()
+    )
+
+fun JsPlainObjectAnnotation(
+    isJsPlainObject: ((Node, AnnotationContext) -> Boolean)? = null,
+    ignore: ((Node, AnnotationContext) -> Boolean)? = null,
+): Annotation {
+    return JsPlainObjectAnnotation(
+        isJsPlainObject = isJsPlainObject?.let { match(it) },
+        ignore = ignore?.let { match(it) }
+    )
+}
+
+fun JsPlainObjectAnnotation(
+    isJsPlainObject: List<Matcher<AnnotationContext>>? = null,
+    ignore: List<Matcher<AnnotationContext>>? = null,
+): Annotation {
+    val isJsPlainObjectMatchers = isJsPlainObject
+        ?: match(::isJsPlainObject)
+
+    val ignoreMatchers = ignore ?: emptyList()
+
+    return annotation@{ node, context ->
+        if (!isJsPlainObjectMatchers.matches(node, context)) return@annotation null
+        if (ignoreMatchers.matches(node, context)) return@annotation null
+
+        if (
+            isInterfaceDeclaration(node)
+            || isTypeAliasDeclaration(node)
+            || context.isAnonymousDeclaration
+        ) {
+            "@kotlinx.js.JsPlainObject"
+        } else {
+            null
+        }
+    }
+}

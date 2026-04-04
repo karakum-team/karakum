@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
+import io.github.sgrishchenko.karakum.extension.annotations.configurable.JsPlainObjectAnnotation
 import io.github.sgrishchenko.karakum.extension.mutabilityModifiers.modifyCustomMutability
 import io.github.sgrishchenko.karakum.extension.plugins.convertErrorTypeReferenceNode
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.NumberPlugin
@@ -146,6 +147,14 @@ class ExtensionTest {
 
             mutabilityModifiers = listOf(
                 ::modifyCustomMutability,
+            )
+
+            annotations = listOf(
+                JsPlainObjectAnnotation(
+                    ignore = match {
+                        match(::isInterfaceDeclaration, withName("MutableContainerClass"))
+                    }
+                )
             )
         }
     }
