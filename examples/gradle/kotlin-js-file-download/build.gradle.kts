@@ -10,6 +10,6 @@ plugins.withType<NodeJsPlugin> {
         webpack.version = "^5.105.4"
         webpackCli.version = "^7.0.2"
         webpackDevServer.version = "^5.2.3"
-        mocha.version = "^12.0.0-beta-10"
+        mocha.version = "12.0.0-beta-10"
     }
 }
