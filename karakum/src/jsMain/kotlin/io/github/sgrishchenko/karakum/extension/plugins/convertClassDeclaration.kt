@@ -84,6 +84,10 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
 
     val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
+    val abstractModifier = "abstract".takeIf {
+        node.modifiers?.asArray()?.any { it.kind == SyntaxKind.AbstractKeyword } ?: false
+    }
+
     val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters?.asArray())
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
@@ -143,7 +147,7 @@ ${staticMembers}${ifPresent(staticInjectedMembers) { "\n${it}" }}
     }
 
     """
-${ifPresent(inheritanceModifier) { "$it " }}${ifPresent(externalModifier) { "$it " }}class ${name}${ifPresent(typeParameters) { "<${it}>"}}${ifPresent(fullHeritageClauses) { " : $it" }} {
+${ifPresent(inheritanceModifier) { "$it " }}${ifPresent(abstractModifier) { "$it "}}${ifPresent(externalModifier) { "$it " }}class ${name}${ifPresent(typeParameters) { "<${it}>"}}${ifPresent(fullHeritageClauses) { " : $it" }} {
 ${members}${ifPresent(injectedMembers) { "\n${it}" }}${companionObject}
 }
     """.trim()
