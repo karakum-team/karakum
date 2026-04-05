@@ -55,7 +55,7 @@ fun createPlugins(
     convertPrimitive(hasKind(SyntaxKind.TrueKeyword)) { "Boolean /* true */" },
     convertPrimitive(hasKind(SyntaxKind.NeverKeyword)) { "Nothing" },
     convertPrimitive(hasKind(SyntaxKind.SymbolKeyword)) { "js.symbol.Symbol" },
-    convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.core.BigInt" },
+    convertPrimitive(hasKind(SyntaxKind.BigIntKeyword)) { "js.numbers.BigInt" },
 
     convertBuiltinTypeReference, // should be applied before identifiers
 

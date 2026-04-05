@@ -1,0 +1,11 @@
+const primitiveAny: any
+const primitiveUnknown: unknown
+const primitiveUndefined: undefined
+const primitiveNull: null
+const primitiveObject: object
+const primitiveString: string
+const primitiveNumber: number
+const primitiveBoolean: boolean
+const primitiveNever: never
+const primitiveSymbol: symbol
+const primitiveBigInt: bigint
