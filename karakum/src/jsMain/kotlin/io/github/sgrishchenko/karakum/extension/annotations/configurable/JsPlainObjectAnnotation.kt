@@ -3,6 +3,7 @@ package io.github.sgrishchenko.karakum.extension.annotations.configurable
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
+import js.numbers.contains
 import kotlinx.js.JsPlainObject
 import typescript.*
 
@@ -19,8 +20,7 @@ private fun getDeclarations(node: Node, context: Context): ReadonlyArray<Node>? 
 
     var symbol = typeChecker.getSymbolAtLocation(node) ?: return null
 
-    // TODO: provide bit mask for TypeFlags
-    if ((symbol.flags.toString().toInt() and SymbolFlags.Alias.toString().toInt()) != 0) {
+    if (SymbolFlags.Alias in symbol.flags) {
         symbol = typeChecker.getAliasedSymbol(symbol)
     }
 

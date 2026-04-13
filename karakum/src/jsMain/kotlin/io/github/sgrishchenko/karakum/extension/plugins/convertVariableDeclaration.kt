@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
+import js.numbers.contains
 import typescript.NodeFlags
 import typescript.isVariableDeclaration
 
@@ -23,7 +24,7 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
 
     val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
-    val modifier = mutabilityModifier ?: if (node.parent.flags.toString().toInt() and NodeFlags.Const.toString().toInt() != 0) {
+    val modifier = mutabilityModifier ?: if (NodeFlags.Const in node.parent.flags) {
         "val"
     } else {
         "var"

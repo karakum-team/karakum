@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.resolveParenthesizedType
 import js.array.ReadonlyArray
+import js.numbers.contains
 import typescript.*
 import kotlin.contracts.contract
 
@@ -66,12 +67,11 @@ private fun isNullableTsNode(node: Node): Boolean {
 }
 
 private fun isNullableTsType(type: Type): Boolean {
-    // TODO: provide bit mask for TypeFlags
     return (
-        (type.flags.toString().toInt() and TypeFlags.Null.toString().toInt()) != 0
-        || (type.flags.toString().toInt() and TypeFlags.Undefined.toString().toInt()) != 0
-        || (type.flags.toString().toInt() and TypeFlags.Any.toString().toInt()) != 0
-        || (type.flags.toString().toInt() and TypeFlags.Unknown.toString().toInt()) != 0
+        TypeFlags.Null in type.flags
+                || TypeFlags.Undefined in type.flags
+                || TypeFlags.Any in type.flags
+                || TypeFlags.Unknown in type.flags
     )
 }
 
