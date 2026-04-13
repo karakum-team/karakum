@@ -9,8 +9,8 @@
   },
   "devDependencies": {
     "@types/node": "^24.12.0",
-    "karakum": "^1.0.0-alpha.104",
-    "typescript": "^5.9.3"
+    "karakum": "^1.0.0-alpha.106",
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "js-file-download": "^0.4.12"

@@ -51,14 +51,11 @@ external fun fileDownload(data: js.buffer.ArrayBuffer, filename: String, mime: S
 
 external fun fileDownload(data: js.buffer.ArrayBufferView, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
 
-external fun fileDownload(data: Blob, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
+external fun fileDownload(data: web.blob.Blob, filename: String, mime: String = definedExternally, bom: String = definedExternally): Unit
 // @formatter:on 
 ```
 
-This example demonstrates that Karakum can produce output with minimal configuration, though the result has a few flaws:
-
-* `ArrayBufferView` is referenced without passing the type parameter
-* `Blob` type is not resolved correctly
-
+This example demonstrates that Karakum can produce output with minimal configuration, though the result has a one flaw:
+`ArrayBufferView` is referenced without passing the type parameter.
 To fix these issues, you can inspect existing [examples](../../examples).
 Also, if you want to write Karakum plugins in Kotlin, [Gradle example](../../examples/gradle) may be helpful.
