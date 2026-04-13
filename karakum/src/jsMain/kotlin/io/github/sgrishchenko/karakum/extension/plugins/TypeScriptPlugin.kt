@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.setParentNodes
-import js.objects.unsafeJso
 import typescript.*
 
 @JsExport
@@ -13,10 +12,10 @@ val typeScriptServiceKey = ContextKey<TypeScriptService>()
 @JsExport
 class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private val printer = createPrinter(unsafeJso {
-        removeComments = true
-        newLine = NewLineKind.LineFeed
-    })
+    private val printer = createPrinter(PrinterOptions(
+        removeComments = true,
+        newLine = NewLineKind.LineFeed,
+    ))
     private val virtualParents = mutableMapOf<Node, Node>()
 
     fun printNode(node: Node): String {

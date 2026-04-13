@@ -16,11 +16,11 @@ import io.github.sgrishchenko.karakum.util.traverse
 import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.objects.Object
-import js.objects.unsafeJso
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
 import node.fs.*
 import node.path.path
+import typescript.CompilerOptions
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
@@ -71,12 +71,12 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val inputCwd = configuration.inputCwd
 
     val preparedCompilerOptions = Object.assign(
-        unsafeJso {
+        CompilerOptions(
             lib = arrayOf(
                 "lib.esnext.d.ts",
                 "lib.dom.d.ts",
             )
-        },
+        ),
         compilerOptions
     )
 
@@ -89,15 +89,15 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     }
 
     if (outputFileName != null) {
-        rm(outputFileName, unsafeJso<RmOptions> {
-            recursive = true
-            force = true
-        })
+        rm(outputFileName, RmOptions(
+            recursive = true,
+            force = true,
+        ))
     } else {
-        rm(output, unsafeJso<RmOptions> {
-            recursive = true
-            force = true
-        })
+        rm(output, RmOptions(
+            recursive = true,
+            force = true,
+        ))
     }
 
     mkdir(output, MakeDirectoryOptions(recursive = true))

@@ -14,33 +14,34 @@ import node.buffer.BufferEncoding
 import node.buffer.utf8
 import node.fs.readFile
 import node.util.ParseArgsConfig
+import node.util.ParseArgsOptionDescriptor
 import node.util.ParseArgsOptionsType
 import node.util.parseArgs
 import node.util.string
 import kotlin.coroutines.EmptyCoroutineContext
 
 suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
-    val config = unsafeJso<ParseArgsConfig> {
-        this.args = args
+    val config = ParseArgsConfig(
+        args = args,
         options = unsafeJso {
-            this["input"] = unsafeJso {
-                type = ParseArgsOptionsType.string
+            this["input"] = ParseArgsOptionDescriptor(
+                type = ParseArgsOptionsType.string,
                 multiple = true
-            }
+            )
 
-            this["output"] = unsafeJso {
-                type = ParseArgsOptionsType.string
-            }
+            this["output"] = ParseArgsOptionDescriptor(
+                type = ParseArgsOptionsType.string,
+            )
 
-            this["library-name"] = unsafeJso {
-                type = ParseArgsOptionsType.string
-            }
+            this["library-name"] = ParseArgsOptionDescriptor(
+                type = ParseArgsOptionsType.string,
+            )
 
-            this["config"] = unsafeJso {
-                type = ParseArgsOptionsType.string
-            }
+            this["config"] = ParseArgsOptionDescriptor(
+                type = ParseArgsOptionsType.string,
+            )
         }
-    }
+    )
 
     val results = parseArgs(config)
 

@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.configuration.MutableConfiguration
 import io.github.sgrishchenko.karakum.configuration.plain
 import js.array.ReadonlyArray
 import js.objects.Object
-import js.objects.unsafeJso
 import node.buffer.BufferEncoding
 import node.buffer.utf8
 import node.fs.*
@@ -45,10 +44,10 @@ suspend fun generateTests(
     }
 
     if (isUpdate) {
-        rm(actualOutputDirName, unsafeJso<RmOptions> {
-            recursive = true
-            force = true
-        })
+        rm(actualOutputDirName, RmOptions(
+            recursive = true,
+            force = true,
+        ))
         return
     }
 
