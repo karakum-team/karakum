@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.annotations.configurable
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import js.array.ReadonlyArray
 import js.numbers.contains
 import kotlinx.js.JsPlainObject
 import typescript.*
@@ -14,7 +13,7 @@ external interface JsPlainObjectAnnotationConfiguration {
     val ignore: ((Node, AnnotationContext) -> Boolean)?
 }
 
-private fun getDeclarations(node: Node, context: Context): ReadonlyArray<Node>? {
+private fun getDeclarations(node: Node, context: Context): List<Node>? {
     val typeScriptService = context.requireService(typeScriptServiceKey)
     val typeChecker = typeScriptService.program.getTypeChecker()
 
@@ -24,7 +23,19 @@ private fun getDeclarations(node: Node, context: Context): ReadonlyArray<Node>? 
         symbol = typeChecker.getAliasedSymbol(symbol)
     }
 
-    return symbol.declarations
+    return symbol.declarations?.flatMap {
+        if (isTypeAliasDeclaration(it)) {
+            val type = it.type
+
+            if (isTypeReferenceNode(type)) {
+                getDeclarations(type.typeName, context) ?: return null
+            } else {
+                listOf(it)
+            }
+        } else {
+            listOf(it)
+        }
+    }
 }
 
 private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {

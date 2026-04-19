@@ -22,6 +22,18 @@ type PlainObject3 = PlainObject1 & { c: string }
 
 type NotPlainObject3 = NotPlainObject1 & { c: string }
 
+type PlainObject4 = PlainObject3
+
+type NotPlainObject4 = NotPlainObject3
+
+interface PlainObject5 extends PlainObject4 {
+    e: string
+}
+
+interface NotPlainObject5 extends NotPlainObject4 {
+    e: string
+}
+
 function createPlainObject1(
     config: {
         a: string
