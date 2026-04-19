@@ -5,6 +5,7 @@ interface InterfaceWithVoidSignatures {
 }
 
 type TypeWithVoidSignatures = {
+    someField: number
     [key: string]: void
 }
 

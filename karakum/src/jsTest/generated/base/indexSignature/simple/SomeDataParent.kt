@@ -2,7 +2,6 @@
 
 package sandbox.base.indexSignature.simple
 
-external interface ReadonlyRouteData {
+external interface SomeDataParent {
 var other: String
-operator fun get(key: String): Any?
 }

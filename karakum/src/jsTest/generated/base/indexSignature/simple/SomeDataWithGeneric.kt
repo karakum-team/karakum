@@ -2,4 +2,4 @@
 
 package sandbox.base.indexSignature.simple
 
-typealias SomeData = js.objects.ReadonlyRecord<js.symbol.Symbol, Double>
+typealias SomeDataWithGeneric<T> = js.objects.ReadonlyRecord<js.symbol.Symbol, T>

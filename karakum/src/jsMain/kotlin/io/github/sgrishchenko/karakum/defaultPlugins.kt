@@ -34,6 +34,8 @@ fun createPlugins(
     CheckKindsPlugin(),
     CheckCoveragePlugin(),
 
+    convertRecord, // should be applied before type literals, aliases, and interfaces
+
     NullableUnionTypePlugin(),
     AccessorsPlugin(),
     TypeAliasDeclarationPlugin(),
