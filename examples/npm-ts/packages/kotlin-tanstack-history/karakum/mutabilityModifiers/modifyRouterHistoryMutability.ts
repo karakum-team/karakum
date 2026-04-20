@@ -4,7 +4,7 @@ export default function (node: Node) {
     if (
         ts.isPropertySignature(node)
 
-        // && node.type
+        && node.type
         && !ts.isFunctionTypeNode(node.type)
 
         && node.parent
