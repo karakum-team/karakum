@@ -1,0 +1,10 @@
+{
+  "libraryName": "@tanstack/history",
+  "input": "dist/esm/index.d.ts",
+  "output": "generated",
+  "libraryNameOutputPrefix": false,
+  "isolatedOutputPackage": true,
+  "packageNameMapper": {
+    "/dist/esm/index/": "/"
+  }
+}

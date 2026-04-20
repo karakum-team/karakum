@@ -1,0 +1,15 @@
+{
+  "name": "kotlin-tanstack-history",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "karakum --config karakum.config.json"
+  },
+  "devDependencies": {
+    "karakum": "^1.0.0-alpha.106",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@tanstack/history": "^1.161.6"
+  }
+}
