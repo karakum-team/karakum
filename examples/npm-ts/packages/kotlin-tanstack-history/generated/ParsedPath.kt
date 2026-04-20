@@ -2,6 +2,7 @@
 
 package tanstack.history
 
+@kotlinx.js.JsPlainObject
 external interface ParsedPath {
 var href: String
 var pathname: String

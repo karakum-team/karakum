@@ -2,12 +2,13 @@
 
 package tanstack.history
 
+@kotlinx.js.JsPlainObject
 external interface CreateHistoryOpts {
 var getLocation: () -> HistoryLocation
-var getLength: () -> Double
+var getLength: () -> Int
 var pushState: (path: String, state: Any?) -> Unit
 var replaceState: (path: String, state: Any?) -> Unit
-var go: (n: Double) -> Unit
+var go: (n: Int) -> Unit
 var back: (ignoreBlocker: Boolean) -> Unit
 var forward: (ignoreBlocker: Boolean) -> Unit
 var createHref: (path: String) -> String
