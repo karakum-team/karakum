@@ -1,0 +1,7 @@
+{
+  "name": "karakum-npm-ts-examples",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
