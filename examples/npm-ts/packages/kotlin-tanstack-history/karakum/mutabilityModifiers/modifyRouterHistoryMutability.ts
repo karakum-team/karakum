@@ -1,14 +1,14 @@
-import ts, {isFunctionTypeNode, isInterfaceDeclaration, isPropertySignature, type Node} from "typescript";
+import ts, {type Node} from "typescript";
 
 export default function (node: Node) {
     if (
-        isPropertySignature(node)
+        ts.isPropertySignature(node)
 
         // && node.type
-        && !isFunctionTypeNode(node.type)
+        && !ts.isFunctionTypeNode(node.type)
 
         && node.parent
-        && isInterfaceDeclaration(node.parent)
+        && ts.isInterfaceDeclaration(node.parent)
         && node.parent.name.text === "RouterHistory"
     ) {
         return "val"
