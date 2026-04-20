@@ -57,20 +57,20 @@ jobs:
           node-version: 24
           cache: 'npm'
           cache-dependency-path: |
-            ./examples/npm-js/kotlin-js-file-download/package-lock.json
-            ./examples/npm-ts/kotlin-js-file-download/package-lock.json
+            ./examples/npm-js/package-lock.json
+            ./examples/npm-ts/package-lock.json
 
       - run: npm ci
-        working-directory: ./examples/npm-js/kotlin-js-file-download
+        working-directory: ./examples/npm-js
 
-      - run: npm start
-        working-directory: ./examples/npm-js/kotlin-js-file-download
+      - run: npm start --workspaces
+        working-directory: ./examples/npm-js
 
       - run: npm ci
-        working-directory: ./examples/npm-ts/kotlin-js-file-download
+        working-directory: ./examples/npm-ts
 
-      - run: npm run check
-        working-directory: ./examples/npm-ts/kotlin-js-file-download
+      - run: npm run check --workspaces
+        working-directory: ./examples/npm-ts
 
-      - run: npm start
-        working-directory: ./examples/npm-ts/kotlin-js-file-download
+      - run: npm start --workspaces
+        working-directory: ./examples/npm-ts
