@@ -46,6 +46,17 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
     constructor(
         strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
         defaultNumberType: String? = null,
+    ) : this(
+        NumberPluginConfiguration(
+            strategy,
+            defaultNumberType,
+        )
+    )
+
+    @JsExport.Ignore
+    constructor(
+        strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
+        defaultNumberType: String? = null,
         vararg matchers: Pair<String, (Node, Context) -> Boolean>,
     ) : this(
         NumberPluginConfiguration(
