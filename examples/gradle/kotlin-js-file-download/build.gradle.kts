@@ -1,15 +1,29 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-
 plugins {
-    kotlin("multiplatform") version "2.3.20" apply false
+    kotlin("multiplatform") version "2.3.20"
+    kotlin("plugin.js-plain-objects") version "2.3.20"
 }
 
-plugins.withType<NodeJsPlugin> {
-    the<NodeJsRootExtension>().versions.apply {
-        webpack.version = "^5.105.4"
-        webpackCli.version = "^7.0.2"
-        webpackDevServer.version = "^5.2.3"
-        mocha.version = "12.0.0-beta-10"
+repositories {
+    mavenCentral()
+}
+
+kotlin {
+    js {
+        browser()
+
+        compilerOptions {
+            target = "es2015"
+        }
+    }
+
+    sourceSets {
+        jsMain {
+            dependencies {
+                api("org.jetbrains.kotlin-wrappers:kotlin-js:2026.4.7")
+                api("org.jetbrains.kotlin-wrappers:kotlin-web:2026.4.7")
+
+                api(npm("js-file-download", "^0.4.12"))
+            }
+        }
     }
 }
