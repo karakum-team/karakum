@@ -47,10 +47,13 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v6
 
       - run: ./gradlew build --no-daemon
-        working-directory: ./examples/gradle/kotlin-js-file-download
+        working-directory: ./examples/gradle
 
       - run: ./gradlew :kotlin-js-file-download-karakum:generateKarakumExternals --no-daemon
-        working-directory: ./examples/gradle/kotlin-js-file-download
+        working-directory: ./examples/gradle
+
+      - run: ./gradlew :kotlin-tanstack-history-karakum:generateKarakumExternals --no-daemon
+        working-directory: ./examples/gradle
 
       - uses: actions/setup-node@v6
         with:
