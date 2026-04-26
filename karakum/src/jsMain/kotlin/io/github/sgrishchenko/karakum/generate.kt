@@ -53,8 +53,8 @@ private fun checkCasing(fileNames: ReadonlyArray<String>) {
     }
 }
 
-suspend fun generate(partialConfiguration: MutableConfiguration) {
-    val configuration = defaultizeConfiguration(partialConfiguration)
+private suspend fun generate(mutableConfiguration: MutableConfiguration) {
+    val configuration = defaultizeConfiguration(mutableConfiguration)
 
     val inputRoots = configuration.inputRoots
     val inputFileNames = configuration.inputFileNames
