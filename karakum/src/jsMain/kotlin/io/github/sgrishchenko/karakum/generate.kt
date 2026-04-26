@@ -57,7 +57,7 @@ suspend fun generate(partialConfiguration: MutableConfiguration) {
     val configuration = defaultizeConfiguration(partialConfiguration)
 
     val inputRoots = configuration.inputRoots
-    val inputFileNames = configuration.jsInputFileNames
+    val inputFileNames = configuration.inputFileNames
     val input = configuration.input
     val output = configuration.output
     val outputFileName = configuration.outputFileName
@@ -65,11 +65,11 @@ suspend fun generate(partialConfiguration: MutableConfiguration) {
     val ignoreOutput = configuration.ignoreOutput
     val plugins = configuration.plugins
     val injections = configuration.injections
-    val annotations = configuration.jsAnnotations
-    val nameResolvers = configuration.jsNameResolvers
-    val inheritanceModifiers = configuration.jsInheritanceModifiers
-    val mutabilityModifiers = configuration.jsMutabilityModifiers
-    val varianceModifiers = configuration.jsVarianceModifiers
+    val annotations = configuration.annotations
+    val nameResolvers = configuration.nameResolvers
+    val inheritanceModifiers = configuration.inheritanceModifiers
+    val mutabilityModifiers = configuration.mutabilityModifiers
+    val varianceModifiers = configuration.varianceModifiers
     val compilerOptions = configuration.compilerOptions
     val inputCwd = configuration.inputCwd
 
@@ -85,7 +85,7 @@ suspend fun generate(partialConfiguration: MutableConfiguration) {
 
     val compilerHost = createCompilerHost(preparedCompilerOptions, setParentNodes = true)
 
-    val program = createProgram(inputFileNames, preparedCompilerOptions, compilerHost)
+    val program = createProgram(inputFileNames.toTypedArray(), preparedCompilerOptions, compilerHost)
 
     for (inputRoot in inputRoots) {
         console.log("Source files root: $inputRoot")

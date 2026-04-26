@@ -8,7 +8,7 @@ import typescript.Node
 val mutabilityModifierServiceKey = ContextKey<MutabilityModifierService>()
 
 @JsExport
-class MutabilityModifierService @JsExport.Ignore constructor(private val mutabilityModifiers: ReadonlyArray<MutabilityModifier>) {
+class MutabilityModifierService @JsExport.Ignore constructor(private val mutabilityModifiers: List<MutabilityModifier>) {
     fun resolveMutabilityModifier(
         node: Node,
         context: Context,
@@ -23,7 +23,7 @@ class MutabilityModifierService @JsExport.Ignore constructor(private val mutabil
     }
 }
 
-class MutabilityModifierPlugin(mutabilityModifiers: ReadonlyArray<MutabilityModifier>) : Plugin {
+class MutabilityModifierPlugin(mutabilityModifiers: List<MutabilityModifier>) : Plugin {
     private val mutabilityModifierService = MutabilityModifierService(mutabilityModifiers)
 
     override suspend fun setup(context: Context) {

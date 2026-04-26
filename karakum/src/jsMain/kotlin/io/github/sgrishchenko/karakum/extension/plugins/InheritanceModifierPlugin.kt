@@ -8,7 +8,7 @@ import typescript.Node
 val inheritanceModifierServiceKey = ContextKey<InheritanceModifierService>()
 
 @JsExport
-class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: ReadonlyArray<InheritanceModifier>) {
+class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: List<InheritanceModifier>) {
     fun resolveSignatureInheritanceModifier(
         node: Node,
         signature: Signature,
@@ -76,7 +76,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
     }
 }
 
-class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier>) : Plugin {
+class InheritanceModifierPlugin(inheritanceModifiers: List<InheritanceModifier>) : Plugin {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
 
     override suspend fun setup(context: Context) {

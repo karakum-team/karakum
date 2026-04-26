@@ -27,10 +27,10 @@ fun commonPrefix(vararg sources: ReadonlyArray<String>): ReadonlyArray<String> {
     return common
 }
 
-fun applyMapper(sourceFileName: String, mapper: ReadonlyRecord<String, String>): String {
+fun applyMapper(sourceFileName: String, mapper: Map<String, String>): String {
     var currentFileName = sourceFileName
 
-    for ((pattern, result) in Object.entries(mapper)) {
+    for ((pattern, result) in mapper) {
         val regexp = pattern.toRegex()
 
         if (regexp.containsMatchIn(currentFileName)) {

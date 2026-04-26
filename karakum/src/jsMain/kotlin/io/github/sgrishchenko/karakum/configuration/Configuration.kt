@@ -225,100 +225,45 @@ interface MutableConfiguration {
     var cwd: String?
 }
 
-@JsExport
 interface Configuration {
-    @JsExport.Ignore
     val inputRoots: List<String>
-    @JsName("inputRoots")
-    val jsInputRoots: ReadonlyArray<String>
     val inputResolutionStrategy: InputResolutionStrategy
 
-    @JsExport.Ignore
     val input: List<String>
-    @JsName("input")
-    val jsInput: ReadonlyArray<String>
-    @JsExport.Ignore
     val inputFileNames: List<String>
-    @JsName("inputFileNames")
-    val jsInputFileNames: ReadonlyArray<String>
     val output: String
     val outputFileName: String?
 
-    @JsExport.Ignore
     val ignoreInput: List<String>
-    @JsName("ignoreInput")
-    val jsIgnoreInput: ReadonlyArray<String>
-    @JsExport.Ignore
     val ignoreOutput: List<String>
-    @JsName("ignoreOutput")
-    val jsIgnoreOutput: ReadonlyArray<String>
 
     val libraryName: String
     val libraryNameOutputPrefix: Boolean
     val isolatedOutputPackage: Boolean
 
-    @JsExport.Ignore
     val plugins: List<Plugin>
-    @JsName("plugins")
-    val jsPlugins: ReadonlyArray<JsPlugin>
 
-    @JsExport.Ignore
     val injections: List<Injection>
-    @JsName("injections")
-    val jsInjections: ReadonlyArray<JsInjection>
 
-    @JsExport.Ignore
     val annotations: List<Annotation>
-    @JsName("annotations")
-    val jsAnnotations: ReadonlyArray<Annotation>
 
-    @JsExport.Ignore
     val nameResolvers: List<NameResolver>
-    @JsName("nameResolvers")
-    val jsNameResolvers: ReadonlyArray<NameResolver>
 
-    @JsExport.Ignore
     val inheritanceModifiers: List<InheritanceModifier>
-    @JsName("inheritanceModifiers")
-    val jsInheritanceModifiers: ReadonlyArray<InheritanceModifier>
 
-    @JsExport.Ignore
     val mutabilityModifiers: List<MutabilityModifier>
-    @JsName("mutabilityModifiers")
-    val jsMutabilityModifiers: ReadonlyArray<MutabilityModifier>
 
-    @JsExport.Ignore
     val varianceModifiers: List<VarianceModifier>
-    @JsName("varianceModifiers")
-    val jsVarianceModifiers: ReadonlyArray<VarianceModifier>
 
-    @JsExport.Ignore
     val moduleNameMapper: Map<String, String>
-    @JsName("moduleNameMapper")
-    val jsModuleNameMapper: ReadonlyRecord<String, String>
-    @JsExport.Ignore
     val packageNameMapper: Map<String, String>
-    @JsName("packageNameMapper")
-    val jsPackageNameMapper: ReadonlyRecord<String, String>
 
-    @JsExport.Ignore
     val importInjector: Map<String, List<String>>
-    @JsName("importInjector")
-    val jsImportInjector: ReadonlyRecord<String, ReadonlyArray<String>>
-    @JsExport.Ignore
     val importMapper: Map<String, Rule>
-    @JsName("importMapper")
-    val jsImportMapper: ReadonlyRecord<String, Rule>
 
-    @JsExport.Ignore
     val namespaceStrategy: Map<String, NamespaceStrategy>
-    @JsName("namespaceStrategy")
-    val jsNamespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>
 
-    @JsExport.Ignore
     val conflictResolutionStrategy: Map<String, ConflictResolutionStrategy>
-    @JsName("conflictResolutionStrategy")
-    val jsConflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>
 
     val compilerOptions: CompilerOptions
 

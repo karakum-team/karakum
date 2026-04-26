@@ -15,7 +15,7 @@ fun applyModuleNameMapper(
     qualifier: String?,
     configuration: Configuration,
 ): ModuleMappingResult {
-    val moduleNameMapper = configuration.jsModuleNameMapper
+    val moduleNameMapper = configuration.moduleNameMapper
 
     val fullName = listOf(moduleName, qualifier ?: "")
         .filter { it.isNotEmpty() }

@@ -9,7 +9,7 @@ val varianceModifierServiceKey = ContextKey<VarianceModifierService>()
 
 @JsExport
 class VarianceModifierService @JsExport.Ignore constructor(
-    private val varianceModifiers: ReadonlyArray<VarianceModifier>
+    private val varianceModifiers: List<VarianceModifier>
 ) {
     fun resolveVarianceModifier(
         node: Node,
@@ -25,7 +25,7 @@ class VarianceModifierService @JsExport.Ignore constructor(
     }
 }
 
-class VarianceModifierPlugin(varianceModifiers: ReadonlyArray<VarianceModifier>) : Plugin {
+class VarianceModifierPlugin(varianceModifiers: List<VarianceModifier>) : Plugin {
     private val varianceModifierService = VarianceModifierService(varianceModifiers)
 
     override suspend fun setup(context: Context) {

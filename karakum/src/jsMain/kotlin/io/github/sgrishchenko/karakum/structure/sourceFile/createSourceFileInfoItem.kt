@@ -15,7 +15,7 @@ import node.path.path
 @JsPlainObject
 external interface SourceFileInfoItem : StructureItem
 
-private fun extractDirName(prefixes: ReadonlyArray<String>, sourceFileName: String): String {
+private fun extractDirName(prefixes: List<String>, sourceFileName: String): String {
     val relativeFileName = removePrefix(sourceFileName, prefixes)
 
     val dirName = path.dirname(relativeFileName)
@@ -40,7 +40,7 @@ fun createSourceFileInfoItem(
     imports: ReadonlyArray<String>,
     configuration: Configuration,
 ): SourceFileInfoItem {
-    val inputRoots = configuration.jsInputRoots
+    val inputRoots = configuration.inputRoots
     val libraryName = prepareLibraryName(configuration.libraryName)
 
     val dirName = extractDirName(inputRoots, sourceFileName)

@@ -8,7 +8,7 @@ import typescript.Node
 val annotationServiceKey = ContextKey<AnnotationService>()
 
 @JsExport
-class AnnotationService @JsExport.Ignore constructor(private val annotations: ReadonlyArray<Annotation>) {
+class AnnotationService @JsExport.Ignore constructor(private val annotations: List<Annotation>) {
     fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, true, context)
     }
@@ -38,7 +38,7 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Re
     }
 }
 
-class AnnotationPlugin(annotations: ReadonlyArray<Annotation>) : Plugin {
+class AnnotationPlugin(annotations: List<Annotation>) : Plugin {
     private val annotationService = AnnotationService(annotations)
 
     override suspend fun setup(context: Context) {

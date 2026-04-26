@@ -6,7 +6,7 @@ import io.github.sgrishchenko.karakum.structure.removePrefix
 import js.array.ReadonlyArray
 import node.path.path
 
-private fun generateRelativeFileName(prefixes: ReadonlyArray<String>, sourceFileName: String): String {
+private fun generateRelativeFileName(prefixes: List<String>, sourceFileName: String): String {
     return removePrefix(sourceFileName, prefixes)
         .replace("\\.d\\.ts$".toRegex(), "")
         .replace("\\.ts$".toRegex(), "")
@@ -16,7 +16,7 @@ fun extractModuleName(
     sourceFileName: String,
     configuration: Configuration,
 ): String {
-    val inputRoots = configuration.jsInputRoots
+    val inputRoots = configuration.inputRoots
     val libraryName = prepareLibraryName(configuration.libraryName)
 
     val relativeFileName = generateRelativeFileName(inputRoots, sourceFileName)

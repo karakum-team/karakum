@@ -8,7 +8,7 @@ import typescript.Node
 val nameResolverServiceKey = ContextKey<NameResolverService>()
 
 @JsExport
-class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyArray<NameResolver>) {
+class NameResolverService @JsExport.Ignore constructor(nameResolvers: List<NameResolver>) {
     private val nameResolvers = nameResolvers + defaultNameResolvers
     private val resolvedNodes = mutableMapOf<Node, String>()
     private var counter = 0
@@ -34,7 +34,7 @@ class NameResolverService @JsExport.Ignore constructor(nameResolvers: ReadonlyAr
     }
 }
 
-class NameResolverPlugin(nameResolvers: ReadonlyArray<NameResolver>) : Plugin {
+class NameResolverPlugin(nameResolvers: List<NameResolver>) : Plugin {
     private val nameResolverService = NameResolverService(nameResolvers)
 
     override suspend fun setup(context: Context) {

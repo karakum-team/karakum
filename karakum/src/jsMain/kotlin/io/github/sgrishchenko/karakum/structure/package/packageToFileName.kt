@@ -40,5 +40,5 @@ fun packageToOutputFileName(
 
     val basePackage = path.posix.join(paths = moduleNameToPackage(libraryName)) + path.posix.sep
 
-    return removePrefix(result, arrayOf(basePackage))
+    return removePrefix(result, listOf(basePackage))
 }

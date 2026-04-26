@@ -79,45 +79,7 @@ private class ConfigurationImpl(
     override val verbose: Boolean,
     override val cwd: String,
     override val inputCwd: String,
-) : Configuration {
-    override val jsInputRoots = inputRoots.toTypedArray()
-
-    override val jsInput = input.toTypedArray()
-    override val jsInputFileNames = inputFileNames.toTypedArray()
-
-    override val jsIgnoreInput = ignoreInput.toTypedArray()
-    override val jsIgnoreOutput = ignoreOutput.toTypedArray()
-
-    override val jsPlugins = plugins
-        .map { it.toJsPlugin() }
-        .toTypedArray()
-
-    override val jsInjections = injections
-        .map { it.toJsInjection() }
-        .toTypedArray()
-
-    override val jsAnnotations = annotations.toTypedArray()
-
-    override val jsNameResolvers = nameResolvers.toTypedArray()
-
-    override val jsInheritanceModifiers = inheritanceModifiers.toTypedArray()
-
-    override val jsMutabilityModifiers = mutabilityModifiers.toTypedArray()
-
-    override val jsVarianceModifiers = varianceModifiers.toTypedArray()
-
-    override val jsModuleNameMapper = moduleNameMapper.toRecord()
-    override val jsPackageNameMapper = packageNameMapper.toRecord()
-
-    override val jsImportInjector = importInjector
-        .mapValues { (_, value) -> value.toTypedArray() }
-        .toRecord()
-    override val jsImportMapper = importMapper.toRecord()
-
-    override val jsNamespaceStrategy = namespaceStrategy.toRecord()
-
-    override val jsConflictResolutionStrategy = conflictResolutionStrategy.toRecord()
-}
+) : Configuration
 
 internal suspend fun defaultizeConfiguration(configuration: MutableConfiguration): Configuration {
     val cwd = toPosix(configuration.cwd ?: process.cwd())
