@@ -47,7 +47,9 @@ export type InjectionType =
 
     | "HERITAGE_CLAUSE"
 
-export type Render<TNode extends Node> = (node: TNode) => string
+interface Abortable {
+    signal?: AbortSignal
+}
 
 export declare interface UnionService {
     readonly uncoveredUnionParents: Map<TsSymbol, Array<string>>

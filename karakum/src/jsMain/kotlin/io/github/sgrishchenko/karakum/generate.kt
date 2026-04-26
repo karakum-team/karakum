@@ -282,6 +282,7 @@ suspend fun generate(
     generate(buildConfiguration(partialConfiguration, block))
 }
 
+@JsExport
 @JsPlainObject
 external interface GenerateOptions: PartialConfiguration, Abortable
 

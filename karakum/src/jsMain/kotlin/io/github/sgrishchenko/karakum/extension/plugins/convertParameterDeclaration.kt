@@ -34,7 +34,7 @@ external interface ParameterDeclarationsConfiguration {
 
 @JsExport
 @JsPlainObject
-external interface ParameterDeclarationConfiguration : Abortable {
+external interface ParameterDeclarationConfiguration {
     val strategy: ParameterDeclarationStrategy
     val defaultValue: String?
     val inheritanceModifier: String?
@@ -145,6 +145,7 @@ suspend fun convertParameterDeclarations(
     error("Unknown parameter declaration strategy: $strategy")
 }
 
+@JsExport
 @JsPlainObject
 external interface ParameterDeclarationsOptions : ParameterDeclarationsConfiguration, Abortable
 
@@ -313,8 +314,9 @@ private fun expandUnions(
     return currentSignatures.toTypedArray()
 }
 
+@JsExport
 @JsPlainObject
-external interface ParameterDeclarationOptions : ParameterDeclarationConfiguration
+external interface ParameterDeclarationOptions : ParameterDeclarationConfiguration, Abortable
 
 @JsExport
 @JsName("convertParameterDeclarationWithFixedType")
