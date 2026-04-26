@@ -15,5 +15,7 @@ val convertVariableStatement = createPlugin plugin@{ node, context, render ->
     val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
     exportModifier?.let { checkCoverageService?.cover(exportModifier) }
 
-    node.declarationList.declarations.asArray().joinToString(separator = "\n") { render(it) }
+    node.declarationList.declarations.asArray()
+        .map { render(it) }
+        .joinToString(separator = "\n")
 }

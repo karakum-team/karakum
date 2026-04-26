@@ -1,10 +1,18 @@
 package io.github.sgrishchenko.karakum.configuration
 
+import io.github.sgrishchenko.karakum.extension.Annotation
+import io.github.sgrishchenko.karakum.extension.InheritanceModifier
+import io.github.sgrishchenko.karakum.extension.Injection
+import io.github.sgrishchenko.karakum.extension.MutabilityModifier
+import io.github.sgrishchenko.karakum.extension.NameResolver
+import io.github.sgrishchenko.karakum.extension.Plugin
+import io.github.sgrishchenko.karakum.extension.VarianceModifier
+import io.github.sgrishchenko.karakum.extension.toJsInjection
+import io.github.sgrishchenko.karakum.extension.toJsPlugin
 import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.util.*
-import js.array.ReadonlyArray
 import js.import.import
-import js.objects.recordOf
+import js.objects.toRecord
 import node.module.findPackageJSON
 import node.path.path
 import node.process.process
@@ -12,21 +20,7 @@ import typescript.CompilerOptions
 
 const val defaultDisclaimer = "// Automatically generated - do not modify!"
 
-private fun <T> normalizeOption(
-    patterns: Many<T>?,
-    defaultValue: ReadonlyArray<T> = emptyArray(),
-): ReadonlyArray<T> {
-    return normalizeOption(patterns) { defaultValue }
-}
-
-private fun <T> normalizeOption(
-    patterns: Many<T>?,
-    defaultValue: () -> ReadonlyArray<T>,
-): ReadonlyArray<T> {
-    return patterns?.toArray() ?: defaultValue()
-}
-
-private fun resolveDefaultInputRoot(inputFileNames: ReadonlyArray<String>): String {
+private fun resolveDefaultInputRoot(inputFileNames: List<String>): String {
     if (inputFileNames.size == 1) {
         return path.dirname(inputFileNames[0]) + path.posix.sep
     }
@@ -39,13 +33,99 @@ private fun resolveDefaultInputRoot(inputFileNames: ReadonlyArray<String>): Stri
     return commonPrefix(sources = inputPathChunks).joinToString(path.posix.sep, postfix = path.posix.sep)
 }
 
-suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Configuration {
+private class ConfigurationImpl(
+    override val inputRoots: List<String>,
+    override val inputResolutionStrategy: InputResolutionStrategy,
+
+    override val input: List<String>,
+    override val inputFileNames: List<String>,
+    override val output: String,
+    override val outputFileName: String?,
+
+    override val ignoreInput: List<String>,
+    override val ignoreOutput: List<String>,
+
+    override val libraryName: String,
+    override val libraryNameOutputPrefix: Boolean,
+    override val isolatedOutputPackage: Boolean,
+
+    override val plugins: List<Plugin>,
+
+    override val injections: List<Injection>,
+
+    override val annotations: List<Annotation>,
+
+    override val nameResolvers: List<NameResolver>,
+
+    override val inheritanceModifiers: List<InheritanceModifier>,
+
+    override val mutabilityModifiers: List<MutabilityModifier>,
+
+    override val varianceModifiers: List<VarianceModifier>,
+
+    override val moduleNameMapper: Map<String, String>,
+    override val packageNameMapper: Map<String, String>,
+
+    override val importInjector: Map<String, List<String>>,
+    override val importMapper: Map<String, Rule>,
+
+    override val namespaceStrategy: Map<String, NamespaceStrategy>,
+
+    override val conflictResolutionStrategy: Map<String, ConflictResolutionStrategy>,
+
+    override val compilerOptions: CompilerOptions,
+
+    override val disclaimer: String,
+    override val verbose: Boolean,
+    override val cwd: String,
+    override val inputCwd: String,
+) : Configuration {
+    override val jsInputRoots = inputRoots.toTypedArray()
+
+    override val jsInput = input.toTypedArray()
+    override val jsInputFileNames = inputFileNames.toTypedArray()
+
+    override val jsIgnoreInput = ignoreInput.toTypedArray()
+    override val jsIgnoreOutput = ignoreOutput.toTypedArray()
+
+    override val jsPlugins = plugins
+        .map { it.toJsPlugin() }
+        .toTypedArray()
+
+    override val jsInjections = injections
+        .map { it.toJsInjection() }
+        .toTypedArray()
+
+    override val jsAnnotations = annotations.toTypedArray()
+
+    override val jsNameResolvers = nameResolvers.toTypedArray()
+
+    override val jsInheritanceModifiers = inheritanceModifiers.toTypedArray()
+
+    override val jsMutabilityModifiers = mutabilityModifiers.toTypedArray()
+
+    override val jsVarianceModifiers = varianceModifiers.toTypedArray()
+
+    override val jsModuleNameMapper = moduleNameMapper.toRecord()
+    override val jsPackageNameMapper = packageNameMapper.toRecord()
+
+    override val jsImportInjector = importInjector
+        .mapValues { (_, value) -> value.toTypedArray() }
+        .toRecord()
+    override val jsImportMapper = importMapper.toRecord()
+
+    override val jsNamespaceStrategy = namespaceStrategy.toRecord()
+
+    override val jsConflictResolutionStrategy = conflictResolutionStrategy.toRecord()
+}
+
+internal suspend fun defaultizeConfiguration(configuration: MutableConfiguration): Configuration {
     val cwd = toPosix(configuration.cwd ?: process.cwd())
 
-    val input = normalizeOption(configuration.input)
+    val input = configuration.input ?: emptyList()
 
-    val ignoreInput = normalizeOption(configuration.ignoreInput)
-    val ignoreOutput = normalizeOption(configuration.ignoreOutput)
+    val ignoreInput = configuration.ignoreInput ?: emptyList()
+    val ignoreOutput = configuration.ignoreOutput ?: emptyList()
 
     val inputResolutionStrategy = configuration.inputResolutionStrategy ?: InputResolutionStrategy.node
 
@@ -71,25 +151,24 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
         outputFileName = absoluteOutput
     }
 
-    val plugins = normalizeOption(configuration.plugins)
-    val injections = normalizeOption(configuration.injections)
-    val annotations = normalizeOption(configuration.annotations)
-    val nameResolvers = normalizeOption(configuration.nameResolvers)
-    val inheritanceModifiers = normalizeOption(configuration.inheritanceModifiers)
-    val mutabilityModifiers = normalizeOption(configuration.mutabilityModifiers)
-    val varianceModifiers = normalizeOption(configuration.varianceModifiers)
+    val plugins = configuration.plugins ?: emptyList()
+    val injections = configuration.injections ?: emptyList()
+    val annotations = configuration.annotations ?: emptyList()
+    val nameResolvers = configuration.nameResolvers ?: emptyList()
+    val inheritanceModifiers = configuration.inheritanceModifiers ?: emptyList()
+    val mutabilityModifiers = configuration.mutabilityModifiers ?: emptyList()
+    val varianceModifiers = configuration.varianceModifiers ?: emptyList()
 
     @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
     val compilerOptions = configuration.compilerOptions ?: Any() as CompilerOptions
 
-    return Configuration(
-        inputRoots = normalizeOption(configuration.inputRoots) {
-            if (inputResolutionStrategy == InputResolutionStrategy.node) {
-                arrayOf(requireNotNull(libraryLocation))
+    return ConfigurationImpl(
+        inputRoots = configuration.inputRoots
+            ?: if (inputResolutionStrategy == InputResolutionStrategy.node) {
+                listOf(requireNotNull(libraryLocation))
             } else {
-                arrayOf(resolveDefaultInputRoot(inputFileNames))
-            }
-        },
+                listOf(resolveDefaultInputRoot(inputFileNames))
+            },
         inputResolutionStrategy = inputResolutionStrategy,
         inputFileNames = inputFileNames,
 
@@ -119,15 +198,15 @@ suspend fun defaultizeConfiguration(configuration: PartialConfiguration): Config
 
         varianceModifiers = varianceModifiers,
 
-        moduleNameMapper = configuration.moduleNameMapper ?: recordOf("^.*$" to prepareLibraryName(libraryName)),
-        packageNameMapper = configuration.packageNameMapper ?: recordOf(),
+        moduleNameMapper = configuration.moduleNameMapper ?: mapOf("^.*$" to prepareLibraryName(libraryName)),
+        packageNameMapper = configuration.packageNameMapper ?: emptyMap(),
 
-        importInjector = configuration.importInjector ?: recordOf(),
-        importMapper = configuration.importMapper ?: recordOf(),
+        importInjector = configuration.importInjector ?: emptyMap(),
+        importMapper = configuration.importMapper ?: emptyMap(),
 
-        namespaceStrategy = configuration.namespaceStrategy ?: recordOf(),
+        namespaceStrategy = configuration.namespaceStrategy ?: emptyMap(),
 
-        conflictResolutionStrategy = configuration.conflictResolutionStrategy ?: recordOf(),
+        conflictResolutionStrategy = configuration.conflictResolutionStrategy ?: emptyMap(),
 
         compilerOptions = compilerOptions,
 

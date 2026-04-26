@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.structure.InputStructureItem
 import io.github.sgrishchenko.karakum.structure.InputStructureItemMeta
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.util.traverse
+import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.objects.recordOf
 import kotlinx.js.JsPlainObject
@@ -23,7 +24,7 @@ fun collectNamespaceInfo(
     val result = mutableListOf<InputNamespaceInfoItem>()
 
     sourceFiles.forEach { sourceFile ->
-        traverse(sourceFile) { node ->
+        traverseSync(sourceFile) { node ->
             if (isModuleDeclaration(node)) {
                 val imports = importInfo[node] ?: emptyArray()
 

@@ -17,18 +17,17 @@ import typescript.*
 class TypeAliasDeclarationPlugin : Plugin {
     private val generated = mutableListOf<DerivedDeclaration>()
 
-    override fun setup(context: Context) = Unit
+    override suspend fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    private fun resolveQualifiedName(node: TypeAliasDeclaration, context: Context, next: Render<Node>): String {
+    private suspend fun resolveQualifiedName(node: TypeAliasDeclaration, context: Context, next: Render<Node>): String {
         val name = next(node.name)
         val result = mutableListOf<String>()
 
-        val typeScriptService = context.lookupService(typeScriptServiceKey)
         val namespaceInfoService = context.lookupService(namespaceInfoServiceKey)
 
-        typeScriptService?.findClosest(node) {
+        findClosest(node, context) {
             if (!isModuleDeclaration(it)) return@findClosest false
 
             val namespaceStrategy = namespaceInfoService?.resolveNamespaceStrategy(it)
@@ -43,7 +42,16 @@ class TypeAliasDeclarationPlugin : Plugin {
         return (result + name).joinToString(separator = ".")
     }
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    private suspend fun findClosest(rootNode: Node?, context: Context, predicate: suspend (node: Node) -> Boolean): Node? {
+        val typeScriptService = context.lookupService(typeScriptServiceKey) ?: return null
+
+        if (rootNode == null) return null
+        if (predicate(rootNode)) return rootNode
+
+        return findClosest(typeScriptService.getParent(rootNode), context, predicate)
+    }
+
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (!isTypeAliasDeclaration(node)) return null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
@@ -128,7 +136,7 @@ class TypeAliasDeclarationPlugin : Plugin {
         return "typealias ${name}${ifPresent(typeParameters) { "<${it}>" }} = $type"
     }
 
-    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         return generateDerivedDeclarations(generated.toTypedArray(), context)
     }
 }

@@ -29,7 +29,7 @@ private fun resolveConflictResolutionStrategy(
 ): ConflictResolutionStrategy? {
     val conflictResolutionStrategy = configuration.conflictResolutionStrategy
 
-    for ((pattern, strategy) in Object.entries(conflictResolutionStrategy)) {
+    for ((pattern, strategy) in conflictResolutionStrategy) {
         val regexp = pattern.toRegex()
 
         if (regexp.containsMatchIn(outputFileName)) {

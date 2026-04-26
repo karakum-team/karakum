@@ -2,14 +2,20 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-@JsExport
 val injectionServiceKey = ContextKey<InjectionService>()
 
 @JsExport
-class InjectionService @JsExport.Ignore constructor(private val injections: ReadonlyArray<Injection>) {
-    fun resolveInjections(
+@JsName("injectionServiceKey")
+val jsInjectionServiceKey = ContextKey<JsInjectionService>()
+
+class InjectionService(private val injections: List<Injection>) {
+    suspend fun resolveInjections(
         node: Node,
         type: InjectionType,
         context: Context,
@@ -22,7 +28,7 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
         return internalResolveInjections(node, injectionContext, render)
     }
 
-    private fun internalResolveInjections(
+    private suspend fun internalResolveInjections(
         node: Node,
         context: InjectionContext,
         render: Render<Node>
@@ -39,16 +45,36 @@ class InjectionService @JsExport.Ignore constructor(private val injections: Read
     }
 }
 
-class InjectionPlugin(injections: ReadonlyArray<Injection>) : Plugin {
+@JsExport
+@JsName("InjectionService")
+class JsInjectionService @JsExport.Ignore constructor(
+    private val delegate: InjectionService,
+) {
+    fun resolveInjections(
+        node: Node,
+        type: InjectionType,
+        context: Context,
+        render: Render<Node>,
+        options: Abortable,
+    ): Promise<ReadonlyArray<String>> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveInjections(node, type, context, render)
+        }
+    }
+}
+
+class InjectionPlugin(injections: List<Injection>) : Plugin {
     private val injectionService = InjectionService(injections)
+    private val jsInjectionService = JsInjectionService(injectionService)
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: Context, next: Render<Node>) = null
+    override suspend fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(injectionServiceKey, this.injectionService)
+        context.registerService(jsInjectionServiceKey, this.jsInjectionService)
     }
 }

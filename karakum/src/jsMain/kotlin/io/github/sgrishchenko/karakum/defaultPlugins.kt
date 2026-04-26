@@ -12,7 +12,7 @@ private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == ki
 
 fun createPlugins(
     configuration: Configuration,
-    injections: ReadonlyArray<Injection>,
+    injections: List<Injection>,
     nameResolvers: ReadonlyArray<NameResolver>,
     inheritanceModifiers: ReadonlyArray<InheritanceModifier>,
     mutabilityModifiers: ReadonlyArray<MutabilityModifier>,

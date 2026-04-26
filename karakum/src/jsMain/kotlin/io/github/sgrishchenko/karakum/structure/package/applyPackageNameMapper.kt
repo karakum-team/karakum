@@ -17,7 +17,7 @@ fun applyPackageNameMapper(
     fileName: String,
     configuration: Configuration,
 ): PackageMappingResult {
-    val packageNameMapper = configuration.packageNameMapper
+    val packageNameMapper = configuration.jsPackageNameMapper
 
     val filePath = packageToFileName(packageChunks, fileName)
 

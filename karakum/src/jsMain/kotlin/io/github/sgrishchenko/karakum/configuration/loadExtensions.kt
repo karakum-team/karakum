@@ -20,8 +20,8 @@ external interface ExtensionConfiguration {
 
 @JsPlainObject
 external interface Extensions {
-    val plugins: ReadonlyArray<Plugin>
-    val injections: ReadonlyArray<Injection>
+    val plugins: ReadonlyArray<JsPlugin>
+    val injections: ReadonlyArray<JsInjection>
     val annotations: ReadonlyArray<Annotation>
     val nameResolvers: ReadonlyArray<NameResolver>
     val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
@@ -39,10 +39,10 @@ external interface ExtensionModule {
  */
 suspend fun <T> loadExtensions(
     name: String,
-    patterns: ReadonlyArray<String>,
+    patterns: List<String>,
     cwd: String,
     loader: (extension: Any) -> T = { it.unsafeCast<T>() },
-): ReadonlyArray<T> {
+): List<T> {
     val fileNames = glob(patterns, cwd)
 
     val extensions = mutableListOf<T>()
@@ -62,7 +62,7 @@ suspend fun <T> loadExtensions(
         }
     }
 
-    return extensions.toTypedArray()
+    return extensions
 }
 
 suspend fun loadExtensions(
@@ -72,65 +72,65 @@ suspend fun loadExtensions(
 
     val plugins = loadExtensions(
         "Plugin",
-        configuration.plugins,
+        configuration.plugins.toList(),
         cwd
     ) { plugin ->
         if (jsTypeOf(plugin) == "function") {
-            createPlugin(plugin.unsafeCast<SimplePlugin>())
+            createJsPlugin(plugin.unsafeCast<SimpleJsPlugin>())
         } else {
-            plugin.unsafeCast<Plugin>()
+            plugin.unsafeCast<JsPlugin>()
         }
     }
 
     val injections = loadExtensions(
         "Injection",
-        configuration.injections,
+        configuration.injections.toList(),
         cwd
     ) { injection ->
         if (jsTypeOf(injection) == "function") {
-            createInjection(injection.unsafeCast<SimpleInjection>())
+            createJsInjection(injection.unsafeCast<SimpleJsInjection>())
         } else {
-            injection.unsafeCast<Injection>()
+            injection.unsafeCast<JsInjection>()
         }
     }
 
     val annotations = loadExtensions<Annotation>(
         "Annotation",
-        configuration.annotations,
+        configuration.annotations.toList(),
         cwd,
     )
 
     val nameResolvers = loadExtensions<NameResolver>(
         "Name Resolver",
-        configuration.nameResolvers,
+        configuration.nameResolvers.toList(),
         cwd,
     )
 
     val inheritanceModifiers = loadExtensions<InheritanceModifier>(
         "Inheritance Modifier",
-        configuration.inheritanceModifiers,
+        configuration.inheritanceModifiers.toList(),
         cwd,
     )
 
     val mutabilityModifiers = loadExtensions<MutabilityModifier>(
         "Mutability modifier",
-        configuration.mutabilityModifiers,
+        configuration.mutabilityModifiers.toList(),
         cwd,
     )
 
     val varianceModifiers = loadExtensions<VarianceModifier>(
         "Variance Modifier",
-        configuration.varianceModifiers,
+        configuration.varianceModifiers.toList(),
         cwd,
     )
 
     return Extensions(
-        plugins = plugins,
-        injections = injections,
-        annotations = annotations,
-        nameResolvers = nameResolvers,
-        inheritanceModifiers = inheritanceModifiers,
-        mutabilityModifiers = mutabilityModifiers,
-        varianceModifiers = varianceModifiers,
+        plugins = plugins.toTypedArray(),
+        injections = injections.toTypedArray(),
+        annotations = annotations.toTypedArray(),
+        nameResolvers = nameResolvers.toTypedArray(),
+        inheritanceModifiers = inheritanceModifiers.toTypedArray(),
+        mutabilityModifiers = mutabilityModifiers.toTypedArray(),
+        varianceModifiers = varianceModifiers.toTypedArray(),
     )
 }

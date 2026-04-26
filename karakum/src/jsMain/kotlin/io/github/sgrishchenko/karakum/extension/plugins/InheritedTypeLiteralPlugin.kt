@@ -17,7 +17,7 @@ fun isInheritedTypeLiteral(node: Node): Boolean {
     }
 }
 
-fun convertInheritedTypeLiteral(
+suspend fun convertInheritedTypeLiteral(
     node: IntersectionTypeNode,
     name: String,
     typeParameters: String?,

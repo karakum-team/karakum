@@ -10,5 +10,7 @@ val convertModuleBlock = createPlugin plugin@{ node, context, render ->
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    node.statements.asArray().joinToString(separator = "\n") { render(it) }
+    node.statements.asArray()
+        .map { render(it) }
+        .joinToString(separator = "\n")
 }

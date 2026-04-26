@@ -105,7 +105,7 @@ fun createNamespaceInfoItem(
         }
     }
 
-    for ((pattern, strategy) in Object.entries(namespaceStrategy)) {
+    for ((pattern, strategy) in namespaceStrategy) {
         val regexp = pattern.toRegex()
 
         if (regexp.containsMatchIn(detailedName) || regexp.containsMatchIn(simpleName)) {

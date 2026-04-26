@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
-import io.github.sgrishchenko.karakum.util.traverse
+import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import kotlinx.js.JsPlainObject
@@ -34,7 +34,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
     }
 
     fun deepCover(node: Node) {
-        traverse(node) { cover(it) }
+        traverseSync(node) { cover(it) }
     }
 
     fun emit(callback: (uncoveredNode: Node) -> Unit): CheckCoverageResult {
@@ -59,7 +59,7 @@ class CheckCoverageService @JsExport.Ignore constructor() {
 class CheckCoveragePlugin : Plugin {
     private val checkCoverageService = CheckCoverageService()
 
-    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val configurationService = context.lookupService(configurationServiceKey)
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
@@ -93,13 +93,13 @@ class CheckCoveragePlugin : Plugin {
         return emptyArray()
     }
 
-    override fun render(node: Node, context: Context, next: Render<Node>) = null
+    override suspend fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun traverse(node: Node, context: Context) {
+    override suspend fun traverse(node: Node, context: Context) {
         this.checkCoverageService.register(node)
     }
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(checkCoverageServiceKey, this.checkCoverageService)
     }
 }

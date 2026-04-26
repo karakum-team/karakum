@@ -7,9 +7,14 @@ import io.github.sgrishchenko.karakum.extension.MutabilityModifier
 import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.VarianceModifier
+import io.github.sgrishchenko.karakum.extension.toInjection
+import io.github.sgrishchenko.karakum.extension.toPlugin
 import io.github.sgrishchenko.karakum.util.Rule
-import io.github.sgrishchenko.karakum.util.manyOf
-import js.objects.recordOf
+import io.github.sgrishchenko.karakum.util.toList
+import js.objects.Object
+import js.array.component1
+import js.array.component2
+import js.objects.ReadonlyRecord
 import typescript.CompilerOptions
 import kotlin.String
 import kotlin.collections.List
@@ -61,88 +66,87 @@ private class MutableConfigurationImpl(
     override var cwd: String? = null,
 ) : MutableConfiguration
 
-private fun <T> List<T>.toMany() = manyOf(values = toTypedArray())
-
-private fun <K : Any, V> Map<K, V>.toRecord() = recordOf(pairs = toList().toTypedArray())
+private fun <V> ReadonlyRecord<String, V>.toMap(): Map<String, V> =
+    Object.entries(this).associate { (key, value) -> key to value }
 
 internal fun buildConfiguration(
     partialConfiguration: PartialConfiguration,
     block: MutableConfiguration.() -> Unit,
-): PartialConfiguration {
-    val scope = MutableConfigurationImpl().apply(block)
+): MutableConfiguration {
+    return MutableConfigurationImpl()
+        .apply(block)
+        .apply {
+            inputRoots = inputRoots
+                ?: partialConfiguration.inputRoots?.toList()
+            inputResolutionStrategy = inputResolutionStrategy
+                ?: partialConfiguration.inputResolutionStrategy
 
-    return PartialConfiguration(
-        inputRoots = scope.inputRoots?.toMany()
-            ?: partialConfiguration.inputRoots,
-        inputResolutionStrategy = scope.inputResolutionStrategy
-            ?: partialConfiguration.inputResolutionStrategy,
+            input = input
+                ?: partialConfiguration.input?.toList()
+            output = output
+                ?: partialConfiguration.output
 
-        input = scope.input?.toMany()
-            ?: partialConfiguration.input,
-        output = scope.output
-            ?: partialConfiguration.output,
+            ignoreInput = ignoreInput
+                ?: partialConfiguration.ignoreInput?.toList()
+            ignoreOutput = ignoreOutput
+                ?: partialConfiguration.ignoreOutput?.toList()
 
-        ignoreInput = scope.ignoreInput?.toMany()
-            ?: partialConfiguration.ignoreInput,
-        ignoreOutput = scope.ignoreOutput?.toMany()
-            ?: partialConfiguration.ignoreOutput,
+            libraryName = libraryName
+                ?: partialConfiguration.libraryName
+            libraryNameOutputPrefix = libraryNameOutputPrefix
+                ?: partialConfiguration.libraryNameOutputPrefix
+            isolatedOutputPackage = isolatedOutputPackage
+                ?: partialConfiguration.isolatedOutputPackage
 
-        libraryName = scope.libraryName
-            ?: partialConfiguration.libraryName,
-        libraryNameOutputPrefix = scope.libraryNameOutputPrefix
-            ?: partialConfiguration.libraryNameOutputPrefix,
-        isolatedOutputPackage = scope.isolatedOutputPackage
-            ?: partialConfiguration.isolatedOutputPackage,
+            plugins = plugins
+                ?: partialConfiguration.plugins?.toList()?.map { it.toPlugin() }
 
-        plugins = scope.plugins?.toMany()
-            ?: partialConfiguration.plugins,
+            injections = injections
+                ?: partialConfiguration.injections?.toList()?.map { it.toInjection() }
 
-        injections = scope.injections?.toMany()
-            ?: partialConfiguration.injections,
+            annotations = annotations
+                ?: partialConfiguration.annotations?.toList()
 
-        annotations = scope.annotations?.toMany()
-            ?: partialConfiguration.annotations,
+            nameResolvers = nameResolvers
+                ?: partialConfiguration.nameResolvers?.toList()
 
-        nameResolvers = scope.nameResolvers?.toMany()
-            ?: partialConfiguration.nameResolvers,
+            inheritanceModifiers = inheritanceModifiers
+                ?: partialConfiguration.inheritanceModifiers?.toList()
 
-        inheritanceModifiers = scope.inheritanceModifiers?.toMany()
-            ?: partialConfiguration.inheritanceModifiers,
+            mutabilityModifiers = mutabilityModifiers
+                ?: partialConfiguration.mutabilityModifiers?.toList()
 
-        mutabilityModifiers = scope.mutabilityModifiers?.toMany()
-            ?: partialConfiguration.mutabilityModifiers,
+            varianceModifiers = varianceModifiers
+                ?: partialConfiguration.varianceModifiers?.toList()
 
-        varianceModifiers = scope.varianceModifiers?.toMany()
-            ?: partialConfiguration.varianceModifiers,
+            moduleNameMapper = moduleNameMapper
+                ?: partialConfiguration.moduleNameMapper?.toMap()
 
-        moduleNameMapper = scope.moduleNameMapper?.toRecord()
-            ?: partialConfiguration.moduleNameMapper,
+            packageNameMapper = packageNameMapper
+                ?: partialConfiguration.packageNameMapper?.toMap()
 
-        packageNameMapper = scope.packageNameMapper?.toRecord()
-            ?: partialConfiguration.packageNameMapper,
+            importInjector = importInjector
+                ?: partialConfiguration.importInjector
+                    ?.toMap()
+                    ?.mapValues { (_, value) -> value.toList() }
 
-        importInjector = scope.importInjector
-            ?.mapValues { (_, value) -> value.toTypedArray() }
-            ?.toRecord()
-            ?: partialConfiguration.importInjector,
+            importMapper = importMapper
+                ?: partialConfiguration.importMapper?.toMap()
 
-        importMapper = scope.importMapper?.toRecord()
-            ?: partialConfiguration.importMapper,
+            namespaceStrategy = namespaceStrategy
+                ?: partialConfiguration.namespaceStrategy?.toMap()
 
-        namespaceStrategy = scope.namespaceStrategy?.toRecord()
-            ?: partialConfiguration.namespaceStrategy,
+            conflictResolutionStrategy = conflictResolutionStrategy
+                ?: partialConfiguration.conflictResolutionStrategy?.toMap()
 
-        conflictResolutionStrategy = scope.conflictResolutionStrategy?.toRecord()
-            ?: partialConfiguration.conflictResolutionStrategy,
+            compilerOptions = compilerOptions
+                ?: partialConfiguration.compilerOptions
 
-        compilerOptions = scope.compilerOptions
-            ?: partialConfiguration.compilerOptions,
-
-        disclaimer = scope.disclaimer
-            ?: partialConfiguration.disclaimer,
-        verbose = scope.verbose
-            ?: partialConfiguration.verbose,
-        cwd = scope.cwd
-            ?: partialConfiguration.cwd,
-    )
+            disclaimer = disclaimer
+                ?: partialConfiguration.disclaimer
+            verbose = verbose
+                ?: partialConfiguration.verbose
+            cwd = cwd
+                ?: partialConfiguration.cwd
+        }
 }

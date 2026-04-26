@@ -5,7 +5,7 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.*
 
-private fun renderRecord(node: IndexSignatureDeclaration, render: Render<Node>): String {
+private suspend fun renderRecord(node: IndexSignatureDeclaration, render: Render<Node>): String {
     val firstParameterType = node.parameters.asArray().firstOrNull()?.type
 
     val keyType = if (firstParameterType != null) {

@@ -172,7 +172,7 @@ fun isNullableLiteralUnionType(node: Node, context: Context): Boolean {
     )
 }
 
-fun convertLiteralUnionType(
+suspend fun convertLiteralUnionType(
     node: UnionTypeNode,
     name: String,
     qualifiedName: String,

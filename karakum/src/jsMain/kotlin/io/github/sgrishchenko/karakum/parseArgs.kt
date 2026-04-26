@@ -18,6 +18,8 @@ import node.util.ParseArgsOptionDescriptor
 import node.util.ParseArgsOptionsType
 import node.util.parseArgs
 import node.util.string
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 import kotlin.coroutines.EmptyCoroutineContext
 
 suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
@@ -72,6 +74,6 @@ suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
 
 @JsExport
 @JsName("parseArgs")
-fun parseArgsAsync(args: Array<String>): Promise<PartialConfiguration> =
-    CoroutineScope(EmptyCoroutineContext)
+fun parseArgsAsync(args: Array<String>, options: Abortable = Abortable()): Promise<PartialConfiguration> =
+    options.asCoroutineScope()
         .promise { parseArgs(args) }

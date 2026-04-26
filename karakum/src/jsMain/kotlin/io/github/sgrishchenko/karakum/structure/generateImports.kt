@@ -13,7 +13,7 @@ fun generateImports(
 
     val importSources = mutableListOf<String>()
 
-    for ((pattern, imports) in Object.entries(importInjector)) {
+    for ((pattern, imports) in importInjector) {
         val regexp = pattern.toRegex()
 
         if (regexp.containsMatchIn(outputFileName)) {

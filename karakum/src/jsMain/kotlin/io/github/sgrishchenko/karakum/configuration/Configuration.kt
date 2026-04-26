@@ -133,10 +133,6 @@ external interface SchemaConfiguration {
 external interface PartialConfiguration {
     val inputRoots: Many<String>?
 
-    /**
-     * @TJS-type string
-     * @$ref #/definitions/InputResolutionStrategy
-     * */
     val inputResolutionStrategy: InputResolutionStrategy?
 
     val input: Many<String>?
@@ -149,9 +145,9 @@ external interface PartialConfiguration {
     val libraryNameOutputPrefix: Boolean?
     val isolatedOutputPackage: Boolean?
 
-    val plugins: Many<Plugin>?
+    val plugins: Many<JsPlugin>?
 
-    val injections: Many<Injection>?
+    val injections: Many<JsInjection>?
 
     val annotations: Many<Annotation>?
 
@@ -230,46 +226,99 @@ interface MutableConfiguration {
 }
 
 @JsExport
-@JsPlainObject
-external interface Configuration {
-    val inputRoots: ReadonlyArray<String>
+interface Configuration {
+    @JsExport.Ignore
+    val inputRoots: List<String>
+    @JsName("inputRoots")
+    val jsInputRoots: ReadonlyArray<String>
     val inputResolutionStrategy: InputResolutionStrategy
 
-    val input: ReadonlyArray<String>
-    val inputFileNames: ReadonlyArray<String>
+    @JsExport.Ignore
+    val input: List<String>
+    @JsName("input")
+    val jsInput: ReadonlyArray<String>
+    @JsExport.Ignore
+    val inputFileNames: List<String>
+    @JsName("inputFileNames")
+    val jsInputFileNames: ReadonlyArray<String>
     val output: String
     val outputFileName: String?
 
-    val ignoreInput: ReadonlyArray<String>
-    val ignoreOutput: ReadonlyArray<String>
+    @JsExport.Ignore
+    val ignoreInput: List<String>
+    @JsName("ignoreInput")
+    val jsIgnoreInput: ReadonlyArray<String>
+    @JsExport.Ignore
+    val ignoreOutput: List<String>
+    @JsName("ignoreOutput")
+    val jsIgnoreOutput: ReadonlyArray<String>
 
     val libraryName: String
     val libraryNameOutputPrefix: Boolean
     val isolatedOutputPackage: Boolean
 
-    val plugins: ReadonlyArray<Plugin>
+    @JsExport.Ignore
+    val plugins: List<Plugin>
+    @JsName("plugins")
+    val jsPlugins: ReadonlyArray<JsPlugin>
 
-    val injections: ReadonlyArray<Injection>
+    @JsExport.Ignore
+    val injections: List<Injection>
+    @JsName("injections")
+    val jsInjections: ReadonlyArray<JsInjection>
 
-    val annotations: ReadonlyArray<Annotation>
+    @JsExport.Ignore
+    val annotations: List<Annotation>
+    @JsName("annotations")
+    val jsAnnotations: ReadonlyArray<Annotation>
 
-    val nameResolvers: ReadonlyArray<NameResolver>
+    @JsExport.Ignore
+    val nameResolvers: List<NameResolver>
+    @JsName("nameResolvers")
+    val jsNameResolvers: ReadonlyArray<NameResolver>
 
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
+    @JsExport.Ignore
+    val inheritanceModifiers: List<InheritanceModifier>
+    @JsName("inheritanceModifiers")
+    val jsInheritanceModifiers: ReadonlyArray<InheritanceModifier>
 
-    val mutabilityModifiers: ReadonlyArray<MutabilityModifier>
+    @JsExport.Ignore
+    val mutabilityModifiers: List<MutabilityModifier>
+    @JsName("mutabilityModifiers")
+    val jsMutabilityModifiers: ReadonlyArray<MutabilityModifier>
 
-    val varianceModifiers: ReadonlyArray<VarianceModifier>
+    @JsExport.Ignore
+    val varianceModifiers: List<VarianceModifier>
+    @JsName("varianceModifiers")
+    val jsVarianceModifiers: ReadonlyArray<VarianceModifier>
 
-    val moduleNameMapper: ReadonlyRecord<String, String>
-    val packageNameMapper: ReadonlyRecord<String, String>
+    @JsExport.Ignore
+    val moduleNameMapper: Map<String, String>
+    @JsName("moduleNameMapper")
+    val jsModuleNameMapper: ReadonlyRecord<String, String>
+    @JsExport.Ignore
+    val packageNameMapper: Map<String, String>
+    @JsName("packageNameMapper")
+    val jsPackageNameMapper: ReadonlyRecord<String, String>
 
-    val importInjector: ReadonlyRecord<String, ReadonlyArray<String>>
-    val importMapper: ReadonlyRecord<String, Rule>
+    @JsExport.Ignore
+    val importInjector: Map<String, List<String>>
+    @JsName("importInjector")
+    val jsImportInjector: ReadonlyRecord<String, ReadonlyArray<String>>
+    @JsExport.Ignore
+    val importMapper: Map<String, Rule>
+    @JsName("importMapper")
+    val jsImportMapper: ReadonlyRecord<String, Rule>
 
-    val namespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>
+    @JsExport.Ignore
+    val namespaceStrategy: Map<String, NamespaceStrategy>
+    @JsName("namespaceStrategy")
+    val jsNamespaceStrategy: ReadonlyRecord<String, NamespaceStrategy>
 
-    val conflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>
+    @JsExport.Ignore
+    val conflictResolutionStrategy: Map<String, ConflictResolutionStrategy>
+    @JsName("conflictResolutionStrategy")
+    val jsConflictResolutionStrategy: ReadonlyRecord<String, ConflictResolutionStrategy>
 
     val compilerOptions: CompilerOptions
 

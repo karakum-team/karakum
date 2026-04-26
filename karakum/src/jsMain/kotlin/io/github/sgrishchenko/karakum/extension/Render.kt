@@ -3,13 +3,26 @@ package io.github.sgrishchenko.karakum.extension
 import io.github.sgrishchenko.karakum.extension.plugins.isPossiblyNullableType
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.*
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-external interface Render<in TNode : Node> {
-    operator fun invoke(node: TNode): String
+@JsExport
+interface Render<in TNode : Node> {
+    @JsExport.Ignore
+    suspend operator fun invoke(node: TNode): String
+
+    fun run(node: TNode, options: Abortable): Promise<String>  =
+        options.asCoroutineScope().promise {
+            invoke(node)
+        }
 }
 
-fun <TNode : Node> Render(render: (node: TNode) -> String) = render.unsafeCast<Render<TNode>>()
+fun <TNode : Node> Render(render: suspend (node: TNode) -> String) = object : Render<TNode> {
+    override suspend fun invoke(node: TNode): String = render(node)
+}
 
 @JsExport
 fun ifPresent(part: String?, render: (part: String) -> String): String {
@@ -36,8 +49,7 @@ private fun isPrimitiveType(node: Node): Boolean {
             || isThisTypeNode(node)
 }
 
-@JsExport
-fun renderNullable(
+suspend fun renderNullable(
     node: TypeNode?,
     isNullable: Boolean,
     context: Context,
@@ -52,7 +64,20 @@ fun renderNullable(
     return renderResolvedNullable(node, isReallyNullable, render)
 }
 
-fun renderResolvedNullable(
+@JsExport
+@JsName("renderNullable")
+fun renderNullableAsync(
+    node: TypeNode?,
+    isNullable: Boolean,
+    context: Context,
+    render: Render<Node>,
+    options: Abortable = Abortable(),
+): Promise<String> =
+    options.asCoroutineScope().promise {
+        renderNullable(node, isNullable, context, render)
+    }
+
+suspend fun renderResolvedNullable(
     node: TypeNode?,
     isNullable: Boolean,
     render: Render<Node>,
@@ -82,7 +107,7 @@ fun renderResolvedNullable(
 fun createRender(context: Context, plugins: ReadonlyArray<Plugin>): Render<Node> {
     val typeScriptService = context.lookupService(typeScriptServiceKey)
 
-    fun render(node: Node, parentNode: Node?, parentIndex: Int): String {
+    suspend fun render(node: Node, parentNode: Node?, parentIndex: Int): String {
         for ((index, plugin) in plugins.withIndex()) {
             if (node == parentNode && index <= parentIndex) continue
 

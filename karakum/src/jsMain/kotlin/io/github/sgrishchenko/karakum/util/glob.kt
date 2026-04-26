@@ -1,19 +1,18 @@
 package io.github.sgrishchenko.karakum.util
 
 import js.array.JsArrays
-import js.array.ReadonlyArray
 import js.promise.await
 import node.fs.Dirent
 import node.fs.GlobOptionsWithFileTypes
 import node.path.path
 
 suspend fun glob(
-    patterns: ReadonlyArray<String>,
+    patterns: List<String>,
     cwd: String,
-    ignore: ReadonlyArray<String> = emptyArray()
-): ReadonlyArray<String> {
+    ignore: List<String> = emptyList()
+): List<String> {
     val fileNames = JsArrays.fromAsync(
-        node.fs.glob(patterns, GlobOptionsWithFileTypes(
+        node.fs.glob(patterns.toTypedArray(), GlobOptionsWithFileTypes(
             cwd = cwd,
             requiredWithFileTypes = true,
             exclude = { file: Dirent<String> ->
@@ -27,5 +26,4 @@ suspend fun glob(
     return fileNames
         .map { it.unsafeCast<Dirent<String>>() }
         .map { toPosix(path.resolve(it.parentPath, it.name)) }
-        .toTypedArray()
 }

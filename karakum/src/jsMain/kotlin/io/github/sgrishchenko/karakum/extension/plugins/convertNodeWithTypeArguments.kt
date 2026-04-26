@@ -6,7 +6,7 @@ import typescript.Node
 import typescript.NodeWithTypeArguments
 import typescript.asArray
 
-fun convertNodeWithTypeArguments(node: NodeWithTypeArguments, render: Render<Node>): String {
+suspend fun convertNodeWithTypeArguments(node: NodeWithTypeArguments, render: Render<Node>): String {
     val typeArguments = node.typeArguments?.asArray()
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }

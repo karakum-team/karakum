@@ -16,7 +16,7 @@ fun extractModuleName(
     sourceFileName: String,
     configuration: Configuration,
 ): String {
-    val inputRoots = configuration.inputRoots
+    val inputRoots = configuration.jsInputRoots
     val libraryName = prepareLibraryName(configuration.libraryName)
 
     val relativeFileName = generateRelativeFileName(inputRoots, sourceFileName)

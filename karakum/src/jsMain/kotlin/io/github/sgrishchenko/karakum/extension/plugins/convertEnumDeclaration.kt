@@ -38,7 +38,8 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
                 ?.getMembers(node, context)
                 ?: node.members.asArray()
             )
-        .joinToString(separator = "\n") { member -> "${render(member)}: $name" }
+        .map { member -> "${render(member)}: $name" }
+        .joinToString(separator = "\n")
 
     """
 sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {

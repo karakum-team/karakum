@@ -79,13 +79,13 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
 class InheritanceModifierPlugin(inheritanceModifiers: ReadonlyArray<InheritanceModifier>) : Plugin {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(inheritanceModifierServiceKey, this.inheritanceModifierService)
     }
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: Context, next: Render<Node>) = null
+    override suspend fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

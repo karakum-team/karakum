@@ -60,7 +60,8 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
                 ?.getMembers(node, context)
                 ?: node.members.asArray()
             )
-        .joinToString(separator = "\n") { render(it) }
+        .map { render(it) }
+        .joinToString(separator = "\n")
 
     val injectedMembers = (injections ?: emptyArray())
         .joinToString(separator = "\n")

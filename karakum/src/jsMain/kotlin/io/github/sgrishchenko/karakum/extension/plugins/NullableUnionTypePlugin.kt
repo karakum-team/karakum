@@ -128,9 +128,9 @@ fun flatUnionTypes(node: UnionTypeNode, context: Context): ReadonlyArray<TypeNod
 }
 
 class NullableUnionTypePlugin : Plugin {
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
@@ -165,7 +165,7 @@ class NullableUnionTypePlugin : Plugin {
         return null
     }
 
-    override fun setup(context: Context) = Unit
+    override suspend fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 }

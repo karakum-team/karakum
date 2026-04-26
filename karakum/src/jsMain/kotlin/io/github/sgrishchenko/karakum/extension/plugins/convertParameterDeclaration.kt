@@ -6,9 +6,13 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.*
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
 sealed external interface ParameterDeclarationStrategy {
     companion object
@@ -30,7 +34,7 @@ external interface ParameterDeclarationsConfiguration {
 
 @JsExport
 @JsPlainObject
-external interface ParameterDeclarationConfiguration {
+external interface ParameterDeclarationConfiguration : Abortable {
     val strategy: ParameterDeclarationStrategy
     val defaultValue: String?
     val inheritanceModifier: String?
@@ -59,8 +63,7 @@ val convertParameterDeclaration = createPlugin plugin@{ node, context, render ->
     ))
 }
 
-@JsExport
-fun convertParameterDeclarations(
+suspend fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
     context: Context,
     render: Render<Node>,
@@ -83,34 +86,37 @@ fun convertParameterDeclarations(
         val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
         val signatures = expandUnions(initialSignature, context)
 
-        return signatures.joinToString(separator = delimiter) { signature ->
-            val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+        return signatures
+            .map { signature ->
+                val inheritanceModifier =
+                    inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-            val parameters = signature
-                .filter { !isThisParameter(it.parameter) }
-                .map {
-                    convertParameterDeclarationWithFixedType(
-                        it.parameter, context, render, ParameterDeclarationConfiguration(
-                            strategy = strategy,
-                            defaultValue = defaultValue,
-                            inheritanceModifier = inheritanceModifier,
-                            type = it.type,
-                            nullable = it.nullable,
+                val parameters = signature
+                    .filter { !isThisParameter(it.parameter) }
+                    .map {
+                        convertParameterDeclarationWithFixedType(
+                            it.parameter, context, render, ParameterDeclarationConfiguration(
+                                strategy = strategy,
+                                defaultValue = defaultValue,
+                                inheritanceModifier = inheritanceModifier,
+                                type = it.type,
+                                nullable = it.nullable,
+                            )
                         )
-                    )
+                    }
+                    .filter { it.isNotEmpty() }
+                    .joinToString(separator = ", ")
+
+                val firstParameter = signature.getOrNull(0)?.parameter
+                val prefix = if (firstParameter != null && isThisParameter(firstParameter)) {
+                    "/* ${typeScriptService?.printNode(firstParameter)}, */ "
+                } else {
+                    ""
                 }
-                .filter { it.isNotEmpty() }
-                .joinToString(separator = ", ")
 
-            val firstParameter = signature.getOrNull(0)?.parameter
-            val prefix = if (firstParameter != null && isThisParameter(firstParameter)) {
-                "/* ${typeScriptService?.printNode(firstParameter)}, */ "
-            } else {
-                ""
+                template(prefix + parameters, signature)
             }
-
-            template(prefix + parameters, signature)
-        }
+            .joinToString(separator = delimiter)
     }
 
     if (strategy == ParameterDeclarationStrategy.lambda) {
@@ -139,8 +145,22 @@ fun convertParameterDeclarations(
     error("Unknown parameter declaration strategy: $strategy")
 }
 
+@JsPlainObject
+external interface ParameterDeclarationsOptions : ParameterDeclarationsConfiguration, Abortable
+
 @JsExport
-fun convertParameterDeclarationWithFixedType(
+@JsName("convertParameterDeclarations")
+fun convertParameterDeclarationsAsync(
+    node: SignatureDeclarationBase,
+    context: Context,
+    render: Render<Node>,
+    options: ParameterDeclarationsOptions,
+): Promise<String> =
+    options.asCoroutineScope().promise {
+        convertParameterDeclarations(node, context, render, options)
+    }
+
+suspend fun convertParameterDeclarationWithFixedType(
     node: ParameterDeclaration,
     context: Context,
     render: Render<Node>,
@@ -292,3 +312,18 @@ private fun expandUnions(
 
     return currentSignatures.toTypedArray()
 }
+
+@JsPlainObject
+external interface ParameterDeclarationOptions : ParameterDeclarationConfiguration
+
+@JsExport
+@JsName("convertParameterDeclarationWithFixedType")
+fun convertParameterDeclarationWithFixedTypeAsync(
+    node: ParameterDeclaration,
+    context: Context,
+    render: Render<Node>,
+    options: ParameterDeclarationOptions,
+): Promise<String> =
+    options.asCoroutineScope().promise {
+        convertParameterDeclarationWithFixedType(node, context, render, options)
+    }

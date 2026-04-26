@@ -44,13 +44,13 @@ class CommentPlugin : Plugin {
     private val coveredCommentRanges = mutableMapOf<SourceFile, MutableList<CommentRange>>()
     private val commentsService = CommentService()
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(commentServiceKey, this.commentsService)
     }
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val sourceFile = node.getSourceFileOrNull() ?: return null
 
         val leadingComments = (getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?: emptyArray())
@@ -87,5 +87,5 @@ class CommentPlugin : Plugin {
         commentRanges?.add(commentRange)
     }
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

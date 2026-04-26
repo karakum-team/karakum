@@ -6,7 +6,7 @@ import typescript.Node
 import typescript.SyntaxKind
 import typescript.isMappedTypeNode
 
-fun convertMappedTypeBody(node: MappedTypeNode, context: Context, render: Render<Node>): String {
+suspend fun convertMappedTypeBody(node: MappedTypeNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
@@ -45,7 +45,7 @@ ${ifPresent(setterInheritanceModifier) { "$it "}}operator fun <${typeParameter}>
     return "${getter}${ifPresent(setter) { "\n\n${it}" }}${ifPresent(injectedMembers) { "\n${it}" }}"
 }
 
-fun convertMappedType (
+suspend fun convertMappedType (
     node: MappedTypeNode,
     name: String,
     typeParameters: String?,

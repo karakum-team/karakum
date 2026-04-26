@@ -1,28 +1,28 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
-import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.extension.*
 import typescript.Node
 import typescript.TypeLiteralNode
 import typescript.asArray
 import typescript.isTypeLiteralNode
 
-fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, render: Render<Node>): String {
+suspend fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
     val injectionService = context.lookupService(injectionServiceKey)
     val injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
-    val members = node.members.asArray().joinToString(separator = "\n") { render(it) }
+    val members = node.members.asArray()
+        .map { render(it) }
+        .joinToString(separator = "\n")
 
     val injectedMembers = (injections ?: emptyArray()).joinToString(separator = "\n")
 
     return "${members}${ifPresent(injectedMembers) { "\n${it}" }}"
 }
 
-fun convertTypeLiteral(
+suspend fun convertTypeLiteral(
     node: TypeLiteralNode,
     name: String,
     typeParameters: String?,

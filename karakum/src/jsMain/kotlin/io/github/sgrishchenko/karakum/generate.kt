@@ -18,12 +18,15 @@ import js.coroutines.promise
 import js.objects.Object
 import js.promise.Promise
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.js.JsPlainObject
 import node.fs.*
 import node.path.path
 import typescript.CompilerOptions
 import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 import kotlin.coroutines.EmptyCoroutineContext
 
 private fun checkCasing(fileNames: ReadonlyArray<String>) {
@@ -50,11 +53,11 @@ private fun checkCasing(fileNames: ReadonlyArray<String>) {
     }
 }
 
-suspend fun generate(partialConfiguration: PartialConfiguration) {
+suspend fun generate(partialConfiguration: MutableConfiguration) {
     val configuration = defaultizeConfiguration(partialConfiguration)
 
     val inputRoots = configuration.inputRoots
-    val inputFileNames = configuration.inputFileNames
+    val inputFileNames = configuration.jsInputFileNames
     val input = configuration.input
     val output = configuration.output
     val outputFileName = configuration.outputFileName
@@ -62,11 +65,11 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
     val ignoreOutput = configuration.ignoreOutput
     val plugins = configuration.plugins
     val injections = configuration.injections
-    val annotations = configuration.annotations
-    val nameResolvers = configuration.nameResolvers
-    val inheritanceModifiers = configuration.inheritanceModifiers
-    val mutabilityModifiers = configuration.mutabilityModifiers
-    val varianceModifiers = configuration.varianceModifiers
+    val annotations = configuration.jsAnnotations
+    val nameResolvers = configuration.jsNameResolvers
+    val inheritanceModifiers = configuration.jsInheritanceModifiers
+    val mutabilityModifiers = configuration.jsMutabilityModifiers
+    val varianceModifiers = configuration.jsVarianceModifiers
     val compilerOptions = configuration.compilerOptions
     val inputCwd = configuration.inputCwd
 
@@ -202,7 +205,9 @@ suspend fun generate(partialConfiguration: PartialConfiguration) {
 
         val targetFileName = path.resolve(output, currentOutputFileName)
 
-        val body = item.nodes.joinToString(separator = "\n\n") { render(it) }
+        val body = item.nodes
+            .map { render(it) }
+            .joinToString(separator = "\n\n")
 
         if (ignoreOutput.all { pattern -> !path.matchesGlob(targetFileName, pattern) }) {
             targetFiles += TargetFile(
@@ -277,8 +282,11 @@ suspend fun generate(
     generate(buildConfiguration(partialConfiguration, block))
 }
 
+@JsPlainObject
+external interface GenerateOptions: PartialConfiguration, Abortable
+
 @JsExport
 @JsName("generate")
-fun generateAsync(partialConfiguration: PartialConfiguration): Promise<Unit> =
-    CoroutineScope(EmptyCoroutineContext)
-        .promise { generate(partialConfiguration) }
+fun generateAsync(options: GenerateOptions): Promise<Unit> =
+    options.asCoroutineScope()
+        .promise { generate(options) {} }

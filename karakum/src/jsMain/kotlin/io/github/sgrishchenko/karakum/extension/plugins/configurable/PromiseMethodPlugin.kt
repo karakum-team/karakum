@@ -2,96 +2,48 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
+import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
+import js.promise.Promise
+import js.promise.await
 import kotlinx.js.JsPlainObject
 import typescript.*
+import web.abort.Abortable
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseType as defaultIsPromiseType
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.renderPromisePayload as defaultRenderPayload
 
-@JsExport
-@JsPlainObject
-external interface PromiseMethodPluginConfiguration {
-    val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node, Context) -> Boolean)?
-    val exclude: ((Node, SignatureContext) -> Boolean)?
-    val renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)?
-}
-
-@JsExport
-class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plugin {
-    private lateinit var isPromiseTypeMatchers: List<Matcher<Context>>
-    private lateinit var ignoreMatchers: List<Matcher<Context>>
-    private lateinit var excludeMatchers: List<Matcher<SignatureContext>>
-    private val renderPayload = configuration.renderPayload ?: { node, _, render ->
-        val typeArguments = requireNotNull(node.typeArguments)
-        render(typeArguments.asArray().first())
-    }
-
-    @JsExport.Ignore
+class PromiseMethodPlugin(
+    private val isPromiseType: List<Matcher<Context>> = match(::defaultIsPromiseType),
+    private val ignore: List<Matcher<Context>> = emptyList(),
+    private val exclude: List<Matcher<SignatureContext>> = emptyList(),
+    private val renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
+) : Plugin {
     constructor(
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
+        renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
     ) : this(
-        PromiseMethodPluginConfiguration(
-            renderPayload = renderPayload
-        )
+        isPromiseType = match(::defaultIsPromiseType),
+        ignore = emptyList(),
+        exclude = emptyList(),
+        renderPayload = renderPayload
     )
 
-    @JsExport.Ignore
     constructor(
-        isPromiseType: ((Node, Context) -> Boolean)? = null,
-        ignore: ((Node, Context) -> Boolean)? = null,
-        exclude: ((Node, SignatureContext) -> Boolean)? = null,
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
+        isPromiseType: (Node, Context) -> Boolean = ::defaultIsPromiseType,
+        ignore: (Node, Context) -> Boolean = { _, _ -> false },
+        exclude: (Node, SignatureContext) -> Boolean = { _, _ -> false },
+        renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
     ) : this(
-        PromiseMethodPluginConfiguration(
-            isPromiseType,
-            ignore,
-            exclude,
-            renderPayload,
-        )
+        isPromiseType = match(isPromiseType),
+        ignore = match(ignore),
+        exclude = match(exclude),
+        renderPayload = renderPayload,
     )
 
-    @JsExport.Ignore
-    constructor(
-        isPromiseType: List<Matcher<Context>>? = null,
-        ignore: List<Matcher<Context>>? = null,
-        exclude: List<Matcher<SignatureContext>>? = null,
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
-    ) : this(
-        PromiseMethodPluginConfiguration(
-            renderPayload = renderPayload,
-        )
-    ) {
-        isPromiseType?.let { isPromiseTypeMatchers = it }
-        ignore?.let { ignoreMatchers = it }
-        exclude?.let { excludeMatchers = it }
-    }
+    override suspend fun setup(context: Context) = Unit
 
-    init {
-        if (!::isPromiseTypeMatchers.isInitialized) {
-            isPromiseTypeMatchers = match {
-                configuration.isPromiseType?.let { match(it) }
-                    ?: match(::defaultIsPromiseType)
-            }
-        }
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-        if (!::ignoreMatchers.isInitialized) {
-            ignoreMatchers = match {
-                configuration.ignore?.let { match(it) }
-            }
-        }
-
-        if (!::excludeMatchers.isInitialized) {
-            excludeMatchers = match {
-                configuration.exclude?.let { match(it) }
-            }
-        }
-    }
-
-    override fun setup(context: Context) = Unit
-
-    override fun traverse(node: Node, context: Context) = Unit
-
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (!isMethodSignature(node) && !isMethodDeclaration(node)) return null
 
         if (isMethodSignature(node) && node.questionToken != null) return null
@@ -101,10 +53,10 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
         node as SignatureDeclarationBase
 
         val type = node.type ?: return null
-        if (!isPromiseTypeMatchers.matches(type, context)) return null
+        if (!isPromiseType.matches(type, context)) return null
         require(isTypeReferenceNode(type))
 
-        if (ignoreMatchers.matches(node, context)) return null
+        if (ignore.matches(node, context)) return null
 
         val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
@@ -133,7 +85,7 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
                         override val signature = signature
                     }
 
-                    if (excludeMatchers.matches(node, signatureContext)) return@template ""
+                    if (exclude.matches(node, signatureContext)) return@template ""
 
                     val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
@@ -154,7 +106,7 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
                         override val signature = signature
                     }
 
-                    if (excludeMatchers.matches(node, signatureContext)) return@template ""
+                    if (exclude.matches(node, signatureContext)) return@template ""
 
                     val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
@@ -169,5 +121,28 @@ class PromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration) : Plu
         return "${promiseDeclaration}\n\n${suspendDeclaration}"
     }
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }
+
+@JsExport
+@JsPlainObject
+external interface PromiseMethodPluginConfiguration {
+    val isPromiseType: ((Node, Context) -> Boolean)?
+    val ignore: ((Node, Context) -> Boolean)?
+    val exclude: ((Node, SignatureContext) -> Boolean)?
+    val renderPayload: ((TypeReferenceNode, Context, Render<Node>, Abortable) -> Promise<String>)?
+}
+
+@JsExport
+fun createPromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration): JsPlugin =
+    PromiseMethodPlugin(
+        isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType,
+        ignore = configuration.ignore ?: { _, _ -> false },
+        exclude = configuration.exclude ?: { _, _ -> false },
+        renderPayload = { node, context, render ->
+            configuration.renderPayload
+                ?.invoke(node, context, render, currentAbortable())
+                ?.await()
+                ?: defaultRenderPayload(node, context, render)
+        },
+    ).toJsPlugin()

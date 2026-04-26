@@ -60,13 +60,13 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
 class TypeScriptPlugin(program: Program) : Plugin {
     private val typeScriptService = TypeScriptService(program)
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: Context, next: Render<Node>) = null
+    override suspend fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(typeScriptServiceKey, this.typeScriptService)
     }
 }

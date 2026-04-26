@@ -30,13 +30,13 @@ class ImportInfoService @JsExport.Ignore constructor(
 class ImportInfoPlugin(program: Program, importInfo: ImportInfo) : Plugin {
     private val importInfoService = ImportInfoService(program, importInfo)
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(importInfoServiceKey, importInfoService)
     }
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (isImportDeclaration(node)) {
             val checkCoverageService = context.lookupService(checkCoverageServiceKey)
             checkCoverageService?.deepCover(node)
@@ -47,5 +47,5 @@ class ImportInfoPlugin(program: Program, importInfo: ImportInfo) : Plugin {
         return null
     }
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }

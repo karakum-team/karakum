@@ -7,10 +7,8 @@ import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.array.component1
 import js.array.component2
-import js.array.tupleOf
 import js.objects.Object
 import js.objects.ReadonlyRecord
-import js.objects.recordOf
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.Node
@@ -26,83 +24,43 @@ inline val NumberPluginStrategy.Companion.strict: NumberPluginStrategy
 inline val NumberPluginStrategy.Companion.loose: NumberPluginStrategy
     get() = unsafeCast("loose")
 
-@JsExport
-@JsPlainObject
-external interface NumberPluginConfiguration {
-    val strategy: NumberPluginStrategy?
-    val defaultNumberType: String?
-    val matchers: ReadonlyRecord<String, (Node, Context) -> Boolean>?
-}
-
-@JsExport
-class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
-    private val strategy = configuration.strategy ?: NumberPluginStrategy.loose
-    private val defaultNumberType = configuration.defaultNumberType ?: "Double"
-    private lateinit var matchers: List<Pair<String, List<Matcher<Context>>>>
+class NumberPlugin(
+    private val strategy: NumberPluginStrategy = NumberPluginStrategy.loose,
+    private val defaultNumberType: String = "Double",
+    vararg matchers: Pair<String, List<Matcher<Context>>>,
+) : Plugin {
+    private val matchers = matchers.toList()
 
     private val uncoveredNodes = mutableSetOf<Node>()
 
-    @JsExport.Ignore
     constructor(
-        strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
-        defaultNumberType: String? = null,
+        strategy: NumberPluginStrategy = NumberPluginStrategy.loose,
+        defaultNumberType: String = "Double",
     ) : this(
-        NumberPluginConfiguration(
-            strategy,
-            defaultNumberType,
-        )
+        strategy,
+        defaultNumberType,
+        matchers = emptyArray<Pair<String, List<Matcher<Context>>>>(),
     )
 
-    @JsExport.Ignore
     constructor(
-        strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
-        defaultNumberType: String? = null,
+        strategy: NumberPluginStrategy = NumberPluginStrategy.loose,
+        defaultNumberType: String = "Double",
         vararg matchers: Pair<String, (Node, Context) -> Boolean>,
     ) : this(
-        NumberPluginConfiguration(
-            strategy,
-            defaultNumberType,
-            Object.fromEntries(
-                matchers
-                    .map { tupleOf(it.first, it.second) }
-                    .toTypedArray()
-            ),
-        )
+        strategy,
+        defaultNumberType,
+        matchers = matchers
+            .map { (numberType, predicate) ->
+                numberType to match(predicate)
+            }
+            .toTypedArray()
     )
 
-    @JsExport.Ignore
-    constructor(
-        strategy: NumberPluginStrategy? = NumberPluginStrategy.loose,
-        defaultNumberType: String? = null,
-        vararg matchers: Pair<String, List<Matcher<Context>>>,
-    ) : this(
-        NumberPluginConfiguration(
-            strategy,
-            defaultNumberType,
-            recordOf(),
-        )
-    ) {
-        this.matchers = matchers.toList()
-    }
+    override suspend fun setup(context: Context) = Unit
 
-    init {
-        require(strategy == NumberPluginStrategy.loose || configuration.defaultNumberType == null) {
-            "defaultNumberType can't be specified for strict strategy"
-        }
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-        if (!::matchers.isInitialized) {
-            matchers = Object.entries(configuration.matchers ?: recordOf())
-                .map { (numberType, predicate) ->
-                    numberType to match { match(predicate) }
-                }
-        }
-    }
-
-    override fun setup(context: Context) = Unit
-
-    override fun traverse(node: Node, context: Context) = Unit
-
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (node.kind != SyntaxKind.NumberKeyword) return null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
@@ -122,7 +80,7 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
         return null
     }
 
-    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         for (uncoveredNode in uncoveredNodes) {
@@ -149,3 +107,23 @@ class NumberPlugin(configuration: NumberPluginConfiguration) : Plugin {
         return emptyArray()
     }
 }
+
+@JsExport
+@JsPlainObject
+external interface NumberPluginConfiguration {
+    val strategy: NumberPluginStrategy?
+    val defaultNumberType: String?
+    val matchers: ReadonlyRecord<String, (Node, Context) -> Boolean>?
+}
+
+@JsExport
+fun createNumberPlugin(configuration: NumberPluginConfiguration): JsPlugin =
+    NumberPlugin(
+        strategy = configuration.strategy ?: NumberPluginStrategy.loose,
+        defaultNumberType = configuration.defaultNumberType ?: "Double",
+        matchers = configuration.matchers
+            ?.let { Object.entries(it) }
+            ?.map { (key, value) -> key to value }
+            ?.toTypedArray()
+            ?: emptyArray(),
+    ).toJsPlugin()

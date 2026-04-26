@@ -2,98 +2,57 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
+import io.github.sgrishchenko.karakum.util.currentAbortable
+import js.promise.Promise
+import js.promise.await
 import kotlinx.js.JsPlainObject
-import typescript.Node
-import typescript.TypeReferenceNode
-import typescript.asArray
-import typescript.isTypeReferenceNode
-import typescript.isUnionTypeNode
+import typescript.*
+import web.abort.Abortable
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseType as defaultIsPromiseType
+import io.github.sgrishchenko.karakum.extension.plugins.configurable.renderPromisePayload as defaultRenderPayload
 
-@JsExport
-@JsPlainObject
-external interface PromiseResultPluginConfiguration {
-    val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node, Context) -> Boolean)?
-    val renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)?
-}
+class PromiseResultPlugin(
+    private val isPromiseType: List<Matcher<Context>> = match(::defaultIsPromiseType),
+    private val ignore: List<Matcher<Context>> = emptyList(),
+    private val renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
+) : Plugin {
 
-@JsExport
-class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plugin {
-    private lateinit var isPromiseTypeMatchers: List<Matcher<Context>>
-    private lateinit var ignoreMatchers: List<Matcher<Context>>
-    private val renderPayload = configuration.renderPayload ?: { node, _, render ->
-        val typeArguments = requireNotNull(node.typeArguments)
-        render(typeArguments.asArray().first())
-    }
-
-    @JsExport.Ignore
     constructor(
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
-    ): this(
-        PromiseResultPluginConfiguration(renderPayload = renderPayload)
+        renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
+    ) : this(
+        isPromiseType = match(::defaultIsPromiseType),
+        ignore = emptyList(),
+        renderPayload = renderPayload
     )
 
-    @JsExport.Ignore
     constructor(
-        isPromiseType: ((Node, Context) -> Boolean)? = null,
-        ignore: ((Node, Context) -> Boolean)? = null,
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
-    ): this(
-        PromiseResultPluginConfiguration(
-            isPromiseType,
-            ignore,
-            renderPayload
-        )
+        isPromiseType: (Node, Context) -> Boolean = ::defaultIsPromiseType,
+        ignore: (Node, Context) -> Boolean = { _, _ -> false },
+        renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
+    ) : this(
+        isPromiseType = match(isPromiseType),
+        ignore = match(ignore),
+        renderPayload = renderPayload,
     )
 
-    @JsExport.Ignore
-    constructor(
-        isPromiseType: List<Matcher<Context>>? = null,
-        ignore: List<Matcher<Context>>? = null,
-        renderPayload: ((TypeReferenceNode, Context, Render<Node>) -> String)? = null,
-    ): this(
-        PromiseResultPluginConfiguration(
-            renderPayload = renderPayload
-        )
-    ) {
-        isPromiseType?.let { isPromiseTypeMatchers = it }
-        ignore?.let { ignoreMatchers = ignore }
-    }
+    override suspend fun setup(context: Context) = Unit
 
-    init {
-        if (!::isPromiseTypeMatchers.isInitialized) {
-            isPromiseTypeMatchers = match {
-                configuration.isPromiseType?.let { match(it) }
-                    ?: match(::defaultIsPromiseType)
-            }
-        }
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-        if (!::ignoreMatchers.isInitialized) {
-            ignoreMatchers = match {
-                configuration.ignore?.let { match(it) }
-            }
-        }
-    }
-
-    override fun setup(context: Context) = Unit
-
-    override fun traverse(node: Node, context: Context) = Unit
-
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (!isUnionTypeNode(node)) return null
 
         if (node.types.asArray().size != 2) return null
-        if (node.types.asArray().none { isPromiseTypeMatchers.matches(it, context) }) return null
+        if (node.types.asArray().none { isPromiseType.matches(it, context) }) return null
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         val parent = typeScriptService?.getParent(node)
 
-        if (parent != null && ignoreMatchers.matches(parent, context)) return null
+        if (parent != null && ignore.matches(parent, context)) return null
 
-        val promiseType = node.types.asArray().first { isPromiseTypeMatchers.matches(it, context) }
-        val otherType = node.types.asArray().first { !isPromiseTypeMatchers.matches(it, context) }
+        val promiseType = node.types.asArray().first { isPromiseType.matches(it, context) }
+        val otherType = node.types.asArray().first { !isPromiseType.matches(it, context) }
 
         require(isTypeReferenceNode(promiseType))
 
@@ -105,5 +64,26 @@ class PromiseResultPlugin(configuration: PromiseResultPluginConfiguration) : Plu
         return "js.promise.PromiseResult<${promisePayload}>"
     }
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 }
+
+@JsExport
+@JsPlainObject
+external interface PromiseResultPluginConfiguration {
+    val isPromiseType: ((Node, Context) -> Boolean)?
+    val ignore: ((Node, Context) -> Boolean)?
+    val renderPayload: ((TypeReferenceNode, Context, Render<Node>, Abortable) -> Promise<String>)?
+}
+
+@JsExport
+fun createPromiseResultPlugin(configuration: PromiseResultPluginConfiguration): JsPlugin =
+    PromiseResultPlugin(
+        isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType,
+        ignore = configuration.ignore ?: { _, _ -> false },
+        renderPayload = { node, context, render ->
+            configuration.renderPayload
+                ?.invoke(node, context, render, currentAbortable())
+                ?.await()
+                ?: defaultRenderPayload(node, context, render)
+        },
+    ).toJsPlugin()

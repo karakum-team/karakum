@@ -21,3 +21,5 @@ inline fun <T> Many<T>.toArray(): ReadonlyArray<T> {
     @Suppress("UNCHECKED_CAST")
     return result as ReadonlyArray<T>
 }
+
+inline fun <T> Many<T>.toList() = toArray().toList()

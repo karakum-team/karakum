@@ -41,15 +41,15 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Re
 class AnnotationPlugin(annotations: ReadonlyArray<Annotation>) : Plugin {
     private val annotationService = AnnotationService(annotations)
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         context.registerService(annotationServiceKey, annotationService)
     }
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val annotations = annotationService.resolveAnnotations(node, context)
 
         if (annotations.isNotEmpty()) {

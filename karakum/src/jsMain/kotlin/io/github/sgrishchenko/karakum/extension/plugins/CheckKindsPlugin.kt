@@ -89,11 +89,11 @@ private val supportedKinds = setOf(
 )
 
 class CheckKindsPlugin : Plugin {
-    override fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
+    override suspend fun generate(context: Context, render: Render<Node>) = emptyArray<GeneratedFile>()
 
-    override fun render(node: Node, context: Context, next: Render<Node>) = null
+    override suspend fun render(node: Node, context: Context, next: Render<Node>) = null
 
-    override fun traverse(node: Node, context: Context){
+    override suspend fun traverse(node: Node, context: Context){
         val configurationService = context.lookupService(configurationServiceKey)
 
         if (
@@ -105,5 +105,5 @@ class CheckKindsPlugin : Plugin {
         }
     }
 
-    override fun setup(context: Context) = Unit
+    override suspend fun setup(context: Context) = Unit
 }

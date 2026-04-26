@@ -2,14 +2,25 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.DerivedFile
+import io.github.sgrishchenko.karakum.extension.GeneratedFile
+import io.github.sgrishchenko.karakum.extension.JsPlugin
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
+import io.github.sgrishchenko.karakum.extension.toJsPlugin
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
+import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
+import js.core.Void
+import js.coroutines.promise
+import js.promise.Promise
+import js.promise.await
 import kotlinx.js.JsPlainObject
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
+import web.function.async
 
 @JsExport
 external interface AnonymousDeclarationContext : Context {
@@ -41,22 +52,23 @@ inline fun AnonymousDeclaration(
         reference = reference,
     ).unsafeCast<AnonymousDeclaration>()
 
-typealias AnonymousDeclarationRender = (
+typealias AnonymousDeclarationRender = suspend (
     node: Node,
     context: AnonymousDeclarationContext,
     render: Render<Node>,
 ) -> AnonymousDeclaration?
 
 class AnonymousDeclarationPlugin(
-    private val anonymousDeclarationRender: AnonymousDeclarationRender
+    render: AnonymousDeclarationRender,
 ) : Plugin {
+    private val anonymousDeclarationRender = render
     private val generated = mutableMapOf<Node, DerivedDeclaration>()
 
-    override fun setup(context: Context) = Unit
+    override suspend fun setup(context: Context) = Unit
 
-    override fun traverse(node: Node, context: Context) = Unit
+    override suspend fun traverse(node: Node, context: Context) = Unit
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val nameResolverService = context.requireService(nameResolverServiceKey)
         val typeScriptService = context.requireService(typeScriptServiceKey)
         val annotationService = context.requireService(annotationServiceKey)
@@ -94,14 +106,27 @@ class AnonymousDeclarationPlugin(
         return reference
     }
 
-    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<DerivedFile> {
+    override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<DerivedFile> {
         return generateDerivedDeclarations(generated.values.toTypedArray(), context)
     }
 }
 
-@JsExport
 fun createAnonymousDeclarationPlugin(
     render: AnonymousDeclarationRender,
 ): Plugin {
     return AnonymousDeclarationPlugin(render)
 }
+
+@JsExport
+@JsName("createAnonymousDeclarationPlugin")
+fun createAnonymousDeclarationPluginAsync(
+    render: (
+        node: Node,
+        context: AnonymousDeclarationContext,
+        render: Render<Node>,
+        options: Abortable,
+    ) -> Promise<AnonymousDeclaration?>,
+): JsPlugin =
+    AnonymousDeclarationPlugin { node, context, next ->
+        render(node, context, next, currentAbortable()).await()
+    }.toJsPlugin()

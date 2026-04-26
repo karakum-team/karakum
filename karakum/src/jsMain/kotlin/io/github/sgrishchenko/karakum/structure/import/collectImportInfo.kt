@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.util.recordOrNull
 import io.github.sgrishchenko.karakum.util.singleOrNull
 import io.github.sgrishchenko.karakum.util.traverse
+import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.array.component1
 import js.array.component2
@@ -42,7 +43,7 @@ fun collectImportInfo(
     val declarations = mutableSetOf<Declaration>()
 
     sourceFiles.forEach { sourceFile ->
-        traverse(sourceFile) { node ->
+        traverseSync(sourceFile) { node ->
             if (isSourceFile(node)) declarations += node
             if (isModuleDeclaration(node)) declarations += node
 
@@ -50,8 +51,8 @@ fun collectImportInfo(
                 val moduleSpecifier = node.moduleSpecifier
                 val importClause = node.importClause
 
-                if (!isStringLiteral(moduleSpecifier)) return@traverse
-                if (importClause == null) return@traverse
+                if (!isStringLiteral(moduleSpecifier)) return@traverseSync
+                if (importClause == null) return@traverseSync
 
                 val parent = node.parent
 
@@ -60,7 +61,7 @@ fun collectImportInfo(
                 } else if (isModuleBlock(parent)) {
                     parent.parent
                 } else {
-                    return@traverse
+                    return@traverseSync
                 }
 
                 val moduleName = moduleSpecifier.text
@@ -98,7 +99,7 @@ fun collectImportInfo(
 
                 val unhandledImportNames = Object.keys(importNames).toMutableSet()
 
-                for ((moduleNamePattern, packageInfo) in Object.entries(importMapper)) {
+                for ((moduleNamePattern, packageInfo) in importMapper) {
                     val moduleNameRegexp = moduleNamePattern.toRegex()
 
                     if (moduleNameRegexp.containsMatchIn(moduleName)) {

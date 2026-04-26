@@ -40,7 +40,7 @@ fun createSourceFileInfoItem(
     imports: ReadonlyArray<String>,
     configuration: Configuration,
 ): SourceFileInfoItem {
-    val inputRoots = configuration.inputRoots
+    val inputRoots = configuration.jsInputRoots
     val libraryName = prepareLibraryName(configuration.libraryName)
 
     val dirName = extractDirName(inputRoots, sourceFileName)

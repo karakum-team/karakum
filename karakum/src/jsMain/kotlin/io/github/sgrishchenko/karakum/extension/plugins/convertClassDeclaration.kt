@@ -123,11 +123,13 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
 
     val members = (constructors + otherMembers)
         .filter { member -> extractModifiers(member).all { it.kind != SyntaxKind.StaticKeyword } }
-        .joinToString(separator = "\n") { render(it) }
+        .map { render(it) }
+        .joinToString(separator = "\n")
 
     val staticMembers = otherMembers
         .filter { member -> extractModifiers(member).any { it.kind == SyntaxKind.StaticKeyword} }
-        .joinToString(separator = "\n") { render(it) }
+        .map { render(it) }
+        .joinToString(separator = "\n")
 
     val injectedMembers = (injections ?: emptyArray())
         .joinToString(separator = "\n")

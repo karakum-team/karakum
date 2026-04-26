@@ -86,7 +86,6 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     }
 }
 
-@JsExport
 class UnionInjection : Injection {
     private var unionService: UnionService? = null
 
@@ -136,12 +135,12 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(ren
         null
     }
 
-    override fun setup(context: Context) {
+    override suspend fun setup(context: Context) {
         unionService = UnionService(context)
         context.registerService(unionServiceKey, requireNotNull(unionService))
     }
 
-    override fun traverse(node: Node, context: Context) {
+    override suspend fun traverse(node: Node, context: Context) {
         if (
             isUnionTypeNode(node)
             && node.types.asArray().all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
@@ -157,7 +156,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(ren
         }
     }
 
-    override fun render(node: Node, context: Context, next: Render<Node>): String? {
+    override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val anonymousUnionDeclaration = anonymousUnionDeclarationPlugin.render(node, context, next)
         if (anonymousUnionDeclaration != null) return anonymousUnionDeclaration
 
@@ -245,7 +244,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typ
         return null
     }
 
-    override fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>? {
+    override suspend fun inject(node: Node, context: InjectionContext, render: Render<Node>): ReadonlyArray<String>? {
         if (context.type == InjectionType.HERITAGE_CLAUSE) {
             if (isClassDeclaration(node)) {
                 val parentNames = unionService?.getParents(node) ?: emptyArray()
@@ -292,7 +291,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typ
         return null
     }
 
-    override fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
+    override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
         for ((symbol, parentNames) in unionService?.uncoveredUnionParents ?: JsMap()) {
@@ -313,3 +312,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typ
         return anonymousUnionDeclarationPlugin.generate(context, render)
     }
 }
+
+@JsExport
+fun createUnionInjection() =
+    UnionInjection().toJsInjection()

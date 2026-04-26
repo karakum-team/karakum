@@ -1,9 +1,13 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import io.github.sgrishchenko.karakum.util.traverse
+import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.*
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.*
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
 typealias TypeParameterExtractionResult = ReadonlyArray<Tuple2<Node, Declaration>>
 
@@ -18,7 +22,7 @@ fun extractTypeParameters(
 
     val typeChecker = typeScriptService?.program?.getTypeChecker()
 
-    traverse(node) { currentNode ->
+    traverseSync(node) { currentNode ->
         if (isIdentifier(currentNode)) {
             val symbol = typeChecker?.getSymbolAtLocation(currentNode)
             val typeParameterDeclarations = (symbol?.declarations ?: emptyArray())
@@ -49,8 +53,8 @@ fun extractTypeParameters(
     return result.toTypedArray()
 }
 
-@JsExport
-fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node>): String {
+
+suspend fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result
         .map { (_, declaration) -> render(declaration) }
         .filter { it.isNotEmpty() }
@@ -58,9 +62,30 @@ fun renderDeclaration(result: TypeParameterExtractionResult, render: Render<Node
 }
 
 @JsExport
-fun renderReference(result: TypeParameterExtractionResult, render: Render<Node>): String {
+@JsName("renderDeclaration")
+fun renderDeclarationAsync(
+    result: TypeParameterExtractionResult,
+    render: Render<Node>,
+    options: Abortable = Abortable(),
+): Promise<String> =
+    options.asCoroutineScope().promise {
+        renderDeclaration(result, render)
+    }
+
+suspend fun renderReference(result: TypeParameterExtractionResult, render: Render<Node>): String {
     return result
         .map { (node) -> render(node) }
         .filter { it.isNotEmpty() }
         .joinToString(separator = ", ")
 }
+
+@JsExport
+@JsName("renderReference")
+fun renderReferenceAsync(
+    result: TypeParameterExtractionResult,
+    render: Render<Node>,
+    options: Abortable = Abortable(),
+): Promise<String> =
+    options.asCoroutineScope().promise {
+        renderReference(result, render)
+    }
