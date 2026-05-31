@@ -120,12 +120,11 @@ class TypeAliasDeclarationPlugin : Plugin {
                 val returnType = next(typeNode.type)
 
                 val type = convertParameterDeclarations(
-                    typeNode, context, next, ParameterDeclarationsConfiguration(
-                        strategy = ParameterDeclarationStrategy.lambda,
-                        template = { parameters, _ ->
-                            "(${parameters}) -> $returnType"
-                        }
-                    ))
+                    typeNode, context, next,
+                    ParameterDeclarationStrategy.lambda,
+                ) { parameters, _ ->
+                    "(${parameters}) -> $returnType"
+                }
 
                 return "typealias ${name}${ifPresent(mergedTypeParameters) { "<${it}>"}} = $type"
             }

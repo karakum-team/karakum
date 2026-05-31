@@ -37,10 +37,10 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
 
     val returnType = node.type?.let { render(it) }
 
-    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-        strategy = ParameterDeclarationStrategy.function,
-        template = { parameters, _ ->
-            "${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> "}}${name}(${parameters})${ifPresent(returnType) { ": $it"}}"
-        }
-    ))
+    convertParameterDeclarations(
+        node, context, render,
+        ParameterDeclarationStrategy.function,
+    ) { parameters, _ ->
+        "${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> "}}${name}(${parameters})${ifPresent(returnType) { ": $it"}}"
+    }
 }

@@ -22,10 +22,10 @@ val convertFunctionType = createPlugin plugin@{ node, context, render ->
         return@plugin "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
     }
 
-    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-        strategy = ParameterDeclarationStrategy.lambda,
-        template = { parameters, _ ->
-            "(${parameters}) -> $returnType"
-        },
-    ))
+    convertParameterDeclarations(
+        node, context, render,
+        ParameterDeclarationStrategy.lambda,
+    ) { parameters, _ ->
+        "(${parameters}) -> $returnType"
+    }
 }

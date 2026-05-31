@@ -27,30 +27,32 @@ val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
     val returnType = node.type?.let{ render(it) }
 
     if (node.questionToken != null) {
-        return@plugin convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-            strategy = ParameterDeclarationStrategy.lambda,
-            template = { parameters, signature ->
-                val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+        return@plugin convertParameterDeclarations(
+            node, context, render,
+            ParameterDeclarationStrategy.lambda,
+        ) { parameters, signature ->
+            val inheritanceModifier =
+                inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-                val functionType = if (node.typeParameters != null) {
-                    "Function<Any?> /* ${typeScriptService?.printNode(node)} */"
-                } else if (node.parameters.asArray().any { parameter -> parameter.dotDotDotToken != null }) {
-                    "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
-                } else {
-                    "(${parameters}) -> ${returnType ?: "Any?"}"
-                }
-
-                "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}val ${name}: (${functionType})?"
+            val functionType = if (node.typeParameters != null) {
+                "Function<Any?> /* ${typeScriptService?.printNode(node)} */"
+            } else if (node.parameters.asArray().any { parameter -> parameter.dotDotDotToken != null }) {
+                "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
+            } else {
+                "(${parameters}) -> ${returnType ?: "Any?"}"
             }
-        ))
+
+            "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}val ${name}: (${functionType})?"
+        }
     }
 
-    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-        strategy = ParameterDeclarationStrategy.function,
-        template = { parameters, signature ->
-            val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+    convertParameterDeclarations(
+        node, context, render,
+        ParameterDeclarationStrategy.function,
+    ) { parameters, signature ->
+        val inheritanceModifier =
+            inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-            "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnType) { ": $it" }}"
-        }
-    ))
+        "${ifPresent(annotation) { "${it}\n" }}${ifPresent(inheritanceModifier) { "$it "}}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnType) { ": $it" }}"
+    }
 }

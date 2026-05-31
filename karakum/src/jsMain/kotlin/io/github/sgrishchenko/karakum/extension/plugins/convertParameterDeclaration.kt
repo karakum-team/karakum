@@ -4,10 +4,12 @@ import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.renderNullable
+import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.promise.Promise
+import js.promise.await
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.*
@@ -29,7 +31,7 @@ inline val ParameterDeclarationStrategy.Companion.lambda: ParameterDeclarationSt
 external interface ParameterDeclarationsConfiguration {
     val strategy: ParameterDeclarationStrategy
     val defaultValue: String?
-    val template: (parameters: String, signature: Signature) -> String
+    val template: (parameters: String, signature: Signature, options: Abortable) -> Promise<String>
 }
 
 @JsExport
@@ -67,11 +69,10 @@ suspend fun convertParameterDeclarations(
     node: SignatureDeclarationBase,
     context: Context,
     render: Render<Node>,
-    configuration: ParameterDeclarationsConfiguration,
+    strategy: ParameterDeclarationStrategy,
+    defaultValue: String? = null,
+    template: suspend (parameters: String, signature: Signature) -> String,
 ): String {
-    val strategy = configuration.strategy
-    val defaultValue = configuration.defaultValue
-    val template = configuration.template
     val initialSignature = extractSignature(node)
 
     val commentService = context.lookupService(commentServiceKey)
@@ -147,7 +148,11 @@ suspend fun convertParameterDeclarations(
 
 @JsExport
 @JsPlainObject
-external interface ParameterDeclarationsOptions : ParameterDeclarationsConfiguration, Abortable
+external interface ParameterDeclarationsOptions : Abortable {
+    val strategy: ParameterDeclarationStrategy
+    val defaultValue: String?
+    val template: (parameters: String, signature: Signature, options: Abortable) -> Promise<String>
+}
 
 @JsExport
 @JsName("convertParameterDeclarations")
@@ -158,7 +163,15 @@ fun convertParameterDeclarationsAsync(
     options: ParameterDeclarationsOptions,
 ): Promise<String> =
     options.asCoroutineScope().promise {
-        convertParameterDeclarations(node, context, render, options)
+        convertParameterDeclarations(
+            node,
+            context,
+            render,
+            options.strategy,
+            options.defaultValue,
+        ) { parameters, signature ->
+            options.template(parameters, signature, currentAbortable()).await()
+        }
     }
 
 suspend fun convertParameterDeclarationWithFixedType(

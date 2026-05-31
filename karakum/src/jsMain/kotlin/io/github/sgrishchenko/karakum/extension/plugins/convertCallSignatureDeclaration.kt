@@ -22,14 +22,15 @@ val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, rende
 
     val returnType = node.type?.let { render(it) }
 
-    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-        strategy = ParameterDeclarationStrategy.function,
-        template = { parameters, signature ->
-            val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+    convertParameterDeclarations(
+        node, context, render,
+        ParameterDeclarationStrategy.function,
+    ) { parameters, signature ->
+        val inheritanceModifier =
+            inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-            """
-${ifPresent(inheritanceModifier) { "$it "}}operator fun ${ifPresent(typeParameters) { "<${it}>" }} invoke(${parameters})${ifPresent(returnType) { ": $it" }}
-            """.trim()
-        }
-    ))
+        """
+${ifPresent(inheritanceModifier) { "$it " }}operator fun ${ifPresent(typeParameters) { "<${it}>" }} invoke(${parameters})${ifPresent(returnType) { ": $it" }}
+        """.trim()
+    }
 }

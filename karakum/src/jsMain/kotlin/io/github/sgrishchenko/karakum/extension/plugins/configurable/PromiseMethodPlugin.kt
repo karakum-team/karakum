@@ -78,45 +78,41 @@ class PromiseMethodPlugin(
 
         val promiseDeclaration = convertParameterDeclarations(
             node, context, next,
-            ParameterDeclarationsConfiguration(
-                strategy = ParameterDeclarationStrategy.function,
-                template = template@{ parameters, signature ->
-                    val signatureContext = object : SignatureContext, Context by context {
-                        override val signature = signature
-                    }
+            ParameterDeclarationStrategy.function,
+        ) template@{ parameters, signature ->
+            val signatureContext = object : SignatureContext, Context by context {
+                override val signature = signature
+            }
 
-                    if (exclude.matches(node, signatureContext)) return@template ""
+            if (exclude.matches(node, signatureContext)) return@template ""
 
-                    val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+            val inheritanceModifier =
+                inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-                    """
-                        $annotation
-                        ${ifPresent(inheritanceModifier) { "$it "}}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }}
-                    """.trimIndent()
-                }
-            )
-        )
+            """
+                $annotation
+                ${ifPresent(inheritanceModifier) { "$it "}}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }}
+            """.trimIndent()
+        }
 
         val suspendDeclaration = convertParameterDeclarations(
             node, context, next,
-            ParameterDeclarationsConfiguration(
-                strategy = ParameterDeclarationStrategy.function,
-                template = template@{ parameters, signature ->
-                    val signatureContext = object : SignatureContext, Context by context {
-                        override val signature = signature
-                    }
+            ParameterDeclarationStrategy.function,
+        ) template@{ parameters, signature ->
+            val signatureContext = object : SignatureContext, Context by context {
+                override val signature = signature
+            }
 
-                    if (exclude.matches(node, signatureContext)) return@template ""
+            if (exclude.matches(node, signatureContext)) return@template ""
 
-                    val inheritanceModifier = inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
+            val inheritanceModifier =
+                inheritanceModifierService?.resolveSignatureInheritanceModifier(node, signature, context)
 
-                    """
-                        @seskar.js.JsAsync
-                        ${ifPresent(inheritanceModifier) { "$it " }}suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it"}}
-                    """.trimIndent()
-                }
-            )
-        )
+            """
+                @seskar.js.JsAsync
+                ${ifPresent(inheritanceModifier) { "$it " }}suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it"}}
+            """.trimIndent()
+        }
 
         return "${promiseDeclaration}\n\n${suspendDeclaration}"
     }

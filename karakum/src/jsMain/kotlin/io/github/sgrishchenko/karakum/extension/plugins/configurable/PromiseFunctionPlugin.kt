@@ -82,23 +82,20 @@ class PromiseFunctionPlugin(
 
         val body = convertParameterDeclarations(
             node, context, next,
-            ParameterDeclarationsConfiguration(
-                strategy = ParameterDeclarationStrategy.function,
-                template = template@{ parameters, signature ->
-                    val signatureContext = object : SignatureContext, Context by context {
-                        override val signature = signature
-                    }
+            ParameterDeclarationStrategy.function,
+        ) template@{ parameters, signature ->
+            val signatureContext = object : SignatureContext, Context by context {
+                override val signature = signature
+            }
 
-                    if (exclude.matches(node, signatureContext)) return@template ""
+            if (exclude.matches(node, signatureContext)) return@template ""
 
-                    """
-                        @seskar.js.JsAsync
-                        ${ifPresent(externalModifier) { "$it " }}suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it" }
-                    }
-                    """.trimIndent()
-                }
-            )
-        )
+            """
+                @seskar.js.JsAsync
+                ${ifPresent(externalModifier) { "$it " }}suspend fun ${ifPresent(typeParameters) { "<${it}> " }}${name}(${parameters})${ifPresent(returnTypePayload) { ": $it" }
+            }
+            """.trimIndent()
+        }
 
         val nodeInfo = DerivedDeclaration(
             sourceFileName,
@@ -111,23 +108,20 @@ class PromiseFunctionPlugin(
 
         return convertParameterDeclarations(
             node, context, next,
-            ParameterDeclarationsConfiguration(
-                strategy = ParameterDeclarationStrategy.function,
-                template = template@{ parameters, signature ->
-                    val signatureContext = object : SignatureContext, Context by context {
-                        override val signature = signature
-                    }
+            ParameterDeclarationStrategy.function,
+        ) template@{ parameters, signature ->
+            val signatureContext = object : SignatureContext, Context by context {
+                override val signature = signature
+            }
 
-                    if (exclude.matches(node, signatureContext)) return@template ""
+            if (exclude.matches(node, signatureContext)) return@template ""
 
-                    """
-                        @JsName("$name")
-                        ${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }
-                    }
-                    """.trimIndent()
-                }
-            )
-        )
+            """
+                @JsName("$name")
+                ${ifPresent(externalModifier) { "$it " }}fun ${ifPresent(typeParameters) { "<${it}> " }}${name}Async(${parameters})${ifPresent(returnType) { ": $it" }
+            }
+            """.trimIndent()
+        }
     }
 
     override suspend fun generate(context: Context, render: Render<Node>): ReadonlyArray<GeneratedFile> {

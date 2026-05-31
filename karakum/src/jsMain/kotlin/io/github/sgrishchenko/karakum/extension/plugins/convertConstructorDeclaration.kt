@@ -9,10 +9,10 @@ val convertConstructorDeclaration = createPlugin plugin@{ node, context, render 
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    convertParameterDeclarations(node, context, render, ParameterDeclarationsConfiguration(
-        strategy = ParameterDeclarationStrategy.function,
-        template = { parameters, _ ->
-            "constructor (${parameters})"
-        }
-    ))
+    convertParameterDeclarations(
+        node, context, render,
+        ParameterDeclarationStrategy.function
+    ) { parameters, _ ->
+        "constructor (${parameters})"
+    }
 }
