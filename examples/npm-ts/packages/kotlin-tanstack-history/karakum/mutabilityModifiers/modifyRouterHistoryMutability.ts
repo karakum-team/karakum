@@ -1,4 +1,4 @@
-import ts, {type Node} from "typescript";
+import ts, {type Node} from "typescript"
 
 export default function (node: Node) {
     if (

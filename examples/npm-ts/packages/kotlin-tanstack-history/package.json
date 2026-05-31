@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.12.0",
-    "karakum": "^1.0.0-alpha.108",
+    "karakum": "^1.0.0-alpha.109",
     "typescript": "^6.0.2"
   },
   "dependencies": {

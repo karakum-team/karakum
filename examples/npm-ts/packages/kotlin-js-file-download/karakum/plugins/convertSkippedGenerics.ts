@@ -1,5 +1,6 @@
 import ts, {type Node} from "typescript"
-import type {Context, Render, Abortable} from "karakum"
+import type {Context, Render} from "karakum"
+import type {Abortable} from "node:events"
 
 export default async function (node: Node, context: Context, render: Render<Node>, options: Abortable) {
     if (

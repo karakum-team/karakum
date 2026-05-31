@@ -1,5 +1,6 @@
 import ts, {type Node} from "typescript"
-import {convertParameterDeclarations, ifPresent, type Context, type Render, type Abortable} from "karakum"
+import {convertParameterDeclarations, ifPresent, type Context, type Render} from "karakum"
+import type {Abortable} from "node:events"
 
 export default async function (node: Node, context: Context, render: Render<Node>, options: Abortable) {
     if (!ts.isPropertySignature(node)) return null
@@ -25,8 +26,9 @@ export default async function (node: Node, context: Context, render: Render<Node
     return convertParameterDeclarations(
         type, context, render,
         {
+            signal: options.signal,
             strategy: "function",
-            template: parameters =>
+            template: async parameters =>
                 `fun ${ifPresent(typeParameters, it => `<${it}> `)}${name}(${parameters})${ifPresent(returnType, it => `: ${it}`)}`
         }
     )
