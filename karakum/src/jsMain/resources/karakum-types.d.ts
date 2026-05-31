@@ -48,7 +48,7 @@ export type InjectionType =
     | "HERITAGE_CLAUSE"
 
 interface Abortable {
-    signal?: AbortSignal
+    signal?: AbortSignal | undefined
 }
 
 export declare interface UnionService {
