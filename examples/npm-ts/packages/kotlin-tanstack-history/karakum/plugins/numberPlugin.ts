@@ -1,5 +1,5 @@
-import {NumberPlugin} from "karakum"
+import {createNumberPlugin} from "karakum"
 
-export default new NumberPlugin({
+export default createNumberPlugin({
     defaultNumberType: "Int",
 })

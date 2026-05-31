@@ -27,7 +27,8 @@ val convertRouterHistoryProperty = createPlugin { node, context, render ->
         val name = render(node.name)
 
         val typeParameters = type.typeParameters?.asArray()
-            ?.joinToString(", ") { render(it) }
+            ?.map { render(it) }
+            ?.joinToString(", ")
 
         val returnType = render(type.type)
 

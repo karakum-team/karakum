@@ -1,7 +1,7 @@
 import ts, {type Node} from "typescript"
-import {convertParameterDeclarations, ifPresent, type Context, type Render} from "karakum"
+import {convertParameterDeclarations, ifPresent, type Context, type Render, type Abortable} from "karakum"
 
-export default function (node: Node, context: Context, render: Render<Node>) {
+export default async function (node: Node, context: Context, render: Render<Node>, options: Abortable) {
     if (!ts.isPropertySignature(node)) return null
 
     const interfaceNode = node.parent
@@ -13,13 +13,14 @@ export default function (node: Node, context: Context, render: Render<Node>) {
     if (!type) return null
     if (!ts.isFunctionTypeNode(type)) return null
 
-    const name = render(node.name)
+    const name = await render.run(node.name, options)
 
-    const typeParameters = type.typeParameters
-        ?.map(it => render(it))
-        ?.join(", ")
+    const asyncTypeParameters = Promise.all(
+        type.typeParameters?.map(it => render.run(it, options)) ?? []
+    )
+    const typeParameters = (await asyncTypeParameters).join(", ")
 
-    const returnType = render(type.type)
+    const returnType = await render.run(type.type, options)
 
     return convertParameterDeclarations(
         type, context, render,

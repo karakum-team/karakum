@@ -1,3 +1,3 @@
-import {PromiseResultPlugin} from "karakum"
+import {createPromiseResultPlugin} from "karakum"
 
-export default new PromiseResultPlugin({})
+export default createPromiseResultPlugin({})
