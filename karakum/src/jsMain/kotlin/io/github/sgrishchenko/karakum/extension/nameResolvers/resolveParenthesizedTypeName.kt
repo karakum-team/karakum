@@ -8,7 +8,7 @@ import typescript.Node
 import typescript.isParenthesizedTypeNode
 
 fun resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
-    fun parenthesizedResolver(node: Node, context: Context): String? {
+    suspend fun parenthesizedResolver(node: Node, context: Context): String? {
         val typeScriptService = context.lookupService(typeScriptServiceKey)
         val getParent = { it: Node ->
             typeScriptService?.getParent(it) ?: it.getParentOrNull()

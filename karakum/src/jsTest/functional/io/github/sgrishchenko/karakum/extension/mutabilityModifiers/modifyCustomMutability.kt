@@ -8,7 +8,7 @@ import typescript.isPropertyDeclaration
 import typescript.isPropertySignature
 import typescript.isVariableDeclaration
 
-fun modifyCustomMutability(node: Node, context: Context): String? {
+suspend fun modifyCustomMutability(node: Node, context: Context): String? {
     if (isPropertySignature(node)) {
         val name = node.name
         if (!isIdentifier(name)) return null

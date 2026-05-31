@@ -1,23 +1,13 @@
 package io.github.sgrishchenko.karakum.configuration
 
-import io.github.sgrishchenko.karakum.extension.Annotation
-import io.github.sgrishchenko.karakum.extension.InheritanceModifier
-import io.github.sgrishchenko.karakum.extension.Injection
-import io.github.sgrishchenko.karakum.extension.MutabilityModifier
-import io.github.sgrishchenko.karakum.extension.NameResolver
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.VarianceModifier
-import io.github.sgrishchenko.karakum.extension.toInjection
-import io.github.sgrishchenko.karakum.extension.toPlugin
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.Rule
 import io.github.sgrishchenko.karakum.util.toList
-import js.objects.Object
 import js.array.component1
 import js.array.component2
+import js.objects.Object
 import js.objects.ReadonlyRecord
 import typescript.CompilerOptions
-import kotlin.String
-import kotlin.collections.List
 
 private class MutableConfigurationImpl(
     override var inputRoots: List<String>? = null,
@@ -105,19 +95,19 @@ internal fun buildConfiguration(
                 ?: partialConfiguration.injections?.toList()?.map { it.toInjection() }
 
             annotations = annotations
-                ?: partialConfiguration.annotations?.toList()
+                ?: partialConfiguration.annotations?.toList()?.map { it.toExtension() }
 
             nameResolvers = nameResolvers
-                ?: partialConfiguration.nameResolvers?.toList()
+                ?: partialConfiguration.nameResolvers?.toList()?.map { it.toExtension() }
 
             inheritanceModifiers = inheritanceModifiers
-                ?: partialConfiguration.inheritanceModifiers?.toList()
+                ?: partialConfiguration.inheritanceModifiers?.toList()?.map { it.toExtension() }
 
             mutabilityModifiers = mutabilityModifiers
-                ?: partialConfiguration.mutabilityModifiers?.toList()
+                ?: partialConfiguration.mutabilityModifiers?.toList()?.map { it.toExtension() }
 
             varianceModifiers = varianceModifiers
-                ?: partialConfiguration.varianceModifiers?.toList()
+                ?: partialConfiguration.varianceModifiers?.toList()?.map { it.toExtension() }
 
             moduleNameMapper = moduleNameMapper
                 ?: partialConfiguration.moduleNameMapper?.toMap()

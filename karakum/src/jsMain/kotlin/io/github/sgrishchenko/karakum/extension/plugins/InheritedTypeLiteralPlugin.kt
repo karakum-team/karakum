@@ -87,7 +87,8 @@ ${ifPresent(accessors) { "${it}\n" }}${members}${ifPresent(injectedMembers) { "\
 fun createInheritedTypeLiteralPlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isInheritedTypeLiteral(node)) return@plugin null
 
-    val name = context.resolveName(node)
+    val nameResolverService = context.requireService(nameResolverServiceKey)
+    val name = nameResolverService.resolveName(node, context)
 
     val typeParameters = extractTypeParameters(node, context)
 

@@ -2,22 +2,28 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
+import js.coroutines.promise
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
+import js.promise.Promise
 
-@JsExport
 val annotationServiceKey = ContextKey<AnnotationService>()
 
 @JsExport
-class AnnotationService @JsExport.Ignore constructor(private val annotations: List<Annotation>) {
-    fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {
+@JsName("annotationServiceKey")
+val jsAnnotationServiceKey = ContextKey<JsAnnotationService>()
+
+class AnnotationService(private val annotations: List<Annotation>) {
+    suspend fun resolveAnonymousAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, true, context)
     }
 
-    fun resolveAnnotations(node: Node, context: Context): ReadonlyArray<String> {
+    suspend fun resolveAnnotations(node: Node, context: Context): ReadonlyArray<String> {
         return internalResolveAnnotations(node, false, context)
     }
 
-    private fun internalResolveAnnotations(
+    private suspend fun internalResolveAnnotations(
         node: Node,
         isAnonymousDeclaration: Boolean,
         context: Context,
@@ -38,11 +44,31 @@ class AnnotationService @JsExport.Ignore constructor(private val annotations: Li
     }
 }
 
+@JsExport
+@JsName("AnnotationService")
+class JsAnnotationService @JsExport.Ignore constructor(
+    private val delegate: AnnotationService,
+) {
+    fun resolveAnonymousAnnotations(node: Node, context: Context, options: Abortable): Promise<ReadonlyArray<String>> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveAnonymousAnnotations(node, context)
+        }
+    }
+
+    fun resolveAnnotations(node: Node, context: Context, options: Abortable): Promise<ReadonlyArray<String>> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveAnnotations(node, context)
+        }
+    }
+}
+
 class AnnotationPlugin(annotations: List<Annotation>) : Plugin {
     private val annotationService = AnnotationService(annotations)
+    private val jsAnnotationService = JsAnnotationService(annotationService)
 
     override suspend fun setup(context: Context) {
         context.registerService(annotationServiceKey, annotationService)
+        context.registerService(jsAnnotationServiceKey, jsAnnotationService)
     }
 
     override suspend fun traverse(node: Node, context: Context) = Unit

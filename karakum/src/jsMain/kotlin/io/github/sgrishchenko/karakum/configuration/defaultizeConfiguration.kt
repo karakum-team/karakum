@@ -1,18 +1,9 @@
 package io.github.sgrishchenko.karakum.configuration
 
-import io.github.sgrishchenko.karakum.extension.Annotation
-import io.github.sgrishchenko.karakum.extension.InheritanceModifier
-import io.github.sgrishchenko.karakum.extension.Injection
-import io.github.sgrishchenko.karakum.extension.MutabilityModifier
-import io.github.sgrishchenko.karakum.extension.NameResolver
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.VarianceModifier
-import io.github.sgrishchenko.karakum.extension.toJsInjection
-import io.github.sgrishchenko.karakum.extension.toJsPlugin
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.prepareLibraryName
 import io.github.sgrishchenko.karakum.util.*
 import js.import.import
-import js.objects.toRecord
 import node.module.findPackageJSON
 import node.path.path
 import node.process.process

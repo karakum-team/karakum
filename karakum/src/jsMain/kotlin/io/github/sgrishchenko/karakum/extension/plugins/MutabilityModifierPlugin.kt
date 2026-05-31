@@ -1,15 +1,20 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-@JsExport
 val mutabilityModifierServiceKey = ContextKey<MutabilityModifierService>()
 
 @JsExport
-class MutabilityModifierService @JsExport.Ignore constructor(private val mutabilityModifiers: List<MutabilityModifier>) {
-    fun resolveMutabilityModifier(
+@JsName("mutabilityModifierServiceKey")
+val jsMutabilityModifierServiceKey = ContextKey<JsMutabilityModifierService>()
+
+class MutabilityModifierService(private val mutabilityModifiers: List<MutabilityModifier>) {
+    suspend fun resolveMutabilityModifier(
         node: Node,
         context: Context,
     ): String? {
@@ -23,11 +28,29 @@ class MutabilityModifierService @JsExport.Ignore constructor(private val mutabil
     }
 }
 
+@JsExport
+@JsName("MutabilityModifierService")
+class JsMutabilityModifierService @JsExport.Ignore constructor(
+    private val delegate: MutabilityModifierService,
+) {
+    fun resolveMutabilityModifier(
+        node: Node,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveMutabilityModifier(node, context)
+        }
+    }
+}
+
 class MutabilityModifierPlugin(mutabilityModifiers: List<MutabilityModifier>) : Plugin {
     private val mutabilityModifierService = MutabilityModifierService(mutabilityModifiers)
+    private val jsMutabilityModifierService = JsMutabilityModifierService(mutabilityModifierService)
 
     override suspend fun setup(context: Context) {
-        context.registerService(mutabilityModifierServiceKey, this.mutabilityModifierService)
+        context.registerService(mutabilityModifierServiceKey, mutabilityModifierService)
+        context.registerService(jsMutabilityModifierServiceKey, jsMutabilityModifierService)
     }
 
     override suspend fun traverse(node: Node, context: Context) = Unit

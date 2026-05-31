@@ -1,15 +1,20 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-@JsExport
 val inheritanceModifierServiceKey = ContextKey<InheritanceModifierService>()
 
 @JsExport
-class InheritanceModifierService @JsExport.Ignore constructor(private val inheritanceModifiers: List<InheritanceModifier>) {
-    fun resolveSignatureInheritanceModifier(
+@JsName("inheritanceModifierServiceKey")
+val jsInheritanceModifierServiceKey = ContextKey<JsInheritanceModifierService>()
+
+class InheritanceModifierService(private val inheritanceModifiers: List<InheritanceModifier>) {
+    suspend fun resolveSignatureInheritanceModifier(
         node: Node,
         signature: Signature,
         context: Context,
@@ -23,7 +28,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
         return internalResolveInheritanceModifier(node, inheritanceModifierContext)
     }
 
-    fun resolveGetterInheritanceModifier(
+    suspend fun resolveGetterInheritanceModifier(
         node: Node,
         context: Context,
     ): String? {
@@ -36,7 +41,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
         return internalResolveInheritanceModifier(node, inheritanceModifierContext)
     }
 
-    fun resolveSetterInheritanceModifier(
+    suspend fun resolveSetterInheritanceModifier(
         node: Node,
         context: Context,
     ): String? {
@@ -49,7 +54,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
         return internalResolveInheritanceModifier(node, inheritanceModifierContext)
     }
 
-    fun resolveInheritanceModifier(
+    suspend fun resolveInheritanceModifier(
         node: Node,
         context: Context,
     ): String? {
@@ -62,7 +67,7 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
         return internalResolveInheritanceModifier(node, inheritanceModifierContext)
     }
 
-    private fun internalResolveInheritanceModifier(
+    private suspend fun internalResolveInheritanceModifier(
         node: Node,
         context: InheritanceModifierContext
     ): String? {
@@ -76,11 +81,60 @@ class InheritanceModifierService @JsExport.Ignore constructor(private val inheri
     }
 }
 
+@JsExport
+@JsName("InheritanceModifierService")
+class JsInheritanceModifierService @JsExport.Ignore constructor(
+    private val delegate: InheritanceModifierService,
+) {
+    fun resolveSignatureInheritanceModifier(
+        node: Node,
+        signature: Signature,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveSignatureInheritanceModifier(node, signature, context)
+        }
+    }
+
+    fun resolveGetterInheritanceModifier(
+        node: Node,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveGetterInheritanceModifier(node, context)
+        }
+    }
+
+    fun resolveSetterInheritanceModifier(
+        node: Node,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveSetterInheritanceModifier(node, context)
+        }
+    }
+
+    fun resolveInheritanceModifier(
+        node: Node,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveInheritanceModifier(node, context)
+        }
+    }
+}
+
 class InheritanceModifierPlugin(inheritanceModifiers: List<InheritanceModifier>) : Plugin {
     private val inheritanceModifierService = InheritanceModifierService(inheritanceModifiers)
+    private val jsInheritanceModifierService = JsInheritanceModifierService(inheritanceModifierService)
 
     override suspend fun setup(context: Context) {
-        context.registerService(inheritanceModifierServiceKey, this.inheritanceModifierService)
+        context.registerService(inheritanceModifierServiceKey, inheritanceModifierService)
+        context.registerService(jsInheritanceModifierServiceKey, jsInheritanceModifierService)
     }
 
     override suspend fun traverse(node: Node, context: Context) = Unit

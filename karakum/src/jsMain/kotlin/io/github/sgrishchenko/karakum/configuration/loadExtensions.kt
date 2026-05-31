@@ -22,11 +22,11 @@ external interface ExtensionConfiguration {
 external interface Extensions {
     val plugins: ReadonlyArray<JsPlugin>
     val injections: ReadonlyArray<JsInjection>
-    val annotations: ReadonlyArray<Annotation>
-    val nameResolvers: ReadonlyArray<NameResolver>
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
-    val mutabilityModifiers: ReadonlyArray<MutabilityModifier>
-    val varianceModifiers: ReadonlyArray<VarianceModifier>
+    val annotations: ReadonlyArray<JsAnnotation>
+    val nameResolvers: ReadonlyArray<JsNameResolver>
+    val inheritanceModifiers: ReadonlyArray<JsInheritanceModifier>
+    val mutabilityModifiers: ReadonlyArray<JsMutabilityModifier>
+    val varianceModifiers: ReadonlyArray<JsVarianceModifier>
 }
 
 external interface ExtensionModule {
@@ -94,31 +94,31 @@ suspend fun loadExtensions(
         }
     }
 
-    val annotations = loadExtensions<Annotation>(
+    val annotations = loadExtensions<JsAnnotation>(
         "Annotation",
         configuration.annotations.toList(),
         cwd,
     )
 
-    val nameResolvers = loadExtensions<NameResolver>(
+    val nameResolvers = loadExtensions<JsNameResolver>(
         "Name Resolver",
         configuration.nameResolvers.toList(),
         cwd,
     )
 
-    val inheritanceModifiers = loadExtensions<InheritanceModifier>(
+    val inheritanceModifiers = loadExtensions<JsInheritanceModifier>(
         "Inheritance Modifier",
         configuration.inheritanceModifiers.toList(),
         cwd,
     )
 
-    val mutabilityModifiers = loadExtensions<MutabilityModifier>(
+    val mutabilityModifiers = loadExtensions<JsMutabilityModifier>(
         "Mutability modifier",
         configuration.mutabilityModifiers.toList(),
         cwd,
     )
 
-    val varianceModifiers = loadExtensions<VarianceModifier>(
+    val varianceModifiers = loadExtensions<JsVarianceModifier>(
         "Variance Modifier",
         configuration.varianceModifiers.toList(),
         cwd,

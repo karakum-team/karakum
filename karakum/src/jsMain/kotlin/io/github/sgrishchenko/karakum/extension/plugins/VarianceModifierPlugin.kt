@@ -1,17 +1,22 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import js.array.ReadonlyArray
+import js.coroutines.promise
+import js.promise.Promise
 import typescript.Node
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-@JsExport
 val varianceModifierServiceKey = ContextKey<VarianceModifierService>()
 
 @JsExport
-class VarianceModifierService @JsExport.Ignore constructor(
+@JsName("varianceModifierServiceKey")
+val jsVarianceModifierServiceKey = ContextKey<JsVarianceModifierService>()
+
+class VarianceModifierService(
     private val varianceModifiers: List<VarianceModifier>
 ) {
-    fun resolveVarianceModifier(
+    suspend fun resolveVarianceModifier(
         node: Node,
         context: Context,
     ): String? {
@@ -25,11 +30,29 @@ class VarianceModifierService @JsExport.Ignore constructor(
     }
 }
 
+@JsExport
+@JsName("VarianceModifierService")
+class JsVarianceModifierService @JsExport.Ignore constructor(
+    private val delegate: VarianceModifierService,
+) {
+    fun resolveVarianceModifier(
+        node: Node,
+        context: Context,
+        options: Abortable,
+    ): Promise<String?> {
+        return options.asCoroutineScope().promise {
+            delegate.resolveVarianceModifier(node, context)
+        }
+    }
+}
+
 class VarianceModifierPlugin(varianceModifiers: List<VarianceModifier>) : Plugin {
     private val varianceModifierService = VarianceModifierService(varianceModifiers)
+    private val jsVarianceModifierService = JsVarianceModifierService(varianceModifierService)
 
     override suspend fun setup(context: Context) {
         context.registerService(varianceModifierServiceKey, varianceModifierService)
+        context.registerService(jsVarianceModifierServiceKey, jsVarianceModifierService)
     }
 
     override suspend fun traverse(node: Node, context: Context) = Unit

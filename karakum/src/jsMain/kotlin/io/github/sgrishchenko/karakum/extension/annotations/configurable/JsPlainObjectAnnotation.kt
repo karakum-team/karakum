@@ -82,17 +82,15 @@ private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
 }
 
 @JsExport
-fun JsPlainObjectAnnotation(configuration: JsPlainObjectAnnotationConfiguration): Annotation {
+fun createJsPlainObjectAnnotation(configuration: JsPlainObjectAnnotationConfiguration): JsAnnotation {
     return JsPlainObjectAnnotation(
         isJsPlainObject = configuration.isJsPlainObject,
         ignore = configuration.ignore,
-    )
+    ).toJsExtension()
 }
 
 fun JsPlainObjectAnnotation(): Annotation =
-    JsPlainObjectAnnotation(
-        JsPlainObjectAnnotationConfiguration()
-    )
+    JsPlainObjectAnnotation(ignore = emptyList())
 
 fun JsPlainObjectAnnotation(
     isJsPlainObject: ((Node, AnnotationContext) -> Boolean)? = null,

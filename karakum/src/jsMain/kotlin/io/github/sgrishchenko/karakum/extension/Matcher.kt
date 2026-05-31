@@ -8,17 +8,17 @@ import typescript.Node
 import typescript.isIdentifier
 
 interface Matcher<in TContext : Context> {
-    val predicate: (Node, TContext) -> Boolean
+    val predicate: suspend (Node, TContext) -> Boolean
     val children: List<Matcher<TContext>>
 }
 
 private class MatcherImpl<in TContext : Context>(
-    override val predicate: (Node, TContext) -> Boolean,
+    override val predicate: suspend (Node, TContext) -> Boolean,
     override val children: List<Matcher<TContext>>,
 ) : Matcher<TContext>
 
 private class MatcherDelegateImpl<in TContext : Context>(
-    override val predicate: (Node, TContext) -> Boolean,
+    override val predicate: suspend (Node, TContext) -> Boolean,
     val childrenProvider: () -> List<Matcher<TContext>>,
 ) : Matcher<TContext> {
     override val children: List<Matcher<TContext>>
@@ -112,7 +112,7 @@ fun <TContext : Context> match(
 
 fun <TContext : Context> resolve(
     vararg matchers: Pair<String, List<Matcher<TContext>>>,
-): (Node, TContext) -> String? {
+): suspend (Node, TContext) -> String? {
     return { node, context ->
         matchers.firstNotNullOfOrNull { (result, matcher) ->
             result.takeIf { matcher.matches(node, context) }
@@ -126,12 +126,12 @@ fun <TContext : Context> match(
     return match { match(predicate) }
 }
 
-private fun <TContext : Context> Matcher<TContext>.toPredicateChains(): List<List<(Node, TContext) -> Boolean>> {
+private fun <TContext : Context> Matcher<TContext>.toPredicateChains(): List<List<suspend (Node, TContext) -> Boolean>> {
     if (children.isEmpty()) return listOf(listOf(predicate))
     return children.flatMap { child -> child.toPredicateChains().map { it + predicate } }
 }
 
-fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: TContext): Boolean {
+suspend fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: TContext): Boolean {
     val predicateChains = toPredicateChains()
 
     val typeScriptService = context.lookupService(typeScriptServiceKey)
@@ -154,6 +154,6 @@ fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: TContext
     return false
 }
 
-fun <TContext : Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
+suspend fun <TContext : Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
     return any { it.matches(node, context) }
 }

@@ -1,5 +1,9 @@
 package io.github.sgrishchenko.karakum.extension
 
 import typescript.Node
+import web.abort.Abortable
+import kotlin.js.Promise
 
-typealias NameResolver = (node: Node, context: Context) -> String?
+typealias NameResolver = suspend (node: Node, context: Context) -> String?
+
+typealias JsNameResolver = (node: Node, context: Context, options: Abortable) -> Promise<String?>

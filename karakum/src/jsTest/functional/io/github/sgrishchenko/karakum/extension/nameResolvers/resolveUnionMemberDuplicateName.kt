@@ -5,7 +5,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import typescript.*
 
-fun resolveUnionMemberDuplicateName(node: Node, context: Context): String? {
+suspend fun resolveUnionMemberDuplicateName(node: Node, context: Context): String? {
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
         typeScriptService?.getParent(it) ?: it.getParentOrNull()

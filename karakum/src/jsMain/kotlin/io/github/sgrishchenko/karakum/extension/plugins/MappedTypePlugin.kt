@@ -83,7 +83,8 @@ ${convertMappedTypeBody(node, context, render)}
 fun createMappedTypePlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isMappedTypeNode(node)) return@plugin null
 
-    val name = context.resolveName(node)
+    val nameResolverService = context.requireService(nameResolverServiceKey)
+    val name = nameResolverService.resolveName(node, context)
 
     val typeParameters = extractTypeParameters(node, context)
 

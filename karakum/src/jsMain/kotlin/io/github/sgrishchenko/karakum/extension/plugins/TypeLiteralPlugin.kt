@@ -63,7 +63,8 @@ fun createTypeLiteralPlugin() = createAnonymousDeclarationPlugin plugin@{ node, 
     // handle empty type literal
     if (node.members.asArray().isEmpty()) return@plugin AnonymousDeclaration("Any")
 
-    val name = context.resolveName(node)
+    val nameResolverService = context.requireService(nameResolverServiceKey)
+    val name = nameResolverService.resolveName(node, context)
 
     val typeParameters = extractTypeParameters(node, context)
 

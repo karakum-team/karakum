@@ -98,7 +98,7 @@ private fun extractUnionMemberEntry(node: LiteralTypeNode): LiteralUnionMemberEn
         ?: extractPrefixUnaryExpressionUnionMemberEntry(node)
 }
 
-private fun resolveUnionMemberEntry(node: LiteralTypeNode, context: Context): LiteralUnionMemberEntry {
+private suspend fun resolveUnionMemberEntry(node: LiteralTypeNode, context: Context): LiteralUnionMemberEntry {
     val nameResolverService = context.requireService(nameResolverServiceKey)
 
     val entry = extractUnionMemberEntry(node) ?: error("Unsupported literal type")
@@ -290,7 +290,8 @@ $it
 fun createLiteralUnionTypePlugin() = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
     if (!isNullableLiteralUnionType(node, context)) return@plugin null
 
-    val name = context.resolveName(node)
+    val nameResolverService = context.requireService(nameResolverServiceKey)
+    val name = nameResolverService.resolveName(node, context)
     val qualifiedName = name
 
     val result = convertLiteralUnionType(node, name, qualifiedName, false, context, render)

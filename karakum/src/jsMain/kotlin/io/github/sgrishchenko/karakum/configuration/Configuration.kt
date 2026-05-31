@@ -149,15 +149,15 @@ external interface PartialConfiguration {
 
     val injections: Many<JsInjection>?
 
-    val annotations: Many<Annotation>?
+    val annotations: Many<JsAnnotation>?
 
-    val nameResolvers: Many<NameResolver>?
+    val nameResolvers: Many<JsNameResolver>?
 
-    val inheritanceModifiers: Many<InheritanceModifier>?
+    val inheritanceModifiers: Many<JsInheritanceModifier>?
 
-    val mutabilityModifiers: Many<MutabilityModifier>?
+    val mutabilityModifiers: Many<JsMutabilityModifier>?
 
-    val varianceModifiers: Many<VarianceModifier>?
+    val varianceModifiers: Many<JsVarianceModifier>?
 
     val moduleNameMapper: ReadonlyRecord<String, String>?
 

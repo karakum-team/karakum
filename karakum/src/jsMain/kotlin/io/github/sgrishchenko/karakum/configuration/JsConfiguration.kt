@@ -7,7 +7,6 @@ import js.objects.ReadonlyRecord
 import js.objects.toRecord
 import kotlinx.js.JsPlainObject
 import typescript.CompilerOptions
-import kotlin.String
 
 @JsExport
 @JsName("Configuration")
@@ -32,15 +31,15 @@ external interface JsConfiguration {
 
     val injections: ReadonlyArray<JsInjection>
 
-    val annotations: ReadonlyArray<Annotation>
+    val annotations: ReadonlyArray<JsAnnotation>
 
-    val nameResolvers: ReadonlyArray<NameResolver>
+    val nameResolvers: ReadonlyArray<JsNameResolver>
 
-    val inheritanceModifiers: ReadonlyArray<InheritanceModifier>
+    val inheritanceModifiers: ReadonlyArray<JsInheritanceModifier>
 
-    val mutabilityModifiers: ReadonlyArray<MutabilityModifier>
+    val mutabilityModifiers: ReadonlyArray<JsMutabilityModifier>
 
-    val varianceModifiers: ReadonlyArray<VarianceModifier>
+    val varianceModifiers: ReadonlyArray<JsVarianceModifier>
 
     val moduleNameMapper: ReadonlyRecord<String, String>
     val packageNameMapper: ReadonlyRecord<String, String>
@@ -85,15 +84,25 @@ fun Configuration.toJsConfiguration(): JsConfiguration =
             .map { it.toJsInjection() }
             .toTypedArray(),
 
-        annotations = annotations.toTypedArray(),
+        annotations = annotations
+            .map { it.toJsExtension() }
+            .toTypedArray(),
 
-        nameResolvers = nameResolvers.toTypedArray(),
+        nameResolvers = nameResolvers
+            .map { it.toJsExtension() }
+            .toTypedArray(),
 
-        inheritanceModifiers = inheritanceModifiers.toTypedArray(),
+        inheritanceModifiers = inheritanceModifiers
+            .map { it.toJsExtension() }
+            .toTypedArray(),
 
-        mutabilityModifiers = mutabilityModifiers.toTypedArray(),
+        mutabilityModifiers = mutabilityModifiers
+            .map { it.toJsExtension() }
+            .toTypedArray(),
 
-        varianceModifiers = varianceModifiers.toTypedArray(),
+        varianceModifiers = varianceModifiers
+            .map { it.toJsExtension() }
+            .toTypedArray(),
 
         moduleNameMapper = moduleNameMapper.toRecord(),
         packageNameMapper = packageNameMapper.toRecord(),

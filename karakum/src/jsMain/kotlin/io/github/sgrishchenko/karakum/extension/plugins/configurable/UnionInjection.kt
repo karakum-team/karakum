@@ -8,14 +8,20 @@ import js.array.component1
 import js.array.component2
 import js.array.tupleOf
 import js.collections.JsMap
+import js.coroutines.promise
 import js.iterable.iterator
+import js.promise.Promise
 import typescript.*
+import web.abort.Abortable
+import web.abort.asCoroutineScope
 
-@JsExport
 val unionServiceKey = ContextKey<UnionService>()
 
 @JsExport
-class UnionService @JsExport.Ignore constructor(private val context: Context) {
+@JsName("unionServiceKey")
+val jsUnionServiceKey = ContextKey<JsUnionService>()
+
+class UnionService(private val context: Context) {
     private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()
     private val coveredUnionParents = mutableSetOf<typescript.Symbol>()
 
@@ -41,8 +47,8 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
         coveredUnionParents.add(symbol)
     }
 
-    fun register(union: UnionTypeNode, reference: TypeReferenceNode) {
-        val nameResolverService = context.lookupService(nameResolverServiceKey)
+    suspend fun register(union: UnionTypeNode, reference: TypeReferenceNode) {
+        val nameResolverService = context.requireService(nameResolverServiceKey)
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)
         val typeChecker = typeScriptService?.program?.getTypeChecker()
@@ -60,7 +66,7 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
         ) {
             name = parent.name.text
         } else {
-            name = nameResolverService?.resolveName(union, context) ?: "Anonymous"
+            name = nameResolverService.resolveName(union, context)
         }
 
         if (symbol != null) {
@@ -86,6 +92,27 @@ class UnionService @JsExport.Ignore constructor(private val context: Context) {
     }
 }
 
+@JsExport
+@JsName("UnionService")
+class JsUnionService @JsExport.Ignore constructor(
+    private val delegate: UnionService,
+) {
+    fun isCovered(node: NamedDeclaration) =
+        delegate.isCovered(node)
+
+    fun cover(node: NamedDeclaration) =
+        delegate.cover(node)
+
+    fun register(union: UnionTypeNode, reference: TypeReferenceNode, options: Abortable): Promise<Unit> {
+        return options.asCoroutineScope().promise {
+            delegate.register(union, reference)
+        }
+    }
+
+    fun getParents(node: NamedDeclaration): ReadonlyArray<String> =
+        delegate.getParents(node)
+}
+
 class UnionInjection : Injection {
     private var unionService: UnionService? = null
 
@@ -98,7 +125,8 @@ class UnionInjection : Injection {
 
             val renderedTypeParameters = renderDeclaration(typeParameters, render)
 
-            val name = context.resolveName(node)
+            val nameResolverService = context.requireService(nameResolverServiceKey)
+            val name = nameResolverService.resolveName(node, context)
 
             val injectionService = context.lookupService(injectionServiceKey)
             val heritageInjections =
@@ -138,6 +166,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(ren
     override suspend fun setup(context: Context) {
         unionService = UnionService(context)
         context.registerService(unionServiceKey, requireNotNull(unionService))
+        context.registerService(jsUnionServiceKey, JsUnionService(requireNotNull(unionService)))
     }
 
     override suspend fun traverse(node: Node, context: Context) {
