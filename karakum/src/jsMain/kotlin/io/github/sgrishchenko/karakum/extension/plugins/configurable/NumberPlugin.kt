@@ -9,10 +9,12 @@ import js.array.component1
 import js.array.component2
 import js.objects.Object
 import js.objects.ReadonlyRecord
+import js.promise.Promise
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.Node
 import typescript.SyntaxKind
+import web.abort.Abortable
 
 sealed external interface NumberPluginStrategy {
     companion object
@@ -45,7 +47,7 @@ class NumberPlugin(
     constructor(
         strategy: NumberPluginStrategy = NumberPluginStrategy.loose,
         defaultNumberType: String = "Double",
-        vararg matchers: Pair<String, (Node, Context) -> Boolean>,
+        vararg matchers: Pair<String, suspend (Node, Context) -> Boolean>,
     ) : this(
         strategy,
         defaultNumberType,
@@ -113,7 +115,7 @@ class NumberPlugin(
 external interface NumberPluginConfiguration {
     val strategy: NumberPluginStrategy?
     val defaultNumberType: String?
-    val matchers: ReadonlyRecord<String, (Node, Context) -> Boolean>?
+    val matchers: ReadonlyRecord<String, (Node, Context, Abortable) -> Promise<Boolean>>?
 }
 
 @JsExport
@@ -123,7 +125,7 @@ fun createNumberPlugin(configuration: NumberPluginConfiguration): JsPlugin =
         defaultNumberType = configuration.defaultNumberType ?: "Double",
         matchers = configuration.matchers
             ?.let { Object.entries(it) }
-            ?.map { (key, value) -> key to value }
+            ?.map { (key, value) -> key to value.wrap() }
             ?.toTypedArray()
             ?: emptyArray(),
     ).toJsPlugin()

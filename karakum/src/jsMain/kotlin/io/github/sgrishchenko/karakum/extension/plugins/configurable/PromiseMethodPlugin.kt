@@ -28,9 +28,9 @@ class PromiseMethodPlugin(
     )
 
     constructor(
-        isPromiseType: (Node, Context) -> Boolean = ::defaultIsPromiseType,
-        ignore: (Node, Context) -> Boolean = { _, _ -> false },
-        exclude: (Node, SignatureContext) -> Boolean = { _, _ -> false },
+        isPromiseType: suspend (Node, Context) -> Boolean = ::defaultIsPromiseType,
+        ignore: suspend (Node, Context) -> Boolean = { _, _ -> false },
+        exclude: suspend (Node, SignatureContext) -> Boolean = { _, _ -> false },
         renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
     ) : this(
         isPromiseType = match(isPromiseType),
@@ -123,18 +123,20 @@ class PromiseMethodPlugin(
 @JsExport
 @JsPlainObject
 external interface PromiseMethodPluginConfiguration {
-    val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node, Context) -> Boolean)?
-    val exclude: ((Node, SignatureContext) -> Boolean)?
+    val isPromiseType: ((Node, Context, Abortable) -> Promise<Boolean>)?
+    val ignore: ((Node, Context, Abortable) -> Promise<Boolean>)?
+    val exclude: ((Node, SignatureContext, Abortable) -> Promise<Boolean>)?
     val renderPayload: ((TypeReferenceNode, Context, Render<Node>, Abortable) -> Promise<String>)?
 }
 
 @JsExport
 fun createPromiseMethodPlugin(configuration: PromiseMethodPluginConfiguration): JsPlugin =
     PromiseMethodPlugin(
-        isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType,
-        ignore = configuration.ignore ?: { _, _ -> false },
-        exclude = configuration.exclude ?: { _, _ -> false },
+        isPromiseType = configuration.isPromiseType?.wrap() ?: { node, context ->
+            defaultIsPromiseType(node, context)
+        },
+        ignore = configuration.ignore?.wrap() ?: { _, _ -> false },
+        exclude = configuration.exclude?.wrap() ?: { _, _ -> false },
         renderPayload = { node, context, render ->
             configuration.renderPayload
                 ?.invoke(node, context, render, currentAbortable())

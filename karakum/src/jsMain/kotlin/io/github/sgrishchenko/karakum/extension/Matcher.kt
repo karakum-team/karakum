@@ -1,11 +1,15 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
+import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
+import js.promise.Promise
+import js.promise.await
 import node.path.path
 import typescript.NamedDeclaration
 import typescript.Node
 import typescript.isIdentifier
+import web.abort.Abortable
 
 interface Matcher<in TContext : Context> {
     val predicate: suspend (Node, TContext) -> Boolean
@@ -34,18 +38,18 @@ private class MatcherScopeImpl<TContext : Context>(
 ) : MatcherScope<TContext>
 
 private fun <TContext : Context> all(
-    vararg predicates: (Node, TContext) -> Boolean,
-): (Node, TContext) -> Boolean {
+    vararg predicates: suspend (Node, TContext) -> Boolean,
+): suspend (Node, TContext) -> Boolean {
     return { node, context -> predicates.all { it(node, context) } }
 }
 
-private fun <TContext : Context> ((Node) -> Boolean).wrap(): (Node, TContext) -> Boolean {
+private fun <TContext : Context> (suspend (Node) -> Boolean).wrap(): suspend (Node, TContext) -> Boolean {
     return { node, _ -> invoke(node) }
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean,
-    vararg predicates: (Node, TContext) -> Boolean,
+    predicate: suspend (Node, TContext) -> Boolean,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
     block: MatcherScope<TContext>.() -> Unit = { },
 ) {
     val scope = MatcherScopeImpl<TContext>().also(block)
@@ -54,22 +58,22 @@ fun <TContext : Context> MatcherScope<TContext>.match(
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean,
-    vararg predicates: (Node, TContext) -> Boolean,
+    predicate: suspend (Node) -> Boolean,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
     block: MatcherScope<TContext>.() -> Unit = { },
 ) {
     match(predicate.wrap(), *predicates, block = block)
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean,
+    predicate: suspend (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     return match(predicate, predicates = emptyArray())
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node, TContext) -> Boolean,
-    vararg predicates: (Node, TContext) -> Boolean,
+    predicate: suspend (Node, TContext) -> Boolean,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     val scope = MatcherScopeImpl<TContext>()
     val matcher = MatcherDelegateImpl(all(predicate, *predicates), scope::children)
@@ -78,14 +82,14 @@ fun <TContext : Context> MatcherScope<TContext>.match(
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean,
+    predicate: suspend (Node) -> Boolean,
 ): MatcherScope<TContext> {
     return match(predicate, predicates = emptyArray())
 }
 
 fun <TContext : Context> MatcherScope<TContext>.match(
-    predicate: (Node) -> Boolean,
-    vararg predicates: (Node, TContext) -> Boolean,
+    predicate: suspend (Node) -> Boolean,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     return match(predicate.wrap(), *predicates)
 }
@@ -121,7 +125,7 @@ fun <TContext : Context> resolve(
 }
 
 fun <TContext : Context> match(
-    predicate: (Node, TContext) -> Boolean,
+    predicate: suspend (Node, TContext) -> Boolean,
 ): List<Matcher<TContext>> {
     return match { match(predicate) }
 }
@@ -156,4 +160,10 @@ suspend fun <TContext : Context> Matcher<TContext>.matches(node: Node, context: 
 
 suspend fun <TContext : Context> Iterable<Matcher<TContext>>.matches(node: Node, context: TContext): Boolean {
     return any { it.matches(node, context) }
+}
+
+internal fun <TContext : Context> ((Node, TContext, Abortable) -> Promise<Boolean>).wrap(): suspend (Node, TContext) -> Boolean {
+    return { node, context ->
+        this(node, context, currentAbortable()).await()
+    }
 }

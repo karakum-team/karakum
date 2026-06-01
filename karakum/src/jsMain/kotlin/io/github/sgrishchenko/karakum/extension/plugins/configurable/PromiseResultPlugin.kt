@@ -26,8 +26,8 @@ class PromiseResultPlugin(
     )
 
     constructor(
-        isPromiseType: (Node, Context) -> Boolean = ::defaultIsPromiseType,
-        ignore: (Node, Context) -> Boolean = { _, _ -> false },
+        isPromiseType: suspend (Node, Context) -> Boolean = ::defaultIsPromiseType,
+        ignore: suspend (Node, Context) -> Boolean = { _, _ -> false },
         renderPayload: suspend (TypeReferenceNode, Context, Render<Node>) -> String = ::defaultRenderPayload,
     ) : this(
         isPromiseType = match(isPromiseType),
@@ -70,16 +70,18 @@ class PromiseResultPlugin(
 @JsExport
 @JsPlainObject
 external interface PromiseResultPluginConfiguration {
-    val isPromiseType: ((Node, Context) -> Boolean)?
-    val ignore: ((Node, Context) -> Boolean)?
+    val isPromiseType: ((Node, Context, Abortable) -> Promise<Boolean>)?
+    val ignore: ((Node, Context, Abortable) -> Promise<Boolean>)?
     val renderPayload: ((TypeReferenceNode, Context, Render<Node>, Abortable) -> Promise<String>)?
 }
 
 @JsExport
 fun createPromiseResultPlugin(configuration: PromiseResultPluginConfiguration): JsPlugin =
     PromiseResultPlugin(
-        isPromiseType = configuration.isPromiseType ?: ::defaultIsPromiseType,
-        ignore = configuration.ignore ?: { _, _ -> false },
+        isPromiseType = configuration.isPromiseType?.wrap() ?: { node, context ->
+            defaultIsPromiseType(node, context)
+        },
+        ignore = configuration.ignore?.wrap() ?: { _, _ -> false },
         renderPayload = { node, context, render ->
             configuration.renderPayload
                 ?.invoke(node, context, render, currentAbortable())

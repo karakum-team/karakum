@@ -3,14 +3,16 @@ package io.github.sgrishchenko.karakum.extension.annotations.configurable
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.numbers.contains
+import js.promise.Promise
 import kotlinx.js.JsPlainObject
 import typescript.*
+import web.abort.Abortable
 
 @JsExport
 @JsPlainObject
 external interface JsPlainObjectAnnotationConfiguration {
-    val isJsPlainObject: ((Node, AnnotationContext) -> Boolean)?
-    val ignore: ((Node, AnnotationContext) -> Boolean)?
+    val isJsPlainObject: ((Node, AnnotationContext, Abortable) -> Promise<Boolean>)?
+    val ignore: ((Node, AnnotationContext, Abortable) -> Promise<Boolean>)?
 }
 
 private fun getDeclarations(node: Node, context: Context): List<Node>? {
@@ -84,8 +86,8 @@ private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
 @JsExport
 fun createJsPlainObjectAnnotation(configuration: JsPlainObjectAnnotationConfiguration): JsAnnotation {
     return JsPlainObjectAnnotation(
-        isJsPlainObject = configuration.isJsPlainObject,
-        ignore = configuration.ignore,
+        isJsPlainObject = configuration.isJsPlainObject?.wrap(),
+        ignore = configuration.ignore?.wrap(),
     ).toJsExtension()
 }
 
@@ -93,8 +95,8 @@ fun JsPlainObjectAnnotation(): Annotation =
     JsPlainObjectAnnotation(ignore = emptyList())
 
 fun JsPlainObjectAnnotation(
-    isJsPlainObject: ((Node, AnnotationContext) -> Boolean)? = null,
-    ignore: ((Node, AnnotationContext) -> Boolean)? = null,
+    isJsPlainObject: (suspend (Node, AnnotationContext) -> Boolean)? = null,
+    ignore: (suspend (Node, AnnotationContext) -> Boolean)? = null,
 ): Annotation {
     return JsPlainObjectAnnotation(
         isJsPlainObject = isJsPlainObject?.let { match(it) },
