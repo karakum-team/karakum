@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import kotlin.apply
 
 plugins {
-    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.110"
+    id("io.github.sgrishchenko.karakum") version "1.0.0-alpha.111"
 }
 
 repositories {
