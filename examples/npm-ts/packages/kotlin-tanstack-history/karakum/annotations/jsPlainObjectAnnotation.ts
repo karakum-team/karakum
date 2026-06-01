@@ -1,7 +1,7 @@
 import ts from "typescript"
-import {JsPlainObjectAnnotation} from "karakum"
+import {createJsPlainObjectAnnotation} from "karakum"
 
-export default JsPlainObjectAnnotation({
+export default createJsPlainObjectAnnotation({
     ignore: node => (
         ts.isInterfaceDeclaration(node)
         && node.name.text === "RouterHistory"

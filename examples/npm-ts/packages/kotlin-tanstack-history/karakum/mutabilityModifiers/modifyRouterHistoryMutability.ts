@@ -1,6 +1,6 @@
 import ts, {type Node} from "typescript"
 
-export default function (node: Node) {
+export default async function (node: Node) {
     if (
         ts.isPropertySignature(node)
 
