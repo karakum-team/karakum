@@ -4,4 +4,4 @@
 
 package sandbox.base.void.simple
 
-external fun functionWithPromiseVoidReturnType(): js.promise.Promise<js.core.Void>
+external fun functionWithPromiseVoidReturnType(): js.promise.Promise<js.void.Void>

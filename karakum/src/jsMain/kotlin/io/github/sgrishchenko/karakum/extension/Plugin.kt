@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.util.currentAbortable
 import js.array.ReadonlyArray
-import js.core.Void
 import js.coroutines.promise
 import js.promise.Promise
 import js.promise.await

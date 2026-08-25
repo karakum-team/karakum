@@ -29,5 +29,5 @@ val convertVoid = createPlugin plugin@{ node, _, _ ->
         return@plugin "Unit"
     }
 
-    "js.core.Void"
+    "js.void.Void"
 }

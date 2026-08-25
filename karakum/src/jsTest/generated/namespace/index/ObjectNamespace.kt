@@ -8,16 +8,14 @@ external object ObjectNamespace {
 val objectNamespaceValue: Double
 /** my favorite constant */
 val objectNamespaceValueWithComment: Double
-sealed interface objectNamespaceUnion {
-companion object
-}
+@js.union.JsUnion
+sealed interface objectNamespaceUnion
 interface ObjectNamespaceInterface {
 var someProperty: ObjectNamespaceInterfaceSomeProperty
 }
 object InnerObjectNamespace {
 val innerObjectNamespaceValue: Double
-sealed interface innerObjectNamespaceUnion {
-companion object
-}
+@js.union.JsUnion
+sealed interface innerObjectNamespaceUnion
 }
 }

@@ -2,9 +2,8 @@
 
 package sandbox.base.union.mixedLiteralEnum
 
-sealed external interface MixedLiteralEnumWithDuplicates {
-companion object
-}
+@js.union.JsUnion
+sealed external interface MixedLiteralEnumWithDuplicates
 inline val MixedLiteralEnumWithDuplicates.Companion.`true`: MixedLiteralEnumWithDuplicates
     get() = js.reflect.unsafeCast(true)
 

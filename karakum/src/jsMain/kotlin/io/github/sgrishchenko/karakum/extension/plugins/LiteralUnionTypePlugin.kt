@@ -262,9 +262,8 @@ inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
         ?.joinToString(separator = ", ")
 
     val declaration = """
-sealed ${ifPresent(externalModifier) { "$it "}}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
-companion object
-}
+@js.union.JsUnion
+sealed ${ifPresent(externalModifier) { "$it "}}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }}
     """.trim()
 
     val generated = """

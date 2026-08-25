@@ -2,9 +2,8 @@
 
 package sandbox.base.union.duplicates
 
-sealed external interface Enc {
-companion object
-}
+@js.union.JsUnion
+sealed external interface Enc
 inline val Enc.Companion.utf8: Enc
     get() = js.reflect.unsafeCast("utf8")
 /*

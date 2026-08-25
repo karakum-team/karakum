@@ -2,9 +2,8 @@
 
 package sandbox.base.function.stringUnionParam
 
-sealed external interface GetGPUInfoInfoType {
-companion object
-}
+@js.union.JsUnion
+sealed external interface GetGPUInfoInfoType
 
 inline val GetGPUInfoInfoType.Companion.basic: GetGPUInfoInfoType
     get() = js.reflect.unsafeCast("basic")

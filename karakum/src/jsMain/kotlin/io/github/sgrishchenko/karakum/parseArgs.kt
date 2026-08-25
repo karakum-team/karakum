@@ -7,42 +7,36 @@ import io.github.sgrishchenko.karakum.util.Many
 import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.json.parse
-import js.objects.unsafeJso
+import js.objects.recordOf
 import js.promise.Promise
-import kotlinx.coroutines.CoroutineScope
 import node.buffer.BufferEncoding
 import node.buffer.utf8
 import node.fs.readFile
-import node.util.ParseArgsConfig
-import node.util.ParseArgsOptionDescriptor
-import node.util.ParseArgsOptionsType
-import node.util.parseArgs
-import node.util.string
+import node.util.*
 import web.abort.Abortable
 import web.abort.asCoroutineScope
-import kotlin.coroutines.EmptyCoroutineContext
 
 suspend fun parseArgs(args: ReadonlyArray<String>): PartialConfiguration {
     val config = ParseArgsConfig(
         args = args,
-        options = unsafeJso {
-            this["input"] = ParseArgsOptionDescriptor(
+        options = recordOf(
+            "input" to ParseArgsOptionDescriptor(
                 type = ParseArgsOptionsType.string,
                 multiple = true
-            )
+            ),
 
-            this["output"] = ParseArgsOptionDescriptor(
+            "output" to ParseArgsOptionDescriptor(
                 type = ParseArgsOptionsType.string,
-            )
+            ),
 
-            this["library-name"] = ParseArgsOptionDescriptor(
+            "library-name" to ParseArgsOptionDescriptor(
                 type = ParseArgsOptionsType.string,
-            )
+            ),
 
-            this["config"] = ParseArgsOptionDescriptor(
+            "config" to ParseArgsOptionDescriptor(
                 type = ParseArgsOptionsType.string,
-            )
-        }
+            ),
+        )
     )
 
     val results = parseArgs(config)

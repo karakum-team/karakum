@@ -2,9 +2,8 @@
 
 package sandbox.base.union.stringEnum
 
-sealed external interface ExampleTokens {
-companion object
-}
+@js.union.JsUnion
+sealed external interface ExampleTokens
 inline val ExampleTokens.Companion.`_`: ExampleTokens
     get() = js.reflect.unsafeCast("")
 

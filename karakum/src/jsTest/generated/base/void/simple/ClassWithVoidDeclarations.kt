@@ -6,5 +6,5 @@ package sandbox.base.void.simple
 
 external class ClassWithVoidDeclarations {
 fun someMethod(): Unit
-val someValue: js.core.Void
+val someValue: js.void.Void
 }

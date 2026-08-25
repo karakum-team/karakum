@@ -2,9 +2,8 @@
 
 package sandbox.namespace.index
 
-sealed external interface ObjectNamespaceInterfaceSomeProperty {
-companion object
-}
+@js.union.JsUnion
+sealed external interface ObjectNamespaceInterfaceSomeProperty
 
 inline val ObjectNamespaceInterfaceSomeProperty.Companion.`3`: ObjectNamespaceInterfaceSomeProperty
     get() = js.reflect.unsafeCast("3")
