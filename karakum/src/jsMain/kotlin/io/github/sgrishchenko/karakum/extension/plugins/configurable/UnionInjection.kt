@@ -147,7 +147,8 @@ class UnionInjection : Injection {
             // TODO: support template literals
             // TODO: support nullable unions
             val declaration = """
-sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed /* union */
+${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(renderedTypeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 }
             """.trim()
 
@@ -222,7 +223,8 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(ren
                 // TODO: support template literals
                 // TODO: support nullable unions
                 return """
-sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+sealed /* union */
+${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParameters) { "<${it}>" }}${ifPresent(injectedHeritageClauses) { " : $it" }} {
 }
                 """.trim()
             }

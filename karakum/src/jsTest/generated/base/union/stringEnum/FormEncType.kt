@@ -3,7 +3,8 @@
 package sandbox.base.union.stringEnum
 
 @js.union.JsUnion
-sealed external interface FormEncType
+sealed /* union */
+external interface FormEncType
 inline val FormEncType.Companion.`application/x-www-form-urlencoded`: FormEncType
     get() = js.reflect.unsafeCast("application/x-www-form-urlencoded")
 
