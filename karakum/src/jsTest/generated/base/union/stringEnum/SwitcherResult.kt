@@ -3,7 +3,8 @@
 package sandbox.base.union.stringEnum
 
 @js.union.JsUnion
-sealed external interface SwitcherResult
+sealed /* union */
+external interface SwitcherResult
 
 inline val SwitcherResult.Companion.on: SwitcherResult
     get() = js.reflect.unsafeCast("on")

@@ -3,7 +3,8 @@
 package extension.union
 
 @js.union.JsUnion
-sealed external interface UnionWithDuplicatesAndResolution
+sealed /* union */
+external interface UnionWithDuplicatesAndResolution
 inline val UnionWithDuplicatesAndResolution.Companion.`true`: UnionWithDuplicatesAndResolution
     get() = js.reflect.unsafeCast(true)
 

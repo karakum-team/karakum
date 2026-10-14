@@ -9,13 +9,15 @@ val objectNamespaceValue: Double
 /** my favorite constant */
 val objectNamespaceValueWithComment: Double
 @js.union.JsUnion
-sealed interface objectNamespaceUnion
+sealed /* union */
+interface objectNamespaceUnion
 interface ObjectNamespaceInterface {
 var someProperty: ObjectNamespaceInterfaceSomeProperty
 }
 object InnerObjectNamespace {
 val innerObjectNamespaceValue: Double
 @js.union.JsUnion
-sealed interface innerObjectNamespaceUnion
+sealed /* union */
+interface innerObjectNamespaceUnion
 }
 }

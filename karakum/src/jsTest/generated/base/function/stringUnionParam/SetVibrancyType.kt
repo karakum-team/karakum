@@ -3,7 +3,8 @@
 package sandbox.base.function.stringUnionParam
 
 @js.union.JsUnion
-sealed external interface SetVibrancyType
+sealed /* union */
+external interface SetVibrancyType
 
 inline val SetVibrancyType.Companion.light: SetVibrancyType
     get() = js.reflect.unsafeCast("light")

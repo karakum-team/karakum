@@ -263,7 +263,8 @@ inline val ${qualifiedName}.Companion.${entry.key}: $qualifiedName
 
     val declaration = """
 @js.union.JsUnion
-sealed ${ifPresent(externalModifier) { "$it "}}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }}
+sealed /* union */
+${ifPresent(externalModifier) { "$it "}}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }}
     """.trim()
 
     val generated = """

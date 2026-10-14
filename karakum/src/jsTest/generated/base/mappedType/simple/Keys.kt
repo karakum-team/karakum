@@ -3,7 +3,8 @@
 package sandbox.base.mappedType.simple
 
 @js.union.JsUnion
-sealed external interface Keys
+sealed /* union */
+external interface Keys
 inline val Keys.Companion.one: Keys
     get() = js.reflect.unsafeCast("one")
 

@@ -3,7 +3,8 @@
 package extension.union
 
 @js.union.JsUnion
-sealed external interface UnionWithDuplicates
+sealed /* union */
+external interface UnionWithDuplicates
 inline val UnionWithDuplicates.Companion.`true`: UnionWithDuplicates
     get() = js.reflect.unsafeCast(true)
 /*

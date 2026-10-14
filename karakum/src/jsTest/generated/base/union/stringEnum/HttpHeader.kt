@@ -3,7 +3,8 @@
 package sandbox.base.union.stringEnum
 
 @js.union.JsUnion
-sealed external interface HttpHeader
+sealed /* union */
+external interface HttpHeader
 inline val HttpHeader.Companion.ContentType: HttpHeader
     get() = js.reflect.unsafeCast("Content-Type")
 
