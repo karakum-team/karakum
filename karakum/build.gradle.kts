@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.js-plain-objects")
     id("io.github.turansky.seskar")
     id("com.vanniktech.maven.publish")
-    `node-conventions`
+    id("karakumbuild.node-conventions")
 }
 
 kotlin {
