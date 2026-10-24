@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import io.github.sgrishchenko.karakum.util.currentAbortable
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.promise.Promise
 import js.promise.await
@@ -58,7 +57,7 @@ class PromiseFunctionPlugin(
 
         if (ignore.matches(node, context)) return null
 
-        val sourceFileName = node.getSourceFileOrNull()?.fileName ?: "generated.d.ts"
+        val sourceFileName = node.getSourceFile()?.fileName ?: "generated.d.ts"
 
         val typeScriptService = context.requireService(typeScriptServiceKey)
 

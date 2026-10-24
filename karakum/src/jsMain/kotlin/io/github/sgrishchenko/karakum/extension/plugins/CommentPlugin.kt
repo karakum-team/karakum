@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import typescript.*
 
@@ -13,14 +12,14 @@ class CommentService @JsExport.Ignore constructor() {
     private val nestedCommentPattern = "(?<!^)/\\*".toRegex()
 
     fun renderLeadingComments(node: Node): String? {
-        val sourceFile = node.getSourceFileOrNull() ?: return null
+        val sourceFile = node.getSourceFile() ?: return null
 
         val leadingComments = getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?: emptyArray()
         return renderComments(sourceFile, leadingComments)
     }
 
     fun renderTrailingComments(node: Node): String? {
-        val sourceFile = node.getSourceFileOrNull() ?: return null
+        val sourceFile = node.getSourceFile() ?: return null
 
         val trailingComments = getTrailingCommentRanges(sourceFile.getFullText(), node.getEnd()) ?: emptyArray()
         return renderComments(sourceFile, trailingComments)
@@ -51,7 +50,7 @@ class CommentPlugin : Plugin {
     override suspend fun traverse(node: Node, context: Context) = Unit
 
     override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
-        val sourceFile = node.getSourceFileOrNull() ?: return null
+        val sourceFile = node.getSourceFile() ?: return null
 
         val leadingComments = (getLeadingCommentRanges(sourceFile.getFullText(), node.getFullStart()) ?: emptyArray())
             .filter { !isCommentRangeCovered(sourceFile, it) }

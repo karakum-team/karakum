@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.DeepMap
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.reflect.invoke
@@ -182,7 +181,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
     }
 
     private fun printNode(node: Node): String {
-        val sourceFile = node.getSourceFileOrNull() ?: virtualSourceFile
+        val sourceFile = node.getSourceFile() ?: virtualSourceFile
 
         return printer.printNode(EmitHint.Unspecified, node, sourceFile)
     }

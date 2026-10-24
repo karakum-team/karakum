@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.resolveParenthesizedType
 import js.array.ReadonlyArray
 import js.numbers.contains
@@ -18,7 +17,7 @@ fun isNullableType(type: Node) = isNull(type) || isUndefined(type)
 
 @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 fun isPossiblyNullableType(node: TypeNode, context: Context): Boolean {
-    if (node.getSourceFileOrNull() == null) {
+    if (node.getSourceFile() == null) {
         // handle synthetic nodes
         val resolvedType = resolveTypeIfNeeded(node, context)
 

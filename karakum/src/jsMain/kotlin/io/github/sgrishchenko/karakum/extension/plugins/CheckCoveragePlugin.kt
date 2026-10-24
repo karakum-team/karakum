@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
@@ -67,7 +66,7 @@ class CheckCoveragePlugin : Plugin {
             if (configurationService?.configuration?.verbose == true) {
                 val syntaxKindRecord = SyntaxKind.unsafeCast<ReadonlyRecord<SyntaxKind, String>>()
                 val message = "Node with kind ${syntaxKindRecord[uncoveredNode.kind]} is uncovered"
-                val sourceFile = uncoveredNode.getSourceFileOrNull()
+                val sourceFile = uncoveredNode.getSourceFile()
 
                 if (sourceFile != null) {
                     val lineAndCharacter = sourceFile.getLineAndCharacterOfPosition(uncoveredNode.pos)

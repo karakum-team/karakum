@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import typescript.Node
 
 private val builtinSources = listOf(
@@ -29,7 +28,7 @@ fun isBuiltin(node: Node, context: Context): Boolean {
     }
 
     return allDeclarations.any { declaration ->
-        val sourceFileName = declaration.getSourceFileOrNull()?.fileName
+        val sourceFileName = declaration.getSourceFile()?.fileName
 
         sourceFileName != null && builtinSources.any { it.matches(sourceFileName) }
     }

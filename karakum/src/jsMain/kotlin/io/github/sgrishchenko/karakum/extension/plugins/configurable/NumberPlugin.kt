@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.checkCoverageServiceKey
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.array.component1
 import js.array.component2
@@ -87,7 +86,7 @@ class NumberPlugin(
 
         for (uncoveredNode in uncoveredNodes) {
             val message = "Unresolved number type"
-            val sourceFile = uncoveredNode.getSourceFileOrNull()
+            val sourceFile = uncoveredNode.getSourceFile()
 
             if (sourceFile != null) {
                 val lineAndCharacter = sourceFile.getLineAndCharacterOfPosition(uncoveredNode.pos)

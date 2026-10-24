@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.currentAbortable
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.promise.Promise
 import js.promise.await
 import js.reflect.invoke
@@ -104,7 +103,7 @@ fun withName(name: String): (Node, Any?) -> Boolean {
 
 fun withFile(glob: String): (Node, Any?) -> Boolean {
     return { node, _ ->
-        node.getSourceFileOrNull().let { it != null && path.matchesGlob(it.fileName, glob) }
+        node.getSourceFile().let { it != null && path.matchesGlob(it.fileName, glob) }
     }
 }
 

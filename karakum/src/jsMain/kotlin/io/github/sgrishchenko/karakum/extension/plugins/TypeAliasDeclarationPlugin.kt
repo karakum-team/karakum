@@ -10,7 +10,6 @@ import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.reflect.invoke
 import typescript.*
@@ -88,7 +87,7 @@ class TypeAliasDeclarationPlugin : Plugin {
 
             val typeScriptService = context.requireService(typeScriptServiceKey)
 
-            val sourceFileName = node.getSourceFileOrNull()?.fileName ?: "generated.d.ts"
+            val sourceFileName = node.getSourceFile()?.fileName ?: "generated.d.ts"
             val namespace = typeScriptService.findClosestNamespace(node)
 
             generated += DerivedDeclaration(

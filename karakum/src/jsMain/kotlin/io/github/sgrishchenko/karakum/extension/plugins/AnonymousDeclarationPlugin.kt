@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import io.github.sgrishchenko.karakum.util.currentAbortable
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.promise.Promise
 import js.promise.await
@@ -69,7 +68,7 @@ class AnonymousDeclarationPlugin(
         val declaration = renderResult.declaration
         val reference = renderResult.reference
 
-        val sourceFileName = node.getSourceFileOrNull()?.fileName ?: "generated.d.ts"
+        val sourceFileName = node.getSourceFile()?.fileName ?: "generated.d.ts"
         val namespace = typeScriptService.findClosestNamespace(node)
 
         generated[node] = DerivedDeclaration(

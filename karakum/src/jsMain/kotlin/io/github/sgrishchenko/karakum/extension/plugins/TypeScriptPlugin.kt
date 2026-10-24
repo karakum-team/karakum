@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.setParentNodes
 import js.reflect.invoke
 import typescript.*
@@ -19,7 +18,7 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualParents = mutableMapOf<Node, Node>()
 
     fun printNode(node: Node): String {
-        val sourceFile = node.getSourceFileOrNull() ?: this.virtualSourceFile
+        val sourceFile = node.getSourceFile() ?: this.virtualSourceFile
 
         return printer.printNode(EmitHint.Unspecified, node, sourceFile)
     }
