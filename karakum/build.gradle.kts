@@ -83,7 +83,7 @@ mavenPublishing {
     pom {
         name = project.name
         description = project.description
-        url = "https://github.com/sgrishchenko/karakum"
+        url = "https://github.com/karakum-team/karakum"
 
         licenses {
             license {
@@ -103,7 +103,7 @@ mavenPublishing {
         scm {
             connection = "scm:git:git://github.com/sgrishchenko/karakum.git"
             developerConnection = "scm:git:git@github.com:sgrishchenko/karakum.git"
-            url = "https://github.com/sgrishchenko/karakum"
+            url = "https://github.com/karakum-team/karakum"
         }
     }
 
