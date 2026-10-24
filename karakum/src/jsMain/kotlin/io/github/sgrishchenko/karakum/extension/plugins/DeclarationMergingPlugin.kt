@@ -7,6 +7,7 @@ import io.github.sgrishchenko.karakum.util.DeepMap
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.JsArrays
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import typescript.*
 import kotlin.contracts.contract
 
@@ -108,17 +109,17 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
 
             if (
                 isModuleBlock(parent)
-                && namespaceInfoService?.resolveNamespaceStrategy(parent.parent) == NamespaceStrategy.`package`
+                && namespaceInfoService?.resolveNamespaceStrategy(parent.parent!!) == NamespaceStrategy.`package`
             ) {
                 return@filter false
             }
 
             if (isVariableDeclarationList(parent)) {
-                val grandparent = parent.parent.parent
+                val grandparent = parent.parent!!.parent
 
                 if (
                     isModuleBlock(grandparent)
-                    && namespaceInfoService?.resolveNamespaceStrategy(grandparent.parent) == NamespaceStrategy.`package`
+                    && namespaceInfoService?.resolveNamespaceStrategy(grandparent.parent!!) == NamespaceStrategy.`package`
                 ) {
                     return@filter false
                 }

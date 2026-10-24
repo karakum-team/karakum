@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import js.reflect.invoke
 import typescript.isPropertyAccessExpression
 
 val convertPropertyAccessExpression = createPlugin plugin@{ node, context, render ->

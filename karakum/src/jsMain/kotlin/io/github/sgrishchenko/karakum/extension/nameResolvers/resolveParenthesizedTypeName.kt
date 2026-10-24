@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.getParentOrNull
+import js.reflect.invoke
 import typescript.Node
 import typescript.isParenthesizedTypeNode
 

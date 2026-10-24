@@ -11,6 +11,7 @@ import js.collections.JsMap
 import js.coroutines.promise
 import js.iterable.iterator
 import js.promise.Promise
+import js.reflect.invoke
 import typescript.*
 import web.abort.Abortable
 import web.abort.asCoroutineScope

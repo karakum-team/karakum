@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.setParentNodes
+import js.reflect.invoke
 import typescript.*
 
 @JsExport
@@ -40,7 +41,7 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
 
     @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
     fun findClosestNamespace(rootNode: Node?): ModuleDeclaration? {
-        return findClosest(rootNode, ::isModuleDeclaration) as ModuleDeclaration?
+        return findClosest(rootNode, isModuleDeclaration::invoke) as ModuleDeclaration?
     }
 
     fun resolveType(node: TypeNode): Node? {

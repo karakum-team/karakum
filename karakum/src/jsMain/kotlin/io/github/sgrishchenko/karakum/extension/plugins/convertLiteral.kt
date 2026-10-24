@@ -2,11 +2,13 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import js.reflect.TypeGuard
+import js.reflect.invoke
 import typescript.Node
 import typescript.isPrefixUnaryExpression
 
 fun convertLiteral(
-    predicate: (node: Node) -> Boolean,
+    predicate: TypeGuard<Node, *>,
     render: (node: Node) -> String?
 ): Plugin {
     val primitivePlugin = convertPrimitive(predicate, render)

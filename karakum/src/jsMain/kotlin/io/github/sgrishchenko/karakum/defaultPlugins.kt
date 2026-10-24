@@ -6,6 +6,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.*
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import typescript.*
 
 private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == kind }
@@ -65,12 +66,12 @@ fun createPlugins(
 
     convertMemberName, // should be applied before literals
 
-    convertLiteral(::isStringLiteral) { "String" },
-    convertLiteral(::isNumericLiteral) { "Double" },
-    convertLiteral(::isBigIntLiteral) { "js.numbers.BigInt" },
+    convertLiteral(isStringLiteral) { "String" },
+    convertLiteral(isNumericLiteral) { "Double" },
+    convertLiteral(isBigIntLiteral) { "js.numbers.BigInt" },
 
-    convertLiteral(::isThisTypeNode) { "Unit" },
-    convertLiteral(::isTemplateLiteralTypeNode) { "String" },
+    convertLiteral(isThisTypeNode) { "Unit" },
+    convertLiteral(isTemplateLiteralTypeNode) { "String" },
 
     convertVoid,
     convertModuleDeclaration,

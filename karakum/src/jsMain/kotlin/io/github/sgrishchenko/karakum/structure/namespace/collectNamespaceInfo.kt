@@ -8,6 +8,7 @@ import io.github.sgrishchenko.karakum.util.traverse
 import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.objects.recordOf
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 

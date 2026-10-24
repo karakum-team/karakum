@@ -2,6 +2,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import js.reflect.TypeGuard
+import js.reflect.invoke
 import typescript.Node
 
 fun convertPrimitive(
@@ -17,3 +19,9 @@ fun convertPrimitive(
         render(node)
     }
 }
+
+fun convertPrimitive(
+    predicate: TypeGuard<Node, *>,
+    render: (render: Node) -> String?,
+): Plugin =
+    convertPrimitive(predicate::invoke, render)

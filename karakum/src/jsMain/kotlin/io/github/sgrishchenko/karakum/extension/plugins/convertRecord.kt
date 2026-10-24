@@ -3,6 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
+import js.reflect.invoke
 import typescript.*
 
 private suspend fun renderRecord(node: IndexSignatureDeclaration, render: Render<Node>): String {

@@ -1,5 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
+import js.reflect.invoke
 import typescript.TypeNode
 import typescript.isParenthesizedTypeNode
 

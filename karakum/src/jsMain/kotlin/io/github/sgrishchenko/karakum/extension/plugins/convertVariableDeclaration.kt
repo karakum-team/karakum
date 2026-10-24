@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.numbers.contains
+import js.reflect.invoke
 import typescript.NodeFlags
 import typescript.isVariableDeclaration
 
@@ -24,7 +25,7 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
 
     val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
-    val modifier = mutabilityModifier ?: if (NodeFlags.Const in node.parent.flags) {
+    val modifier = mutabilityModifier ?: if (NodeFlags.Const in node.parent!!.flags) {
         "val"
     } else {
         "var"
@@ -42,7 +43,7 @@ val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
         namespace == null
         || namespaceInfoService?.resolveNamespaceStrategy(namespace) == NamespaceStrategy.`package`
     ) {
-        leadingComment = commentService?.renderLeadingComments(node.parent) ?: ""
+        leadingComment = commentService?.renderLeadingComments(node.parent!!) ?: ""
     }
 
     val type = node.type

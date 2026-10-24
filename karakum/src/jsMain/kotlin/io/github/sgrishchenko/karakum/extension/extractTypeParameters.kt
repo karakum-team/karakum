@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.*
 import js.coroutines.promise
 import js.promise.Promise
+import js.reflect.invoke
 import typescript.*
 import web.abort.Abortable
 import web.abort.asCoroutineScope

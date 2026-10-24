@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.util.camelize
 import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.isKebab
 import io.github.sgrishchenko.karakum.util.isValidIdentifier
+import js.reflect.invoke
 import typescript.*
 
 fun createKebabAnnotation(node: Node): String {

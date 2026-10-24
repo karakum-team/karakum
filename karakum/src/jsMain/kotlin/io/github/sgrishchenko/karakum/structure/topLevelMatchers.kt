@@ -6,6 +6,7 @@ import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.Declaration
 import typescript.ModuleDeclaration

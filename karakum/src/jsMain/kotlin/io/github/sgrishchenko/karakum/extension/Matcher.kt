@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.promise.Promise
 import js.promise.await
+import js.reflect.invoke
 import node.path.path
 import typescript.NamedDeclaration
 import typescript.Node

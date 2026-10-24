@@ -3,6 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import typescript.ModuleDeclaration
 import typescript.Node
 import typescript.Program

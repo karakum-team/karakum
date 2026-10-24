@@ -11,6 +11,7 @@ import js.array.ReadonlyArray
 import js.array.component1
 import js.array.component2
 import js.objects.Object
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 
@@ -66,7 +67,7 @@ fun extractNamespaceName(
     return if (isModuleDeclaration(parent)) {
         extractNamespaceName(parent, name)
     } else if (isModuleBlock(parent)) {
-        extractNamespaceName(parent.parent, name)
+        extractNamespaceName(parent.parent!!, name)
     } else {
         name
     }

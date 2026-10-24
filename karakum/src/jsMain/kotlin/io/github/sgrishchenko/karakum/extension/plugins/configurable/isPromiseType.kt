@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.isBuiltin
+import js.reflect.invoke
 import typescript.Node
 import typescript.isIdentifier
 import typescript.isTypeReferenceNode

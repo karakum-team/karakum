@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.topLevel.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
+import js.reflect.invoke
 import typescript.isExportAssignment
 
 val blankOutExportStatement = createPlugin plugin@{ node, _, _ ->

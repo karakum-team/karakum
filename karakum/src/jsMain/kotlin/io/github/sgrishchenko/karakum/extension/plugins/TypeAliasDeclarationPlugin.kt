@@ -12,6 +12,7 @@ import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import typescript.*
 
 class TypeAliasDeclarationPlugin : Plugin {

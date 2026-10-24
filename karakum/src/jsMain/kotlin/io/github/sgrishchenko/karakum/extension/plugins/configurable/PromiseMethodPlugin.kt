@@ -6,6 +6,7 @@ import io.github.sgrishchenko.karakum.util.currentAbortable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.promise.Promise
 import js.promise.await
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 import web.abort.Abortable

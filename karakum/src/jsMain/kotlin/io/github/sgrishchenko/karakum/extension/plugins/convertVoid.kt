@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
+import js.reflect.invoke
 import typescript.*
 
 private fun extractReturnType(node: Node): Node? {
@@ -23,7 +24,7 @@ private fun extractReturnType(node: Node): Node? {
 val convertVoid = createPlugin plugin@{ node, _, _ ->
     if (node.kind != SyntaxKind.VoidKeyword) return@plugin null
 
-    val returnType = extractReturnType(node.parent)
+    val returnType = extractReturnType(node.parent!!)
 
     if (returnType != null) {
         return@plugin "Unit"

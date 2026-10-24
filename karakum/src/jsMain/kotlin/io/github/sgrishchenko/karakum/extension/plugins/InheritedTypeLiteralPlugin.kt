@@ -1,6 +1,7 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
+import js.reflect.invoke
 import typescript.*
 import kotlin.contracts.contract
 

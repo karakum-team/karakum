@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.renderNullable
+import js.reflect.invoke
 import typescript.isNamedTupleMember
 
 val convertNamedTupleMember = createPlugin plugin@{ node, context, render ->

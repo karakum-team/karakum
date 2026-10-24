@@ -11,6 +11,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.configurable.PromiseResu
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.loose
 import io.github.sgrishchenko.karakum.extension.nameResolvers.resolveUnionMemberDuplicateName
 import io.github.sgrishchenko.karakum.generateTests
+import js.reflect.invoke
 import kotlinx.coroutines.test.runTest
 import typescript.Node
 import typescript.isClassDeclaration
@@ -50,38 +51,38 @@ class ExtensionTest {
                     NumberPluginStrategy.loose,
                     defaultNumberType = "Double /* fallback */",
                     "Int" to match {
-                        match(::isInterfaceDeclaration, withName("InterfaceWithNumbers")) {
-                            match(::isPropertySignature, withName("numberField1"))
-                            match(::isMethodSignature, withName("numberMethod1"))
-                                .match(::isParameter, withName("numberParam"))
+                        match(isInterfaceDeclaration::invoke, withName("InterfaceWithNumbers")) {
+                            match(isPropertySignature::invoke, withName("numberField1"))
+                            match(isMethodSignature::invoke, withName("numberMethod1"))
+                                .match(isParameter::invoke, withName("numberParam"))
                         }
 
-                        match(::isClassDeclaration, withName("ClassWithNumbers")) {
-                            match(::isPropertyDeclaration, withName("numberField1"))
-                            match(::isMethodDeclaration, withName("numberMethod1"))
-                                .match(::isParameter, withName("numberParam"))
+                        match(isClassDeclaration::invoke, withName("ClassWithNumbers")) {
+                            match(isPropertyDeclaration::invoke, withName("numberField1"))
+                            match(isMethodDeclaration::invoke, withName("numberMethod1"))
+                                .match(isParameter::invoke, withName("numberParam"))
                         }
                     },
                     "Double" to match {
-                        match(::isInterfaceDeclaration, withName("InterfaceWithNumbers")) {
-                            match(::isPropertySignature, withName("numberField2"))
-                            match(::isMethodSignature, withName("numberMethod2"))
-                                .match(::isParameter, withName("numberParam"))
-                            match(::isMethodSignature, withName("numberMethod3"))
+                        match(isInterfaceDeclaration::invoke, withName("InterfaceWithNumbers")) {
+                            match(isPropertySignature::invoke, withName("numberField2"))
+                            match(isMethodSignature::invoke, withName("numberMethod2"))
+                                .match(isParameter::invoke, withName("numberParam"))
+                            match(isMethodSignature::invoke, withName("numberMethod3"))
                         }
 
-                        match(::isClassDeclaration, withName("ClassWithNumbers")) {
-                            match(::isPropertyDeclaration, withName("numberField2"))
-                            match(::isMethodDeclaration, withName("numberMethod2"))
-                                .match(::isParameter, withName("numberParam"))
-                            match(::isMethodDeclaration, withName("numberMethod3"))
+                        match(isClassDeclaration::invoke, withName("ClassWithNumbers")) {
+                            match(isPropertyDeclaration::invoke, withName("numberField2"))
+                            match(isMethodDeclaration::invoke, withName("numberMethod2"))
+                                .match(isParameter::invoke, withName("numberParam"))
+                            match(isMethodDeclaration::invoke, withName("numberMethod3"))
                         }
                     },
                 ),
 
                 PromiseResultPlugin(
                     ignore = match {
-                        match(::isFunctionDeclaration, withName("returnsPromiseResultIgnored"))
+                        match(isFunctionDeclaration::invoke, withName("returnsPromiseResultIgnored"))
                     }
                 ),
                 PromiseResultPlugin(
@@ -91,11 +92,11 @@ class ExtensionTest {
 
                 PromiseFunctionPlugin(
                     ignore = match {
-                        match(::isFunctionDeclaration, withName("returnsPromiseIgnored"))
+                        match(isFunctionDeclaration::invoke, withName("returnsPromiseIgnored"))
                     },
                     exclude = match {
                         match(
-                            ::isFunctionDeclaration,
+                            isFunctionDeclaration::invoke,
                             withName("returnsPromise2"),
                             { _, context ->
                                 context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
@@ -110,22 +111,22 @@ class ExtensionTest {
 
                 PromiseMethodPlugin(
                     ignore = match {
-                        match(::isInterfaceDeclaration, withName("InterfaceWithPromiseMethods"))
-                            .match(::isMethodSignature, withName("returnsPromiseIgnored"))
+                        match(isInterfaceDeclaration::invoke, withName("InterfaceWithPromiseMethods"))
+                            .match(isMethodSignature::invoke, withName("returnsPromiseIgnored"))
 
-                        match(::isClassDeclaration, withName("ClassWithPromiseMethods"))
-                            .match(::isMethodDeclaration, withName("returnsPromiseIgnored"))
+                        match(isClassDeclaration::invoke, withName("ClassWithPromiseMethods"))
+                            .match(isMethodDeclaration::invoke, withName("returnsPromiseIgnored"))
                     },
                     exclude = match {
                         match(
-                            ::isMethodSignature,
+                            isMethodSignature::invoke,
                             withName("returnsPromise2"),
                             { _, context ->
                                 context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
                             }
                         )
                         match(
-                            ::isMethodDeclaration,
+                            isMethodDeclaration::invoke,
                             withName("returnsPromise2"),
                             { _, context ->
                                 context.signature.first().parameter.type?.let { isUnionTypeNode(it) } == true
@@ -152,7 +153,7 @@ class ExtensionTest {
             annotations = listOf(
                 JsPlainObjectAnnotation(
                     ignore = match {
-                        match(::isInterfaceDeclaration, withName("MutableContainerClass"))
+                        match(isInterfaceDeclaration::invoke, withName("MutableContainerClass"))
                     }
                 )
             )

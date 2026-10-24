@@ -2,6 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
+import js.reflect.invoke
 import typescript.asArray
 import typescript.isCallSignatureDeclaration
 

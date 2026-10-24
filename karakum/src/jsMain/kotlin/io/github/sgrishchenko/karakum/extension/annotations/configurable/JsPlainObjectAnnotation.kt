@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.numbers.contains
 import js.promise.Promise
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 import web.abort.Abortable
@@ -43,7 +44,7 @@ private fun getDeclarations(node: Node, context: Context): List<Node>? {
 private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
     if (
         isInterfaceDeclaration(node)
-        && node.members.asArray().all(::isPropertySignature)
+        && node.members.asArray().all(isPropertySignature::invoke)
         && node.heritageClauses
             ?.asArray()
             ?.flatMap { it.types.asArray().asIterable() }
@@ -63,7 +64,7 @@ private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
 
     if (
         isTypeLiteralNode(node)
-        && node.members.asArray().all(::isPropertySignature)
+        && node.members.asArray().all(isPropertySignature::invoke)
     ) {
         return true
     }

@@ -9,6 +9,7 @@ import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import js.array.ReadonlyArray
 import js.promise.Promise
 import js.promise.await
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 import web.abort.Abortable

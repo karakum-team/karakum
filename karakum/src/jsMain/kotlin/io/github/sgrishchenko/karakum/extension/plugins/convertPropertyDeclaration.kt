@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
+import js.reflect.invoke
 import typescript.SyntaxKind
 import typescript.asArray
 import typescript.isPropertyDeclaration

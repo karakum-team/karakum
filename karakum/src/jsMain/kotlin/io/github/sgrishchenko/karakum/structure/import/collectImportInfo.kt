@@ -10,6 +10,7 @@ import js.array.component1
 import js.array.component2
 import js.objects.Object
 import js.objects.recordOf
+import js.reflect.invoke
 import typescript.*
 
 typealias ImportInfo = Map<Declaration, ReadonlyArray<String>>
@@ -59,7 +60,7 @@ fun collectImportInfo(
                 val declaration = if (isSourceFile(parent)) {
                     parent
                 } else if (isModuleBlock(parent)) {
-                    parent.parent
+                    parent.parent!!
                 } else {
                     return@traverseSync
                 }

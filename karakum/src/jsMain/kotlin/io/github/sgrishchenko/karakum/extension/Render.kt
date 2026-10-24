@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.promise.Promise
+import js.reflect.invoke
 import typescript.*
 import web.abort.Abortable
 import web.abort.asCoroutineScope

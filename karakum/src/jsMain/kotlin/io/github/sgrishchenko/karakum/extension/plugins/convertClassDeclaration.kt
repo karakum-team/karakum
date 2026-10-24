@@ -8,6 +8,7 @@ import io.github.sgrishchenko.karakum.extension.STATIC_MEMBER
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.array.ReadonlyArray
+import js.reflect.invoke
 import typescript.*
 
 private fun extractModifiers(member: Declaration): ReadonlyArray<ModifierLike> {

@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.resolveParenthesizedType
 import js.array.ReadonlyArray
 import js.numbers.contains
+import js.reflect.invoke
 import typescript.*
 import kotlin.contracts.contract
 

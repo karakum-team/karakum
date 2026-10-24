@@ -5,6 +5,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.currentAbortable
 import js.promise.Promise
 import js.promise.await
+import js.reflect.invoke
 import kotlinx.js.JsPlainObject
 import typescript.*
 import web.abort.Abortable

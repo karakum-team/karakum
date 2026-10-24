@@ -10,6 +10,7 @@ import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.promise.Promise
 import js.promise.await
+import js.reflect.invoke
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
 import typescript.*
