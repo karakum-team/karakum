@@ -11,7 +11,8 @@ fun convertPrimitive(
     render: (render: Node) -> String?,
 ): Plugin =
     createPlugin plugin@{ node, context, _ ->
-        if (!predicate(node)) return@plugin null
+        if (!predicate(node))
+            return@plugin null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
@@ -19,8 +20,16 @@ fun convertPrimitive(
         render(node)
     }
 
-fun convertPrimitive(
-    predicate: TypeGuard<Node, *>,
-    render: (render: Node) -> String?,
+fun <T : Node> convertPrimitive(
+    predicate: TypeGuard<Node, T>,
+    render: (render: T) -> String?,
 ): Plugin =
-    convertPrimitive(predicate::invoke, render)
+    createPlugin plugin@{ node, context, _ ->
+        if (!predicate(node))
+            return@plugin null
+
+        val checkCoverageService = context.lookupService(checkCoverageServiceKey)
+        checkCoverageService?.cover(node)
+
+        render(node)
+    }

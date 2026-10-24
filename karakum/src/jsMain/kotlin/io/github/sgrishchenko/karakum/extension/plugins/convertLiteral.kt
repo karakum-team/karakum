@@ -7,8 +7,8 @@ import js.reflect.invoke
 import typescript.Node
 import typescript.isPrefixUnaryExpression
 
-fun convertLiteral(
-    predicate: TypeGuard<Node, *>,
+fun <T : Node> convertLiteral(
+    predicate: TypeGuard<Node, T>,
     render: (node: Node) -> String?
 ): Plugin {
     val primitivePlugin = convertPrimitive(predicate, render)
