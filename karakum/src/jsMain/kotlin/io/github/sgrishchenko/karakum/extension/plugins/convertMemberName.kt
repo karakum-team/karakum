@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.util.camelize
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.isKebab
 import io.github.sgrishchenko.karakum.util.isValidIdentifier
 import js.reflect.invoke
@@ -42,7 +41,7 @@ fun convertMemberNameLiteral(node: StringLiteral): String {
 
 val convertMemberName = createPlugin plugin@{ node, context, _ ->
     if (isStringLiteral(node) || isNumericLiteral(node)) {
-        val parent = node.getParentOrNull() ?: return@plugin null
+        val parent = node.parent ?: return@plugin null
 
         if (
             (isPropertyDeclaration(parent) && parent.name === node)

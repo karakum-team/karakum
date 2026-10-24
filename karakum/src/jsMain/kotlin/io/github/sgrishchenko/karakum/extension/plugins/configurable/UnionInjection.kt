@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins.configurable
 
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.*
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.array.ReadonlyArray
 import js.array.component1
 import js.array.component2
@@ -58,7 +57,7 @@ class UnionService(private val context: Context) {
 
         var name: String
 
-        val parent = union.getParentOrNull()
+        val parent = union.parent
 
         if (
             parent != null
@@ -306,7 +305,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typ
                 return parentNames
             }
 
-            val parent = node.getParentOrNull()
+            val parent = node.parent
 
             if (
                 parent != null

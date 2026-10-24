@@ -2,14 +2,13 @@ package io.github.sgrishchenko.karakum.extension.nameResolvers
 
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.reflect.invoke
 import typescript.*
 
 suspend fun resolveUnionMemberDuplicateName(node: Node, context: Context): String? {
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
-        typeScriptService?.getParent(it) ?: it.getParentOrNull()
+        typeScriptService?.getParent(it) ?: it.parent
     }
 
     if (!isLiteralTypeNode(node)) return null

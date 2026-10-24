@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.isBuiltin
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.reflect.invoke
 import typescript.isExpressionWithTypeArguments
 import typescript.isIdentifier
@@ -21,7 +20,7 @@ val builtinTypes = browserApi
 val convertBuiltinTypeReference = createPlugin plugin@{ node, context, _ ->
     if (!isIdentifier(node)) return@plugin null
 
-    val parent = node.getParentOrNull() ?: return@plugin null
+    val parent = node.parent ?: return@plugin null
     if (
         !isTypeReferenceNode(parent)
         && !isExpressionWithTypeArguments(parent)

@@ -3,8 +3,6 @@ package io.github.sgrishchenko.karakum.util
 import typescript.Node
 import typescript.SourceFile
 
-fun Node.getParentOrNull() = parent.unsafeCast<Node?>()
-
 fun Node.getSourceFileOrNull() = getSourceFile().unsafeCast<SourceFile?>()
 
 private external interface MutableNode {

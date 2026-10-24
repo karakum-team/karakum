@@ -3,14 +3,13 @@ package io.github.sgrishchenko.karakum.extension.nameResolvers
 import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.capitalize
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import js.reflect.invoke
 import typescript.*
 
 val resolveFunctionTypeAliasParameterName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val getParent = { it: Node ->
-        typeScriptService?.getParent(it) ?: it.getParentOrNull()
+        typeScriptService?.getParent(it) ?: it.parent
     }
 
     val parameter = getParent(node)

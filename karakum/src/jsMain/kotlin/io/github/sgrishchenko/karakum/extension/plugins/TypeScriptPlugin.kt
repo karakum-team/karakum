@@ -1,7 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
-import io.github.sgrishchenko.karakum.util.getParentOrNull
 import io.github.sgrishchenko.karakum.util.getSourceFileOrNull
 import io.github.sgrishchenko.karakum.util.setParentNodes
 import js.reflect.invoke
@@ -26,7 +25,7 @@ class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     }
 
     fun getParent(node: Node): Node? {
-        val realParent = node.getParentOrNull()
+        val realParent = node.parent
         if (realParent != null) return realParent
 
         return virtualParents[node]
