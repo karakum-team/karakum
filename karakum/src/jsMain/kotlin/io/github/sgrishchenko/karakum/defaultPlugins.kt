@@ -68,8 +68,7 @@ fun createPlugins(
 
     convertLiteral(isStringLiteral) { "String" },
     convertLiteral(isNumericLiteral) {
-        // TODO: use real `Int` check
-        if (it.text == "-1") "Int" else "Double"
+        if (it.text.toIntOrNull() != null) "Int" else "Double"
     },
     convertLiteral(isBigIntLiteral) { "js.numbers.BigInt" },
 
