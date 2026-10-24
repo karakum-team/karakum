@@ -9,7 +9,7 @@ import typescript.isPrefixUnaryExpression
 
 fun <T : Node> convertLiteral(
     predicate: TypeGuard<Node, T>,
-    render: (node: Node) -> String?
+    render: (node: T) -> String?
 ): Plugin {
     val primitivePlugin = convertPrimitive(predicate, render)
 
