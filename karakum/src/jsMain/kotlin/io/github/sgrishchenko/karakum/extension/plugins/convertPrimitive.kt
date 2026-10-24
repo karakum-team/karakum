@@ -9,8 +9,8 @@ import typescript.Node
 fun convertPrimitive(
     predicate: (node: Node) -> Boolean,
     render: (render: Node) -> String?,
-): Plugin {
-    return createPlugin plugin@{ node, context, _ ->
+): Plugin =
+    createPlugin plugin@{ node, context, _ ->
         if (!predicate(node)) return@plugin null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
@@ -18,7 +18,6 @@ fun convertPrimitive(
 
         render(node)
     }
-}
 
 fun convertPrimitive(
     predicate: TypeGuard<Node, *>,
