@@ -31,8 +31,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         val valueDeclaration = symbol.valueDeclaration
 
         // it is one of the additional declarations, and it will be covered in value declaration
-        return valueDeclaration != null
-            && isClassDeclaration(valueDeclaration)
+        return isClassDeclaration(valueDeclaration)
             && node !== valueDeclaration
     }
 
@@ -54,7 +53,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
 
         val valueDeclaration = symbol.valueDeclaration
         val valueDeclarationTypeParameters =
-            if (valueDeclaration != null && isClassDeclaration(valueDeclaration)) {
+            if (isClassDeclaration(valueDeclaration)) {
                 valueDeclaration.typeParameters?.asArray()
             } else {
                 null

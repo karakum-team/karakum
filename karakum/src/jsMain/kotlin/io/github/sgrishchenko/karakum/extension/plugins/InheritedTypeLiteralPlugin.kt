@@ -72,7 +72,7 @@ suspend fun convertInheritedTypeLiteral(
 
     var accessors = ""
 
-    if (mappedType != null && isMappedTypeNode(mappedType)) {
+    if (isMappedTypeNode(mappedType)) {
         accessors = convertMappedTypeBody(mappedType, context, render)
     }
 

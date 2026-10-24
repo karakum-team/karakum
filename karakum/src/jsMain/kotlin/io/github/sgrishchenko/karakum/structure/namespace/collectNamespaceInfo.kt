@@ -40,7 +40,7 @@ fun collectNamespaceInfo(
 
                 val body = node.body
 
-                if (body != null && isModuleBlock(body)) {
+                if (isModuleBlock(body)) {
                     nodes = body.statements.asArray()
                 }
 

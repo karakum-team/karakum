@@ -282,7 +282,7 @@ private fun expandUnions(
                 continue
             }
 
-            if (type != null && isUnionTypeNode(type)) {
+            if (isUnionTypeNode(type)) {
                 checkCoverageService?.cover(type)
 
                 val generatedSignatures = mutableListOf<Signature>()

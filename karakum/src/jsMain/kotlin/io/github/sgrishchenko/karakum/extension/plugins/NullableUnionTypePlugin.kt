@@ -106,7 +106,7 @@ fun flatUnionTypes(node: UnionTypeNode, context: Context): ReadonlyArray<TypeNod
 
             val resolvedType = typeScriptService?.resolveType(type)
 
-            if (resolvedType != null && isUnionTypeNode(resolvedType)) {
+            if (isUnionTypeNode(resolvedType)) {
                 result += flatUnionTypes(resolvedType, context).toList()
             } else {
                 result += type

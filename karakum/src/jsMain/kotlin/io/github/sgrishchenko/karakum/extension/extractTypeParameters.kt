@@ -32,12 +32,12 @@ fun extractTypeParameters(
             for (declaration in typeParameterDeclarations) {
                 var typeParameterContainer = typeScriptService?.getParent(declaration)
 
-                if (typeParameterContainer != null && isInferTypeNode(typeParameterContainer)) {
+                if (isInferTypeNode(typeParameterContainer)) {
                     val conditionalType = typeScriptService?.findClosest(typeParameterContainer) {
                         isConditionalTypeNode(it)
                     }
 
-                    if (conditionalType != null && isConditionalTypeNode(conditionalType)) {
+                    if (isConditionalTypeNode(conditionalType)) {
                         typeParameterContainer = conditionalType.trueType
                     }
                 }

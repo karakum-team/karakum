@@ -97,7 +97,7 @@ fun <TContext : Context> MatcherScope<TContext>.match(
 fun withName(name: String): (Node, Any?) -> Boolean {
     return { node, _ ->
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-        (node as NamedDeclaration).name.let { it != null && isIdentifier(it) && it.text == name }
+        (node as NamedDeclaration).name.let { isIdentifier(it) && it.text == name }
     }
 }
 

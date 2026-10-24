@@ -60,8 +60,7 @@ class UnionService(private val context: Context) {
         val parent = union.parent
 
         if (
-            parent != null
-            && isTypeAliasDeclaration(parent)
+            isTypeAliasDeclaration(parent)
             && parent.type == union
         ) {
             name = parent.name.text
@@ -308,8 +307,7 @@ sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typ
             val parent = node.parent
 
             if (
-                parent != null
-                && isTypeAliasDeclaration(parent)
+                isTypeAliasDeclaration(parent)
                 && parent.type == node
             ) {
                 val parentNames = unionService?.getParents(parent) ?: emptyArray()
