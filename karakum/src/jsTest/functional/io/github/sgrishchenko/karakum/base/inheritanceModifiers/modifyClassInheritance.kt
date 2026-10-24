@@ -4,21 +4,20 @@ import io.github.sgrishchenko.karakum.extension.match
 import io.github.sgrishchenko.karakum.extension.resolve
 import io.github.sgrishchenko.karakum.extension.withFile
 import io.github.sgrishchenko.karakum.extension.withName
-import js.reflect.invoke
 import typescript.isClassDeclaration
 
 val modifyClassInheritance = resolve(
     "open" to match {
         withFile("**/class/parentConstructors.d.ts").let {
-            match(isClassDeclaration::invoke, withName("GrandparentWithConstructor"), it)
-            match(isClassDeclaration::invoke, withName("ParentWithoutConstructor"), it)
-            match(isClassDeclaration::invoke, withName("ParentWithConstructor"), it)
+            match(isClassDeclaration, withName("GrandparentWithConstructor"), it)
+            match(isClassDeclaration, withName("ParentWithoutConstructor"), it)
+            match(isClassDeclaration, withName("ParentWithConstructor"), it)
         }
 
         match(
-            isClassDeclaration::invoke,
+            isClassDeclaration,
             withFile("**/interface/inheritance.d.ts"),
-            withName("ParentClass")
+            withName("ParentClass"),
         )
-    }
+    },
 )

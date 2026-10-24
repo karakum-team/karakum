@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.currentAbortable
 import js.promise.Promise
 import js.promise.await
+import js.reflect.TypeGuard
 import js.reflect.invoke
 import node.path.path
 import typescript.NamedDeclaration
@@ -92,6 +93,25 @@ fun <TContext : Context> MatcherScope<TContext>.match(
     vararg predicates: suspend (Node, TContext) -> Boolean,
 ): MatcherScope<TContext> {
     return match(predicate.wrap(), *predicates)
+}
+
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: TypeGuard<Node, *>,
+): MatcherScope<TContext> =
+    match(predicate::invoke)
+
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: TypeGuard<Node, *>,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
+): MatcherScope<TContext> =
+    match(predicate::invoke, predicates = predicates)
+
+fun <TContext : Context> MatcherScope<TContext>.match(
+    predicate: TypeGuard<Node, *>,
+    vararg predicates: suspend (Node, TContext) -> Boolean,
+    block: MatcherScope<TContext>.() -> Unit = { }
+) {
+    match(predicate::invoke, predicates = predicates, block = block)
 }
 
 fun withName(name: String): (Node, Any?) -> Boolean {
