@@ -67,7 +67,10 @@ fun createPlugins(
     convertMemberName, // should be applied before literals
 
     convertLiteral(isStringLiteral) { "String" },
-    convertLiteral(isNumericLiteral) { "Double" },
+    convertLiteral(isNumericLiteral) {
+        // TODO: use real `Int` check
+        if (it.text == "-1") "Int" else "Double"
+    },
     convertLiteral(isBigIntLiteral) { "js.numbers.BigInt" },
 
     convertLiteral(isThisTypeNode) { "Unit" },
