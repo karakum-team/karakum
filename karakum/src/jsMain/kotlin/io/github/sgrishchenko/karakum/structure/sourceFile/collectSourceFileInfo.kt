@@ -8,6 +8,7 @@ import js.array.ReadonlyArray
 import js.objects.recordOf
 import kotlinx.js.JsPlainObject
 import typescript.SourceFile
+import typescript.asArray
 
 @JsPlainObject
 external interface InputSourceFileInfoItem : SourceFileInfoItem, InputStructureItem
@@ -30,20 +31,19 @@ fun collectSourceFileInfo(
 
         val nodes = sourceFile.statements
 
-        // TODO: create ticket for JsPlainObject
-        recordOf(
-            "fileName" to item.fileName,
-            "package" to item.`package`,
-            "moduleName" to item.moduleName,
-            "qualifier" to item.qualifier,
-            "hasRuntime" to item.hasRuntime,
-            "imports" to item.imports,
+        InputSourceFileInfoItem(
+            fileName = item.fileName,
+            `package` = item.`package`,
+            moduleName = item.moduleName,
+            qualifier = item.qualifier,
+            hasRuntime = item.hasRuntime,
+            imports = item.imports,
 
-            "nodes" to nodes,
-            "meta" to InputStructureItemMeta(
+            nodes = nodes.asArray(),
+            meta = InputStructureItemMeta(
                 type = "Source File",
                 name = sourceFile.fileName
             ),
-        ).unsafeCast<InputSourceFileInfoItem>()
+        )
     }.toTypedArray()
 }
