@@ -44,10 +44,13 @@ suspend fun generateTests(
     }
 
     if (isUpdate) {
-        rm(actualOutputDirName, RmOptions(
-            recursive = true,
-            force = true,
-        ))
+        rm(
+            actualOutputDirName,
+            RmOptions(
+                recursive = true,
+                force = true,
+            ),
+        )
         return
     }
 
@@ -57,7 +60,7 @@ suspend fun generateTests(
     assertEquals(
         expectedFileNames.map { path.relative(expectedOutputDirName, it) }.toSet(),
         actualFileNames.map { path.relative(actualOutputDirName, it) }.toSet(),
-        message = "File structures in $dirName are not equal"
+        message = "File structures in $dirName are not equal",
     )
 
     val report = mutableListOf<Triple<String, String, String>>()
@@ -86,6 +89,6 @@ $expected
 actual:
 $actual
             """.trimEnd()
-        }
+        },
     )
 }

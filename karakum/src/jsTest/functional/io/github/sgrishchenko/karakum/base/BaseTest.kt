@@ -22,7 +22,7 @@ class BaseTest {
             )
             importInjector = mapOf(
                 "importType/simple/DataRouterStateContext.kt" to listOf(
-                    "sandbox.base.importType.router.RouterState"
+                    "sandbox.base.importType.router.RouterState",
                 ),
                 "property/doubleOptionality/AgnosticBaseRouteObject.kt" to listOf(
                     "sandbox.base.generated.AgnosticBaseRouteObjectHandle15",

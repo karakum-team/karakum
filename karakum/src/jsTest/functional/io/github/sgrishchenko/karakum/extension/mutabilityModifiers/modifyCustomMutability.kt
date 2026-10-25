@@ -2,12 +2,7 @@ package io.github.sgrishchenko.karakum.extension.mutabilityModifiers
 
 import io.github.sgrishchenko.karakum.extension.Context
 import js.reflect.invoke
-import typescript.Node
-import typescript.isGetAccessor
-import typescript.isIdentifier
-import typescript.isPropertyDeclaration
-import typescript.isPropertySignature
-import typescript.isVariableDeclaration
+import typescript.*
 
 suspend fun modifyCustomMutability(node: Node, context: Context): String? {
     if (isPropertySignature(node)) {

@@ -17,11 +17,11 @@ class NamespaceTest {
             libraryName = "sandbox-namespace"
             packageNameMapper = mapOf(
                 "will/be/mapped/andthis" to "was/mapped/nested",
-                "will/be/mapped" to "was/mapped/main"
+                "will/be/mapped" to "was/mapped/main",
             )
             moduleNameMapper = mapOf(
                 "will-be-mapped#AndThis" to "was-mapped#Nested",
-                "will-be-erased" to ""
+                "will-be-erased" to "",
             )
             namespaceStrategy = mapOf(
                 "package-namespace.NestedNamespace" to NamespaceStrategy.`package`,
@@ -34,7 +34,7 @@ class NamespaceTest {
                     "default" to "other.import.provider.X",
                     "\\*" to "",
                     ".+" to "other.import.provider.",
-                )
+                ),
             )
             importInjector = mapOf(
                 "import/consumer/ignored.kt" to listOf(

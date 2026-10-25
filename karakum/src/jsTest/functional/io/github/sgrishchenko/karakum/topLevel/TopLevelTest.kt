@@ -13,10 +13,10 @@ class TopLevelTest {
             output = testOutput
             libraryName = "sandbox-top-level"
             moduleNameMapper = mapOf(
-                "^(?!sandbox-top-level/myFunction1$).*" to "sandbox-top-level"
+                "^(?!sandbox-top-level/myFunction1$).*" to "sandbox-top-level",
             )
             plugins = listOf(
-                blankOutExportStatement
+                blankOutExportStatement,
             )
         }
     }
