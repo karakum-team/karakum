@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.structure.import
 import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.util.recordOrNull
 import io.github.sgrishchenko.karakum.util.singleOrNull
-import io.github.sgrishchenko.karakum.util.traverse
 import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.array.component1

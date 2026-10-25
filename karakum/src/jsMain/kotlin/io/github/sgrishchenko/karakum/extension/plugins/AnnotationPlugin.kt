@@ -3,10 +3,10 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
 import js.coroutines.promise
+import js.promise.Promise
 import typescript.Node
 import web.abort.Abortable
 import web.abort.asCoroutineScope
-import js.promise.Promise
 
 val annotationServiceKey = ContextKey<AnnotationService>()
 

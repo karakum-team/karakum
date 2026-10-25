@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.structure.InputStructureItem
 import io.github.sgrishchenko.karakum.structure.InputStructureItemMeta
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
-import js.objects.recordOf
 import kotlinx.js.JsPlainObject
 import typescript.SourceFile
 import typescript.asArray

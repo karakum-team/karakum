@@ -1,12 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
-import io.github.sgrishchenko.karakum.extension.InjectionType
-import io.github.sgrishchenko.karakum.extension.MEMBER
-import io.github.sgrishchenko.karakum.extension.STATIC_MEMBER
-import io.github.sgrishchenko.karakum.extension.createPlugin
-import io.github.sgrishchenko.karakum.extension.ifPresent
+import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
 import js.reflect.invoke
 import typescript.*

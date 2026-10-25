@@ -1,10 +1,6 @@
 package io.github.sgrishchenko.karakum.extension.plugins
 
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.HERITAGE_CLAUSE
-import io.github.sgrishchenko.karakum.extension.InjectionType
-import io.github.sgrishchenko.karakum.extension.Render
-import io.github.sgrishchenko.karakum.extension.ifPresent
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
 import js.reflect.unsafeCast

@@ -1,10 +1,6 @@
 package io.github.sgrishchenko.karakum.configuration
 
-import io.github.sgrishchenko.karakum.util.Many
-import io.github.sgrishchenko.karakum.util.Rule
-import io.github.sgrishchenko.karakum.util.manyOf
-import io.github.sgrishchenko.karakum.util.toArray
-import io.github.sgrishchenko.karakum.util.toPosix
+import io.github.sgrishchenko.karakum.util.*
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import node.process.process

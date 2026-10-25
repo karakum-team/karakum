@@ -2,11 +2,9 @@ package io.github.sgrishchenko.karakum
 
 import js.coroutines.promise
 import js.promise.Promise
-import kotlinx.coroutines.CoroutineScope
 import node.process.process
 import web.abort.Abortable
 import web.abort.asCoroutineScope
-import kotlin.coroutines.EmptyCoroutineContext
 
 internal suspend fun cli() {
     val partialConfiguration = parseArgs(process.argv.drop(2).toTypedArray())

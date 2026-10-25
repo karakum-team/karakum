@@ -17,7 +17,6 @@ import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.objects.Object
 import js.promise.Promise
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.js.JsPlainObject
 import node.fs.*
 import node.path.path
@@ -27,7 +26,6 @@ import typescript.createCompilerHost
 import typescript.createProgram
 import web.abort.Abortable
 import web.abort.asCoroutineScope
-import kotlin.coroutines.EmptyCoroutineContext
 
 private fun checkCasing(fileNames: ReadonlyArray<String>) {
     var isConflict = false

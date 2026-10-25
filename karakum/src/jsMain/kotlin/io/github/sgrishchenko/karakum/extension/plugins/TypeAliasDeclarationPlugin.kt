@@ -3,11 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.configuration.NamespaceStrategy
 import io.github.sgrishchenko.karakum.configuration.`object`
 import io.github.sgrishchenko.karakum.configuration.`package`
-import io.github.sgrishchenko.karakum.extension.Context
-import io.github.sgrishchenko.karakum.extension.GeneratedFile
-import io.github.sgrishchenko.karakum.extension.Plugin
-import io.github.sgrishchenko.karakum.extension.Render
-import io.github.sgrishchenko.karakum.extension.ifPresent
+import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import js.array.ReadonlyArray

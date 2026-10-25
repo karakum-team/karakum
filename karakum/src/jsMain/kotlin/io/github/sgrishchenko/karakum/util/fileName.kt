@@ -1,10 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
 import js.array.ReadonlyArray
-import js.array.component1
-import js.array.component2
-import js.objects.Object
-import js.objects.ReadonlyRecord
 
 fun commonPrefix(vararg sources: ReadonlyArray<String>): ReadonlyArray<String> {
     var common = sources.firstOrNull() ?: emptyArray()
