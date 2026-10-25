@@ -29,7 +29,7 @@ class CommentService @JsExport.Ignore constructor() {
         val fullText = sourceFile.getFullText()
 
         return commentRanges.joinToString(separator = "") {
-            val text = fullText.slice(it.pos.toInt()..<it.end.toInt())
+            val text = fullText.slice(it.pos..<it.end)
             val escapedTest = text
                 .replace(nestedCommentPattern, "&#47;*")
                 .replace("\r\n", "\n")
