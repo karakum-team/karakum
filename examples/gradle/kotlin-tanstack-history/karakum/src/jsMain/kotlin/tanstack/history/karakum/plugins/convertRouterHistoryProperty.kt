@@ -8,6 +8,7 @@ import io.github.sgrishchenko.karakum.extension.plugins.ParameterDeclarationsCon
 import io.github.sgrishchenko.karakum.extension.plugins.convertParameterDeclarations
 import io.github.sgrishchenko.karakum.extension.plugins.function
 import io.github.sgrishchenko.karakum.util.getParentOrNull
+import typescript.asArray
 import typescript.isFunctionTypeNode
 import typescript.isInterfaceDeclaration
 import typescript.isPropertySignature
@@ -25,7 +26,7 @@ val convertRouterHistoryProperty = createPlugin { node, context, render ->
 
         val name = render(node.name)
 
-        val typeParameters = type.typeParameters
+        val typeParameters = type.typeParameters?.asArray()
             ?.map { render(it) }
             ?.joinToString(", ")
 
