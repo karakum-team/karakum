@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
 import typescript.SyntaxKind
-import typescript.asArray
 import typescript.isFunctionDeclaration
 
 val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
@@ -13,10 +12,10 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
+    val exportModifier = node.modifiers?.find { it.kind == SyntaxKind.ExportKeyword }
     exportModifier?.let { checkCoverageService?.cover(it) }
 
-    val declareModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.DeclareKeyword }
+    val declareModifier = node.modifiers?.find { it.kind == SyntaxKind.DeclareKeyword }
     declareModifier?.let { checkCoverageService?.cover(it) }
 
     // skip body
@@ -31,7 +30,7 @@ val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
 
     val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
-    val typeParameters = node.typeParameters?.asArray()
+    val typeParameters = node.typeParameters
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")

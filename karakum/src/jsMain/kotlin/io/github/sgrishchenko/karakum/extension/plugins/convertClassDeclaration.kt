@@ -6,12 +6,12 @@ import js.reflect.invoke
 import typescript.*
 
 private fun extractModifiers(member: Declaration): ReadonlyArray<ModifierLike> {
-    if (isPropertyDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
-    if (isMethodDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
-    if (isConstructorDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
-    if (isGetAccessorDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
-    if (isSetAccessorDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
-    if (isIndexSignatureDeclaration(member)) return member.modifiers?.asArray() ?: emptyArray()
+    if (isPropertyDeclaration(member)) return member.modifiers ?: emptyArray()
+    if (isMethodDeclaration(member)) return member.modifiers ?: emptyArray()
+    if (isConstructorDeclaration(member)) return member.modifiers ?: emptyArray()
+    if (isGetAccessorDeclaration(member)) return member.modifiers ?: emptyArray()
+    if (isSetAccessorDeclaration(member)) return member.modifiers ?: emptyArray()
+    if (isIndexSignatureDeclaration(member)) return member.modifiers ?: emptyArray()
 
     return emptyArray()
 }
@@ -26,10 +26,10 @@ private fun resolveConstructors(
 
     if (node.heritageClauses == null) return emptyArray()
 
-    val heritageClause = node.heritageClauses?.asArray()?.find { it.token == SyntaxKind.ExtendsKeyword }
+    val heritageClause = node.heritageClauses?.find { it.token == SyntaxKind.ExtendsKeyword }
     if (heritageClause == null) return emptyArray()
 
-    val parentReference = heritageClause.types.asArray()[0].expression
+    val parentReference = heritageClause.types[0].expression
 
     val typeScriptService = context.lookupService(typeScriptServiceKey)
     val typeChecker = typeScriptService?.program?.getTypeChecker()
@@ -43,7 +43,7 @@ private fun resolveConstructors(
 
     val mergedMembers = declarationMergingService
         ?.getMembers(parentDeclaration, context)
-        ?: parentDeclaration.members.asArray()
+        ?: parentDeclaration.members
 
     return resolveConstructors(parentDeclaration, mergedMembers, context)
 }
@@ -62,10 +62,10 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val injectionService = context.lookupService(injectionServiceKey)
 
-    val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
+    val exportModifier = node.modifiers?.find { it.kind == SyntaxKind.ExportKeyword }
     if (exportModifier != null) checkCoverageService?.cover(exportModifier)
 
-    val declareModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.DeclareKeyword }
+    val declareModifier = node.modifiers?.find { it.kind == SyntaxKind.DeclareKeyword }
     if (declareModifier != null) checkCoverageService?.cover(declareModifier)
 
     val name = node.name?.let { render(it) } ?: "Anonymous"
@@ -80,15 +80,15 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
     val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
     val abstractModifier = "abstract".takeIf {
-        node.modifiers?.asArray()?.any { it.kind == SyntaxKind.AbstractKeyword } ?: false
+        node.modifiers?.any { it.kind == SyntaxKind.AbstractKeyword } ?: false
     }
 
-    val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters?.asArray())
+    val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters)
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
 
-    val heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?: node.heritageClauses?.asArray())
+    val heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?: node.heritageClauses)
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
@@ -103,7 +103,7 @@ val convertClassDeclaration = createPlugin plugin@{ node, context, render ->
 
     val mergedMembers = declarationMergingService
         ?.getMembers(node, context)
-        ?: node.members.asArray()
+        ?: node.members
 
     // cover private members
     mergedMembers

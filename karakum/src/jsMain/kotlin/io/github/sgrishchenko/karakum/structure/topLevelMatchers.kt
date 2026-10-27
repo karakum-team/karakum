@@ -92,7 +92,7 @@ private val functionMatcher: TopLevelMatcher = matcher@{ node ->
 
 private val variableMatcher: TopLevelMatcher = { node ->
     if (isVariableStatement(node)) {
-        node.declarationList.declarations.asArray()
+        node.declarationList.declarations
             .mapNotNull { declaration ->
                 val nameNode = declaration.name
                 if (!isIdentifier(nameNode)) return@mapNotNull null

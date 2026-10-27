@@ -80,7 +80,7 @@ class AccessorsPlugin : Plugin {
             checkCoverageService?.cover(node)
 
             if (isSetAccessor(node)) {
-                checkCoverageService?.deepCover(node.parameters.asArray()[0])
+                checkCoverageService?.deepCover(node.parameters[0])
             }
 
             this.coveredAccessors.add(symbol)
@@ -93,7 +93,7 @@ class AccessorsPlugin : Plugin {
             val annotation = createKebabAnnotation(accessorName)
 
             val getterType = accessorInfo.getter?.type
-            val setterType = accessorInfo.setter?.parameters?.asArray()?.get(0)?.type
+            val setterType = accessorInfo.setter?.parameters?.get(0)?.type
 
             val type = if (getterType != null) {
                 next(getterType)

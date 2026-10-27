@@ -135,7 +135,7 @@ class NullableUnionTypePlugin : Plugin {
         checkCoverageService?.cover(node)
 
         if (isNullableOnlyUnionType(node, context)) {
-            node.types.asArray().forEach { checkCoverageService?.deepCover(it) }
+            node.types.forEach { checkCoverageService?.deepCover(it) }
 
             return "Nothing?"
         }
@@ -146,7 +146,7 @@ class NullableUnionTypePlugin : Plugin {
             val types = flatUnionTypes(node, context)
 
             val nonNullableTypes = types.filter{ !isNullableType(it) }
-            val nullableTypes = node.types.asArray().filter { isNullableType(it) }
+            val nullableTypes = node.types.filter { isNullableType(it) }
 
             nullableTypes.forEach { checkCoverageService?.deepCover(it) }
 

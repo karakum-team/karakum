@@ -21,7 +21,6 @@ import kotlinx.js.JsPlainObject
 import node.fs.*
 import node.path.path
 import typescript.CompilerOptions
-import typescript.asArray
 import typescript.createCompilerHost
 import typescript.createProgram
 import web.abort.Abortable
@@ -177,7 +176,7 @@ private suspend fun generate(mutableConfiguration: MutableConfiguration) {
     }
 
     sourceFiles
-        .flatMap { it.statements.asArray().asIterable() }
+        .flatMap { it.statements.asSequence() }
         .forEach { statement ->
             traverse(statement) { node ->
                 for (plugin in converterPlugins) {

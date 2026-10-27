@@ -81,7 +81,7 @@ fun collectImportInfo(
                     if (isNamespaceImport(importClauseNamedBindings)) {
                         importNames["*"] = importClauseNamedBindings.name.text
                     } else if (isNamedImports(importClauseNamedBindings)) {
-                        importClauseNamedBindings.elements.asArray().forEach { element ->
+                        importClauseNamedBindings.elements.forEach { element ->
                             val propertyName = element.propertyName
 
                             if (propertyName != null) {

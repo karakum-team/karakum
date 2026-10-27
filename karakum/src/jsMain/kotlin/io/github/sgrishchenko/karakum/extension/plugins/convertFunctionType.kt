@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isFunctionTypeNode
 
 val convertFunctionType = createPlugin plugin@{ node, context, render ->
@@ -19,7 +18,7 @@ val convertFunctionType = createPlugin plugin@{ node, context, render ->
 
     val returnType = render(node.type)
 
-    if (node.parameters.asArray().any { it.dotDotDotToken != null }) {
+    if (node.parameters.any { it.dotDotDotToken != null }) {
         return@plugin "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
     }
 

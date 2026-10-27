@@ -118,7 +118,7 @@ class UnionInjection : Injection {
     private val anonymousUnionDeclarationPlugin = createAnonymousDeclarationPlugin plugin@{ node, context, render ->
         if (
             isUnionTypeNode(node)
-            && node.types.asArray().all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
+            && node.types.all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
         ) {
             val typeParameters = extractTypeParameters(node, context)
 
@@ -172,12 +172,12 @@ ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(renderedTy
     override suspend fun traverse(node: Node, context: Context) {
         if (
             isUnionTypeNode(node)
-            && node.types.asArray().all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
+            && node.types.all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
 
             // ignore parameters because they are expanded as overloads
             && !isParameter(node.parent)
         ) {
-            for (type in node.types.asArray()) {
+            for (type in node.types) {
                 if (!isTypeReferenceNode(type)) continue
 
                 unionService?.register(node, type)
@@ -202,11 +202,11 @@ ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(renderedTy
 
             if (
                 isUnionTypeNode(typeNode)
-                    && typeNode.types.asArray().all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
+                    && typeNode.types.all { type -> isTypeReferenceNode(type) && type.typeArguments == null }
             ) {
                 val name = next(node.name)
 
-                val typeParameters = node.typeParameters?.asArray()
+                val typeParameters = node.typeParameters
                     ?.map { next(it) }
                     ?.filter { it.isNotEmpty() }
                     ?.joinToString(separator = ", ")
@@ -239,7 +239,7 @@ ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(typeParame
 
                 val name = next(node.name)
 
-                val typeParameters = node.typeParameters?.asArray()
+                val typeParameters = node.typeParameters
                     ?.map { next(it) }
                     ?.filter { it.isNotEmpty() }
                     ?.joinToString(separator = ", ")

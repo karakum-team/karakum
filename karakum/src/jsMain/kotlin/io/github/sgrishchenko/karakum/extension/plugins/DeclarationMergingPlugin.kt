@@ -48,13 +48,13 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         val declarationTypeParameters = symbol.declarations
             ?.mapNotNull {
                 if (!isInterfaceDeclaration(it)) return@mapNotNull null
-                it.typeParameters?.asArray()
+                it.typeParameters
             }
 
         val valueDeclaration = symbol.valueDeclaration
         val valueDeclarationTypeParameters =
             if (isClassDeclaration(valueDeclaration)) {
-                valueDeclaration.typeParameters?.asArray()
+                valueDeclaration.typeParameters
             } else {
                 null
             }
@@ -73,12 +73,12 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
         val heritageClauses = symbol.declarations
             ?.mapNotNull {
                 if (!isInterfaceDeclaration(it)) return@mapNotNull null
-                it.heritageClauses?.asArray()
+                it.heritageClauses
             }
             ?.flatMap { it.asIterable() }
 
         if (isClassDeclaration(node)) {
-            val mainHeritageClauses = node.heritageClauses?.asArray()
+            val mainHeritageClauses = node.heritageClauses
 
             return (mainHeritageClauses ?: emptyArray()) +
                     (heritageClauses?.toTypedArray() ?: emptyArray())
@@ -141,7 +141,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
                 val declarationMap = declarations.fold(DeepMap<Any, NamedDeclaration>()) { acc, declaration ->
                     if (!isSignatureDeclaration(declaration)) return@fold acc
 
-                    val parameterSymbols = declaration.parameters.asArray()
+                    val parameterSymbols = declaration.parameters
                         .map { parameter ->
                             val typeNode = parameter.type ?: return@map "any"
                             typeChecker.getTypeFromTypeNode(typeNode).symbol.unsafeCast<typescript.Symbol?>()

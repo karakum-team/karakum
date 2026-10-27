@@ -53,15 +53,15 @@ class TypeAliasDeclarationPlugin : Plugin {
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
         checkCoverageService?.cover(node)
 
-        val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
+        val exportModifier = node.modifiers?.find { it.kind == SyntaxKind.ExportKeyword }
         exportModifier?.let { checkCoverageService?.cover(exportModifier) }
 
-        val declareModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.DeclareKeyword }
+        val declareModifier = node.modifiers?.find { it.kind == SyntaxKind.DeclareKeyword }
         declareModifier?.let { checkCoverageService?.cover(declareModifier) }
 
         val name = next(node.name)
 
-        val typeParameters = node.typeParameters?.asArray()
+        val typeParameters = node.typeParameters
             ?.map { next(it) }
             ?.filter { it.isNotEmpty() }
             ?.joinToString(separator = ", ")
@@ -107,8 +107,8 @@ class TypeAliasDeclarationPlugin : Plugin {
 
                 checkCoverageService?.cover(typeNode)
 
-                val mergedTypeParameters = (node.typeParameters?.asArray() ?: emptyArray())
-                    .plus(functionTypeParameters.asArray())
+                val mergedTypeParameters = (node.typeParameters ?: emptyArray())
+                    .plus(functionTypeParameters)
                     .map { next(it) }
                     .filter { it.isNotEmpty() }
                     .joinToString(separator = ", ")

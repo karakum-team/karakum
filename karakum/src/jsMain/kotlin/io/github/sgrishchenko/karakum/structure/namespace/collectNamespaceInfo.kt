@@ -39,7 +39,7 @@ fun collectNamespaceInfo(
                 val body = node.body
 
                 if (isModuleBlock(body)) {
-                    nodes = body.statements.asArray()
+                    nodes = body.statements
                 }
 
                 result += InputNamespaceInfoItem(

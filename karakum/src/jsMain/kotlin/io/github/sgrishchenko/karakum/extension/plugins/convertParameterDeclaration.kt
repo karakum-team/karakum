@@ -122,7 +122,7 @@ suspend fun convertParameterDeclarations(
     }
 
     if (strategy == ParameterDeclarationStrategy.lambda) {
-        val parameters = node.parameters.asArray()
+        val parameters = node.parameters
             .filter { parameter -> !isThisParameter(parameter) }
             .map { parameter ->
                 convertParameterDeclarationWithFixedType(parameter, context, render, ParameterDeclarationConfiguration(
@@ -134,7 +134,7 @@ suspend fun convertParameterDeclarations(
             .filter { it.isNotEmpty() }
             .joinToString(separator = ", ")
 
-        val firstParameter = node.parameters.asArray().getOrNull(0)
+        val firstParameter = node.parameters.getOrNull(0)
         val prefix = if (firstParameter != null && isThisParameter(firstParameter)) {
             "/* ${typeScriptService?.printNode(firstParameter)}, */ "
         } else {
@@ -199,9 +199,9 @@ suspend fun convertParameterDeclarationWithFixedType(
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
         val signature = (node.parent as SignatureDeclarationBase)
 
-        val parameterIndex = signature.parameters.asArray().indexOf(node)
+        val parameterIndex = signature.parameters.indexOf(node)
 
-        val anonymousParameters = signature.parameters.asArray()
+        val anonymousParameters = signature.parameters
             .filter { parameter -> !isIdentifier(parameter.name) }
 
         if (anonymousParameters.size == 1) "options" else "param${parameterIndex}"
@@ -240,7 +240,7 @@ private fun isThisParameter(parameter: ParameterDeclaration): Boolean {
 }
 
 private fun extractSignature(node: SignatureDeclarationBase): Signature =
-    node.parameters.asArray().map {
+    node.parameters.map {
         ParameterInfo(
             parameter = it,
             type = it.type,

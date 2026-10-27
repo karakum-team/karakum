@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import js.reflect.invoke
 import typescript.SyntaxKind
-import typescript.asArray
 import typescript.isIndexSignatureDeclaration
 
 val convertIndexedSignatureDeclaration = createPlugin plugin@{ node, context, render ->
@@ -20,10 +19,10 @@ val convertIndexedSignatureDeclaration = createPlugin plugin@{ node, context, re
     val getterInheritanceModifier = inheritanceModifierService?.resolveGetterInheritanceModifier(node, context)
     val setterInheritanceModifier = inheritanceModifierService?.resolveSetterInheritanceModifier(node, context)
 
-    val readonly = node.modifiers?.asArray()?.find { modifier -> modifier.kind == SyntaxKind.ReadonlyKeyword }
+    val readonly = node.modifiers?.find { modifier -> modifier.kind == SyntaxKind.ReadonlyKeyword }
     readonly?.let { checkCoverageService?.cover(it) }
 
-    val firstParameterType = node.parameters.asArray().getOrNull(0)?.type
+    val firstParameterType = node.parameters.getOrNull(0)?.type
 
     val keyType = if (firstParameterType != null) {
         render(firstParameterType)

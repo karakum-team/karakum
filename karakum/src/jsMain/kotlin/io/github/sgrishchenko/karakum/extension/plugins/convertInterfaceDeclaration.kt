@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
 import typescript.SyntaxKind
-import typescript.asArray
 import typescript.isInterfaceDeclaration
 
 val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
@@ -21,7 +20,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
     val injectionService = context.lookupService(injectionServiceKey)
 
-    val exportModifier = node.modifiers?.asArray()?.find { it.kind == SyntaxKind.ExportKeyword }
+    val exportModifier = node.modifiers?.find { it.kind == SyntaxKind.ExportKeyword }
     exportModifier?.let { checkCoverageService?.cover(exportModifier) }
 
     val name = render(node.name)
@@ -34,12 +33,12 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
 
     val externalModifier = namespaceInfoService?.resolveExternalModifier(namespace) ?: "external"
 
-    val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters?.asArray())
+    val typeParameters = (declarationMergingService?.getTypeParameters(node) ?: node.typeParameters)
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
 
-    val heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?: node.heritageClauses?.asArray())
+    val heritageClauses = (declarationMergingService?.getHeritageClauses(node) ?: node.heritageClauses)
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
@@ -55,7 +54,7 @@ val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
     val members = (
             declarationMergingService
                 ?.getMembers(node, context)
-                ?: node.members.asArray()
+                ?: node.members
             )
         .map { render(it) }
         .joinToString(separator = "\n")

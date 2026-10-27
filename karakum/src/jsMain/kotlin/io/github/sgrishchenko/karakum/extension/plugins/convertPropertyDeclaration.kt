@@ -6,7 +6,6 @@ import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
 import typescript.SyntaxKind
-import typescript.asArray
 import typescript.isPropertyDeclaration
 
 val convertPropertyDeclaration = createPlugin plugin@{ node, context, render ->
@@ -22,7 +21,7 @@ val convertPropertyDeclaration = createPlugin plugin@{ node, context, render ->
     val inheritanceModifier = inheritanceModifierService?.resolveInheritanceModifier(node, context)
     val mutabilityModifier = mutabilityModifierService?.resolveMutabilityModifier(node, context)
 
-    val readonly = node.modifiers?.asArray()?.find { modifier -> modifier.kind == SyntaxKind.ReadonlyKeyword }
+    val readonly = node.modifiers?.find { modifier -> modifier.kind == SyntaxKind.ReadonlyKeyword }
     readonly?.let { checkCoverageService?.cover(it) }
 
     node.questionToken?.let { checkCoverageService?.cover(it) }

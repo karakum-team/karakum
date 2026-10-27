@@ -5,7 +5,6 @@ import io.github.sgrishchenko.karakum.extension.InjectionType
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isEnumDeclaration
 
 val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
@@ -37,7 +36,7 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
     val members = (
             declarationMergingService
                 ?.getMembers(node, context)
-                ?: node.members.asArray()
+                ?: node.members
             )
         .map { member -> "${render(member)}: $name" }
         .joinToString(separator = "\n")

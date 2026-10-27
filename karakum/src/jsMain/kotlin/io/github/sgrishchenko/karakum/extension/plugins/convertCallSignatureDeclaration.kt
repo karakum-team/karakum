@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isCallSignatureDeclaration
 
 val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, render ->
@@ -16,7 +15,6 @@ val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, rende
     val inheritanceModifierService = context.lookupService(inheritanceModifierServiceKey)
 
     val typeParameters = node.typeParameters
-        ?.asArray()
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")

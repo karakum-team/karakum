@@ -43,8 +43,8 @@ class PromiseResultPlugin(
     override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         if (!isUnionTypeNode(node)) return null
 
-        if (node.types.asArray().size != 2) return null
-        if (node.types.asArray().none { isPromiseType.matches(it, context) }) return null
+        if (node.types.size != 2) return null
+        if (node.types.none { isPromiseType.matches(it, context) }) return null
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)
 
@@ -52,8 +52,8 @@ class PromiseResultPlugin(
 
         if (parent != null && ignore.matches(parent, context)) return null
 
-        val promiseType = node.types.asArray().first { isPromiseType.matches(it, context) }
-        val otherType = node.types.asArray().first { !isPromiseType.matches(it, context) }
+        val promiseType = node.types.first { isPromiseType.matches(it, context) }
+        val otherType = node.types.first { !isPromiseType.matches(it, context) }
 
         require(isTypeReferenceNode(promiseType))
 

@@ -7,7 +7,6 @@ import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
 import kotlinx.js.JsPlainObject
 import typescript.SourceFile
-import typescript.asArray
 
 @JsPlainObject
 external interface InputSourceFileInfoItem : SourceFileInfoItem, InputStructureItem
@@ -38,7 +37,7 @@ fun collectSourceFileInfo(
             hasRuntime = item.hasRuntime,
             imports = item.imports,
 
-            nodes = nodes.asArray(),
+            nodes = nodes,
             meta = InputStructureItemMeta(
                 type = "Source File",
                 name = sourceFile.fileName

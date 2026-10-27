@@ -4,10 +4,9 @@ import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import typescript.Node
 import typescript.NodeWithTypeArguments
-import typescript.asArray
 
 suspend fun convertNodeWithTypeArguments(node: NodeWithTypeArguments, render: Render<Node>): String {
-    val typeArguments = node.typeArguments?.asArray()
+    val typeArguments = node.typeArguments
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")

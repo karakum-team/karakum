@@ -7,7 +7,7 @@ import js.reflect.invoke
 import typescript.*
 
 private suspend fun renderRecord(node: IndexSignatureDeclaration, render: Render<Node>): String {
-    val firstParameterType = node.parameters.asArray().firstOrNull()?.type
+    val firstParameterType = node.parameters.firstOrNull()?.type
 
     val keyType = if (firstParameterType != null) {
         render(firstParameterType)
@@ -23,9 +23,9 @@ private suspend fun renderRecord(node: IndexSignatureDeclaration, render: Render
 val convertRecord = createPlugin plugin@{ node, context, render ->
     if (
         isTypeLiteralNode(node)
-        && node.members.asArray().singleOrNull()?.let { isIndexSignatureDeclaration(it) } == true
+        && node.members.singleOrNull()?.let { isIndexSignatureDeclaration(it) } == true
     ) {
-        val indexSignature = node.members.asArray().singleOrNull() ?: return@plugin null
+        val indexSignature = node.members.singleOrNull() ?: return@plugin null
         if (!isIndexSignatureDeclaration(indexSignature)) return@plugin null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
@@ -37,12 +37,13 @@ val convertRecord = createPlugin plugin@{ node, context, render ->
         isTypeAliasDeclaration(node)
         && node.type
             .let { if (isTypeLiteralNode(it)) it.members else null }
-            ?.asArray()?.singleOrNull()?.let { isIndexSignatureDeclaration(it) } == true
+            ?.singleOrNull()
+            ?.let { isIndexSignatureDeclaration(it) } == true
     ) {
         val type = node.type
         if (!isTypeLiteralNode(type)) return@plugin null
 
-        val indexSignature = type.members.asArray().singleOrNull() ?: return@plugin null
+        val indexSignature = type.members.singleOrNull() ?: return@plugin null
         if (!isIndexSignatureDeclaration(indexSignature)) return@plugin null
 
         val checkCoverageService = context.lookupService(checkCoverageServiceKey)
@@ -53,7 +54,7 @@ val convertRecord = createPlugin plugin@{ node, context, render ->
         val name = render(node.name)
         val indexType = renderRecord(indexSignature, render)
 
-        val typeParameters = node.typeParameters?.asArray()
+        val typeParameters = node.typeParameters
             ?.map { render(it) }
             ?.filter { it.isNotEmpty() }
             ?.joinToString(separator = ", ")
@@ -61,9 +62,9 @@ val convertRecord = createPlugin plugin@{ node, context, render ->
         "typealias $name${ifPresent(typeParameters) { "<${it}>" }} = $indexType"
     } else if (
         isInterfaceDeclaration(node)
-        && node.members.asArray().singleOrNull()?.let { isIndexSignatureDeclaration(it) } == true
+        && node.members.singleOrNull()?.let { isIndexSignatureDeclaration(it) } == true
     ) {
-        val indexSignature = node.members.asArray().singleOrNull() ?: return@plugin null
+        val indexSignature = node.members.singleOrNull() ?: return@plugin null
         if (!isIndexSignatureDeclaration(indexSignature)) return@plugin null
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)
@@ -83,7 +84,7 @@ val convertRecord = createPlugin plugin@{ node, context, render ->
         val name = render(node.name)
         val type = renderRecord(indexSignature, render)
 
-        val typeParameters = node.typeParameters?.asArray()
+        val typeParameters = node.typeParameters
             ?.map { render(it) }
             ?.filter { it.isNotEmpty() }
             ?.joinToString(separator = ", ")

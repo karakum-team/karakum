@@ -3,7 +3,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isRestTypeNode
 import typescript.isTupleTypeNode
 
@@ -15,13 +14,13 @@ val convertTupleType = createPlugin plugin@{ node, context, render ->
 
     checkCoverageService?.cover(node)
 
-    if (node.elements.asArray().any { isRestTypeNode(it) }) {
+    if (node.elements.any { isRestTypeNode(it) }) {
         checkCoverageService?.deepCover(node)
 
         return@plugin "js.array.VariadicTuple /* ${typeScriptService?.printNode(node)} */"
     }
 
-    val elementArray = node.elements.asArray()
+    val elementArray = node.elements
         .map { render(it) }
         .filter { it.isNotEmpty() }
 

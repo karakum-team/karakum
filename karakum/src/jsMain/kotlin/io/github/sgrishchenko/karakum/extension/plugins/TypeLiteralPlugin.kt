@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
 import typescript.Node
 import typescript.TypeLiteralNode
-import typescript.asArray
 import typescript.isTypeLiteralNode
 
 suspend fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, render: Render<Node>): String {
@@ -14,7 +13,7 @@ suspend fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, rend
     val injectionService = context.lookupService(injectionServiceKey)
     val injections = injectionService?.resolveInjections(node, InjectionType.MEMBER, context, render)
 
-    val members = node.members.asArray()
+    val members = node.members
         .map { render(it) }
         .joinToString(separator = "\n")
 
@@ -62,7 +61,7 @@ fun createTypeLiteralPlugin() = createAnonymousDeclarationPlugin plugin@{ node, 
     if (!isTypeLiteralNode(node)) return@plugin null
 
     // handle empty type literal
-    if (node.members.asArray().isEmpty()) return@plugin AnonymousDeclaration("Any")
+    if (node.members.isEmpty()) return@plugin AnonymousDeclaration("Any")
 
     val nameResolverService = context.requireService(nameResolverServiceKey)
     val name = nameResolverService.resolveName(node, context)

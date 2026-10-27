@@ -44,10 +44,9 @@ private fun getDeclarations(node: Node, context: Context): List<Node>? {
 private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
     if (
         isInterfaceDeclaration(node)
-        && node.members.asArray().all(isPropertySignature::invoke)
+        && node.members.all(isPropertySignature::invoke)
         && node.heritageClauses
-            ?.asArray()
-            ?.flatMap { it.types.asArray().asIterable() }
+            ?.flatMap { it.types.asIterable() }
             ?.all { type ->
                 val declarations = getDeclarations(type.expression, context)
 
@@ -64,13 +63,13 @@ private fun isJsPlainObject(node: Node, context: AnnotationContext): Boolean {
 
     if (
         isTypeLiteralNode(node)
-        && node.members.asArray().all(isPropertySignature::invoke)
+        && node.members.all(isPropertySignature::invoke)
     ) {
         return true
     }
 
     if (isIntersectionTypeNode(node)) {
-        return node.types.asArray().all { type ->
+        return node.types.all { type ->
             if (isTypeReferenceNode(type)) {
                 val declarations = getDeclarations(type.typeName, context)
 

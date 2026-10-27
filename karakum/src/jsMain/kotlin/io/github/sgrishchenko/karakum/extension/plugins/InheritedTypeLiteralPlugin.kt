@@ -11,7 +11,7 @@ fun isInheritedTypeLiteral(node: Node): Boolean {
         returns(true) implies (node is IntersectionTypeNode)
     }
 
-    return isIntersectionTypeNode(node) && node.types.asArray().all {
+    return isIntersectionTypeNode(node) && node.types.all {
         isTypeReferenceNode(it)
                 || isTypeLiteralNode(it)
                 || isMappedTypeNode(it)
@@ -46,9 +46,9 @@ suspend fun convertInheritedTypeLiteral(
         (namespaceInfoService?.resolveExternalModifier(namespace) ?: "external")
     }
 
-    val typeReferences = node.types.asArray().filter { isTypeReferenceNode(it) }
-    val typeLiterals = node.types.asArray().filter { isTypeLiteralNode(it) }
-    val mappedType = node.types.asArray().find { isMappedTypeNode(it) }
+    val typeReferences = node.types.filter { isTypeReferenceNode(it) }
+    val typeLiterals = node.types.filter { isTypeLiteralNode(it) }
+    val mappedType = node.types.find { isMappedTypeNode(it) }
 
     val heritageTypes = typeReferences
         .map { render(it) }

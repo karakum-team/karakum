@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isHeritageClause
 
 val convertHeritageClause = createPlugin plugin@{ node, context, render ->
@@ -11,7 +10,7 @@ val convertHeritageClause = createPlugin plugin@{ node, context, render ->
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    node.types.asArray()
+    node.types
         .map { render(it) }
         .filter { it.isNotEmpty() }
         .joinToString(separator = ", ")

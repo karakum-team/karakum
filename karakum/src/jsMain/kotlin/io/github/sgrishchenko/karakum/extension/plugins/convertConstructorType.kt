@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isConstructorTypeNode
 
 val convertConstructorType = createPlugin plugin@{ node, context, render ->
@@ -21,11 +20,11 @@ val convertConstructorType = createPlugin plugin@{ node, context, render ->
 
     val returnType = render(node.type)
 
-    if (node.parameters.asArray().any { it.dotDotDotToken != null }) {
+    if (node.parameters.any { it.dotDotDotToken != null }) {
         return@plugin "js.function.ConstructorFunction<js.array.VariadicTuple, ${returnType}> /* ${typeScriptService?.printNode(node)} */"
     }
 
-    val parameterArray = node.parameters.asArray()
+    val parameterArray = node.parameters
         .map {
             val isOptional = it.questionToken != null
 

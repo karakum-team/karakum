@@ -2,7 +2,6 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isModuleBlock
 
 val convertModuleBlock = createPlugin plugin@{ node, context, render ->
@@ -11,7 +10,7 @@ val convertModuleBlock = createPlugin plugin@{ node, context, render ->
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)
     checkCoverageService?.cover(node)
 
-    node.statements.asArray()
+    node.statements
         .map { render(it) }
         .joinToString(separator = "\n")
 }

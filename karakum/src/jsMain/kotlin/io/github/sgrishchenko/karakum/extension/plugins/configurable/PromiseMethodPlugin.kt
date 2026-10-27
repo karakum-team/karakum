@@ -68,7 +68,7 @@ class PromiseMethodPlugin(
             .takeIf { it.isNotEmpty() }
             ?: "@JsName(\"$name\")"
 
-        val typeParameters = node.typeParameters?.asArray()
+        val typeParameters = node.typeParameters
             ?.map { next(it) }
             ?.filter { it.isNotEmpty() }
             ?.joinToString(separator = ", ")

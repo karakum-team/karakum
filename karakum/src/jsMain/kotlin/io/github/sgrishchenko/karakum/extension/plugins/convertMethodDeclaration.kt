@@ -4,7 +4,6 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
-import typescript.asArray
 import typescript.isMethodDeclaration
 
 val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
@@ -20,7 +19,7 @@ val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
     val name = escapeIdentifier(render(node.name))
     val annotation = createKebabAnnotation(node.name)
 
-    val typeParameters = node.typeParameters?.asArray()
+    val typeParameters = node.typeParameters
         ?.map { render(it) }
         ?.filter { it.isNotEmpty() }
         ?.joinToString(separator = ", ")
@@ -37,7 +36,7 @@ val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
 
             val functionType = if (node.typeParameters != null) {
                 "Function<Any?> /* ${typeScriptService?.printNode(node)} */"
-            } else if (node.parameters.asArray().any { parameter -> parameter.dotDotDotToken != null }) {
+            } else if (node.parameters.any { parameter -> parameter.dotDotDotToken != null }) {
                 "Function<${returnType}> /* ${typeScriptService?.printNode(node)} */"
             } else {
                 "(${parameters}) -> ${returnType ?: "Any?"}"
