@@ -4,6 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.*
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.extension.plugins.AnnotationPlugin
 import io.github.sgrishchenko.karakum.extension.plugins.CommentPlugin
+import io.github.sgrishchenko.karakum.extension.plugins.ExcludeDeprecatedPlugin
 import io.github.sgrishchenko.karakum.structure.TargetFile
 import io.github.sgrishchenko.karakum.structure.createTopLevelMatcher
 import io.github.sgrishchenko.karakum.structure.import.collectImportInfo
@@ -161,6 +162,7 @@ private suspend fun generate(mutableConfiguration: MutableConfiguration) {
     )
 
     val converterPlugins = listOf(
+        ExcludeDeprecatedPlugin,
         // it is important to handle comments and annotations at first
         CommentPlugin(),
         AnnotationPlugin(annotations),
