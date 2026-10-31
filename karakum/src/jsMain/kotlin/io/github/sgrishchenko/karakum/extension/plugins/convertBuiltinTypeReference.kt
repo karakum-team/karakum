@@ -14,7 +14,8 @@ private val readonlyBuiltinTypeTypes = mapOf(
     "Set" to "js.collections.ReadonlySet",
 )
 
-val builtinTypes = browserApi
+val builtinTypes = BROWSER_TYPES
+    .associate { it.jsName to it.kotlinFqn }
     .plus(readonlyBuiltinTypeTypes)
 
 val convertBuiltinTypeReference = createPlugin plugin@{ node, context, _ ->
