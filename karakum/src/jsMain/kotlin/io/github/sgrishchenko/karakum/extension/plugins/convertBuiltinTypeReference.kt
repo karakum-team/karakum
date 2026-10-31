@@ -34,7 +34,9 @@ val convertBuiltinTypeReference = createPlugin plugin@{ node, context, _ ->
     ) return@plugin null
 
     val jsName = node.text
-    val kotlinFqn = if (isHeritageClause(parent.parent)) {
+    val useParentTypeMap = parent.parent
+        .let { isHeritageClause(it) && it.token == typescript.SyntaxKind.ImplementsKeyword }
+    val kotlinFqn = if (useParentTypeMap) {
         builtinParentTypeMap[jsName]
     } else {
         builtinTypeMap[jsName]

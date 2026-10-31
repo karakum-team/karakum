@@ -2,6 +2,6 @@
 
 package sandbox.base.builtinType.simple
 
-external interface CustomIterable : js.iterable.JsIterable.Mixin<String> {
+external interface CustomIterable : js.iterable.JsIterable<String> {
 
 }
