@@ -45,8 +45,8 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
 
     """
 /* enum */
-${ifPresent(externalModifier) { "$it " }}class ${name}${ifPresent(injectedHeritageClauses) { " : $it" }}
-private constructor() {
+${ifPresent(externalModifier) { "$it " }}class $name
+private constructor()${ifPresent(injectedHeritageClauses) { " :\n$it" }} {
 companion object {
 $members
 }
