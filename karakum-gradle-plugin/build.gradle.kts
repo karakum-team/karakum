@@ -8,7 +8,7 @@ dependencies {
     api(libs.multiplatform)
     api(libs.plugin.jsPlainObjects)
 
-    testImplementation(libs.test)
+    testImplementation(libs.kotlin.test)
 }
 
 kotlin {

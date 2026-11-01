@@ -72,7 +72,7 @@ kotlin {
             kotlin.srcDir(layout.projectDirectory.dir("src/jsTest/functional"))
 
             dependencies {
-                implementation(libs.test)
+                implementation(libs.kotlin.test)
                 implementation(libs.coroutines.test)
             }
         }

@@ -24,16 +24,10 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        val libs by creating {
+        create("libs") {
             val kotlinVersion: String by settings
             library("multiplatform", "org.jetbrains.kotlin.multiplatform", "org.jetbrains.kotlin.multiplatform.gradle.plugin").version(kotlinVersion)
             library("plugin-jsPlainObjects", "org.jetbrains.kotlin.plugin.js-plain-objects", "org.jetbrains.kotlin.plugin.js-plain-objects.gradle.plugin").version(kotlinVersion)
-
-            library("test", "org.jetbrains.kotlin", "kotlin-test").version(kotlinVersion)
-
-            val kotlinCoroutinesVersion: String by settings
-            library("coroutines-core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version(kotlinCoroutinesVersion)
-            library("coroutines-test", "org.jetbrains.kotlinx", "kotlinx-coroutines-test").version(kotlinCoroutinesVersion)
 
             val typescriptVersion: String by settings
             library("typescript", "npm", "typescript").version(typescriptVersion)
@@ -42,7 +36,7 @@ dependencyResolutionManagement {
             library("tsJsonSchemaGenerator", "npm", "ts-json-schema-generator").version(tsJsonSchemaGeneratorVersion)
         }
 
-        val wrappers by creating {
+        create("wrappers") {
             val wrappersVersion: String by settings
             from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:$wrappersVersion")
         }
