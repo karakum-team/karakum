@@ -1,23 +1,5 @@
 rootProject.name = "karakum"
 
-pluginManagement {
-    plugins {
-        val kotlinVersion: String by settings
-        kotlin("jvm") version kotlinVersion
-        kotlin("multiplatform") version kotlinVersion
-        kotlin("plugin.js-plain-objects") version kotlinVersion
-
-        val mavenPublishVersion: String by settings
-        id("com.vanniktech.maven.publish") version mavenPublishVersion
-
-        val gradlePublishVersion: String by settings
-        id("com.gradle.plugin-publish") version gradlePublishVersion
-
-        val seskarVersion: String by settings
-        id("io.github.turansky.seskar") version seskarVersion
-    }
-}
-
 dependencyResolutionManagement {
     repositories {
         mavenCentral()

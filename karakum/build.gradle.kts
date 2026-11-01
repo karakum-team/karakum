@@ -4,10 +4,10 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.NpmExtension
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.js-plain-objects")
-    id("io.github.turansky.seskar")
-    id("com.vanniktech.maven.publish")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.jsPlainObjects)
+    alias(libs.plugins.seskar)
+    alias(libs.plugins.mavenPublish)
     id("karakumbuild.node-conventions")
 }
 

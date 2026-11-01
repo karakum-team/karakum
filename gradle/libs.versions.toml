@@ -2,8 +2,20 @@
 coroutines = "1.11.0"
 kfc = "19.20.0"
 kotlin = "2.4.21"
+maven-publish = "0.36.0"
+gradle-plugin-publish = "2.1.1"
+seskar = "4.66.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+jsPlainObjects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin" }
+
+mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradle-plugin-publish" }
+seskar = { id = "io.github.turansky.seskar", version.ref = "seskar" }

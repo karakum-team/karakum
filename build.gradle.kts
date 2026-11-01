@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 plugins {
-    kotlin("multiplatform") apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
     id("karakumbuild.node-conventions")
 }
 

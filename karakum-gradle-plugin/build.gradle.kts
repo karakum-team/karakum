@@ -1,7 +1,6 @@
 plugins {
     `kotlin-dsl`
-    kotlin("jvm")
-    id("com.gradle.plugin-publish")
+    alias(libs.plugins.gradlePluginPublish)
 }
 
 dependencies {

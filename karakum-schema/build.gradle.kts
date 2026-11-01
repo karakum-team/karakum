@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.js-plain-objects")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.jsPlainObjects)
     id("karakumbuild.node-conventions")
 }
 
