@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(libs.multiplatform)
-    api(libs.plugin.jsPlainObjects)
+    api(libs.gradlePlugins.kotlin)
+    api(libs.gradlePlugins.jsPlainObjects)
 
     testImplementation(libs.kotlin.test)
 }

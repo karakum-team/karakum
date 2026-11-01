@@ -7,10 +7,6 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            val kotlinVersion: String by settings
-            library("multiplatform", "org.jetbrains.kotlin.multiplatform", "org.jetbrains.kotlin.multiplatform.gradle.plugin").version(kotlinVersion)
-            library("plugin-jsPlainObjects", "org.jetbrains.kotlin.plugin.js-plain-objects", "org.jetbrains.kotlin.plugin.js-plain-objects.gradle.plugin").version(kotlinVersion)
-
             val typescriptVersion: String by settings
             library("typescript", "npm", "typescript").version(typescriptVersion)
 
