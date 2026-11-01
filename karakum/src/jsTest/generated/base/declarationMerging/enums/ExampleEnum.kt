@@ -4,7 +4,9 @@
 
 package sandbox.base.declarationMerging.enums
 
-sealed external interface ExampleEnum {
+/* enum */
+external class ExampleEnum
+private constructor() {
 companion object {
 val a: ExampleEnum
 val b: ExampleEnum

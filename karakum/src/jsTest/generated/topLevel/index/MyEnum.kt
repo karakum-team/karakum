@@ -4,7 +4,9 @@
 
 package sandbox.top.level.index
 
-sealed external interface MyEnum {
+/* enum */
+external class MyEnum
+private constructor() {
 companion object {
 val FIRST: MyEnum
 val SECOND: MyEnum

@@ -44,10 +44,12 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
         .joinToString(separator = "\n")
 
     """
-sealed ${ifPresent(externalModifier) { "$it " }}interface ${name}${ifPresent(injectedHeritageClauses) { " : $it" }} {
+/* enum */
+${ifPresent(externalModifier) { "$it " }}class ${name}${ifPresent(injectedHeritageClauses) { " : $it" }}
+private constructor() {
 companion object {
 $members
 }
 }
-    """.trim()
+""".trim()
 }
