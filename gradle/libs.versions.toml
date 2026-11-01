@@ -3,7 +3,7 @@ coroutines = "1.11.0"
 kfc = "19.20.0"
 kotlin = "2.4.21"
 maven-publish = "0.36.0"
-gradle-plugin-publish = "2.1.1"
+gradle-plugin-publish = "2.2.1"
 seskar = "4.66.0"
 
 [libraries]
