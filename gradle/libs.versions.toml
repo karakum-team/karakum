@@ -21,3 +21,5 @@ jsPlainObjects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.
 mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradle-plugin-publish" }
 seskar = { id = "io.github.turansky.seskar", version.ref = "seskar" }
+
+kfc-latestTools = { id = "io.github.turansky.kfc.latest-tools", version.ref = "kfc" }

@@ -21,8 +21,6 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("build-logic")
-
 include("karakum")
 include("karakum-schema")
 include("karakum-gradle-plugin")

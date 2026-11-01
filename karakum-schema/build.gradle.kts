@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsExec
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.jsPlainObjects)
-    id("karakumbuild.node-conventions")
+    alias(libs.plugins.kfc.latestTools)
 }
 
 kotlin {

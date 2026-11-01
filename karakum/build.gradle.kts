@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.jsPlainObjects)
     alias(libs.plugins.seskar)
     alias(libs.plugins.mavenPublish)
-    id("karakumbuild.node-conventions")
+    alias(libs.plugins.kfc.latestTools)
 }
 
 kotlin {
