@@ -38,7 +38,9 @@ val convertEnumDeclaration = createPlugin plugin@{ node, context, render ->
                 ?.getMembers(node, context)
                 ?: node.members
             )
-        .map { member -> "${render(member)}: $name" }
+        .map { render(it) }
+        .filter { it.isNotEmpty() }
+        .map { "$it: $name" }
         .joinToString(separator = "\n")
 
     """
