@@ -77,16 +77,13 @@ class AnnotationPlugin(annotations: List<Annotation>) : Plugin {
 
     override suspend fun render(node: Node, context: Context, next: Render<Node>): String? {
         val annotations = annotationService.resolveAnnotations(node, context)
+            .ifEmpty { return null }
 
-        if (annotations.isNotEmpty()) {
-            return """
-${annotations.joinToString(separator = "\n")}
-${next(node)}
-            """.trim()
-        }
+        val declaration = next(node)
+            .ifEmpty { return null }
 
-        return null
+        return annotations.asSequence()
+            .plus(declaration)
+            .joinToString("\n")
     }
-
-
 }

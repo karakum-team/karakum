@@ -69,7 +69,10 @@ class CommentPlugin : Plugin {
         val leadingCommentOutput = commentsService.renderComments(sourceFile, leadingComments)
         val trailingCommentOutput = commentsService.renderComments(sourceFile, trailingComments)
 
-        return "${leadingCommentOutput}${next(node)}${trailingCommentOutput}"
+        val declaration = next(node)
+            .ifEmpty { return null }
+
+        return "$leadingCommentOutput$declaration$trailingCommentOutput"
     }
 
     private fun isCommentRangeCovered(sourceFile: SourceFile, commentRange: CommentRange): Boolean {
