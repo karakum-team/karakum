@@ -282,6 +282,7 @@ fun resolveConflicts(
     val normalizedTargetFiles = resolveTargetFileConflicts(targetFiles, configuration)
 
     val primaryFiles = normalizedTargetFiles
+        .filter { it.body.isNotEmpty() }
         .map { item ->
             val outputFileName = packageToOutputFileName(
                 item.`package`,
