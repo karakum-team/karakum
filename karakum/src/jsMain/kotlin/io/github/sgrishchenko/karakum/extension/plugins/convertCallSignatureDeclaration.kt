@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.isCallSignatureDeclaration
+import typescript.ast.`is`.isCallSignatureDeclaration
 
 val convertCallSignatureDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isCallSignatureDeclaration(node)) return@plugin null

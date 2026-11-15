@@ -2,10 +2,10 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
-import typescript.MappedTypeNode
-import typescript.Node
-import typescript.SyntaxKind
-import typescript.isMappedTypeNode
+import typescript.ast.MappedTypeNode
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isMappedTypeNode
 
 suspend fun convertMappedTypeBody(node: MappedTypeNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)

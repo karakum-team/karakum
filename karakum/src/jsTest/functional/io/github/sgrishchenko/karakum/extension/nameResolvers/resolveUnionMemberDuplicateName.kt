@@ -3,7 +3,11 @@ package io.github.sgrishchenko.karakum.extension.nameResolvers
 import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.`is`.isLiteralTypeNode
+import typescript.ast.`is`.isStringLiteral
+import typescript.ast.`is`.isTypeAliasDeclaration
+import typescript.ast.`is`.isUnionTypeNode
 
 suspend fun resolveUnionMemberDuplicateName(node: Node, context: Context): String? {
     val typeScriptService = context.lookupService(typeScriptServiceKey)

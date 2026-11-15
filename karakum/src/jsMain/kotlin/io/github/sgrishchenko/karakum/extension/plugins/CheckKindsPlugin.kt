@@ -5,8 +5,8 @@ import io.github.sgrishchenko.karakum.extension.GeneratedFile
 import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.Render
 import js.objects.ReadonlyRecord
-import typescript.Node
-import typescript.SyntaxKind
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
 
 private val supportedKinds = setOf(
     SyntaxKind.SourceFile, // lines

@@ -20,9 +20,9 @@ import js.promise.Promise
 import kotlinx.js.JsPlainObject
 import node.fs.*
 import node.path.path
-import typescript.CompilerOptions
 import typescript.createCompilerHost
-import typescript.createProgram
+import typescript.sync.CompilerOptions
+import typescript.sync.createProgram
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 

@@ -10,7 +10,11 @@ import io.github.sgrishchenko.karakum.structure.module.moduleNameToPackage
 import js.array.ReadonlyArray
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.ModuleDeclaration
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isModuleBlock
+import typescript.ast.`is`.isModuleDeclaration
+import typescript.ast.`is`.isStringLiteral
 
 @JsPlainObject
 external interface NamespaceInfoItem : StructureItem {

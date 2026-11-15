@@ -6,7 +6,7 @@ import io.github.sgrishchenko.karakum.structure.InputStructureItemMeta
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
 import kotlinx.js.JsPlainObject
-import typescript.SourceFile
+import typescript.ast.SourceFile
 
 @JsPlainObject
 external interface InputSourceFileInfoItem : SourceFileInfoItem, InputStructureItem

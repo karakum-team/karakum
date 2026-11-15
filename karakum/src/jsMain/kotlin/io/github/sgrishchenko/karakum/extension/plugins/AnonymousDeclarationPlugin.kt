@@ -8,7 +8,7 @@ import js.array.ReadonlyArray
 import js.promise.Promise
 import js.promise.await
 import kotlinx.js.JsPlainObject
-import typescript.Node
+import typescript.ast.Node
 import web.abort.Abortable
 
 external interface AnonymousDeclaration

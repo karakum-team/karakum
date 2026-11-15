@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
-import typescript.Node
+import typescript.ast.Node
 
 private val builtinSources = listOf(
     """^.*/typescript/lib/lib\.decorators\.d\.ts$""".toRegex(),

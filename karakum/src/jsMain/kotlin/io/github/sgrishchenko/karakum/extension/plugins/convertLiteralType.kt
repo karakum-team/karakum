@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isLiteralTypeNode
+import typescript.ast.`is`.isLiteralTypeNode
 
 val convertLiteralType = createPlugin plugin@{ node, context, render ->
     if (!isLiteralTypeNode(node)) return@plugin null

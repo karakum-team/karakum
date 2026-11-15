@@ -2,7 +2,11 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SourceFile
+import typescript.ast.scanner.CommentRange
+import typescript.ast.scanner.getLeadingCommentRanges
+import typescript.ast.scanner.getTrailingCommentRanges
 
 @JsExport
 val commentServiceKey = ContextKey<CommentService>()

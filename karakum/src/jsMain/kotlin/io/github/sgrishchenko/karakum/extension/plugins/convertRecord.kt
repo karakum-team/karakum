@@ -4,7 +4,12 @@ import io.github.sgrishchenko.karakum.extension.Render
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.IndexSignatureDeclaration
+import typescript.ast.Node
+import typescript.ast.`is`.isIndexSignatureDeclaration
+import typescript.ast.`is`.isInterfaceDeclaration
+import typescript.ast.`is`.isTypeAliasDeclaration
+import typescript.ast.`is`.isTypeLiteralNode
 
 private suspend fun renderRecord(node: IndexSignatureDeclaration, render: Render<Node>): String {
     val firstParameterType = node.parameters.firstOrNull()?.type

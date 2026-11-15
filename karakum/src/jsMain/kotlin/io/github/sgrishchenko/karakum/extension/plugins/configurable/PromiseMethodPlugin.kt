@@ -8,7 +8,12 @@ import js.promise.Promise
 import js.promise.await
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SignatureDeclarationBase
+import typescript.ast.TypeReferenceNode
+import typescript.ast.`is`.isMethodDeclaration
+import typescript.ast.`is`.isMethodSignature
+import typescript.ast.`is`.isTypeReferenceNode
 import web.abort.Abortable
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.isPromiseType as defaultIsPromiseType
 import io.github.sgrishchenko.karakum.extension.plugins.configurable.renderPromisePayload as defaultRenderPayload

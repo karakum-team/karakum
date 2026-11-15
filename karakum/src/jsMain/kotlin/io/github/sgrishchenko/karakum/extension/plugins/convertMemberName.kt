@@ -5,7 +5,9 @@ import io.github.sgrishchenko.karakum.util.camelize
 import io.github.sgrishchenko.karakum.util.isKebab
 import io.github.sgrishchenko.karakum.util.isValidIdentifier
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.StringLiteral
+import typescript.ast.`is`.*
 
 fun createKebabAnnotation(node: Node): String {
     if (isStringLiteral(node) && node.text == "") {

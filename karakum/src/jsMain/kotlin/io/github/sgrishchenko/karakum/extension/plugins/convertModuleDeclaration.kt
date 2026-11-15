@@ -7,7 +7,7 @@ import io.github.sgrishchenko.karakum.configuration.`package`
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.isModuleDeclaration
+import typescript.ast.`is`.isModuleDeclaration
 
 val convertModuleDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isModuleDeclaration(node)) return@plugin null

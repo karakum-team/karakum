@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
-import typescript.isMethodSignature
+import typescript.ast.`is`.isMethodSignature
 
 val convertMethodSignature = createPlugin plugin@{ node, context, render ->
     if (!isMethodSignature(node)) return@plugin null

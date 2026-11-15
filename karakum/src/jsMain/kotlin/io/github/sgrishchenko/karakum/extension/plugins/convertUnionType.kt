@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isUnionTypeNode
+import typescript.ast.`is`.isUnionTypeNode
 
 val convertUnionType = createPlugin plugin@{ node, context, _ ->
     if (!isUnionTypeNode(node)) return@plugin null

@@ -11,8 +11,8 @@ import js.objects.ReadonlyRecord
 import js.promise.Promise
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import typescript.Node
-import typescript.SyntaxKind
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
 import web.abort.Abortable
 
 sealed external interface NumberPluginStrategy {

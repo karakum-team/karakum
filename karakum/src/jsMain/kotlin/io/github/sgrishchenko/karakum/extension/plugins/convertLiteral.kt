@@ -4,8 +4,8 @@ import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.TypeGuard
 import js.reflect.invoke
-import typescript.Node
-import typescript.isPrefixUnaryExpression
+import typescript.ast.Node
+import typescript.ast.`is`.isPrefixUnaryExpression
 
 fun <T : Node> convertLiteral(
     predicate: TypeGuard<Node, T>,

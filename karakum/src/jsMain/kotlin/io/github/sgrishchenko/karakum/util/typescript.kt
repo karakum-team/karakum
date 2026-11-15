@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
-import typescript.Node
+import typescript.ast.Node
 
 private external interface MutableNode {
     var parent: Node

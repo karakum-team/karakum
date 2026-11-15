@@ -5,8 +5,8 @@ import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import kotlinx.js.JsPlainObject
-import typescript.Node
-import typescript.SyntaxKind
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
 
 @JsExport
 val checkCoverageServiceKey = ContextKey<CheckCoverageService>()

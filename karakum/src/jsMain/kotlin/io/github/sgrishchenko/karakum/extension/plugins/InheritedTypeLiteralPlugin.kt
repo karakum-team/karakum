@@ -2,7 +2,12 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.IntersectionTypeNode
+import typescript.ast.Node
+import typescript.ast.`is`.isIntersectionTypeNode
+import typescript.ast.`is`.isMappedTypeNode
+import typescript.ast.`is`.isTypeLiteralNode
+import typescript.ast.`is`.isTypeReferenceNode
 import kotlin.contracts.contract
 
 @Suppress("CANNOT_CHECK_FOR_EXTERNAL_INTERFACE")

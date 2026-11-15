@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isConditionalTypeNode
+import typescript.ast.`is`.isConditionalTypeNode
 
 val convertConditionalType = createPlugin plugin@{ node, context, _ ->
     if (!isConditionalTypeNode(node)) return@plugin null

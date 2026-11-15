@@ -10,7 +10,10 @@ import js.array.component2
 import js.objects.Object
 import js.objects.recordOf
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Declaration
+import typescript.ast.Node
+import typescript.ast.SourceFile
+import typescript.ast.`is`.*
 
 typealias ImportInfo = Map<Declaration, ReadonlyArray<String>>
 

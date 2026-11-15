@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.util.*
 import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import node.process.process
-import typescript.CompilerOptions
+import typescript.sync.CompilerOptions
 
 private fun normalizeOption(
     patterns: Many<Any>?,

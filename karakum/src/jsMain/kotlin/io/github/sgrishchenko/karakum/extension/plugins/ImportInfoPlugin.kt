@@ -4,10 +4,10 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import js.array.ReadonlyArray
 import js.reflect.invoke
-import typescript.ModuleDeclaration
-import typescript.Node
-import typescript.Program
-import typescript.isImportDeclaration
+import typescript.ast.ModuleDeclaration
+import typescript.ast.Node
+import typescript.ast.`is`.isImportDeclaration
+import typescript.sync.Program
 
 @JsExport
 val importInfoServiceKey = ContextKey<ImportInfoService>()

@@ -2,8 +2,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isVariableStatement
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isVariableStatement
 
 val convertVariableStatement = createPlugin plugin@{ node, context, render ->
     if (!isVariableStatement(node)) return@plugin null

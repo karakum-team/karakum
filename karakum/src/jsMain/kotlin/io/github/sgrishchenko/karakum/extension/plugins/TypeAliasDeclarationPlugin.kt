@@ -8,7 +8,10 @@ import io.github.sgrishchenko.karakum.structure.derived.DerivedDeclaration
 import io.github.sgrishchenko.karakum.structure.derived.generateDerivedDeclarations
 import js.array.ReadonlyArray
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.TypeAliasDeclaration
+import typescript.ast.`is`.*
 
 class TypeAliasDeclarationPlugin : Plugin {
     private val generated = mutableListOf<DerivedDeclaration>()

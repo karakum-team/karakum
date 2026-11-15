@@ -5,8 +5,8 @@ import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isPropertyDeclaration
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isPropertyDeclaration
 
 val convertPropertyDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isPropertyDeclaration(node)) return@plugin null

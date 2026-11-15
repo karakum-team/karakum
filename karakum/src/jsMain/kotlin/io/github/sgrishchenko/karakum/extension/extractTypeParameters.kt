@@ -6,7 +6,12 @@ import js.array.*
 import js.coroutines.promise
 import js.promise.Promise
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Declaration
+import typescript.ast.Node
+import typescript.ast.`is`.isConditionalTypeNode
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isInferTypeNode
+import typescript.ast.`is`.isTypeParameterDeclaration
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 

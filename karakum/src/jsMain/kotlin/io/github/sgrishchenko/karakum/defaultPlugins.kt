@@ -7,7 +7,10 @@ import io.github.sgrishchenko.karakum.structure.import.ImportInfo
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import js.array.ReadonlyArray
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.*
+import typescript.sync.Program
 
 private fun hasKind(kind: SyntaxKind): (node: Node) -> Boolean = { it.kind == kind }
 

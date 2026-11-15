@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isModuleBlock
+import typescript.ast.`is`.isModuleBlock
 
 val convertModuleBlock = createPlugin plugin@{ node, context, render ->
     if (!isModuleBlock(node)) return@plugin null

@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isTypeQueryNode
+import typescript.ast.`is`.isTypeQueryNode
 
 val convertTypeQuery = createPlugin plugin@{ node, context, render ->
     if (!isTypeQueryNode(node)) return@plugin null

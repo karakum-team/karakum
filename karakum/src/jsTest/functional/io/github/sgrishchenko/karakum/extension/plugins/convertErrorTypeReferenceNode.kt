@@ -2,9 +2,9 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isExpressionWithTypeArguments
-import typescript.isIdentifier
-import typescript.isTypeReferenceNode
+import typescript.ast.`is`.isExpressionWithTypeArguments
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isTypeReferenceNode
 
 val convertErrorTypeReferenceNode = createPlugin plugin@{ node, _, _ ->
     if (isTypeReferenceNode(node)) {

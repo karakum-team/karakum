@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isFunctionTypeNode
+import typescript.ast.`is`.isFunctionTypeNode
 
 val convertFunctionType = createPlugin plugin@{ node, context, render ->
     if (!isFunctionTypeNode(node)) return@plugin null

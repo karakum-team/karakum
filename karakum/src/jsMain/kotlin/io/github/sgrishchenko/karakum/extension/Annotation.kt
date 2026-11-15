@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.extension
 
-import typescript.Node
+import typescript.ast.Node
 import web.abort.Abortable
 import kotlin.js.Promise
 

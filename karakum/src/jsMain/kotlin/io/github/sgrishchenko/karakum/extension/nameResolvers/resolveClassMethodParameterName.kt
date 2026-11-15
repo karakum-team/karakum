@@ -4,7 +4,11 @@ import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.capitalize
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.`is`.isClassDeclaration
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isMethodDeclaration
+import typescript.ast.`is`.isParameter
 
 val resolveClassMethodParameterName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService(typeScriptServiceKey)

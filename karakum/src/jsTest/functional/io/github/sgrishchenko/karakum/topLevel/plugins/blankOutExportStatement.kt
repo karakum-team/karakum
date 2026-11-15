@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.topLevel.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isExportAssignment
+import typescript.ast.`is`.isExportAssignment
 
 val blankOutExportStatement = createPlugin plugin@{ node, _, _ ->
     val sourceFileName = node.getSourceFile()?.fileName ?: "generated.d.ts"

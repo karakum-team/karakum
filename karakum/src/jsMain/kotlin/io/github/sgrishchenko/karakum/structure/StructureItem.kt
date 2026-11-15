@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.structure
 
 import js.array.ReadonlyArray
 import kotlinx.js.JsPlainObject
-import typescript.Node
+import typescript.ast.Node
 
 @JsPlainObject
 external interface StructureItem {

@@ -3,8 +3,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isFunctionDeclaration
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isFunctionDeclaration
 
 val convertFunctionDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isFunctionDeclaration(node)) return@plugin null

@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isParenthesizedTypeNode
+import typescript.ast.`is`.isParenthesizedTypeNode
 
 val convertParenthesizedType = createPlugin plugin@{ node, context, render ->
     if (!isParenthesizedTypeNode(node)) return@plugin null

@@ -3,10 +3,11 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.isBuiltin
 import js.reflect.invoke
-import typescript.isExpressionWithTypeArguments
-import typescript.isHeritageClause
-import typescript.isIdentifier
-import typescript.isTypeReferenceNode
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isExpressionWithTypeArguments
+import typescript.ast.`is`.isHeritageClause
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isTypeReferenceNode
 
 private val readonlyBuiltinTypeTypes: Map<String, String> = mapOf(
     "Array" to "js.array.ReadonlyArray",
@@ -35,7 +36,7 @@ val convertBuiltinTypeReference = createPlugin plugin@{ node, context, _ ->
 
     val jsName = node.text
     val useParentTypeMap = parent.parent
-        .let { isHeritageClause(it) && it.token == typescript.SyntaxKind.ImplementsKeyword }
+        .let { isHeritageClause(it) && it.token == SyntaxKind.ImplementsKeyword }
     val kotlinFqn = if (useParentTypeMap) {
         builtinParentTypeMap[jsName]
     } else {

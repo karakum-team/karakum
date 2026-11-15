@@ -1,7 +1,7 @@
 package io.github.sgrishchenko.karakum.extension
 
 import io.github.sgrishchenko.karakum.extension.plugins.Signature
-import typescript.Node
+import typescript.ast.Node
 import web.abort.Abortable
 import kotlin.js.Promise
 

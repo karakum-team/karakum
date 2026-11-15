@@ -4,8 +4,8 @@ import io.github.sgrishchenko.karakum.extension.Context
 import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import js.reflect.invoke
-import typescript.Node
-import typescript.isParenthesizedTypeNode
+import typescript.ast.Node
+import typescript.ast.`is`.isParenthesizedTypeNode
 
 fun resolveParenthesizedTypeName(resolver: NameResolver): NameResolver {
     suspend fun parenthesizedResolver(node: Node, context: Context): String? {

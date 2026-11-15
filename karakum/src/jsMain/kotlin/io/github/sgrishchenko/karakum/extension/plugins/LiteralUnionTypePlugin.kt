@@ -5,7 +5,11 @@ import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.LiteralTypeNode
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.UnionTypeNode
+import typescript.ast.`is`.*
 import kotlin.contracts.contract
 
 sealed external interface LiteralUnionMemberEntryType {

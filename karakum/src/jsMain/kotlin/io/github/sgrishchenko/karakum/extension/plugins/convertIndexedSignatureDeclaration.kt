@@ -4,8 +4,8 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isIndexSignatureDeclaration
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isIndexSignatureDeclaration
 
 val convertIndexedSignatureDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isIndexSignatureDeclaration(node)) return@plugin null

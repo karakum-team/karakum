@@ -2,8 +2,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isTypeOperatorNode
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isTypeOperatorNode
 
 val convertTypeOperator = createPlugin plugin@{ node, context, _ ->
     if (!isTypeOperatorNode(node)) return@plugin null

@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.configuration.Configuration
 import io.github.sgrishchenko.karakum.configuration.JsConfiguration
 import io.github.sgrishchenko.karakum.configuration.toJsConfiguration
 import io.github.sgrishchenko.karakum.extension.*
-import typescript.Node
+import typescript.ast.Node
 
 val configurationServiceKey = ContextKey<ConfigurationService>()
 

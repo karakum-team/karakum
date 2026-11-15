@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isQualifiedName
+import typescript.ast.`is`.isQualifiedName
 
 val convertQualifiedName = createPlugin plugin@{ node, context, render ->
     if (!isQualifiedName(node)) return@plugin null

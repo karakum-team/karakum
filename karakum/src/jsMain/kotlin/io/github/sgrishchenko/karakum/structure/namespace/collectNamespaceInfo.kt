@@ -8,7 +8,14 @@ import io.github.sgrishchenko.karakum.util.traverseSync
 import js.array.ReadonlyArray
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SourceFile
+import typescript.ast.`is`.isModuleBlock
+import typescript.ast.`is`.isModuleDeclaration
+import kotlin.collections.forEach
+import kotlin.collections.mutableListOf
+import kotlin.collections.plusAssign
+import kotlin.collections.toTypedArray
 
 @JsPlainObject
 external interface InputNamespaceInfoItem : NamespaceInfoItem, InputStructureItem

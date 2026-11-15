@@ -4,7 +4,12 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.GetAccessorDeclaration
+import typescript.ast.Node
+import typescript.ast.SetAccessorDeclaration
+import typescript.ast.`is`.isGetAccessor
+import typescript.ast.`is`.isSetAccessor
+import typescript.sync.Symbol
 
 @JsPlainObject
 internal external interface AccessorInfo {

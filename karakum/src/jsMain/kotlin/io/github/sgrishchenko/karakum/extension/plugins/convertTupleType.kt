@@ -3,8 +3,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.isRestTypeNode
-import typescript.isTupleTypeNode
+import typescript.ast.`is`.isRestTypeNode
+import typescript.ast.`is`.isTupleTypeNode
 
 val convertTupleType = createPlugin plugin@{ node, context, render ->
     if (!isTupleTypeNode(node)) return@plugin null

@@ -8,7 +8,8 @@ import io.github.sgrishchenko.karakum.extension.plugins.convertErrorTypeReferenc
 import io.github.sgrishchenko.karakum.generateTests
 import js.reflect.invoke
 import kotlinx.coroutines.test.runTest
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.`is`.*
 import kotlin.test.Test
 
 private fun isCustomPromise(node: Node, context: Context): Boolean {

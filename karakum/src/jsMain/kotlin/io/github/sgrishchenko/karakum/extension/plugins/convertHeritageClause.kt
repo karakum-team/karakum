@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isHeritageClause
+import typescript.ast.`is`.isHeritageClause
 
 val convertHeritageClause = createPlugin plugin@{ node, context, render ->
     if (!isHeritageClause(node)) return@plugin null

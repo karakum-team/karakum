@@ -6,7 +6,9 @@ import js.numbers.contains
 import js.promise.Promise
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.`is`.*
+import typescript.sync.SymbolFlags
 import web.abort.Abortable
 
 @JsExport

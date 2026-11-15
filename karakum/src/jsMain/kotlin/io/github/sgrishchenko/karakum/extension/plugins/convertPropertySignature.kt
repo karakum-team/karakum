@@ -5,8 +5,8 @@ import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isPropertySignature
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isPropertySignature
 
 val convertPropertySignature = createPlugin plugin@{ node, context, render ->
     if (!isPropertySignature(node)) return@plugin null

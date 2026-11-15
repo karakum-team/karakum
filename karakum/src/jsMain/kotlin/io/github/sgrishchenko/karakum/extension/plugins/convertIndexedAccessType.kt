@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isIndexedAccessTypeNode
+import typescript.ast.`is`.isIndexedAccessTypeNode
 
 val convertIndexedAccessType = createPlugin plugin@{ node, context, render ->
     if (!isIndexedAccessTypeNode(node)) return@plugin null

@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isTypePredicateNode
+import typescript.ast.`is`.isTypePredicateNode
 
 val convertTypePredicate = createPlugin plugin@{ node, context, _ ->
     if (!isTypePredicateNode(node)) return@plugin null

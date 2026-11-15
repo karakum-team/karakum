@@ -2,9 +2,9 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isArrayTypeNode
-import typescript.isTypeOperatorNode
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isArrayTypeNode
+import typescript.ast.`is`.isTypeOperatorNode
 
 val convertArrayType = createPlugin plugin@{ node, context, render ->
     if (

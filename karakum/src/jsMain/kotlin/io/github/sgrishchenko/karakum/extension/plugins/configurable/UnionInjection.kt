@@ -11,7 +11,12 @@ import js.coroutines.promise
 import js.iterable.iterator
 import js.promise.Promise
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.NamedDeclaration
+import typescript.ast.Node
+import typescript.ast.TypeReferenceNode
+import typescript.ast.UnionTypeNode
+import typescript.ast.`is`.*
+import typescript.sync.Symbol
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 
@@ -22,8 +27,8 @@ val unionServiceKey = ContextKey<UnionService>()
 val jsUnionServiceKey = ContextKey<JsUnionService>()
 
 class UnionService(private val context: Context) {
-    private val unionParents = mutableMapOf<typescript.Symbol, ReadonlyArray<String>>()
-    private val coveredUnionParents = mutableSetOf<typescript.Symbol>()
+    private val unionParents = mutableMapOf<Symbol, ReadonlyArray<String>>()
+    private val coveredUnionParents = mutableSetOf<Symbol>()
 
     @JsExport.Ignore
     val uncoveredUnionParents
@@ -82,7 +87,7 @@ class UnionService(private val context: Context) {
         return unionParents[symbol] ?: emptyArray()
     }
 
-    private fun getSymbol(node: NamedDeclaration): typescript.Symbol? {
+    private fun getSymbol(node: NamedDeclaration): Symbol? {
         val name = node.name ?: return null
 
         val typeScriptService = context.lookupService(typeScriptServiceKey)

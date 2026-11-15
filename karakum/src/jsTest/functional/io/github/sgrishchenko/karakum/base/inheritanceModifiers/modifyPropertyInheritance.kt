@@ -4,8 +4,8 @@ import io.github.sgrishchenko.karakum.extension.match
 import io.github.sgrishchenko.karakum.extension.resolve
 import io.github.sgrishchenko.karakum.extension.withFile
 import io.github.sgrishchenko.karakum.extension.withName
-import typescript.isClassDeclaration
-import typescript.isPropertyDeclaration
+import typescript.ast.`is`.isClassDeclaration
+import typescript.ast.`is`.isPropertyDeclaration
 
 val modifyPropertyInheritance = resolve(
     "override" to match {

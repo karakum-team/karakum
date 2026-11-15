@@ -6,8 +6,8 @@ import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.structure.namespace.NamespaceInfo
 import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
 import io.github.sgrishchenko.karakum.structure.namespace.resolveDefaultNamespaceStrategy
-import typescript.ModuleDeclaration
-import typescript.Node
+import typescript.ast.ModuleDeclaration
+import typescript.ast.Node
 
 @JsExport
 val namespaceInfoServiceKey = ContextKey<NamespaceInfoService>()

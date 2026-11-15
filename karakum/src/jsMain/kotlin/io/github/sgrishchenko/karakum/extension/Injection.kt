@@ -6,7 +6,7 @@ import js.coroutines.promise
 import js.promise.Promise
 import js.promise.await
 import js.reflect.unsafeCast
-import typescript.Node
+import typescript.ast.Node
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 

@@ -7,7 +7,7 @@ import js.import.import
 import node.module.findPackageJSON
 import node.path.path
 import node.process.process
-import typescript.CompilerOptions
+import typescript.sync.CompilerOptions
 
 const val defaultDisclaimer = "// Automatically generated - do not modify!"
 

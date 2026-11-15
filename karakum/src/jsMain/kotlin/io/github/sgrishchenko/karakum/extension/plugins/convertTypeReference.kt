@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isTypeReferenceNode
+import typescript.ast.`is`.isTypeReferenceNode
 
 val convertTypeReference = createPlugin plugin@{ node, context, render ->
     if (!isTypeReferenceNode(node)) return@plugin null

@@ -4,9 +4,9 @@ import io.github.sgrishchenko.karakum.extension.NameResolver
 import io.github.sgrishchenko.karakum.extension.plugins.typeScriptServiceKey
 import io.github.sgrishchenko.karakum.util.capitalize
 import js.reflect.invoke
-import typescript.Node
-import typescript.isCallSignatureDeclaration
-import typescript.isInterfaceDeclaration
+import typescript.ast.Node
+import typescript.ast.`is`.isCallSignatureDeclaration
+import typescript.ast.`is`.isInterfaceDeclaration
 
 val resolveInterfaceCallSignatureReturnTypeName: NameResolver = nameResolver@{ node, context ->
     val typeScriptService = context.lookupService(typeScriptServiceKey)

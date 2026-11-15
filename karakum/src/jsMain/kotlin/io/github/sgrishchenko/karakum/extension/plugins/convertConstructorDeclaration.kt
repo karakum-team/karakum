@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isConstructorDeclaration
+import typescript.ast.`is`.isConstructorDeclaration
 
 val convertConstructorDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isConstructorDeclaration(node)) return@plugin null

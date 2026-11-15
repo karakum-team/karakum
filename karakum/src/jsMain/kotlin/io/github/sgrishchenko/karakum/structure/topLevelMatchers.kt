@@ -8,7 +8,10 @@ import io.github.sgrishchenko.karakum.structure.namespace.extractNamespaceName
 import js.array.ReadonlyArray
 import js.reflect.invoke
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.Declaration
+import typescript.ast.ModuleDeclaration
+import typescript.ast.Node
+import typescript.ast.`is`.*
 
 @JsPlainObject
 external interface TopLevelMatch {

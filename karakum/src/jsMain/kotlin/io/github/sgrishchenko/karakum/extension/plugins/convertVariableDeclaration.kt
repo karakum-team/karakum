@@ -6,8 +6,8 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.numbers.contains
 import js.reflect.invoke
-import typescript.NodeFlags
-import typescript.isVariableDeclaration
+import typescript.ast.NodeFlags
+import typescript.ast.`is`.isVariableDeclaration
 
 val convertVariableDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isVariableDeclaration(node)) return@plugin null

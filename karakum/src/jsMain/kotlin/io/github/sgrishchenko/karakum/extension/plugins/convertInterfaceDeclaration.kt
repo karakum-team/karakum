@@ -2,8 +2,8 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
-import typescript.SyntaxKind
-import typescript.isInterfaceDeclaration
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.isInterfaceDeclaration
 
 val convertInterfaceDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isInterfaceDeclaration(node)) return@plugin null

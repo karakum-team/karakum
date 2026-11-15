@@ -7,7 +7,7 @@ import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import typescript.CompilerOptions
+import typescript.sync.CompilerOptions
 
 sealed external interface NamespaceStrategy {
     companion object

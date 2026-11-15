@@ -3,7 +3,14 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.*
 import io.github.sgrishchenko.karakum.util.setParentNodes
 import js.reflect.invoke
-import typescript.*
+import typescript.PrinterOptions
+import typescript.ast.*
+import typescript.ast.factory.createSourceFile
+import typescript.ast.`is`.isModuleDeclaration
+import typescript.createPrinter
+import typescript.proto.NewLineKind
+import typescript.sync.NodeBuilderFlags
+import typescript.sync.Program
 
 @JsExport
 val typeScriptServiceKey = ContextKey<TypeScriptService>()
@@ -11,10 +18,12 @@ val typeScriptServiceKey = ContextKey<TypeScriptService>()
 @JsExport
 class TypeScriptService @JsExport.Ignore constructor(val program: Program) {
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private val printer = createPrinter(PrinterOptions(
-        removeComments = true,
-        newLine = NewLineKind.LineFeed,
-    ))
+    private val printer = createPrinter(
+        PrinterOptions(
+            removeComments = true,
+            newLine = NewLineKind.LineFeed,
+        )
+    )
     private val virtualParents = mutableMapOf<Node, Node>()
 
     fun printNode(node: Node): String {

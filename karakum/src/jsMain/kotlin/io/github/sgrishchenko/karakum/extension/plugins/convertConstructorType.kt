@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.extension.renderNullable
 import js.reflect.invoke
-import typescript.isConstructorTypeNode
+import typescript.ast.`is`.isConstructorTypeNode
 
 val convertConstructorType = createPlugin plugin@{ node, context, render ->
     if (!isConstructorTypeNode(node)) return@plugin null

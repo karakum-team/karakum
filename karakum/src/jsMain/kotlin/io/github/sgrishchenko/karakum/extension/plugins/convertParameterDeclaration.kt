@@ -13,7 +13,14 @@ import js.promise.await
 import js.reflect.invoke
 import js.reflect.unsafeCast
 import kotlinx.js.JsPlainObject
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.ParameterDeclaration
+import typescript.ast.SignatureDeclarationBase
+import typescript.ast.TypeNode
+import typescript.ast.`is`.isFunctionTypeNode
+import typescript.ast.`is`.isIdentifier
+import typescript.ast.`is`.isParameter
+import typescript.ast.`is`.isUnionTypeNode
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 

@@ -7,7 +7,15 @@ import io.github.sgrishchenko.karakum.util.DeepMap
 import js.array.JsArrays
 import js.array.ReadonlyArray
 import js.reflect.invoke
-import typescript.*
+import typescript.PrinterOptions
+import typescript.ast.*
+import typescript.ast.factory.createSourceFile
+import typescript.ast.`is`.*
+import typescript.createPrinter
+import typescript.proto.NewLineKind
+import typescript.sync.Program
+import typescript.sync.Symbol
+import typescript.sync.SymbolTable
 import kotlin.contracts.contract
 
 @JsExport
@@ -15,12 +23,14 @@ val declarationMergingServiceKey = ContextKey<DeclarationMergingService>()
 
 @JsExport
 class DeclarationMergingService @JsExport.Ignore constructor(private val program: Program) {
-    private val coveredSymbols = mutableSetOf<typescript.Symbol>()
+    private val coveredSymbols = mutableSetOf<Symbol>()
     private val virtualSourceFile = createSourceFile("virtual.d.ts", "", ScriptTarget.Latest)
-    private val printer = createPrinter(PrinterOptions(
-        removeComments = true,
-        newLine = NewLineKind.LineFeed,
-    ))
+    private val printer = createPrinter(
+        PrinterOptions(
+            removeComments = true,
+            newLine = NewLineKind.LineFeed,
+        )
+    )
 
     fun isCovered(node: NamedDeclaration): Boolean {
         val symbol = this.getSymbol(node)
@@ -144,7 +154,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
                     val parameterSymbols = declaration.parameters
                         .map { parameter ->
                             val typeNode = parameter.type ?: return@map "any"
-                            typeChecker.getTypeFromTypeNode(typeNode).symbol.unsafeCast<typescript.Symbol?>()
+                            typeChecker.getTypeFromTypeNode(typeNode).symbol.unsafeCast<Symbol?>()
                                 ?: printNode(typeNode)
                         }
                         .toTypedArray()
@@ -172,7 +182,7 @@ class DeclarationMergingService @JsExport.Ignore constructor(private val program
             || isMethodDeclaration(declaration)
     }
 
-    private fun getSymbol(node: NamedDeclaration): typescript.Symbol? {
+    private fun getSymbol(node: NamedDeclaration): Symbol? {
         val name = node.name ?: return null
 
         val typeChecker = program.getTypeChecker()

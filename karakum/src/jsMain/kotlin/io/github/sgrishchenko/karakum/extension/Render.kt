@@ -6,7 +6,10 @@ import js.array.ReadonlyArray
 import js.coroutines.promise
 import js.promise.Promise
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.TypeNode
+import typescript.ast.`is`.*
 import web.abort.Abortable
 import web.abort.asCoroutineScope
 

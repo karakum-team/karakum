@@ -3,7 +3,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import js.reflect.invoke
-import typescript.isTypeParameterDeclaration
+import typescript.ast.`is`.isTypeParameterDeclaration
 
 val convertTypeParameterDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isTypeParameterDeclaration(node)) return@plugin null

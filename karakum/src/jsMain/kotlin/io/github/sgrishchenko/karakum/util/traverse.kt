@@ -1,6 +1,6 @@
 package io.github.sgrishchenko.karakum.util
 
-import typescript.Node
+import typescript.ast.Node
 
 @JsExport
 fun traverseSync(rootNode: Node, handler: (node: Node) -> Unit) {

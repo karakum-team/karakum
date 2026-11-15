@@ -5,7 +5,17 @@ import io.github.sgrishchenko.karakum.util.resolveParenthesizedType
 import js.array.ReadonlyArray
 import js.numbers.contains
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.Node
+import typescript.ast.SyntaxKind
+import typescript.ast.TypeNode
+import typescript.ast.UnionTypeNode
+import typescript.ast.`is`.isIndexedAccessTypeNode
+import typescript.ast.`is`.isLiteralTypeNode
+import typescript.ast.`is`.isParenthesizedTypeNode
+import typescript.ast.`is`.isUnionTypeNode
+import typescript.sync.Type
+import typescript.sync.TypeFlags
+import typescript.sync.UnionType
 import kotlin.contracts.contract
 
 private fun isNull(type: Node) = isLiteralTypeNode(type) && type.literal.kind == SyntaxKind.NullKeyword

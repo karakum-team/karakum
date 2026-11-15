@@ -3,7 +3,11 @@ package io.github.sgrishchenko.karakum.extension.plugins
 import io.github.sgrishchenko.karakum.extension.*
 import js.array.ReadonlyArray
 import js.reflect.invoke
-import typescript.*
+import typescript.ast.ClassDeclaration
+import typescript.ast.Declaration
+import typescript.ast.ModifierLike
+import typescript.ast.SyntaxKind
+import typescript.ast.`is`.*
 
 private fun extractModifiers(member: Declaration): ReadonlyArray<ModifierLike> {
     if (isPropertyDeclaration(member)) return member.modifiers ?: emptyArray()

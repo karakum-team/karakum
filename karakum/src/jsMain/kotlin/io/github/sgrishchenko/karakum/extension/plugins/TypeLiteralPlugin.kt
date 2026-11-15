@@ -2,9 +2,9 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.*
 import js.reflect.invoke
-import typescript.Node
-import typescript.TypeLiteralNode
-import typescript.isTypeLiteralNode
+import typescript.ast.Node
+import typescript.ast.TypeLiteralNode
+import typescript.ast.`is`.isTypeLiteralNode
 
 suspend fun convertTypeLiteralBody(node: TypeLiteralNode, context: Context, render: Render<Node>): String {
     val checkCoverageService = context.lookupService(checkCoverageServiceKey)

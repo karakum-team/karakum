@@ -7,7 +7,7 @@ import js.array.component1
 import js.array.component2
 import js.objects.Object
 import js.objects.ReadonlyRecord
-import typescript.CompilerOptions
+import typescript.sync.CompilerOptions
 
 private class MutableConfigurationImpl(
     override var inputRoots: List<String>? = null,

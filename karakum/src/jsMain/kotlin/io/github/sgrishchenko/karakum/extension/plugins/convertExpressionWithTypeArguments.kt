@@ -2,7 +2,7 @@ package io.github.sgrishchenko.karakum.extension.plugins
 
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.invoke
-import typescript.isExpressionWithTypeArguments
+import typescript.ast.`is`.isExpressionWithTypeArguments
 
 val convertExpressionWithTypeArguments = createPlugin plugin@{ node, context, render ->
     if (!isExpressionWithTypeArguments(node)) return@plugin null

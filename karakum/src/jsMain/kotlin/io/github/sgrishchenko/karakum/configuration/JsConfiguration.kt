@@ -6,7 +6,7 @@ import js.array.ReadonlyArray
 import js.objects.ReadonlyRecord
 import js.objects.toRecord
 import kotlinx.js.JsPlainObject
-import typescript.CompilerOptions
+import typescript.sync.CompilerOptions
 
 @JsExport
 @JsName("Configuration")

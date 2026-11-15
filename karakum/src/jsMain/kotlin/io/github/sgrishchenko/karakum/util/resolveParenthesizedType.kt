@@ -1,8 +1,8 @@
 package io.github.sgrishchenko.karakum.util
 
 import js.reflect.invoke
-import typescript.TypeNode
-import typescript.isParenthesizedTypeNode
+import typescript.ast.TypeNode
+import typescript.ast.`is`.isParenthesizedTypeNode
 
 fun resolveParenthesizedType(node: TypeNode): TypeNode {
     return if (isParenthesizedTypeNode(node)) {

@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.extension.Plugin
 import io.github.sgrishchenko.karakum.extension.createPlugin
 import js.reflect.TypeGuard
 import js.reflect.invoke
-import typescript.Node
+import typescript.ast.Node
 
 fun convertPrimitive(
     predicate: (node: Node) -> Boolean,

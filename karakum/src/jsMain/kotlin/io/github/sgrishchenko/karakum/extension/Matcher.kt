@@ -7,9 +7,9 @@ import js.promise.await
 import js.reflect.TypeGuard
 import js.reflect.invoke
 import node.path.path
-import typescript.NamedDeclaration
-import typescript.Node
-import typescript.isIdentifier
+import typescript.ast.NamedDeclaration
+import typescript.ast.Node
+import typescript.ast.`is`.isIdentifier
 import web.abort.Abortable
 
 interface Matcher<in TContext : Context> {

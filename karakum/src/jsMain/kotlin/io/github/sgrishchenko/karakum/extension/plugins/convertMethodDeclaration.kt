@@ -4,7 +4,7 @@ import io.github.sgrishchenko.karakum.extension.createPlugin
 import io.github.sgrishchenko.karakum.extension.ifPresent
 import io.github.sgrishchenko.karakum.util.escapeIdentifier
 import js.reflect.invoke
-import typescript.isMethodDeclaration
+import typescript.ast.`is`.isMethodDeclaration
 
 val convertMethodDeclaration = createPlugin plugin@{ node, context, render ->
     if (!isMethodDeclaration(node)) return@plugin null
